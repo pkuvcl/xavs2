@@ -7,13 +7,15 @@
 [![GitHub forks](https://img.shields.io/github/forks/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/network)
 [![GitHub stars](https://img.shields.io/github/stars/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/stargazers)
 
-## Compiling Method
+## Compile it
 ### Windows
 Use VS2013 or latest version of  visual studio open the `./build/vs2013/xavs2.sln` solution and set the `xavs2` as the start project.
 
 #### Notes
-1. In the compile process, `shell executor` is needed. We need add it to enviroment variables.
-2. `vsyasm` is needed, install it according to your OS version.
+1. A `shell executor`, i.e. the bash in git for windows, is needed and should be found in `PATH` variable.
+ For example, the path `C:\Program Files\Git\bin` can be added if git-for-windows is installed.
+2. `vsyasm` is needed and `1.2.0` is suggested for windows platform. It can be downloaded through: http://yasm.tortall.net/Download.html .
+ A later version `1.3.0`, can be found in https://github.com/luofalei/yasm/tree/vs2013 .
 
 ### Linux
 `Makefile` is a simple way to organize code compilation and it had already exitst in the `./build/linux`. You can perform the following commands.
@@ -23,7 +25,7 @@ $ ./configure
 $ make
 ```
 
-## Usage
+## Try it
 ```
 ./xavs2 [-f encoder.cfg [-f seq.cfg]] [-p ParameterName=value] [--ParameterName=value]
 ```
