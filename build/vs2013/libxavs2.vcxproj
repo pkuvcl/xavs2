@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\common\block_info.c" />
+    <ClCompile Include="..\..\source\common\cg_scan.c" />
+    <ClCompile Include="..\..\source\common\common.c" />
+    <ClCompile Include="..\..\source\common\cpu.c" />
+    <ClCompile Include="..\..\source\common\cudata.c" />
+    <ClCompile Include="..\..\source\common\filter_alf.c" />
+    <ClCompile Include="..\..\source\common\filter_deblock.c" />
+    <ClCompile Include="..\..\source\common\filter_sao.c" />
+    <ClCompile Include="..\..\source\common\frame.c" />
+    <ClCompile Include="..\..\source\common\intra.c" />
+    <ClCompile Include="..\..\source\common\mc.c" />
+    <ClCompile Include="..\..\source\common\pixel.c" />
+    <ClCompile Include="..\..\source\common\primitives.c" />
+    <ClCompile Include="..\..\source\common\quant.c" />
+    <ClCompile Include="..\..\source\common\threadpool.c" />
+    <ClCompile Include="..\..\source\common\transform.c" />
+    <ClCompile Include="..\..\source\common\win32thread.c" />
+    <ClCompile Include="..\..\source\encoder\aec.c" />
+    <ClCompile Include="..\..\source\encoder\aec_ctx.c" />
+    <ClCompile Include="..\..\source\encoder\aec_fastrdo.c" />
+    <ClCompile Include="..\..\source\encoder\aec_rdo.c" />
+    <ClCompile Include="..\..\source\encoder\aec_vrdo.c" />
+    <ClCompile Include="..\..\source\encoder\alf.c" />
+    <ClCompile Include="..\..\source\encoder\encoder.c" />
+    <ClCompile Include="..\..\source\encoder\header.c" />
+    <ClCompile Include="..\..\source\encoder\md_inter.c" />
+    <ClCompile Include="..\..\source\encoder\md_intra.c" />
+    <ClCompile Include="..\..\source\encoder\me.c" />
+    <ClCompile Include="..\..\source\encoder\parameters.c" />
+    <ClCompile Include="..\..\source\encoder\presets.c" />
+    <ClCompile Include="..\..\source\encoder\pre_encode.c" />
+    <ClCompile Include="..\..\source\encoder\ratecontrol.c" />
+    <ClCompile Include="..\..\source\encoder\rdo.c" />
+    <ClCompile Include="..\..\source\encoder\rdoq.c" />
+    <ClCompile Include="..\..\source\encoder\rps.c" />
+    <ClCompile Include="..\..\source\encoder\sao.c" />
+    <ClCompile Include="..\..\source\encoder\slice.c" />
+    <ClCompile Include="..\..\source\encoder\tdrdo.c" />
+    <ClCompile Include="..\..\source\encoder\wquant.c" />
+    <ClCompile Include="..\..\source\encoder\wrapper.c" />
+    <ClCompile Include="..\..\source\encoder\xavs2.c" />
+    <ClCompile Include="..\..\source\encoder\xlist.c" />
+    <ClCompile Include="..\..\source\encoder\yuv_writer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\common\avs2tab.h" />
+    <ClInclude Include="..\..\source\common\avs2_defs.h" />
+    <ClInclude Include="..\..\source\common\basic_types.h" />
+    <ClInclude Include="..\..\source\common\block_info.h" />
+    <ClInclude Include="..\..\source\common\common.h" />
+    <ClInclude Include="..\..\source\common\cpu.h" />
+    <ClInclude Include="..\..\source\common\cudata.h" />
+    <ClInclude Include="..\..\source\common\defines.h" />
+    <ClInclude Include="..\..\source\common\filter.h" />
+    <ClInclude Include="..\..\source\common\frame.h" />
+    <ClInclude Include="..\..\source\common\intra.h" />
+    <ClInclude Include="..\..\source\common\mc.h" />
+    <ClInclude Include="..\..\source\common\nal.h" />
+    <ClInclude Include="..\..\source\common\osdep.h" />
+    <ClInclude Include="..\..\source\common\pixel.h" />
+    <ClInclude Include="..\..\source\common\predict.h" />
+    <ClInclude Include="..\..\source\common\primitives.h" />
+    <ClInclude Include="..\..\source\common\threadpool.h" />
+    <ClInclude Include="..\..\source\common\transform.h" />
+    <ClInclude Include="..\..\source\common\vec\intrinsic.h" />
+    <ClInclude Include="..\..\source\common\win32thread.h" />
+    <ClInclude Include="..\..\source\common\x86\blockcopy8.h" />
+    <ClInclude Include="..\..\source\common\x86\dct8.h" />
+    <ClInclude Include="..\..\source\common\x86\mc.h" />
+    <ClInclude Include="..\..\source\common\x86\pixel-util.h" />
+    <ClInclude Include="..\..\source\common\x86\pixel.h" />
+    <ClInclude Include="..\..\source\common\x86\quant8.h" />
+    <ClInclude Include="..\..\source\configw.h" />
+    <ClInclude Include="..\..\source\encoder\aec.h" />
+    <ClInclude Include="..\..\source\encoder\alf.h" />
+    <ClInclude Include="..\..\source\encoder\bitstream.h" />
+    <ClInclude Include="..\..\source\encoder\encoder.h" />
+    <ClInclude Include="..\..\source\encoder\header.h" />
+    <ClInclude Include="..\..\source\encoder\me.h" />
+    <ClInclude Include="..\..\source\encoder\presets.h" />
+    <ClInclude Include="..\..\source\encoder\ratecontrol.h" />
+    <ClInclude Include="..\..\source\encoder\rdo.h" />
+    <ClInclude Include="..\..\source\encoder\rdoq.h" />
+    <ClInclude Include="..\..\source\encoder\rps.h" />
+    <ClInclude Include="..\..\source\encoder\sao.h" />
+    <ClInclude Include="..\..\source\encoder\slice.h" />
+    <ClInclude Include="..\..\source\encoder\tdrdo.h" />
+    <ClInclude Include="..\..\source\encoder\wquant.h" />
+    <ClInclude Include="..\..\source\encoder\wrapper.h" />
+    <ClInclude Include="..\..\source\encoder\xlist.h" />
+    <ClInclude Include="..\..\source\xavs2.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F202E04C-47EC-42CD-8AC0-73B0D77E4DD4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\</OutDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>XAVS2_EXPORTS;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;WIN32;ARCH_X86_64=0;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\source;..\..\source\common;..\..\source\encoder;..\..\source\pthread</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>asmopt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <YASM>
+      <Defines>ARCH_X86_64=0;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;PREFIX</Defines>
+    </YASM>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)..\.." &amp;&amp; sh version.sh</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>UpdateSourceVersionInfo</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>XAVS2_EXPORTS;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;WIN32;ARCH_X86_64=1;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\source;..\..\source\common;..\..\source\encoder;..\..\source\pthread</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>asmopt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <YASM>
+      <Defines>ARCH_X86_64=1;HIGH_BIT_DEPTH=0;BIT_DEPTH=8</Defines>
+    </YASM>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)..\.." &amp;&amp; sh version.sh</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>UpdateSourceVersionInfo</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>XAVS2_EXPORTS;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;WIN32;ARCH_X86_64=0;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile />
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\source;..\..\source\common;..\..\source\encoder;..\..\source\pthread</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>asmopt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <YASM>
+      <Defines>ARCH_X86_64=0;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;PREFIX</Defines>
+    </YASM>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)..\.." &amp;&amp; sh version.sh</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>UpdateSourceVersionInfo</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>XAVS2_EXPORTS;HIGH_BIT_DEPTH=0;BIT_DEPTH=8;WIN32;ARCH_X86_64=1;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\source;..\..\source\common;..\..\source\encoder;..\..\source\pthread</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>asmopt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <YASM>
+      <Defines>ARCH_X86_64=1;HIGH_BIT_DEPTH=0;BIT_DEPTH=8</Defines>
+    </YASM>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)..\.." &amp;&amp; sh version.sh</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>UpdateSourceVersionInfo</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
