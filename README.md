@@ -27,11 +27,29 @@ $ make
 ```
 ./xavs2 [-f encoder.cfg [-f seq.cfg]] [-p ParameterName=value] [--ParameterName=value]
 ```
-### Encode with configure file
+
+### Encode with configuration files
 ```
-./xavs2 -f encoder.cfg [-f seq.cfg] -p InputFile=input.yuv -p FramesToBeEncoded=500 -p FrameRate=6 -p SourceWidth=3840 -p SourceHeight=2160 -p InputSampleBitDepth=8 -p SampleBitDepth=8 -p preset=0 -p recon=. -p initial_qp=45 -p OutputFile=test.avs
+./xavs2 -f encoder.cfg -f seq4K.cfg -p InputFile=input.yuv -p FramesToBeEncoded=500 \
+  -p preset=0 -p recon=. -p initial_qp=32 -p OutputFile=test.avs
 ```
-### Enocde without configure file
+
+### Enocde without configuraton files
 ```
-./xavs2 -p InputFile=input.yuv --FramesToBeEncoded=500 --FrameRate=6 --SourceWidth=3840 --SourceHeight=2160 --InputSampleBitDepth=8 --SampleBitDepth=8 --thread_frames=1 --thread_rows=1 --preset=0 --recon=. --initial_qp=45 --OutputFile=test.avs
+./xavs2 -p InputFile=input.yuv --FramesToBeEncoded=500 --FrameRate=6 \
+  --SourceWidth=3840 --SourceHeight=2160 --InputSampleBitDepth=8 --SampleBitDepth=8 \
+  --thread_frames=1 --thread_rows=1 --preset=0 \
+  --recon=. --initial_qp=32 --OutputFile=test.avs
 ```
+
+## Homepages
+
+[PKU-VCL][1]
+
+[git repository on Gitee.com][2]
+
+[git repository on Github.com][3]
+
+  [1]: http://vcl.idm.pku.edu.cn/ "PKU-VCL"
+  [2]: https://gitee.com/pkuvcl/xavs2 "gitee repository"
+  [3]: https://github.com/pkuvcl/xavs2 "github repository"
