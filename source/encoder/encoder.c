@@ -38,7 +38,6 @@
 #include "mc.h"
 #include "wrapper.h"
 #include "encoder.h"
-#include "wrapper.h"
 #include "frame.h"
 #include "aec.h"
 #include "slice.h"
@@ -61,9 +60,6 @@
 #if defined(__ARM_ARCH_7A__) | SYS_LINUX || !defined(_MSC_VER)
 #define sprintf_s snprintf
 #endif
-
-#include <stdio.h>
-#include <avs2_defs.h>
 
 /* "video_sequence_end_code", 0xB1 */
 static const uint8_t end_code[16] = {
