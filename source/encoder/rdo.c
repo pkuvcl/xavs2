@@ -3382,7 +3382,7 @@ rdcost_t compress_ctu_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, i
         h->copy_aec_state_rdo(&cs_aec, p_aec);
         large_cu_cost = compress_cu_intra(h, &cs_aec, p_cu, best, cost_limit);
 
-        /* QSFD，提前终止CU下层划分 */
+        /* QSFD, skip smaller CU partitions */
         if (IS_ALG_ENABLE(OPT_CU_QSFD)) {
             if (p_cu->cu_info.i_level > 3 && large_cu_cost < h->thres_qsfd_cu[1][p_cu->cu_info.i_level - 3]) {
                 b_split_ctu = FALSE;
@@ -3474,7 +3474,7 @@ rdcost_t compress_ctu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, i
             }
         }
 
-        /*--添加QSFD,提前终止CU下层划分 */
+        /* QSFD, skip smaller CU partitions */
         if (IS_ALG_ENABLE(OPT_CU_QSFD)) {
             if (p_cu->cu_info.i_level != 3 && large_cu_cost < h->thres_qsfd_cu[0][p_cu->cu_info.i_level - 3]) {
                 b_split_ctu = FALSE;

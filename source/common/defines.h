@@ -77,7 +77,7 @@ enum xavs2_fast_algorithms_e {
                                        * （1）若I_2Nx2N不优于帧间预测模式，则不遍历帧内其他划分；
                                        * （2）帧间最优模式的CBP为零时跳过帧内划分方式。*/
     OPT_ROUGH_PU_SEL         ,        /* 粗略的PU划分模式搜索 */
-    OPT_CBP_DIRECT           ,        /* 根据direct模式下残差是否为全零块，跳过PU划分和CU递归划分*/
+    OPT_CBP_DIRECT           ,        /* 根据direct模式下残差是否为全零块，跳过PU划分和CU递归划分 */
 
     /* fast intra */
     OPT_BYPASS_SDIP          ,        /* 如果PRED_I_2Nxn已获最优，直接跳过PRED_I_nx2N */
@@ -93,7 +93,10 @@ enum xavs2_fast_algorithms_e {
     OPT_ET_HOMO_MV           ,        /* */
     OPT_CU_CSET              ,        /* CSET of uAVS2, Only for inter frames that are not referenced by others */
     OPT_CU_DEPTH_CTRL        ,        /* 基于时空相关性的Depth估计，依据上、左、左上、右上和时域参考块level调整DEPTH范围，全I帧也适用 */
-    OPT_CU_QSFD              ,        /* 基于RD-cost的终止当前CU层划分 */
+    OPT_CU_QSFD              ,        /* CU splitting termination based on RD-Cost: 
+                                         Z. Wang, R. Wang, K. Fan, H. Sun, and W. Gao, 
+                                         “uAVS2—Fast encoder for the 2nd generation IEEE 1857 video coding standard,”
+                                         Signal Process. Image Commun., vol. 53, no. October 2016, pp. 13–23, 2017. */
 
     /* others */
     OPT_FAST_ZBLOCK          ,        /* 快速零块估计 */
