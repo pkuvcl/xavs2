@@ -68,6 +68,7 @@ enum xavs2_fast_algorithms_e {
     OPT_EARLY_SKIP           ,        /* 基于时空相关性的快速SKIP决策 */
     OPT_PSC_MD               ,        /* 基于时空相关性的快速模式决策 (prediction size correlation based mode decision) */
     OPT_FAST_CBF_MODE        ,        /* 基于最优划分模式的CBF快速跳过剩余的划分模式 */
+    OPT_FAST_PU_SEL          ,        /* OPT_FAST_CBF_MODE的简化算法，cbf=0时，若2Nx2N不优于SKIP，则跳过剩余帧间模式和帧内模式 */
     OPT_BYPASS_AMP           ,        /* 如果PRED_2NxN未获得最优，直接跳过相同划分方向的PRED_2NxnU/PRED_2NxnD; PRED_Nx2N同理 */
     OPT_DMH_CANDIDATE        ,        /* 用于精简DMH模式下的RDO次数 */
     OPT_BYPASS_MODE_FPIC     ,        /* F帧中的帧内模式与DMH模式跳过 */
@@ -78,6 +79,8 @@ enum xavs2_fast_algorithms_e {
                                        * （2）帧间最优模式的CBP为零时跳过帧内划分方式。*/
     OPT_ROUGH_PU_SEL         ,        /* 粗略的PU划分模式搜索 */
     OPT_CBP_DIRECT           ,        /* 根据direct模式下残差是否为全零块，跳过PU划分和CU递归划分 */
+    OPT_SKIP_DMH_THRES       ,        /* 通过Distortion的阈值决定跳过DMH模式的遍历 */
+    OPT_ROUGH_SKIP_SEL       ,        /* 通过distortion对比只对个别skip/direct模式做RDO */
 
     /* fast intra */
     OPT_BYPASS_SDIP          ,        /* 如果PRED_I_2Nxn已获最优，直接跳过PRED_I_nx2N */
@@ -101,16 +104,13 @@ enum xavs2_fast_algorithms_e {
     /* others */
     OPT_FAST_ZBLOCK          ,        /* 快速零块估计 */
     OPT_TR_KEY_FRAME_MD      ,        /* 以更大概率跳过非关键帧的部分模式，能节省5%以上时间 */
-    OPT_SKIP_DMH_THRES       ,        /* 通过Distortion的阈值决定跳过DMH模式的遍历 */
-    OPT_ROUGH_SKIP_SEL       ,        /* 通过distortion对比只对个别skip/direct模式做RDO */
-    OPT_CODE_OPTIMZATION     ,        /* OPT_CU_SUBCU_COST: @罗法蕾，先编码大CU，再编码小CU时若前几个小CU的RDCost超过大CU的一定比率则跳过后续CU 
-                                       * OPT_RDOQ_SKIP:     @傅天亮 add，通过在RDOQ之前对变换系数的阈值判断检测全零块，跳过RDOQ过程
+    OPT_CODE_OPTIMZATION     ,        /* OPT_CU_SUBCU_COST: 先编码大CU，再编码小CU时若前几个小CU的RDCost超过大CU的一定比率则跳过后续CU 
+                                       * OPT_RDOQ_SKIP:     通过在RDOQ之前对变换系数的阈值判断检测全零块，跳过RDOQ过程
                                        */
     OPT_BIT_EST_PSZT         ,        /* 快速TU比特估计：对33x32的亮度TU假定只有低频的16x16部分有非零系数 */
     OPT_TU_LEVEL_DEC         ,        /* TU两层划分决策：对第一层TU划分选出最优，对最优做第二层TU划分，决策是否需要两层TU划分 */
     OPT_FAST_ALF             ,        /* ALF快速算法，在顶层B帧（不被其余帧参考）禁用ALF，在所有ALF的协方差矩阵计算时，进行step=2的下采样 */
     OPT_FAST_SAO             ,        /* SAO快速算法，在顶层B帧（不被其余帧参考）禁用SAO */
-    OPT_FAST_PU_SEL          ,        /* OPT_FAST_CBF_MODE的简化算法，cbf=0时，若2Nx2N不优于SKIP，则跳过剩余帧间模式和帧内模式 */
     OPT_SUBCU_SPLIT          ,        /* 根据划分子块的数目决策父块是否对非SKIP模式做RDO */
     NUM_FAST_ALGS                     /* 总的快速算法数量 */
 };
