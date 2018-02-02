@@ -85,7 +85,7 @@ align_plane_size(int x, int disalign)
 
 /* ---------------------------------------------------------------------------
  */
-int xavs2_frame_buffer_size(xavs2_param_t *param, int alloc_type)
+size_t xavs2_frame_buffer_size(xavs2_param_t *param, int alloc_type)
 {
     int img_w_l  = ((param->org_width  + MIN_CU_SIZE - 1) >> MIN_CU_SIZE_IN_BIT) << MIN_CU_SIZE_IN_BIT;
     int img_h_l  = ((param->org_height + MIN_CU_SIZE - 1) >> MIN_CU_SIZE_IN_BIT) << MIN_CU_SIZE_IN_BIT;

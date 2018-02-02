@@ -47,7 +47,7 @@
 xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type);
 void xavs2_frame_delete(xavs2_handler_t *h_mgr, xavs2_frame_t *frame);
 
-int xavs2_frame_buffer_size(xavs2_param_t *param, int alloc_type);
+size_t xavs2_frame_buffer_size(xavs2_param_t *param, int alloc_type);
 void xavs2_frame_destroy_objects(xavs2_handler_t *h_mgr, xavs2_frame_t *frame);
 
 void xavs2_frame_copy_planes(xavs2_t *h, xavs2_frame_t *dst, xavs2_frame_t *src);

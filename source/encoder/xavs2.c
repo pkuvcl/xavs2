@@ -259,7 +259,7 @@ xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *op
     uint8_t         *mem_ptr = NULL;
     int size_ratecontrol = xavs2_rc_get_buffer_size(param);      /* rate control */
     int size_tdrdo       = tdrdo_get_buffer_size(param);
-    int mem_size;
+    size_t mem_size;
     int i;
 
     /* init all function handlers */

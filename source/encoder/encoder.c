@@ -1075,7 +1075,7 @@ static void encoder_decide_level_id(xavs2_param_t *param)
         { 0x66, 8192, 4608,  60, 480000 },  // 10.2.60
         { 0x68, 8192, 4608, 120, 240000 },  // 10.0.120
         { 0x6A, 8192, 4608, 120, 800000 },  // 10.2.120
-        { 0x00, 0, 0, 0 },  // ½ûÖ¹
+        { 0x00, 16384, 8192, 120, 8000000 },  // ½ûÖ¹
     };
 
     int i = 1;
@@ -1181,7 +1181,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
     /* check LevelID */
     encoder_decide_level_id(param);
-    if (param->level_id == 0) {
+    if (param->level_id <= 0 || param->level_id > 0x6A) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "Not Supported LevelID: %dx%d, %.3f fps, %d bps!\n",
                   param->org_width, param->org_height, param->frame_rate, param->i_target_bitrate);
         return -1;
@@ -1385,7 +1385,7 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
     size_t size_alf = alf_get_buffer_size(param);
     int frame_size_in_scu = w_in_scu * h_in_scu;
     int num_me_bytes = (w_in_4x4 * h_in_4x4)* sizeof(dist_t[MAX_INTER_MODES][MAX_REFS]);
-    int size_extra_frame_buffer = 0;
+    size_t size_extra_frame_buffer = 0;
     int j;
     int scu_xy = 0;
     cu_info_t *p_cu_info;
