@@ -115,7 +115,7 @@ const uint8_t tab_qp_scale_chroma[64] = {
  */
 static ALWAYS_INLINE void cu_mvd_derivation(xavs2_t *h, mv_t *mvd, const mv_t *mv, const mv_t *mvp)
 {
-    if (h->param.enable_pmvr) {
+    if (h->param->enable_pmvr) {
         mv_t ctr;
 
         ctr.x = (mvp->x >> 1) << 1;
@@ -304,7 +304,7 @@ void lcu_start_init_pos(xavs2_t *h, int i_lcu_x, int i_lcu_y)
      */
 
 #if ENABLE_RATE_CONTROL
-    if (h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         h->i_qp = xavs2_ratecontrol_qp_lcu(h, h->fenc->i_frame, h->i_qp);
     }
 #endif
@@ -378,7 +378,7 @@ void lcu_start_init_pixels(xavs2_t *h, int i_lcu_x, int i_lcu_y)
             memcpy(h->lcu.ctu_border[0].rec_top + 1, h->intra_border[0], lcu_width * 2 * sizeof(pel_t));
             memcpy(h->lcu.ctu_border[1].rec_top + 1, h->intra_border[1], lcu_width * sizeof(pel_t));
             memcpy(h->lcu.ctu_border[2].rec_top + 1, h->intra_border[2], lcu_width * sizeof(pel_t));
-        } else if (h->param.i_lcurow_threads > 1) {
+        } else if (h->param->i_lcurow_threads > 1) {
             /* top-right pixels */
             memcpy(h->lcu.ctu_border[0].rec_top + 1 + lcu_width,        h->intra_border[0] + img_x + lcu_width, lcu_width * sizeof(pel_t));
             memcpy(h->lcu.ctu_border[1].rec_top + 1 + (lcu_width >> 1), h->intra_border[1] + ((img_x + lcu_width) >> 1), (lcu_width >> 1) * sizeof(pel_t));

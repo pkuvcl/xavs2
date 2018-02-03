@@ -108,8 +108,9 @@ double tab_qsfd_thres[MAX_QP][2][CTU_DEPTH];
 /*--------------------------------------------------------------------------
  */
 static INLINE
-void algorithm_init_thresholds(xavs2_t *h, int i_preset_level)
+void algorithm_init_thresholds(xavs2_param_t *p_param)
 {
+    int i_preset_level = p_param->preset_level;
     //trade-off encoding time and performance
     const double s_inter = tab_qsfd_s_presets[0][i_preset_level];
     const double s_intra = tab_qsfd_s_presets[1][i_preset_level];
@@ -139,7 +140,7 @@ void algorithm_init_thresholds(xavs2_t *h, int i_preset_level)
     }
 
     /* È«Áã¿é¼ì²â */
-    h->param.factor_zero_block = tab_th_zero_block_factor[i_preset_level];
+    p_param->factor_zero_block = tab_th_zero_block_factor[i_preset_level];
 }
 
 /* ---------------------------------------------------------------------------
@@ -312,7 +313,7 @@ uint64_t get_fast_algorithms(xavs2_t *h, int i_preset_level)
 void encoder_set_fast_algorithms(xavs2_t *h)
 {
     const int num_algorithm = NUM_FAST_ALGS;
-    int i_preset_level = h->param.preset_level;
+    int i_preset_level = h->param->preset_level;
     uint64_t enable_algs = 0;  // disable all algorithms
 
     if (num_algorithm > 64) {
@@ -331,9 +332,6 @@ void encoder_set_fast_algorithms(xavs2_t *h)
         h->use_fractional_me = 1;
     } else {
         h->use_fractional_me = 2;
-    }
-    if (i_preset_level < 4) {
-        h->param.me_method = XAVS2_ME_HEX;
     }
     h->use_fast_sub_me = (i_preset_level < 5);
     h->UMH_big_hex_level = (i_preset_level < 5) ? 0 : (i_preset_level < 9) ? 1 : 2;
@@ -357,7 +355,6 @@ void encoder_set_fast_algorithms(xavs2_t *h)
     h->num_intra_rmd_dist2  = tab_num_angle_dist2[i_preset_level];
     h->num_intra_rmd_dist1  = tab_num_angle_dist1[i_preset_level];
     h->num_rdo_intra_chroma = tab_num_rdo_chroma_intra_mode[i_preset_level];
-    algorithm_init_thresholds(h, i_preset_level);
 
     /* Ö¡ÄÚÔ¤²âÄ£Ê½ */
     if (IS_ALG_ENABLE(OPT_FAST_INTRA_MODE)) {
@@ -372,7 +369,7 @@ void encoder_set_fast_algorithms(xavs2_t *h)
     }
 
     /* AEC */
-    switch (h->param.rdo_bit_est_method) {
+    switch (h->param->rdo_bit_est_method) {
     case 1:
     case 2:
         h->size_aec_rdo_copy = sizeof(aec_t) - sizeof(ctx_set_t);
@@ -385,6 +382,22 @@ void encoder_set_fast_algorithms(xavs2_t *h)
     }
 }
 
+/**
+* ---------------------------------------------------------------------------
+* Function   : decide the ultimate parameters used by encoders
+* Parameters :
+*      [in ] : p_param - the ultimate coding parameter to be set
+* Return     : none
+* ---------------------------------------------------------------------------
+*/
+void decide_ultimate_paramters(xavs2_param_t *p_param)
+{
+    algorithm_init_thresholds(p_param);
+
+    if (p_param->preset_level < 4) {
+        p_param->me_method = XAVS2_ME_HEX;
+    }
+}
 
 #undef SWITCH_OFF
 #undef SWITCH_ON

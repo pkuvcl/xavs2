@@ -610,7 +610,7 @@ rdcost_t sao_rdo_new_params(xavs2_t *h, aec_t *p_aec, int avail_left, int avail_
             aec_copy_coding_state_sao(&h->cs_data.cs_sao_temp, p_aec);
             // for other normal mode
             for (type = 0; type < 5; type++) {
-                if (!h->param.b_fast_sao || tab_sao_check_mode_fast[compIdx][type]) {
+                if (!h->param->b_fast_sao || tab_sao_check_mode_fast[compIdx][type]) {
                     if (((!IS_ALG_ENABLE(OPT_FAST_SAO)) || (!(!h->fdec->rps.referd_by_others && h->i_type == SLICE_TYPE_B)))) {
                         aec_copy_coding_state_sao(p_aec, &h->cs_data.cs_sao_start);
                         temp_sao_param[compIdx].mergeIdx = SAO_MERGE_NONE;
@@ -715,7 +715,7 @@ static ALWAYS_INLINE void off_sao(SAOBlkParam *saoblkparam)
 static void sao_filter_region(xavs2_t *h, SAOBlkParam *blk_param, int compIdx, sao_region_t *p_region)
 {
     ALIGN16(int signupline[MAX_CU_SIZE + SAO_SHIFT_PIX_NUM]);
-    const int max_val = ((1 << h->param.sample_bit_depth) - 1);
+    const int max_val = ((1 << h->param->sample_bit_depth) - 1);
     int start_x, end_x, start_y, end_y;
     int start_x_r0, end_x_r0, start_x_r, end_x_r, start_x_rn, end_x_rn;
     int x, y;
@@ -872,7 +872,7 @@ static void sao_filter_region(xavs2_t *h, SAOBlkParam *blk_param, int compIdx, s
         break;
     }
     case SAO_TYPE_BO:
-        band_shift = (h->param.sample_bit_depth - NUM_SAO_BO_CLASSES_IN_BIT);
+        band_shift = (h->param->sample_bit_depth - NUM_SAO_BO_CLASSES_IN_BIT);
         start_x = 0;
         end_x = width;
         start_y = 0;
@@ -914,7 +914,7 @@ static void sao_get_neighbor_avail(xavs2_t *h, sao_region_t *p_avail, int i_lcu_
     p_avail->b_right = (i_lcu_x < h->i_width_in_lcu - 1);
     p_avail->b_down  = (i_lcu_y < h->i_height_in_lcu - 1);
 
-    if (h->param.b_cross_slice_loop_filter == FALSE) {
+    if (h->param->b_cross_slice_loop_filter == FALSE) {
         slice_t *slice = h->slices[h->i_slice_index];
         if (p_avail->b_top) {
             p_avail->b_top = (slice->i_first_lcu_y != i_lcu_y);
@@ -1073,7 +1073,7 @@ void sao_slice_onoff_decision(xavs2_t *h, bool_t *slice_sao_on)
     int compIdx;
 
     for (compIdx = 0; compIdx < NUM_SAO_COMPONENTS; compIdx++) {
-        if (h->param.chroma_format == CHROMA_420 || compIdx == IMG_Y) {
+        if (h->param->chroma_format == CHROMA_420 || compIdx == IMG_Y) {
             slice_sao_on[compIdx] = TRUE;
             if (h->fref[0] != NULL && h->fref[0]->num_lcu_sao_off[compIdx] > num_lcu * saorate[compIdx]) {
                 slice_sao_on[compIdx] = FALSE;
@@ -1097,7 +1097,7 @@ void sao_copy_lcu(xavs2_t *h, xavs2_frame_t *frm_dst, xavs2_frame_t *frm_src, in
     int end_x   = XAVS2_MIN(h->i_width,  ((lcu_x + 1) << h->i_lcu_level));
     int lcu_width  = end_x - start_x;
     int lcu_height;
-    int i_first_lcu_y_for_filter = h->param.b_cross_slice_loop_filter ? 0 : h->slices[h->i_slice_index]->i_first_lcu_y;
+    int i_first_lcu_y_for_filter = h->param->b_cross_slice_loop_filter ? 0 : h->slices[h->i_slice_index]->i_first_lcu_y;
     int start_y_shift = (lcu_y != i_first_lcu_y_for_filter) ? SAO_SHIFT_PIX_NUM : 0;
     pel_t *p_src;
     pel_t *p_dst;
@@ -1143,7 +1143,7 @@ void sao_get_lcu_param_after_deblock(xavs2_t *h, aec_t *p_aec, int i_lcu_x, int 
     for (compIdx = 0; compIdx < 3; compIdx++) {
         if (h->slice_sao_on[compIdx]) {
             for (type = 0; type < 5; type++) {
-                if (!h->param.b_fast_sao || tab_sao_check_mode_fast[compIdx][type]) {
+                if (!h->param->b_fast_sao || tab_sao_check_mode_fast[compIdx][type]) {
                     if (((!IS_ALG_ENABLE(OPT_FAST_SAO)) || (!(!h->fdec->rps.referd_by_others && h->i_type == SLICE_TYPE_B)))) {
                         gf_sao_stat[type](h->img_sao, h->fenc, &h->sao_stat_datas[i_lcu_xy][compIdx][type], &region, compIdx);
                     }

@@ -116,7 +116,7 @@ void xavs2e_release_row_task(row_info_t *row)
 
         /* 如果此时Slice边界的相邻行已处理完，则直接进行插值，不需要加锁
          * 否则，需要加锁后进行处理，避免出现问题 */
-        if (h->param.b_cross_slice_loop_filter == FALSE) {
+        if (h->param->b_cross_slice_loop_filter == FALSE) {
             if (row->b_top_slice_border && row->row > 0) {
                 if (is_lcu_row_finished(h, fdec, row->row - 1)) {
                     int y_start = (row->row << h->i_lcu_level) - 4;
@@ -132,14 +132,14 @@ void xavs2e_release_row_task(row_info_t *row)
             }
         } else {
             /* TODO: 多Slice并行时，对Slice边界的处理 */
-            if (h->param.slice_num > 1) {
+            if (h->param->slice_num > 1) {
                 xavs2_log(NULL, XAVS2_LOG_ERROR, "CrossSliceLoopFilter not supported now!\n");
                 assert(0);
             }
         }
 
         xavs2_pthread_mutex_lock(&fdec->mutex);           /* lock */
-        if (h->param.b_cross_slice_loop_filter == FALSE) {
+        if (h->param->b_cross_slice_loop_filter == FALSE) {
             if (b_slice_boundary_done == FALSE && row->b_top_slice_border && row->row > 0) {
                 if (is_lcu_row_finished(h, fdec, row->row - 1)) {
                     int y_start = (row->row << h->i_lcu_level) - 4;
@@ -181,7 +181,7 @@ static ALWAYS_INLINE
 void xavs2e_inter_sync(xavs2_t *h, int lcu_y, int lcu_x)
 {
     if (h->i_type != SLICE_TYPE_I && h->h_top->i_frm_threads > 1) {
-        int num_lcu_delay = ((h->param.search_range + (1 << h->i_lcu_level) - 1) >> h->i_lcu_level) + 1;
+        int num_lcu_delay = ((h->param->search_range + (1 << h->i_lcu_level) - 1) >> h->i_lcu_level) + 1;
         int low_bound  = XAVS2_MAX(lcu_y - num_lcu_delay, 0);
         int up_bound = XAVS2_MIN(lcu_y + num_lcu_delay, h->i_height_in_lcu - 1);
         int col_coded = h->i_width_in_lcu;

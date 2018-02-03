@@ -130,7 +130,7 @@ static void lf_set_edge_filter_param(xavs2_t *h, int i_level, int scu_x, int scu
 
         /* Is this border a slice border inside the picture? */
         if (cu_get_slice_index(h, scu_x, scu_y) != cu_get_slice_index(h, scu_x, scu_y - 1)) {
-            if (!h->param.b_cross_slice_loop_filter) {
+            if (!h->param->b_cross_slice_loop_filter) {
                 return;
             }
         }
@@ -237,7 +237,7 @@ void lf_lcu_set_edge_filter(xavs2_t *h, int i_level, int scu_x, int scu_y, int s
 
             /* set transform block boundary */
             if (p_cu_info->i_mode != PRED_I_NxN && p_cu_info->i_tu_split && p_cu_info->i_cbp != 0) {
-                if (h->param.enable_nsqt && IS_HOR_PU_PART(p_cu_info->i_mode)) {
+                if (h->param->enable_nsqt && IS_HOR_PU_PART(p_cu_info->i_mode)) {
                     if (p_cu_info->i_level == B16X16_IN_BIT) {
                         lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i    )),                  EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
                     } else {
@@ -245,7 +245,7 @@ void lf_lcu_set_edge_filter(xavs2_t *h, int i_level, int scu_x, int scu_y, int s
                         lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i    )),                  EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
                         lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i    )) + (1 << (i - 1)), EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
                     }
-                } else if (h->param.enable_nsqt && IS_VER_PU_PART(p_cu_info->i_mode)) {
+                } else if (h->param->enable_nsqt && IS_VER_PU_PART(p_cu_info->i_mode)) {
                     if (p_cu_info->i_level == B16X16_IN_BIT) {
                         lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i    )),                  scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
                     } else {
@@ -421,8 +421,8 @@ void lf_scu_deblock(xavs2_t *h, pel_t *p_rec[3], int i_stride, int i_stride_c, i
         pel_t *src_y = p_rec[0] + (scu_y << MIN_CU_SIZE_IN_BIT) * i_stride + (scu_x << MIN_CU_SIZE_IN_BIT);
         cu_info_t *MbP = dir ? (MbQ - h->i_width_in_mincu) : (MbQ - 1); /* MbP = Mb of the remote 4x4 block */
         int QP = (cu_get_qp(h, MbP) + cu_get_qp(h, MbQ) + 1) >> 1;                /* average QP of the two blocks */
-        int shift = h->param.sample_bit_depth - 8;
-        int offset = shift << 3;  /* coded as 10/12 bit, QP is added by (8 * (h->param.sample_bit_depth - 8)) in config file */
+        int shift = h->param->sample_bit_depth - 8;
+        int offset = shift << 3;  /* coded as 10/12 bit, QP is added by (8 * (h->param->sample_bit_depth - 8)) in config file */
         int alpha, beta;
         uint8_t b_filter_edge[2];
 
@@ -434,22 +434,22 @@ void lf_scu_deblock(xavs2_t *h, pel_t *p_rec[3], int i_stride, int i_stride_c, i
         }
 
         /* deblock luma edge */
-        alpha = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP - offset + h->param.alpha_c_offset)] << shift;
-        beta  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP - offset + h->param.beta_offset)] << shift;
+        alpha = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP - offset + h->param->alpha_c_offset)] << shift;
+        beta  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP - offset + h->param->beta_offset)] << shift;
 
         g_funcs.deblock_luma[dir](src_y, i_stride, alpha, beta, b_filter_edge);
 
-        assert(h->param.chroma_format == CHROMA_420 || h->param.chroma_format == CHROMA_400);   /* only support I420/I400 now */
+        assert(h->param->chroma_format == CHROMA_420 || h->param->chroma_format == CHROMA_400);   /* only support I420/I400 now */
         /* deblock chroma edge */
-        if (edge_type == EDGE_TYPE_BOTH && h->param.chroma_format == CHROMA_420)
+        if (edge_type == EDGE_TYPE_BOTH && h->param->chroma_format == CHROMA_420)
         if ((((scu_y & 1) == 0) && dir) || (((scu_x & 1) == 0) && (!dir))) {
             pel_t *src_u = p_rec[1] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
             pel_t *src_v = p_rec[2] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
 
             int alpha_c, beta_c;
             QP = cu_get_chroma_qp(h, QP, 0) - offset;
-            alpha_c = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP + h->param.alpha_c_offset)] << shift;
-            beta_c  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP + h->param.beta_offset)] << shift;
+            alpha_c = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->alpha_c_offset)] << shift;
+            beta_c  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->beta_offset)] << shift;
             g_funcs.deblock_chroma[dir](src_u, src_v, i_stride_c, alpha_c, beta_c, b_filter_edge);
         }
     }

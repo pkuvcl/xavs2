@@ -287,10 +287,10 @@ double get_psnr_with_ssd(double f_max, uint64_t diff)
  */
 static void encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double *psnr_v)
 {
-    int i_width = h->param.org_width;
-    int i_height = h->param.org_height;
+    int i_width = h->param->org_width;
+    int i_height = h->param->org_height;
     int i_size = i_width * i_height;
-    int uvformat = h->param.chroma_format == CHROMA_420 ? 4 : 2;
+    int uvformat = h->param->chroma_format == CHROMA_420 ? 4 : 2;
     const double f_max_signal = (double)(255 * 255) * i_size;
     const int inout_shift     = 0;
     uint64_t diff_y, diff_u, diff_v;
@@ -301,7 +301,7 @@ static void encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double 
                                  h->fdec->planes[0], h->fdec->i_stride[0], i_width, i_height, inout_shift);
 
     /* chroma */
-    if (h->param.chroma_format != CHROMA_400) {
+    if (h->param->chroma_format != CHROMA_400) {
         i_width  >>= 1;
         i_height >>= 1;
         diff_u = xavs2_pixel_ssd_wxh(&g_funcs.pixf,
@@ -484,7 +484,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
     qp = i_qp - SHIFT_QP;
 #endif
 
-    if (h->param.intra_period == 1) {
+    if (h->param->intra_period == 1) {
         lambda = 0.85 * pow(2, qp / 4.0) *  LAM_2Level_TU;
     } else {
 #if ENABLE_WQUANT
@@ -499,7 +499,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
 
         rps_idx = cur_frm->rps_index_in_gop;
 
-        if (h->param.successive_Bframe > 0) {
+        if (h->param->successive_Bframe > 0) {
             if (i_type != SLICE_TYPE_I && rps_idx != 0) {
                 lambda *= XAVS2_CLIP3F(2.00, 4.00, qp / 8.0);
             } else if (i_type == SLICE_TYPE_P || i_type == SLICE_TYPE_F) {
@@ -528,12 +528,12 @@ static void xavs2e_update_lambda(xavs2_t *h, int i_type, double lambda)
     h->f_lambda_1th    = 1.0 / h->f_lambda_mode;
 
     /* get lambda for RDOQ */
-    if (h->param.i_rdoq_level != RDOQ_OFF) {
-        h->f_lambda_rdoq = (lambda * h->param.lambda_factor_rdoq + 50) / 100;
+    if (h->param->i_rdoq_level != RDOQ_OFF) {
+        h->f_lambda_rdoq = (lambda * h->param->lambda_factor_rdoq + 50) / 100;
         if (i_type == SLICE_TYPE_P || i_type == SLICE_TYPE_F) {
-            h->f_lambda_rdoq = (h->f_lambda_rdoq * h->param.lambda_factor_rdoq_p + 50) / 100;
+            h->f_lambda_rdoq = (h->f_lambda_rdoq * h->param->lambda_factor_rdoq_p + 50) / 100;
         } else if (i_type == SLICE_TYPE_B) {
-            h->f_lambda_rdoq = (h->f_lambda_rdoq * h->param.lambda_factor_rdoq_b + 50) / 100;
+            h->f_lambda_rdoq = (h->f_lambda_rdoq * h->param->lambda_factor_rdoq_b + 50) / 100;
         }
     }
 }
@@ -577,7 +577,7 @@ static void init_frame(xavs2_t *h, xavs2_frame_t *frame)
     g_funcs.fast_memset(h->lcu_slice_idx, -1, h->i_width_in_lcu * h->i_height_in_lcu * sizeof(int8_t));
 
     // initialize MVs, references and prediction direction
-    if (h->param.me_method == XAVS2_ME_UMH) {
+    if (h->param->me_method == XAVS2_ME_UMH) {
         g_funcs.mem_repeat_i(all_mincost, 1 << 30, frame_size_in_4x4 * MAX_INTER_MODES * MAX_REFS * sizeof(dist_t) / sizeof(int32_t));
     }
 }
@@ -658,7 +658,7 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
                 h->frameinfo->frame_stat.stat_frm.f_lambda_frm = h->f_lambda_mode;
 
                 /* refine qp */
-                if (h->param.enable_refine_qp && h->param.intra_period > 1) {
+                if (h->param->enable_refine_qp && h->param->intra_period > 1) {
                     h->i_qp = (int)(5.661 * log((double)(h->f_lambda_mode)) + 13.131 + 0.5);
                 }
                 /* udpdate some properties */
@@ -730,7 +730,7 @@ static void encoder_release_frames(xavs2_t *h)
     }
 
     /* make sure all row context to release */
-    if (h->param.i_lcurow_threads > 1) {
+    if (h->param->i_lcurow_threads > 1) {
         int *num_lcu_coded = h->fdec->num_lcu_coded_in_row;
 
         for (i = 0; i < h->i_height_in_lcu; i++) {
@@ -763,7 +763,7 @@ void encoder_encode_frame_header(xavs2_t *h)
     /* create sequence header if need ------------------------------
      */
     if (h->fenc->b_keyframe) {
-        if (h->fenc->i_frm_coi == 0 || h->param.intra_period > 1) {
+        if (h->fenc->i_frm_coi == 0 || h->param->intra_period > 1) {
             /* generate sequence parameters */
             nal_start(h, NAL_SPS, NAL_PRIORITY_HIGHEST);
             xavs2_sequence_write(h, p_bs);
@@ -843,11 +843,11 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
                 p_aec->b_writting = 1;
             }
 
-            if (h->param.enable_sao) {
+            if (h->param->enable_sao) {
                 write_saoparam_one_lcu(h, p_aec, lcu_x, lcu_y, h->slice_sao_on, h->sao_blk_params[lcu_y * h->i_width_in_lcu + lcu_x]);
             }
 
-            if (h->param.enable_alf) {
+            if (h->param->enable_alf) {
                 int alf_comp;
                 for (alf_comp = 0; alf_comp < 3; alf_comp++) {
                     if (h->pic_alf_on[alf_comp]) {
@@ -1008,20 +1008,20 @@ static int encoder_decide_mv_range(xavs2_t *h)
     h->min_mv_range[0] = -8192;
     h->max_mv_range[0] =  8191;
 
-    if (h->param.profile_id == MAIN10_PROFILE || h->param.profile_id == MAIN_PROFILE) {
-        if (h->param.i_frame_threads > 1) {
+    if (h->param->profile_id == MAIN10_PROFILE || h->param->profile_id == MAIN_PROFILE) {
+        if (h->param->i_frame_threads > 1) {
             /* set vertical mv range */
             h->min_mv_range[1] = -((1 << h->i_lcu_level) << 2);
             h->max_mv_range[1] =  ((1 << h->i_lcu_level) << 2) - 1;
         } else {
             /* set vertical mv range */
-            if (h->param.level_id >= 0x40) {
+            if (h->param->level_id >= 0x40) {
                 h->min_mv_range[1] = -2048;
                 h->max_mv_range[1] =  2047;
-            } else if (h->param.level_id >= 0x20) {
+            } else if (h->param->level_id >= 0x20) {
                 h->min_mv_range[1] = -1024;
                 h->max_mv_range[1] =  1023;
-            } else if (h->param.level_id >= 0x10) {
+            } else if (h->param->level_id >= 0x10) {
                 h->min_mv_range[1] = -512;
                 h->max_mv_range[1] =  511;
             } else {
@@ -1030,7 +1030,7 @@ static int encoder_decide_mv_range(xavs2_t *h)
         }
 
         /* scale for field coding */
-        if (h->param.InterlaceCodingOption == FIELD_CODING) {
+        if (h->param->InterlaceCodingOption == FIELD_CODING) {
             h->min_mv_range[1] >>= 1;
             h->max_mv_range[1] >>= 1;
         }
@@ -1398,6 +1398,7 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
 
     /* compute the space size and alloc buffer */
     mem_size = sizeof(xavs2_t)                       +  /* xavs2_t */
+               sizeof(xavs2_param_t)                 +  /* xavs2_param_t */
                sizeof(nal_t)   * (MAX_SLICES + 6)    +  /* all nal units */
                sizeof(uint8_t) * XAVS2_BS_HEAD_LEN   +  /* bitstream buffer (frame header only) */
                sizeof(uint8_t) * bs_size             +  /* bitstream buffer for all slices */
@@ -1436,7 +1437,10 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
     ALIGN_POINTER(mem_base);          /* align pointer */
 
     /* copy the input parameters */
-    memcpy(&h->param, param, sizeof(xavs2_param_t));
+    h->param = (xavs2_param_t *)mem_base;
+    memcpy(h->param, param, sizeof(xavs2_param_t));
+    mem_base += sizeof(xavs2_param_t);
+    ALIGN_POINTER(mem_base);
 
     /* const properties */
     h->i_width           = frame_w;
@@ -1448,14 +1452,14 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
     h->i_width_in_minpu  = w_in_4x4;
     h->i_height_in_minpu = h_in_4x4;
 
-    h->framerate         = h->param.frame_rate;
+    h->framerate         = h->param->frame_rate;
 
-    h->i_lcu_level       = h->param.lcu_bit_level;
-    h->i_scu_level       = h->param.scu_bit_level;
-    h->i_chroma_v_shift  = h->param.chroma_format == CHROMA_420;
-    h->i_max_ref         = h->param.num_max_ref;
-    h->b_progressive     = (bool_t)h->param.progressive_frame;
-    h->b_field_sequence  = (h->param.InterlaceCodingOption == FIELD_CODING);
+    h->i_lcu_level       = h->param->lcu_bit_level;
+    h->i_scu_level       = h->param->scu_bit_level;
+    h->i_chroma_v_shift  = h->param->chroma_format == CHROMA_420;
+    h->i_max_ref         = h->param->num_max_ref;
+    h->b_progressive     = (bool_t)h->param->progressive_frame;
+    h->b_field_sequence  = (h->param->InterlaceCodingOption == FIELD_CODING);
 
     /* set table which indicates numbers of intra prediction modes for RDO */
     for (i = 0; i < MAX_CU_SIZE_IN_BIT; i++) {
@@ -1657,21 +1661,21 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
     ALIGN_POINTER(mem_base);
     
     // allocate memory for current frame
-    if (h->param.enable_tdrdo) {
+    if (h->param->enable_tdrdo) {
         h->img_luma_pre = xavs2_frame_new(h, &mem_base, FT_TEMP);
         ALIGN_POINTER(mem_base);
     } else {
         h->img_luma_pre = NULL;
     }
 
-    if (h->param.enable_sao) {
+    if (h->param->enable_sao) {
         h->img_sao = xavs2_frame_new(h, &mem_base, FT_TEMP);
         ALIGN_POINTER(mem_base);
     } else {
         h->img_sao = NULL;
     }
 
-    if (h->param.enable_alf) {
+    if (h->param->enable_alf) {
         h->img_alf = xavs2_frame_new(h, &mem_base, FT_TEMP);
         ALIGN_POINTER(mem_base);
         alf_init_buffer(h, mem_base);
@@ -1696,7 +1700,7 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
 
 #if ENABLE_WQUANT
     /* adaptive frequency weighting quantization */
-    if (h->param.enable_wquant) {
+    if (h->param->enable_wquant) {
         xavs2_wq_init_seq_quant_param(h);
     }
 #endif
@@ -1781,7 +1785,7 @@ int encoder_contexts_init(xavs2_t *h, xavs2_handler_t *h_mgr)
      * build frame encoding contexts */
     h_mgr->frm_contexts[0] = h; /* context 0 is the main encoder handle */
     for (i = 1; i < h_mgr->i_frm_threads; i++) {
-        if ((h_mgr->frm_contexts[i] = encoder_create_frame_context(&h->param)) == 0) {
+        if ((h_mgr->frm_contexts[i] = encoder_create_frame_context(h->param)) == 0) {
             goto fail;
         }
 
@@ -1947,7 +1951,7 @@ static void init_decoding_frame(xavs2_t *h)
 static void encoder_init_func_handles(xavs2_t *h)
 {
     /* set some function handles according option or preset level */
-    if (h->param.enable_hadamard) {
+    if (h->param->enable_hadamard) {
         g_funcs.pixf.intra_cmp = g_funcs.pixf.satd;
         g_funcs.pixf.fpel_cmp  = g_funcs.pixf.satd;
     } else {
@@ -2016,12 +2020,12 @@ static void show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
                                         "                        ME:%d, SearchRange:%d,\n"\
                                         "                        RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
                                         "                        RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
-        h->param.inter_2pu, h->param.enable_amp, h->param.enable_intra, h->param.enable_sdip, 
-        h->param.enable_dhp, h->param.enable_dmh, h->param.enable_mhp_skip, h->param.enable_wsm,
-        h->param.enable_nsqt, h->param.b_fast_2lelvel_tu, h->param.enable_secT,
-        h->param.me_method, h->param.search_range,
-        h->param.enable_refine_qp, h->param.enable_tdrdo, h->i_fast_algs,
-        h->param.i_rd_level, h->param.i_rdoq_level, h->param.enable_sao, h->param.enable_alf);
+        h->param->inter_2pu, h->param->enable_amp, h->param->enable_intra, h->param->enable_sdip, 
+        h->param->enable_dhp, h->param->enable_dmh, h->param->enable_mhp_skip, h->param->enable_wsm,
+        h->param->enable_nsqt, h->param->b_fast_2lelvel_tu, h->param->enable_secT,
+        h->param->me_method, h->param->search_range,
+        h->param->enable_refine_qp, h->param->enable_tdrdo, h->i_fast_algs,
+        h->param->i_rd_level, h->param->i_rdoq_level, h->param->enable_sao, h->param->enable_alf);
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "--------------------------------------------------------------------------------\n");
     xavs2_log(NULL, XAVS2_LOG_INFO,     "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
@@ -2052,12 +2056,17 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
     /* show header info */
     show_head_info(param);
 #endif
-
+    /* decide ultimaete coding parameters by preset level */
+    decide_ultimate_paramters(param);
+    
     /* init frame context */
     if ((h = encoder_create_frame_context(param)) == NULL) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "create frame context fail\n");
         goto fail;
     }
+
+    /* set fast algorithms according to the input preset level */
+    encoder_set_fast_algorithms(h);
 
     /* init top handler */
     h->h_top       = h_mgr;
@@ -2070,12 +2079,10 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
     h_mgr->frm_contexts[0] = h;   /* point to the xavs2_t handle */
 
 #if XAVS2_TRACE
-    xavs2_trace_init(&h->param);    /* init trace */
+    xavs2_trace_init(h->param);    /* init trace */
 #endif
 
 
-    /* set fast algorithms according to the input preset level */
-    encoder_set_fast_algorithms(h);
 
     if (encoder_decide_mv_range(h) < 0) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "check mv range fail\n");
@@ -2086,7 +2093,7 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
 
     xavs2_init_valid_mode_table(h);
 
-    xavs2_me_init_umh_threshold(h, h->umh_bsize, h->param.i_initial_qp + 1);
+    xavs2_me_init_umh_threshold(h, h->umh_bsize, h->param->i_initial_qp + 1);
 
 #if CTRL_OPT_AEC
     init_aec_context_tab();
@@ -2128,21 +2135,21 @@ void xavs2e_frame_coding_init(xavs2_t *h)
     /* prepare to encode -------------------------------------------
      */
 #if ENABLE_WQUANT
-    if (h->param.intra_period != 0 && h->i_type == SLICE_TYPE_I) {
+    if (h->param->intra_period != 0 && h->i_type == SLICE_TYPE_I) {
         // adaptive frequency weighting quantization
-        if (h->param.enable_wquant) {
+        if (h->param->enable_wquant) {
             xavs2_wq_init_seq_quant_param(h);
         }
     }
 
-    if (h->param.enable_wquant && h->param.PicWQEnable) {
+    if (h->param->enable_wquant && h->param->PicWQEnable) {
         xavs2_wq_init_pic_quant_param(h);
         xavs2_wq_update_pic_matrix(h);
     }
 #endif
 
     /* frame picture? */
-    if (h->param.InterlaceCodingOption == FIELD_CODING) {
+    if (h->param->InterlaceCodingOption == FIELD_CODING) {
         h->b_top_field = (h->fenc->i_frm_poc & 1) == 0;
     }
 
@@ -2156,7 +2163,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
 
 #if ENABLE_RATE_CONTROL
     /* get frame level qp */
-    if (h->param.i_rc_method != XAVS2_RC_CQP) {
+    if (h->param->i_rc_method != XAVS2_RC_CQP) {
         int new_qp = h->i_qp;
         new_qp = xavs2_ratecontrol_qp(h, h->fenc->i_frame, h->fenc->i_frm_type, h->fenc->i_qpplus1);
 
@@ -2180,7 +2187,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
         qsfd_calculate_threshold_of_a_frame(h);
     }
 
-    if (h->param.enable_intra || h->fenc->i_frm_type == XAVS2_TYPE_I) {
+    if (h->param->enable_intra || h->fenc->i_frm_type == XAVS2_TYPE_I) {
         h->fenc->b_enable_intra = 1;
     } else {
         h->fenc->b_enable_intra = 0;
@@ -2208,10 +2215,10 @@ void *xavs2e_encode_one_frame(void *arg)
      */
     xavs2e_frame_coding_init(h);
 
-    h->pic_alf_on[0] = h->param.enable_alf;
-    h->pic_alf_on[1] = h->param.enable_alf;
-    h->pic_alf_on[2] = h->param.enable_alf;
-    if (h->param.enable_alf && IS_ALG_ENABLE(OPT_FAST_ALF)) {
+    h->pic_alf_on[0] = h->param->enable_alf;
+    h->pic_alf_on[1] = h->param->enable_alf;
+    h->pic_alf_on[2] = h->param->enable_alf;
+    if (h->param->enable_alf && IS_ALG_ENABLE(OPT_FAST_ALF)) {
         if ((!h->fdec->rps.referd_by_others && h->i_type == SLICE_TYPE_B)) {
             h->pic_alf_on[0] = 0;
             h->pic_alf_on[1] = 0;
@@ -2220,7 +2227,7 @@ void *xavs2e_encode_one_frame(void *arg)
     }
 
     /* start AEC frame coding */
-    if (!h->param.enable_alf) {
+    if (!h->param->enable_alf) {
         xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
     }
 
@@ -2272,13 +2279,13 @@ void *xavs2e_encode_one_frame(void *arg)
 
         /* 对Slice的最后一行LCU来说，需要合并多个Slice的码流
          * 但在RDO阶段，并不需要 */
-        // if (h->param.slice_num > 1 && row_type == 2) {
+        // if (h->param->slice_num > 1 && row_type == 2) {
         //     nal_merge_slice(h, h->slices[h->i_slice_index]->p_bs_buf, h->i_nal_type, h->i_nal_ref_idc);
         // }
     }   // for all LCU rows
 
     /* (4) Make sure that all LCU row are finished */
-    if (h->param.slice_num > 1) {
+    if (h->param->slice_num > 1) {
         xavs2_frame_t *p_fdec = h->fdec;
 
         for (i = 0; i < h->i_height_in_lcu; i++) {
@@ -2291,7 +2298,7 @@ void *xavs2e_encode_one_frame(void *arg)
     }
 
     /* (5) 统计SAO的开启和开关比率 */
-    if (h->param.enable_sao && (h->slice_sao_on[0] || h->slice_sao_on[1] || h->slice_sao_on[2])) {
+    if (h->param->enable_sao && (h->slice_sao_on[0] || h->slice_sao_on[1] || h->slice_sao_on[2])) {
         int sao_off_num_y = 0;
         int sao_off_num_u = 0;
         int sao_off_num_v = 0;
@@ -2311,7 +2318,7 @@ void *xavs2e_encode_one_frame(void *arg)
     }
 
     /* (6) ALF */
-    if (h->param.enable_alf) {
+    if (h->param->enable_alf) {
         xavs2_frame_copy_planes(h, h->img_alf, h->fdec);
         xavs2_frame_expand_border_frame(h, h->img_alf);
         alf_filter_one_frame(h);

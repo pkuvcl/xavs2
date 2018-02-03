@@ -199,13 +199,13 @@ static
 int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
                          xavs2_frame_t *cur_frm, xavs2_rps_t *p_rps)
 {
-    const xavs2_rps_t *p_seq_rps = h->param.cfg_ref_all;
+    const xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
     xavs2_frame_t     *frame = NULL;
     int rps_idx = 0;
     int j;
 
     if (cur_frm->i_frm_type == XAVS2_TYPE_I) {
-        if (h->param.intra_period == 1) {
+        if (h->param->intra_period == 1) {
             memcpy(p_rps, &p_seq_rps[0], sizeof(xavs2_rps_t));
             p_rps->num_of_ref       = 0;  // clear reference frames for I frame
             p_rps->referd_by_others = 0;
@@ -215,7 +215,7 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             p_rps->num_to_rm        = 0;
             p_rps->referd_by_others = 1;
 
-            if (!h->param.b_open_gop || !h->param.successive_Bframe) {
+            if (!h->param->b_open_gop || !h->param->successive_Bframe) {
                 // IDR refresh
                 for (j = 0; j < frm_buf->num_frames; j++) {
                     if ((frame = frm_buf->frames[j]) != NULL && cur_frm->i_frame != frame->i_frame) {
@@ -250,10 +250,10 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             p_rps->qp_offset        = 0;
         }
     } else {
-        rps_idx = (cur_frm->i_frm_coi - 1 - ((!h->param.b_open_gop && h->param.successive_Bframe > 0) ? frm_buf->COI_IDR : 0)) % h->i_gop_size;
+        rps_idx = (cur_frm->i_frm_coi - 1 - ((!h->param->b_open_gop && h->param->successive_Bframe > 0) ? frm_buf->COI_IDR : 0)) % h->i_gop_size;
         memcpy(p_rps, &p_seq_rps[rps_idx], sizeof(xavs2_rps_t));
 
-        if (cur_frm->i_frame > frm_buf->POC_IDR && (!h->param.b_open_gop || !h->param.successive_Bframe)) {
+        if (cur_frm->i_frame > frm_buf->POC_IDR && (!h->param->b_open_gop || !h->param->successive_Bframe)) {
             /* clear frames before IDR frame */
             for (j = 0; j < frm_buf->num_frames; j++) {
                 if ((frame = frm_buf->frames[j]) != NULL) {
@@ -321,7 +321,7 @@ int rps_init_reference_list(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
 
                 /* check whether the frame could be referenced by current frame */
                 b_could_be_referenced = frame->i_frame >= frm_buf->POC_IDR ||
-                    (frame->i_frame < frm_buf->POC_IDR && cur_frm->i_frm_type == XAVS2_TYPE_B && h->param.b_open_gop);
+                    (frame->i_frame < frm_buf->POC_IDR && cur_frm->i_frm_type == XAVS2_TYPE_B && h->param->b_open_gop);
 
                 if (k == num_ref &&
                     frame->i_frm_coi == coi &&
@@ -489,7 +489,7 @@ int rps_fix_reference_list_pf(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
 
                 if (poi < cur_frm->i_frame && poi > max_fwd_poi &&
                     XAVS2_ABS(poi - cur_frm->i_frame) < 128 && frame->removed == 0 &&
-                    (h->param.temporal_id_exist_flag == 0 || h->i_layer >= frame->rps.temporal_id)) {
+                    (h->param->temporal_id_exist_flag == 0 || h->i_layer >= frame->rps.temporal_id)) {
                     if (max_fwd_idx != -1) {
                         xavs2_pthread_mutex_lock(&DPB[max_fwd_idx]->mutex);   /* lock */
                         DPB[max_fwd_idx]->cnt_refered--;
@@ -751,7 +751,7 @@ int rps_build(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     cur_frm->rps_index_in_gop = xavs2e_get_frame_rps(h, frm_buf, cur_frm, p_rps);
 
     // get encoding layer of current frame
-    if (h->param.temporal_id_exist_flag == 1 && cur_frm->i_frm_type != XAVS2_TYPE_I) {
+    if (h->param->temporal_id_exist_flag == 1 && cur_frm->i_frm_type != XAVS2_TYPE_I) {
         if (p_rps->temporal_id < 0 || p_rps->temporal_id >= TEMPORAL_MAXLEVEL) {
             p_rps->temporal_id = TEMPORAL_MAXLEVEL - 1;    // the lowest level
         }
@@ -812,13 +812,13 @@ xavs2_frame_t *find_fdec_and_build_rps(xavs2_t *h, xavs2_frame_buffer_t *frm_buf
  */
 static void set_picture_reorder_delay(xavs2_t *h)
 {
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         int delta_dd = 1000;
         int tmp_delta_dd;
         int i;
 
         for (i = 0; i < h->i_gop_size; i++) {
-            tmp_delta_dd = h->param.cfg_ref_all[i].poc - (i + 1);
+            tmp_delta_dd = h->param->cfg_ref_all[i].poc - (i + 1);
             if (tmp_delta_dd < delta_dd) {
                 delta_dd = tmp_delta_dd;
             }
@@ -876,10 +876,10 @@ int check_rps_config(xavs2_param_t *param)
  */
 int parse_rps_config(xavs2_t *h)
 {
-    xavs2_rps_t *p_seq_rps = h->param.cfg_ref_all;
+    xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
     int rps_idx;
 
-    h->i_gop_size = h->param.i_gop_size;
+    h->i_gop_size = h->param->i_gop_size;
 
     // set index
     for (rps_idx = 0; rps_idx < h->i_gop_size; rps_idx++) {

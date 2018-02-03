@@ -339,10 +339,10 @@ void xavs2_wq_init_seq_quant_param(xavs2_t *h)
     for (wqm_index = 0; wqm_index < 2; wqm_index++) {
         block_size = XAVS2_MIN(1 << (wqm_index + 2), 8);
         wqm_idx = (wqm_index < 2) ? wqm_index : 1;
-        if (h->param.SeqWQM == 0) {
+        if (h->param->SeqWQM == 0) {
             wq_get_default_matrix(wqm_idx, seq_wqm);
-        } else if (h->param.SeqWQM == 1) {
-            wq_get_user_defined_matrix(h->param.psz_seq_wq_file, wqm_idx, seq_wqm);
+        } else if (h->param->SeqWQM == 1) {
+            wq_get_user_defined_matrix(h->param->psz_seq_wq_file, wqm_idx, seq_wqm);
         }
         for (i = 0; i < (block_size * block_size); i++) {
             wq->seq_wq_matrix[wqm_index][i] = (int16_t)seq_wqm[i];
@@ -361,7 +361,7 @@ void xavs2_wq_init_pic_quant_param(xavs2_t *h)
     int wq_model;
     int i, j, k;
 
-    h->WeightQuantEnable = (h->param.enable_wquant && h->param.PicWQEnable);
+    h->WeightQuantEnable = (h->param->enable_wquant && h->param->PicWQEnable);
 
     if (!h->WeightQuantEnable) {
         for (i = 0; i < 2; i++) {
@@ -381,7 +381,7 @@ void xavs2_wq_init_pic_quant_param(xavs2_t *h)
             }
         }
     } else {
-        if (h->param.PicWQDataIndex == 1) {
+        if (h->param->PicWQDataIndex == 1) {
             // patch the weighting parameters use default weighted parameters, input->WQParam==0
             for (i = 0; i < 2; i++) {
                 for (j = 0; j < 6; j++) {
@@ -390,23 +390,23 @@ void xavs2_wq_init_pic_quant_param(xavs2_t *h)
             }
 
             // if input->WQParam!=0, update wq_param
-            if (h->param.WQParam == 0) {
+            if (h->param->WQParam == 0) {
                 wq->cur_frame_wq_param = FRAME_WQ_DEFAULT;      // default param - detailed
                 for (i = 0; i < 6; i++) {
                     wq->wq_param[DETAILED][i] = tab_wq_param_default[DETAILED][i];
                 }
-            } else if (h->param.WQParam == 1) {
+            } else if (h->param->WQParam == 1) {
                 // load user defined weighted parameters
                 wq->cur_frame_wq_param = USER_DEF_UNDETAILED;   // user defined undetailed param
-                wq_get_user_defined_param(h, h->param.WeightParamUnDetailed, 0);
-            } else if (h->param.WQParam == 2) {
+                wq_get_user_defined_param(h, h->param->WeightParamUnDetailed, 0);
+            } else if (h->param->WQParam == 2) {
                 // load user defined weighted parameters
                 wq->cur_frame_wq_param = USER_DEF_DETAILED;     // user defined detailed param
-                wq_get_user_defined_param(h, h->param.WeightParamDetailed, 1);
+                wq_get_user_defined_param(h, h->param->WeightParamDetailed, 1);
             }
 
             // reconstruct the weighting matrix
-            wq_model = h->param.WQModel;
+            wq_model = h->param->WQModel;
             for (k = 0; k < 2; k++) {
                 for (j = 0; j < 8; j++) {
                     for (i = 0; i < 8; i++) {
@@ -421,11 +421,11 @@ void xavs2_wq_init_pic_quant_param(xavs2_t *h)
                     }
                 }
             }
-        } else if (h->param.PicWQDataIndex == 2) {
+        } else if (h->param->PicWQDataIndex == 2) {
             for (wqm_index = 0; wqm_index < 2; wqm_index++) {
                 block_size = XAVS2_MIN(1 << (wqm_index + 2), 8);
                 wqm_idx = (wqm_index < 2) ? wqm_index : 1;
-                wq_get_user_defined_matrix(h->param.psz_pic_wq_file, wqm_idx, pic_wqm);
+                wq_get_user_defined_matrix(h->param->psz_pic_wq_file, wqm_idx, pic_wqm);
                 for (i = 0; i < (block_size * block_size); i++) {
                     wq->pic_user_wq_matrix[wqm_index][i] = (int16_t)pic_wqm[i];
                 }
@@ -454,25 +454,25 @@ void xavs2_wq_update_pic_matrix(xavs2_t *h)
         for (wqm_index = 0; wqm_index < 4; wqm_index++) {
             block_size = XAVS2_MIN(1 << (wqm_index + 2), 8);
             wqm_idx = (wqm_index < 2) ? wqm_index : 1;
-            if (h->param.PicWQDataIndex == 0) {
+            if (h->param->PicWQDataIndex == 0) {
                 for (i = 0; i < (block_size * block_size); i++) {
                     wq->cur_wq_matrix[wqm_index][i] = wq->seq_wq_matrix[wqm_idx][i];
                 }
-            } else if (h->param.PicWQDataIndex == 1) {
-                if (h->param.WQParam == 0) {
+            } else if (h->param->PicWQDataIndex == 1) {
+                if (h->param->WQParam == 0) {
                     for (i = 0; i < (block_size * block_size); i++) {
                         wq->cur_wq_matrix[wqm_index][i] = wq->wq_matrix[wqm_idx][DETAILED][i];
                     }
-                } else if (h->param.WQParam == 1) {
+                } else if (h->param->WQParam == 1) {
                     for (i = 0; i < (block_size * block_size); i++) {
                         wq->cur_wq_matrix[wqm_index][i] = wq->wq_matrix[wqm_idx][0][i];
                     }
-                } else if (h->param.WQParam == 2) {
+                } else if (h->param->WQParam == 2) {
                     for (i = 0; i < (block_size * block_size); i++) {
                         wq->cur_wq_matrix[wqm_index][i] = wq->wq_matrix[wqm_idx][1][i];
                     }
                 }
-            } else if (h->param.PicWQDataIndex == 2) {
+            } else if (h->param->PicWQDataIndex == 2) {
                 for (i = 0; i < (block_size * block_size); i++) {
                     wq->cur_wq_matrix[wqm_index][i] = wq->pic_user_wq_matrix[wqm_idx][i];
                 }

@@ -62,7 +62,7 @@ static ALWAYS_INLINE int is_valid_qp(xavs2_t *h, int i_qp)
 static ALWAYS_INLINE
 int get_frame_coi_to_write(xavs2_t *h, xavs2_frame_t *frm)
 {
-    if (h->param.num_parallel_gop > 1) {
+    if (h->param->num_parallel_gop > 1) {
         return (frm->i_frm_coi - frm->i_gop_idr_coi) & 255;
     } else {
         return frm->i_frm_coi & 255;
@@ -74,40 +74,40 @@ int get_frame_coi_to_write(xavs2_t *h, xavs2_frame_t *frm)
  */
 int xavs2_sequence_write(xavs2_t *h, bs_t *p_bs)
 {
-    xavs2_rps_t *p_seq_rps = h->param.cfg_ref_all;
+    xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
     int bits = 0;
     int i, j;
 
     bits += u_0(p_bs, 32, 0x1b0,                                    "seqence_start_code");
-    bits += u_v(p_bs,  8, h->param.profile_id,                      "profile_id");
-    bits += u_v(p_bs,  8, h->param.level_id,                        "level_id");
-    bits += u_v(p_bs,  1, h->param.progressive_sequence,            "progressive_sequence");
+    bits += u_v(p_bs,  8, h->param->profile_id,                      "profile_id");
+    bits += u_v(p_bs,  8, h->param->level_id,                        "level_id");
+    bits += u_v(p_bs,  1, h->param->progressive_sequence,            "progressive_sequence");
     bits += u_v(p_bs,  1, h->b_field_sequence,                      "field_coded_sequence");
-    bits += u_v(p_bs, 14, h->param.org_width,                       "horizontal_size");
-    bits += u_v(p_bs, 14, h->param.org_height,                      "vertical_size");
-    bits += u_v(p_bs,  2, h->param.chroma_format,                   "chroma_format");
+    bits += u_v(p_bs, 14, h->param->org_width,                       "horizontal_size");
+    bits += u_v(p_bs, 14, h->param->org_height,                      "vertical_size");
+    bits += u_v(p_bs,  2, h->param->chroma_format,                   "chroma_format");
     
-    bits += u_v(p_bs,  3, h->param.sample_precision,                "sample_precision");
-    if (h->param.profile_id == MAIN10_PROFILE) { // MAIN10 profile
-        bits += u_v(p_bs, 3, ((h->param.sample_bit_depth - 6) / 2), "encoding_precision");
+    bits += u_v(p_bs,  3, h->param->sample_precision,                "sample_precision");
+    if (h->param->profile_id == MAIN10_PROFILE) { // MAIN10 profile
+        bits += u_v(p_bs, 3, ((h->param->sample_bit_depth - 6) / 2), "encoding_precision");
     }
 
-    bits += u_v(p_bs,  4, h->param.aspect_ratio_information,        "aspect_ratio_information");
-    bits += u_v(p_bs,  4, h->param.frame_rate_code,                 "frame_rate_code");
-    bits += u_v(p_bs, 18, h->param.bitrate_lower,                   "bit_rate_lower");
+    bits += u_v(p_bs,  4, h->param->aspect_ratio_information,        "aspect_ratio_information");
+    bits += u_v(p_bs,  4, h->param->frame_rate_code,                 "frame_rate_code");
+    bits += u_v(p_bs, 18, h->param->bitrate_lower,                   "bit_rate_lower");
     bits += u_v(p_bs,  1, 1,                                        "marker bit");
-    bits += u_v(p_bs, 12, h->param.bitrate_upper,                   "bit_rate_upper");
-    bits += u_v(p_bs,  1, h->param.low_delay,                       "low_delay");
+    bits += u_v(p_bs, 12, h->param->bitrate_upper,                   "bit_rate_upper");
+    bits += u_v(p_bs,  1, h->param->low_delay,                       "low_delay");
     bits += u_v(p_bs,  1, 1,                                        "marker bit");
-    bits += u_v(p_bs,  1, h->param.temporal_id_exist_flag,          "temporal_id exist flag");
-    bits += u_v(p_bs, 18, h->param.bbv_buffer_size,                 "bbv buffer size");
+    bits += u_v(p_bs,  1, h->param->temporal_id_exist_flag,          "temporal_id exist flag");
+    bits += u_v(p_bs, 18, h->param->bbv_buffer_size,                 "bbv buffer size");
     bits += u_v(p_bs,  3, h->i_lcu_level,                           "Largest Coding Block Size");
-    bits += u_v(p_bs,  1, h->param.enable_wquant,                   "weight_quant_enable");
+    bits += u_v(p_bs,  1, h->param->enable_wquant,                   "weight_quant_enable");
 
 #if ENABLE_WQUANT
-    if (h->param.enable_wquant) {
-        bits += u_v(p_bs, 1, h->param.SeqWQM,                       "load_seq_weight_quant_data_flag");
-        if (h->param.SeqWQM) {
+    if (h->param->enable_wquant) {
+        bits += u_v(p_bs, 1, h->param->SeqWQM,                       "load_seq_weight_quant_data_flag");
+        if (h->param->SeqWQM) {
             int x, y, sizeId, iWqMSize;
             wq_data_t *wq = &h->wq_data;
 
@@ -122,20 +122,20 @@ int xavs2_sequence_write(xavs2_t *h, bs_t *p_bs)
         }
     }
 #else
-    assert(h->param.enable_wquant == 0);
+    assert(h->param->enable_wquant == 0);
 #endif
 
     bits += u_v(p_bs, 1, 1,                                         "background_picture_disable");
-    bits += u_v(p_bs, 1, h->param.enable_mhp_skip,                  "mhpskip enabled");
-    bits += u_v(p_bs, 1, h->param.enable_dhp,                       "dhp enabled");
-    bits += u_v(p_bs, 1, h->param.enable_wsm,                       "wsm enabled");
-    bits += u_v(p_bs, 1, h->param.enable_amp,                       "Asymmetric Motion Partitions");
-    bits += u_v(p_bs, 1, h->param.enable_nsqt,                      "enable_NSQT");
-    bits += u_v(p_bs, 1, h->param.enable_sdip,                      "enable_SDIP");
-    bits += u_v(p_bs, 1, h->param.enable_secT,                      "secT enabled");
-    bits += u_v(p_bs, 1, h->param.enable_sao,                       "SAO Enable Flag");
-    bits += u_v(p_bs, 1, h->param.enable_alf,                       "ALF Enable Flag");
-    bits += u_v(p_bs, 1, h->param.enable_pmvr,                      "pmvr enabled");
+    bits += u_v(p_bs, 1, h->param->enable_mhp_skip,                  "mhpskip enabled");
+    bits += u_v(p_bs, 1, h->param->enable_dhp,                       "dhp enabled");
+    bits += u_v(p_bs, 1, h->param->enable_wsm,                       "wsm enabled");
+    bits += u_v(p_bs, 1, h->param->enable_amp,                       "Asymmetric Motion Partitions");
+    bits += u_v(p_bs, 1, h->param->enable_nsqt,                      "enable_NSQT");
+    bits += u_v(p_bs, 1, h->param->enable_sdip,                      "enable_SDIP");
+    bits += u_v(p_bs, 1, h->param->enable_secT,                      "secT enabled");
+    bits += u_v(p_bs, 1, h->param->enable_sao,                       "SAO Enable Flag");
+    bits += u_v(p_bs, 1, h->param->enable_alf,                       "ALF Enable Flag");
+    bits += u_v(p_bs, 1, h->param->enable_pmvr,                      "pmvr enabled");
 
     bits += u_v(p_bs, 1, 1,                                         "marker bit");
 
@@ -156,11 +156,11 @@ int xavs2_sequence_write(xavs2_t *h, bs_t *p_bs)
         bits += u_v(p_bs, 1, 1,                                     "marker bit");
     }
 
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         bits += u_v(p_bs, 5, h->picture_reorder_delay,              "output_reorder_delay");
     }
 
-    bits += u_v(p_bs, 1, h->param.b_cross_slice_loop_filter,        "Cross Loop Filter Flag");
+    bits += u_v(p_bs, 1, h->param->b_cross_slice_loop_filter,        "Cross Loop Filter Flag");
     bits += u_v(p_bs, 3, 0,                                         "reserved bits");
 
     /* byte align */
@@ -198,24 +198,24 @@ int xavs2_intra_picture_header_write(xavs2_t *h, bs_t *p_bs)
 
     len  = u_0(p_bs, 32, 0x1B3,                                     "I picture start code");
     len += u_v(p_bs, 32, bbv_delay,                                 "bbv_delay");
-    len += u_v(p_bs, 1, h->param.time_code_flag,                    "time_code_flag");
+    len += u_v(p_bs, 1, h->param->time_code_flag,                    "time_code_flag");
 
-    // if (h->param.time_code_flag) {
+    // if (h->param->time_code_flag) {
     //     tc = frametotc(h, frame, h->tc_reserve_bit);
     //     len += u_v(p_bs, 24, tc, "time_code");
     // }
 
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         display_delay = h->fdec->i_frame - h->fdec->i_frm_coi + h->picture_reorder_delay;
     }
 
     len += u_v(p_bs, 8, get_frame_coi_to_write(h, h->fdec),         "coding_order");
 
-    if (h->param.temporal_id_exist_flag == 1) {
+    if (h->param->temporal_id_exist_flag == 1) {
         len += u_v(p_bs, TEMPORAL_MAXLEVEL_BIT, h->i_layer,         "temporal_id");
     }
 
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         len += ue_v(p_bs, display_delay,                            "picture_output_delay");
     }
 
@@ -237,7 +237,7 @@ int xavs2_intra_picture_header_write(xavs2_t *h, bs_t *p_bs)
         len += u_v(p_bs, 1, 1, "marker bit");
     }
 
-    if (h->param.low_delay) {
+    if (h->param->low_delay) {
         len += ue_v(p_bs, 0,                                        "bbv check times");
     }
 
@@ -246,33 +246,33 @@ int xavs2_intra_picture_header_write(xavs2_t *h, bs_t *p_bs)
         len += u_v(p_bs, 1, 1,                                      "picture_structure");
     }
 
-    len += u_v(p_bs, 1, h->param.top_field_first,                   "top_field_first");
-    len += u_v(p_bs, 1, h->param.repeat_first_field,                "repeat_first_field");
-    if (h->param.InterlaceCodingOption == FIELD_CODING) {
+    len += u_v(p_bs, 1, h->param->top_field_first,                   "top_field_first");
+    len += u_v(p_bs, 1, h->param->repeat_first_field,                "repeat_first_field");
+    if (h->param->InterlaceCodingOption == FIELD_CODING) {
         len += u_v(p_bs, 1, h->b_top_field,                         "is top field");
         len += u_v(p_bs, 1, 1,                                      "reserved bit for interlace coding");
     }
 
-    len += u_v(p_bs, 1, h->param.fixed_picture_qp,                  "fixed_picture_qp");
+    len += u_v(p_bs, 1, h->param->fixed_picture_qp,                  "fixed_picture_qp");
     len += u_v(p_bs, 7, h->i_qp,                                    "picture_qp");
 
-    len += u_v(p_bs, 1, h->param.loop_filter_disable,               "loop_filter_disable");
-    if (!h->param.loop_filter_disable) {
-        len += u_v(p_bs, 1, h->param.loop_filter_parameter_flag,    "loop_filter_parameter_flag");
-        if (h->param.loop_filter_parameter_flag) {
-            len += se_v(p_bs, h->param.alpha_c_offset,              "alpha offset");
-            len += se_v(p_bs, h->param.beta_offset,                 "beta offset");
+    len += u_v(p_bs, 1, h->param->loop_filter_disable,               "loop_filter_disable");
+    if (!h->param->loop_filter_disable) {
+        len += u_v(p_bs, 1, h->param->loop_filter_parameter_flag,    "loop_filter_parameter_flag");
+        if (h->param->loop_filter_parameter_flag) {
+            len += se_v(p_bs, h->param->alpha_c_offset,              "alpha offset");
+            len += se_v(p_bs, h->param->beta_offset,                 "beta offset");
         }
     }
 
 #if ENABLE_WQUANT
-    len += u_v(p_bs, 1, h->param.chroma_quant_param_disable, "chroma_quant_param_disable");
-    if (!h->param.chroma_quant_param_disable) {
-        len += se_v(p_bs, h->param.chroma_quant_param_delta_u, "chroma_quant_param_delta_cb");
-        len += se_v(p_bs, h->param.chroma_quant_param_delta_v, "chroma_quant_param_delta_cr");
+    len += u_v(p_bs, 1, h->param->chroma_quant_param_disable, "chroma_quant_param_disable");
+    if (!h->param->chroma_quant_param_disable) {
+        len += se_v(p_bs, h->param->chroma_quant_param_delta_u, "chroma_quant_param_delta_cb");
+        len += se_v(p_bs, h->param->chroma_quant_param_delta_v, "chroma_quant_param_delta_cr");
     } else {
-        assert(h->param.chroma_quant_param_delta_u == 0);
-        assert(h->param.chroma_quant_param_delta_v == 0);
+        assert(h->param->chroma_quant_param_delta_u == 0);
+        assert(h->param->chroma_quant_param_delta_v == 0);
     }
 #else
     len += u_v(p_bs, 1, 1, "chroma_quant_param_disable");
@@ -284,27 +284,27 @@ int xavs2_intra_picture_header_write(xavs2_t *h, bs_t *p_bs)
 
 #if ENABLE_WQUANT
     // adaptive frequency weighting quantization
-    if (h->param.enable_wquant) {
-        len += u_v(p_bs, 1, h->param.PicWQEnable,                   "pic_weight_quant_enable");
-        if (h->param.PicWQEnable) {
-            len += u_v(p_bs, 2, h->param.PicWQDataIndex,            "pic_weight_quant_data_index");
-            if (h->param.PicWQDataIndex == 1) {
+    if (h->param->enable_wquant) {
+        len += u_v(p_bs, 1, h->param->PicWQEnable,                   "pic_weight_quant_enable");
+        if (h->param->PicWQEnable) {
+            len += u_v(p_bs, 2, h->param->PicWQDataIndex,            "pic_weight_quant_data_index");
+            if (h->param->PicWQDataIndex == 1) {
                 len += u_v(p_bs, 1, 0,                              "reserved_bits");
 
-                len += u_v(p_bs, 2, h->param.WQParam,               "weighting_quant_param_index");
-                len += u_v(p_bs, 2, h->param.WQModel,               "weighting_quant_model");
+                len += u_v(p_bs, 2, h->param->WQParam,               "weighting_quant_param_index");
+                len += u_v(p_bs, 2, h->param->WQModel,               "weighting_quant_model");
 
-                if ((h->param.WQParam == 1) || ((h->param.MBAdaptQuant) && (h->param.WQParam == 3))) {
+                if ((h->param->WQParam == 1) || ((h->param->MBAdaptQuant) && (h->param->WQParam == 3))) {
                     for (i = 0; i < 6; i++) {
                         len += se_v(p_bs, (int)(h->wq_data.wq_param[UNDETAILED][i] - tab_wq_param_default[UNDETAILED][i]), "quant_param_delta_u");
                     }
                 }
-                if ((h->param.WQParam == 2) || ((h->param.MBAdaptQuant) && (h->param.WQParam == 3))) {
+                if ((h->param->WQParam == 2) || ((h->param->MBAdaptQuant) && (h->param->WQParam == 3))) {
                     for (i = 0; i < 6; i++) {
                         len += se_v(p_bs, (int)(h->wq_data.wq_param[DETAILED][i] - tab_wq_param_default[DETAILED][i]), "quant_param_delta_d");
                     }
                 }
-            } else if (h->param.PicWQDataIndex == 2) {
+            } else if (h->param->PicWQDataIndex == 2) {
                 int x, y, sizeId, iWqMSize;
                 for (sizeId = 0; sizeId < 2; sizeId++) {
                     i = 0;
@@ -346,16 +346,16 @@ int xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs)
     len += u_v(p_bs, 32, bbv_delay,                                 "bbv delay");
     len += u_v(p_bs,  2, picture_coding_type,                       "picture_coding_type");
 
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         display_delay = h->fenc->i_frame - h->fdec->i_frm_coi + h->picture_reorder_delay;
     }
 
     len += u_v(p_bs, 8, get_frame_coi_to_write(h, h->fdec),         "coding_order");
-    if (h->param.temporal_id_exist_flag == 1) {
+    if (h->param->temporal_id_exist_flag == 1) {
         len += u_v(p_bs, TEMPORAL_MAXLEVEL_BIT, h->i_layer,         "temporal_id");
     }
 
-    if (!h->param.low_delay) {
+    if (!h->param->low_delay) {
         len += ue_v(p_bs, display_delay,                            "displaydelay");
     }
 
@@ -377,7 +377,7 @@ int xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs)
         len += u_v(p_bs, 1, 1, "marker bit");
     }
 
-    if (h->param.low_delay) {
+    if (h->param->low_delay) {
         len += ue_v(p_bs, 0,                                        "bbv check times");
     }
 
@@ -386,14 +386,14 @@ int xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs)
         len += u_v(p_bs, 1, 1,                                      "picture_structure");
     }
 
-    len += u_v(p_bs, 1, h->param.top_field_first,                   "top_field_first");
-    len += u_v(p_bs, 1, h->param.repeat_first_field,                "repeat_first_field");
-    if (h->param.InterlaceCodingOption == FIELD_CODING) {
+    len += u_v(p_bs, 1, h->param->top_field_first,                   "top_field_first");
+    len += u_v(p_bs, 1, h->param->repeat_first_field,                "repeat_first_field");
+    if (h->param->InterlaceCodingOption == FIELD_CODING) {
         len += u_v(p_bs, 1, h->b_top_field,                         "is top field");
         len += u_v(p_bs, 1, 1,                                      "reserved bit for interlace coding");
     }
 
-    len += u_v(p_bs, 1, h->param.fixed_picture_qp,                  "fixed_picture_qp");
+    len += u_v(p_bs, 1, h->param->fixed_picture_qp,                  "fixed_picture_qp");
     len += u_v(p_bs, 7, h->i_qp,                                    "picture_qp");
 
     if (picture_coding_type != 2) {
@@ -402,25 +402,25 @@ int xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs)
 
     len += u_v(p_bs, 1, h->fenc->b_random_access_decodable,         "random_access_decodable_flag");
 
-    len += u_v(p_bs, 1, h->param.loop_filter_disable,               "loop_filter_disable");
+    len += u_v(p_bs, 1, h->param->loop_filter_disable,               "loop_filter_disable");
 
-    if (!h->param.loop_filter_disable) {
-        len += u_v(p_bs, 1, h->param.loop_filter_parameter_flag,    "loop_filter_parameter_flag");
+    if (!h->param->loop_filter_disable) {
+        len += u_v(p_bs, 1, h->param->loop_filter_parameter_flag,    "loop_filter_parameter_flag");
 
-        if (h->param.loop_filter_parameter_flag) {
-            len += se_v(p_bs, h->param.alpha_c_offset,              "alpha offset");
-            len += se_v(p_bs, h->param.beta_offset,                 "beta offset");
+        if (h->param->loop_filter_parameter_flag) {
+            len += se_v(p_bs, h->param->alpha_c_offset,              "alpha offset");
+            len += se_v(p_bs, h->param->beta_offset,                 "beta offset");
         }
     }
 
 #if ENABLE_WQUANT
-    len += u_v(p_bs, 1, h->param.chroma_quant_param_disable, "chroma_quant_param_disable");
-    if (!h->param.chroma_quant_param_disable) {
-        len += se_v(p_bs, h->param.chroma_quant_param_delta_u, "chroma_quant_param_delta_cb");
-        len += se_v(p_bs, h->param.chroma_quant_param_delta_v, "chroma_quant_param_delta_cr");
+    len += u_v(p_bs, 1, h->param->chroma_quant_param_disable, "chroma_quant_param_disable");
+    if (!h->param->chroma_quant_param_disable) {
+        len += se_v(p_bs, h->param->chroma_quant_param_delta_u, "chroma_quant_param_delta_cb");
+        len += se_v(p_bs, h->param->chroma_quant_param_delta_v, "chroma_quant_param_delta_cr");
     } else {
-        assert(h->param.chroma_quant_param_delta_u == 0);
-        assert(h->param.chroma_quant_param_delta_v == 0);
+        assert(h->param->chroma_quant_param_delta_u == 0);
+        assert(h->param->chroma_quant_param_delta_v == 0);
     }
 #else
     len += u_v(p_bs, 1, 1, "chroma_quant_param_disable");
@@ -432,28 +432,28 @@ int xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs)
 
     // adaptive frequency weighting quantization
 #if ENABLE_WQUANT
-    if (h->param.enable_wquant) {
-        len += u_v(p_bs, 1, h->param.PicWQEnable,                   "pic_weight_quant_enable");
-        if (h->param.PicWQEnable) {
-            len += u_v(p_bs, 2, h->param.PicWQDataIndex,            "pic_weight_quant_data_index");
+    if (h->param->enable_wquant) {
+        len += u_v(p_bs, 1, h->param->PicWQEnable,                   "pic_weight_quant_enable");
+        if (h->param->PicWQEnable) {
+            len += u_v(p_bs, 2, h->param->PicWQDataIndex,            "pic_weight_quant_data_index");
 
-            if (h->param.PicWQDataIndex == 1) {
+            if (h->param->PicWQDataIndex == 1) {
                 len += u_v(p_bs, 1, 0,                              "reserved_bits");
 
-                len += u_v(p_bs, 2, h->param.WQParam,               "weighting_quant_param_index");
-                len += u_v(p_bs, 2, h->param.WQModel,               "weighting_quant_model");
+                len += u_v(p_bs, 2, h->param->WQParam,               "weighting_quant_param_index");
+                len += u_v(p_bs, 2, h->param->WQModel,               "weighting_quant_model");
 
-                if ((h->param.WQParam == 1) || ((h->param.MBAdaptQuant) && (h->param.WQParam == 3))) {
+                if ((h->param->WQParam == 1) || ((h->param->MBAdaptQuant) && (h->param->WQParam == 3))) {
                     for (i = 0; i < 6; i++) {
                         len += se_v(p_bs, (int)(h->wq_data.wq_param[UNDETAILED][i] - tab_wq_param_default[UNDETAILED][i]), "quant_param_delta_u");
                     }
                 }
-                if ((h->param.WQParam == 2) || ((h->param.MBAdaptQuant) && (h->param.WQParam == 3))) {
+                if ((h->param->WQParam == 2) || ((h->param->MBAdaptQuant) && (h->param->WQParam == 3))) {
                     for (i = 0; i < 6; i++) {
                         len += se_v(p_bs, (int)(h->wq_data.wq_param[DETAILED][i] - tab_wq_param_default[DETAILED][i]), "quant_param_delta_d");
                     }
                 }
-            } else if (h->param.PicWQDataIndex == 2) {
+            } else if (h->param->PicWQDataIndex == 2) {
                 int x, y, sizeId, iWqMSize;
                 for (sizeId = 0; sizeId < 2; sizeId++) {
                     i = 0;
@@ -517,7 +517,7 @@ static void writeAlfCoeff(ALFParam *Alfp, bs_t *p_bs, int componentID)
  */
 void xavs2_picture_header_alf_write(xavs2_t *h, ALFParam *alfPictureParam, bs_t *p_bs)
 {
-    if (h->param.enable_alf) {
+    if (h->param->enable_alf) {
         u_v(p_bs, 1, h->pic_alf_on[0], "alf_pic_flag_Y");
         u_v(p_bs, 1, h->pic_alf_on[1], "alf_pic_flag_Cb");
         u_v(p_bs, 1, h->pic_alf_on[2], "alf_pic_flag_Cr");
@@ -559,12 +559,12 @@ int xavs2_slice_header_write(xavs2_t *h, slice_t *p_slice)
         len += u_v(p_bs, 2, slice_horizontal_position_extension,    "slice horizontal position extension");
     }
 
-    if (!h->param.fixed_picture_qp) {
-        len += u_v(p_bs, 1, h->param.i_rc_method != XAVS2_RC_CBR_SCU, "fixed_slice_qp");
+    if (!h->param->fixed_picture_qp) {
+        len += u_v(p_bs, 1, h->param->i_rc_method != XAVS2_RC_CBR_SCU, "fixed_slice_qp");
         len += u_v(p_bs, 7, p_slice->i_qp,                          "slice_qp");
     }
 
-    if (h->param.enable_sao) {
+    if (h->param->enable_sao) {
         len += u_v(p_bs, 1, h->slice_sao_on[0],                     "sao_slice_flag_Y");
         len += u_v(p_bs, 1, h->slice_sao_on[1],                     "sao_slice_flag_Cb");
         len += u_v(p_bs, 1, h->slice_sao_on[2],                     "sao_slice_flag_Cr");

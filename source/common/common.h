@@ -593,11 +593,6 @@ typedef struct xavs2_param_t {
     bool_t  b_sao_before_deblock;     /* conduct SAO parameter decision before deblock totally finish */
     bool_t  b_fast_sao;               /* Fast SAO encoding decision */
     bool_t  b_fast_2lelvel_tu;        /* enable fast 2-level TU for inter */
-    bool_t  enable_tu_2level;        /* enable 2-level TU for inter ,
-                                      * 0: off,
-                                      * 1: tu-2level only for best partition mode of one CU,
-                                      * 2: tu-2level rdo ,
-                                      * 3: tu - 2level rdoq */
     float   factor_zero_block;        /* threadhold factor for zero block detection */
 
     /* RDOQ */
@@ -1406,7 +1401,7 @@ struct xavs2_t {
      */
 
     ALIGN32(SYNC_VARS_1(communal_vars_1));
-    xavs2_param_t   param;            /* input parameters */
+    const xavs2_param_t*   param;            /* input parameters */
 
     /* -------------------------------------------------------------
      * contexts synchronization control
@@ -1437,6 +1432,11 @@ struct xavs2_t {
                                           0 : skip this step
                                           1 :  8 points. 0.17% loss ~ 4% TimeSaving
                                           2 : 16 points */
+    bool_t      enable_tu_2level;        /* enable 2-level TU for inter ,
+                                          * 0: off,
+                                          * 1: tu-2level only for best partition mode of one CU,
+                                          * 2: tu-2level rdo ,
+                                          * 3: tu - 2level rdoq */
     bool_t      skip_rough_improved;  /* whether use the improved SKIP_ROUGH_SEL (from leimeng) */
     float       framerate;
     int         i_gop_size;           /* sub GOP size */

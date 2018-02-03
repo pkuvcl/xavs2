@@ -590,7 +590,7 @@ static int rdoq_est_coeff_level_wq(xavs2_t *h, level_info_t *p_level_info,
     const int thres_lower_int = (int)((16384 << shift_bit) / (double)(tab_Q_TAB[qp]));
     const int scale = tab_IQ_TAB[qp];
     const int shift = tab_IQ_SHIFT[qp] - shift_bit;
-    int wqm_shift   = (h->param.PicWQDataIndex == 1) ? 3 : 0;
+    int wqm_shift   = (h->param->PicWQDataIndex == 1) ? 3 : 0;
     int wqm_coef    = 1;
     int rec, err;
     int level;
@@ -931,7 +931,7 @@ int rdoq_cg(xavs2_t *h, rdoq_t *p_rdoq, cu_t *p_cu, coeff_t *ncur_blk, const int
     cost_state_t *p_cost_stat;
     const int16_t *p_tab_coeff_scan1d = p_rdoq->p_scan_tab_1d;
     const int i_tu_level = p_rdoq->i_tu_level;
-    const int shift_bit = 16 - (h->param.sample_bit_depth + 1) - i_tu_level;
+    const int shift_bit = 16 - (h->param->sample_bit_depth + 1) - i_tu_level;
     const double f_err_level_mult = 256.0 / (1 << (shift_bit * 2));
     const int thres_lower_int = (int)((16384 << shift_bit) / (double)(tab_Q_TAB[qp]));
     const rdcost_t lambda_rdoq = h->f_lambda_rdoq;

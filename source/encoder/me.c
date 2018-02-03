@@ -505,7 +505,7 @@ me_subpel_refine(xavs2_t *h, xavs2_me_t *p_me)
     bmy = p_me->bmv.y;
     bmv = p_me->bmv;
 
-    if (h->param.enable_hadamard) {
+    if (h->param->enable_hadamard) {
         ME_COST_QPEL(bmx, bmy);
         bcost = cost;
     } else {
@@ -543,7 +543,7 @@ me_subpel_refine(xavs2_t *h, xavs2_me_t *p_me)
     if (h->use_fractional_me > 1) {
         // loop over search positions
         for (pos = 1; pos < search_pos4; pos += search_step) {
-            if (h->param.enable_pmvr) {
+            if (h->param->enable_pmvr) {
                 if (pmvr_adapt_mv(&mx, &my, ctr_x, ctr_y, bmx, bmy, search_pattern[pos][0], search_pattern[pos][1])) {
                     continue;
                 }
@@ -611,7 +611,7 @@ int xavs2_me_get_buf_size(xavs2_param_t *param)
 void xavs2_me_init(xavs2_t *h, uint8_t **mem_base)
 {
     uint8_t *mbase  = *mem_base;
-    int me_range    = XAVS2_MAX(256, h->param.search_range);
+    int me_range    = XAVS2_MAX(256, h->param->search_range);
     int subpel_num  = 4 * (2 * me_range + 3);
     int max_mv_bits = 5 + 2 * (int)ceil(log(subpel_num + 1) / log(2) + 1e-10);
     int max_mvd     = (1 << ((max_mv_bits >> 1))) - 1;
@@ -887,7 +887,7 @@ dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc
     int mv_y_min  = p_me->mv_min_fpel[1];
     int mv_x_max  = p_me->mv_max_fpel[0];
     int mv_y_max  = p_me->mv_max_fpel[1];
-    int me_range  = h->param.search_range;
+    int me_range  = h->param->search_range;
     int lambda    = h->i_lambda_factor; // factor for determining Lagrangian's motion cost
     const uint32_t mv_min = pack16to32_mask2(-mv_x_min, -mv_y_min);
     const uint32_t mv_max = pack16to32_mask2(mv_x_max, mv_y_max) | 0x8000;
@@ -919,7 +919,7 @@ dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc
 
     /* -------------------------------------------------------------
      * search using different method */
-    switch (h->param.me_method) {
+    switch (h->param->me_method) {
     case XAVS2_ME_TZ:         /* TZ */
     {
         const int RasterDistance = 16;
@@ -1203,8 +1203,8 @@ dist_t xavs2_me_search_sym(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, 
     int mv_x_max = p_me->mv_max[0];
     int mv_y_max = p_me->mv_max[1];
     int lambda   = h->i_lambda_factor;
-    int min_pos2 = (h->param.enable_hadamard ? 0 : 1);
-    int max_pos2 = (h->param.enable_hadamard ? XAVS2_MAX(1, search_pos2) : search_pos2);
+    int min_pos2 = (h->param->enable_hadamard ? 0 : 1);
+    int max_pos2 = (h->param->enable_hadamard ? XAVS2_MAX(1, search_pos2) : search_pos2);
     const uint32_t mv_min = pack16to32_mask2(-mv_x_min, -mv_y_min);
     const uint32_t mv_max = pack16to32_mask2(mv_x_max, mv_y_max) | 0x8000;
     const uint16_t *p_cost_mvx = h->mvbits - p_me->mvp.x;
@@ -1246,7 +1246,7 @@ dist_t xavs2_me_search_sym(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, 
     // loop over search positions
     if (h->use_fractional_me >= 2) {
         for (pos = 1; pos < search_pos4; pos++) {
-            if (h->param.enable_pmvr) {
+            if (h->param->enable_pmvr) {
                 if (pmvr_adapt_mv(&mx, &my, ctr_x, ctr_y, mv->x, mv->y, Spiral[pos][0], Spiral[pos][1])) {
                     continue;
                 }
@@ -1289,8 +1289,8 @@ dist_t xavs2_me_search_bid(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, 
     int mv_x_max = p_me->mv_max[0];
     int mv_y_max = p_me->mv_max[1];
     int lambda   = h->i_lambda_factor;
-    int min_pos2 = (h->param.enable_hadamard ? 0 : 1);
-    int max_pos2 = (h->param.enable_hadamard ? XAVS2_MAX(1, search_pos2) : search_pos2);
+    int min_pos2 = (h->param->enable_hadamard ? 0 : 1);
+    int max_pos2 = (h->param->enable_hadamard ? XAVS2_MAX(1, search_pos2) : search_pos2);
     int block_w = p_me->i_block_w;
     int xx2;
     int yy2;
@@ -1365,7 +1365,7 @@ dist_t xavs2_me_search_bid(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, 
     // loop over search positions
     if (h->use_fractional_me >= 2) {
         for (pos = 1; pos < search_pos4; pos++) {
-            if (h->param.enable_pmvr) {
+            if (h->param->enable_pmvr) {
                 if (pmvr_adapt_mv(&mx, &my, ctr_x, ctr_y, fwd_mv->x, fwd_mv->y, Spiral[pos][0], Spiral[pos][1])) {
                     continue;
                 }

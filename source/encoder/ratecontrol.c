@@ -306,17 +306,17 @@ static double rc_calculate_gop_delta_qp(ratectrl_t *rc, int frm_type, int gop_le
 static int rc_calculate_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
 {
     ratectrl_t *rc = h->rc;
-    const int max_qp = rc->i_max_qp + (h->param.sample_bit_depth - 8) * 8;
+    const int max_qp = rc->i_max_qp + (h->param->sample_bit_depth - 8) * 8;
     const int remain_frames = rc->i_total_frames - rc->i_coded_frames;
     double qp;
 
-    assert(h->param.i_rc_method != XAVS2_RC_CQP);
+    assert(h->param->i_rc_method != XAVS2_RC_CQP);
 
     /* call before floating point arithmetic */
     xavs2_emms();
 
     /* the initial frame QP */
-    if (h->param.enable_refine_qp && h->param.intra_period > 1) {
+    if (h->param->enable_refine_qp && h->param->intra_period > 1) {
         qp = 5.661 * log(h->f_lambda_mode) + 13.131;
     } else {
         qp = h->i_qp;
@@ -338,7 +338,7 @@ static int rc_calculate_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int forc
         double bit = log(1000 * rc->f_target_bpp);
         double gpp = log(cal_frame_gradient(h->fenc));
         int    idx = XAVS2_MIN(2, rc->i_intra_period);
-        int    max_i_qp = 63 + (h->param.sample_bit_depth - 8) * 8 - 10;
+        int    max_i_qp = 63 + (h->param->sample_bit_depth - 8) * 8 - 10;
 
         qp = (tab_qp_gpp[idx][0] + tab_qp_gpp[idx][1] * gpp - bit) / tab_qp_gpp[idx][2];
         qp = XAVS2_CLIP3F(20, max_i_qp, qp);
@@ -584,7 +584,7 @@ int xavs2_ratecontrol_base_qp(xavs2_t *h)
 int xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
 {
     /* get QP for current frame */
-    if (h->param.i_rc_method != XAVS2_RC_CQP && frm_type != XAVS2_TYPE_B) {
+    if (h->param->i_rc_method != XAVS2_RC_CQP && frm_type != XAVS2_TYPE_B) {
         return rc_calculate_frame_qp(h, frm_idx, frm_type, force_qp); //EKIN_MARK
     } else {
         return h->i_qp;         // return the old value directly
@@ -607,12 +607,12 @@ int xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp)
     UNUSED_PARAMETER(h);
     UNUSED_PARAMETER(frm_idx);
 
-    //if (h->param.i_rc_method == XAVS2_RC_CBR_SCU && img->current_mb_nr == 0) {
+    //if (h->param->i_rc_method == XAVS2_RC_CBR_SCU && img->current_mb_nr == 0) {
     //    Init_LCURateControl(rc, num_of_orgMB);
     //}
 
 #if RC_LCU_LEVEL
-    if (h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         ratectrl_t *rc = h->rc;
         double lambda_mode = 0.5;
         int current_mb_nr = 0;  /* FIX: current LCU index */
@@ -654,7 +654,7 @@ int xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp)
         }
 
         lambda_mode *= pow(2, (rc->RcMBQP - qp) / 4.0);
-        rc->RcMBQP = XAVS2_MAX(rc->i_min_qp, XAVS2_MIN(rc->RcMBQP, rc->i_max_qp + (h->param.sample_bit_depth - 8) * 8));
+        rc->RcMBQP = XAVS2_MAX(rc->i_min_qp, XAVS2_MIN(rc->RcMBQP, rc->i_max_qp + (h->param->sample_bit_depth - 8) * 8));
 
         rc->SumMBQP += rc->RcMBQP;
         rc->NumMB++;
@@ -683,7 +683,7 @@ void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp)
     UNUSED_PARAMETER(qp);
 
 #if RC_LCU_LEVEL
-    if (h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         ratectrl_t *rc = h->rc;
         int LCUbits;
 
@@ -719,12 +719,12 @@ void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, i
 
     UNUSED_PARAMETER(frm_idx);
 
-    if (h->param.i_rc_method == XAVS2_RC_CQP) {
+    if (h->param->i_rc_method == XAVS2_RC_CQP) {
         return;                 /* no need to update */
     }
 
 #if RC_LCU_LEVEL
-    if (h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         frm_qp = (int)((0.5 + rc->SumMBQP) / rc->NumMB);
     }
 #endif

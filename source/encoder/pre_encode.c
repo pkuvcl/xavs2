@@ -61,7 +61,7 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
      *
      */
     lookahead_t *lookahead = &h_mgr->lookahead;
-    xavs2_param_t *param   = &h_mgr->p_coder->param;
+    xavs2_param_t *param   = h_mgr->p_coder->param;
     int b_delayed = 0;            // the frame is normal to be encoded default
 
     /* slice type decision */
@@ -184,7 +184,7 @@ void lookahead_append_frame(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_fra
 static INLINE
 int lookahead_append_rest_frames(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_frame_t **frm_set, int index_in_gop)
 {
-    int i_lowdelay_frame = h_mgr->p_coder->param.enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+    int i_lowdelay_frame = h_mgr->p_coder->param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
     int i;
     int num_out = 0;
 
@@ -198,7 +198,7 @@ int lookahead_append_rest_frames(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs
             rest_frm->i_reordered_pts = rest_frm->i_pts; /* DTS is same as PTS */
 
             /* append to output list to be encoded */
-            lookahead_append_frame(h_mgr, list_out, rest_frm, h_mgr->p_coder->param.successive_Bframe, i);
+            lookahead_append_frame(h_mgr, list_out, rest_frm, h_mgr->p_coder->param->successive_Bframe, i);
             num_out++;
         }
     }
@@ -225,7 +225,7 @@ int lookahead_append_rest_frames(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs
 int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 {
     xavs2_t         *h               = h_mgr->p_coder;
-    xavs2_param_t   *param           = &h->param;
+    xavs2_param_t   *param           = h->param;
     xavs2_frame_t  **blocked_frm_set = h_mgr->blocked_frm_set;
     int64_t         *blocked_pts_set = h_mgr->blocked_pts_set;
     xlist_t         *list_out        = &h_mgr->list_frames_ready;

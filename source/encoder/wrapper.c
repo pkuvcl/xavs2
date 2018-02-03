@@ -89,9 +89,9 @@ void frame_buffer_destroy(xavs2_handler_t *h_mgr, xavs2_frame_buffer_t *frm_buf)
 void frame_buffer_update(xavs2_t *h, xavs2_frame_buffer_t *frm_buf, xavs2_frame_t *frm)
 {
     /* update the task manager */
-    if (h->param.intra_period != 0 && frm->i_frm_type == XAVS2_TYPE_I) {
+    if (h->param->intra_period != 0 && frm->i_frm_type == XAVS2_TYPE_I) {
         frm_buf->COI_IDR = frm->i_frm_coi;
-        if (h->param.i_cfg_type != XAVS2_RPS_CFG_RAP) {
+        if (h->param->i_cfg_type != XAVS2_RPS_CFG_RAP) {
             frm_buf->POC_IDR = frm->i_frame;
         }
     }

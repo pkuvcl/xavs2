@@ -106,7 +106,7 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
             h_mgr->i_output = next_output_frame_idx;
 
 #if XAVS2_DUMP_REC
-            dump_yuv_out(h, h_mgr->h_rec_file, frame, h->param.org_width, h->param.org_height);
+            dump_yuv_out(h, h_mgr->h_rec_file, frame, h->param->org_width, h->param->org_height);
 #endif //if XAVS2_DUMP_REC
             xavs2_pthread_mutex_unlock(&frame->mutex);   /* unlock */
 

@@ -74,8 +74,8 @@ void slice_lcu_row_order_init(xavs2_t *h)
     int idx_slice = 0;
     int i;
 
-    if (h->param.i_lcurow_threads > 1 && h->param.slice_num > 1) {
-        int slice_num = h->param.slice_num;
+    if (h->param->i_lcurow_threads > 1 && h->param->slice_num > 1) {
+        int slice_num = h->param->slice_num;
         int set_new_lcu_row = 1;
         int k;
 
@@ -129,7 +129,7 @@ void xavs2_slices_init(xavs2_t *h)
 {
     slice_t *p_slice;
 
-    if (h->param.slice_num < 2) {
+    if (h->param->slice_num < 2) {
         /* single slice per frame */
         p_slice = h->slices[0];
 
@@ -145,7 +145,7 @@ void xavs2_slices_init(xavs2_t *h)
     } else {
         /* multi-slice per frame */
         uint8_t *p_bs_start   = h->p_bs_buf_slice;
-        const int i_slice_num = h->param.slice_num;
+        const int i_slice_num = h->param->slice_num;
         int i_rest_rows       = h->i_height_in_lcu;
         int i_len_per_row     = (h->i_bs_buf_slice - i_slice_num * CACHE_LINE_256B) / i_rest_rows;
         int i_first_row_id    = 0;
@@ -378,7 +378,7 @@ void *xavs2_lcu_row_write(void *arg)
     const int    i_lcu_y  = row->row;
     row_info_t  *last_row = (i_lcu_y > slice->i_first_lcu_y) ? &h->frameinfo->rows[i_lcu_y - 1] : 0;
     lcu_analyse_t lcu_analyse = g_funcs.compress_ctu[h->i_type];
-    const bool_t b_enable_wpp = h->param.i_lcurow_threads > 1;
+    const bool_t b_enable_wpp = h->param->i_lcurow_threads > 1;
     int min_level = h->i_scu_level;
     int max_level = h->i_lcu_level;
     int i_lcu_x;
@@ -387,7 +387,7 @@ void *xavs2_lcu_row_write(void *arg)
 #endif
 
     h->lcu.get_skip_mvs = g_funcs.get_skip_mv_predictors[h->i_type];
-    if (h->param.slice_num > 1) {
+    if (h->param->slice_num > 1) {
         slice_init_bufer(h, slice);
     }
 
@@ -453,19 +453,19 @@ void *xavs2_lcu_row_write(void *arg)
 
         /* 4, deblock on lcu */
 #if XAVS2_DUMP_REC
-        if (!h->param.loop_filter_disable) {
+        if (!h->param->loop_filter_disable) {
             xavs2_lcu_deblock(h, h->fdec);
         }
 #else
         /* no need to do loop-filter without dumping, but at this time,
          * the PSNR is computed not correctly if XAVS2_STAT is on. */
-        if (!h->param.loop_filter_disable && h->fdec->rps.referd_by_others) {
+        if (!h->param->loop_filter_disable && h->fdec->rps.referd_by_others) {
             xavs2_lcu_deblock(h, h->fdec);
         }
 #endif
 
         /* copy reconstruction pixels when the last LCU is reconstructed */
-        if (h->param.enable_sao) {
+        if (h->param->enable_sao) {
             if (i_lcu_x > 0) {
                 sao_get_lcu_param_after_deblock(h, p_aec, i_lcu_x - 1, i_lcu_y);
                 sao_filter_lcu(h, h->sao_blk_params[i_lcu_y * h->i_width_in_lcu + i_lcu_x - 1], i_lcu_x - 1, i_lcu_y);
@@ -489,7 +489,7 @@ void *xavs2_lcu_row_write(void *arg)
 
     /* post-processing for current lcu row -------------------------
      */
-    if (h->param.enable_sao && (h->slice_sao_on[0] || h->slice_sao_on[1] || h->slice_sao_on[2])) {
+    if (h->param->enable_sao && (h->slice_sao_on[0] || h->slice_sao_on[1] || h->slice_sao_on[2])) {
         int sao_off_num_y = 0;
         int sao_off_num_u = 0;
         int sao_off_num_v = 0;
@@ -515,7 +515,7 @@ void *xavs2_lcu_row_write(void *arg)
         h->num_sao_lcu_off[i_lcu_y][2] = num_lcu;
     }
 
-    if (h->param.enable_alf && (h->pic_alf_on[0] || h->pic_alf_on[1] || h->pic_alf_on[2])) {
+    if (h->param->enable_alf && (h->pic_alf_on[0] || h->pic_alf_on[1] || h->pic_alf_on[2])) {
         if (h->i_type == SLICE_TYPE_B && IS_ALG_ENABLE(OPT_FAST_ALF)) {
             i_lcu_x = ((i_lcu_y + h->fenc->i_frm_coi) & 1);
             for (; i_lcu_x < h->i_width_in_lcu; i_lcu_x += 2) {

@@ -767,7 +767,7 @@ void interpolate_lcu_row(xavs2_t *h, xavs2_frame_t* frm, int i_lcu_y)
     }
 
     /* 多slice时减少冗余运算 */
-    if (h->param.slice_num > 1 && !b_start && !b_end) {
+    if (h->param->slice_num > 1 && !b_start && !b_end) {
         if (slice->i_first_lcu_y == i_lcu_y) {
             /* Slice的上边界 */
             y_start += (MC_OFFSET + PAD_OFFSET);

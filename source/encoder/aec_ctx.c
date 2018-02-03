@@ -191,7 +191,7 @@ static ALWAYS_INLINE void aec_set_function_handles(xavs2_t *h, binary_t *fh, int
         memcpy(fh, &gf_aec_default, sizeof(binary_t));
     } else {
         // estimate bit rate without writing (during RDO)
-        switch (h->param.rdo_bit_est_method) {
+        switch (h->param->rdo_bit_est_method) {
         case 1:
             memcpy(fh, &gf_aec_fastrdo, sizeof(binary_t));
             break;

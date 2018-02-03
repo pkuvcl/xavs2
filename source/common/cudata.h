@@ -50,7 +50,7 @@ void lcu_end(xavs2_t *h, int i_lcu_x, int i_lcu_y);
 static ALWAYS_INLINE int clip_qp(xavs2_t *h, int i_qp)
 {
     /* AVS2-P2： 图像量化因子  picture_qp */
-    int max_qp = MAX_QP + (h->param.sample_bit_depth - 8) * 8;
+    int max_qp = MAX_QP + (h->param->sample_bit_depth - 8) * 8;
     return XAVS2_MAX(MIN_QP, XAVS2_MIN(max_qp, i_qp));
 }
 

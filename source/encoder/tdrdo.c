@@ -614,7 +614,7 @@ void tdrdo_frame_start(xavs2_t *h)
     assert(td_rdo != NULL);
 
     td_rdo->GlobeFrameNumber = h->ip_pic_idx;
-    if (h->param.successive_Bframe) {
+    if (h->param->successive_Bframe) {
         td_rdo->pRealFD = &td_rdo->RealDList.FrameDistortionArray[td_rdo->GlobeFrameNumber];
     } else {
         td_rdo->pRealFD = &td_rdo->RealDList.FrameDistortionArray[td_rdo->globenumber];
@@ -627,7 +627,7 @@ void tdrdo_frame_start(xavs2_t *h)
             td_rdo->ppreF.Y_base   = h->img_luma_pre->planes[IMG_Y];
             td_rdo->ppreF.nStrideY = h->img_luma_pre->i_stride[IMG_Y];
             xavs2_frame_copy_planes(h, h->img_luma_pre, h->fenc);
-        } else  if ((int)h->fenc->i_frame < h->param.num_frames) {
+        } else  if ((int)h->fenc->i_frame < h->param->num_frames) {
             td_rdo->pOMCPFD = &td_rdo->OMCPDList.FrameDistortionArray[td_rdo->GlobeFrameNumber - 1];
             td_rdo->pOMCPFD->BlockDistortionArray = (BD *)xavs2_calloc(td_rdo->pOMCPFD->TotalNumOfBlocks, sizeof(BD));
             td_rdo->porgF.Y_base = h->fenc->planes[IMG_Y];
@@ -638,7 +638,7 @@ void tdrdo_frame_start(xavs2_t *h)
         td_rdo->pOMCPFD = NULL;
     }
 
-    if (td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && td_rdo->GlobeFrameNumber < h->param.num_frames - 1) {
+    if (td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && td_rdo->GlobeFrameNumber < h->param->num_frames - 1) {
         CaculateKappaTableLDP(h, &td_rdo->OMCPDList, &td_rdo->RealDList, td_rdo->GlobeFrameNumber, h->i_qp);
     }
 }
@@ -652,7 +652,7 @@ void tdrdo_frame_done(xavs2_t *h)
     td_rdo_t *td_rdo = h->td_rdo;
     assert(td_rdo != NULL);
 
-    if ((h->fenc->i_frame % td_rdo->StepLength == 0 && !h->param.successive_Bframe) || h->param.successive_Bframe) {
+    if ((h->fenc->i_frame % td_rdo->StepLength == 0 && !h->param->successive_Bframe) || h->param->successive_Bframe) {
         td_rdo->precF.Y_base = h->fdec->planes[IMG_Y];
         //td_rdo->precF.nStrideY = h->fdec->i_stride[IMG_Y];// fdec->stride[0] , bitrate rise ?
         td_rdo->precF.nStrideY = h->img_luma_pre->i_stride[IMG_Y];   //to check: fdec->stride[0] ? by lutao
@@ -693,10 +693,10 @@ void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda)
     assert(td_rdo != NULL);
 
     td_rdo->CurMBQP = h->i_qp;
-    if (td_rdo->GlobeFrameNumber < h->param.num_frames && h->i_type != SLICE_TYPE_I) {
-        if (h->param.successive_Bframe && h->param.num_frames > 1 && td_rdo->GlobeFrameNumber <= ((int)((h->param.num_frames - 1) / td_rdo->StepLength))*td_rdo->StepLength) {
+    if (td_rdo->GlobeFrameNumber < h->param->num_frames && h->i_type != SLICE_TYPE_I) {
+        if (h->param->successive_Bframe && h->param->num_frames > 1 && td_rdo->GlobeFrameNumber <= ((int)((h->param->num_frames - 1) / td_rdo->StepLength))*td_rdo->StepLength) {
             td_rdo->pOMCPFD = SearchFrameDistortionArray(&td_rdo->OMCPDList, td_rdo->GlobeFrameNumber, td_rdo->StepLength, h->i_type);
-        } else if (!h->param.successive_Bframe && h->param.num_frames > td_rdo->StepLength && td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0) {
+        } else if (!h->param->successive_Bframe && h->param->num_frames > td_rdo->StepLength && td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0) {
             td_rdo->pOMCPFD = &td_rdo->OMCPDList.FrameDistortionArray[(td_rdo->GlobeFrameNumber - 1) / td_rdo->StepLength];
         } else {
             td_rdo->pOMCPFD = NULL;
@@ -704,7 +704,7 @@ void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda)
     }
 
     // Just for LDP
-    if (h->i_type != SLICE_TYPE_I && h->param.successive_Bframe == 0) {
+    if (h->i_type != SLICE_TYPE_I && h->param->successive_Bframe == 0) {
         AdjustLcuQPLambdaLDP(h, td_rdo->pOMCPFD, h->lcu.i_scu_xy, h->i_width_in_mincu, new_lambda);
         td_rdo->CurMBQP = XAVS2_CLIP3F(MIN_QP, MAX_QP, td_rdo->CurMBQP);
     }
@@ -717,8 +717,8 @@ void tdrdo_lcu_update(xavs2_t *h)
     td_rdo_t *td_rdo = h->td_rdo;
     assert(td_rdo != NULL);
 
-    if ((td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && !h->param.successive_Bframe) || h->param.successive_Bframe) {
+    if ((td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && !h->param->successive_Bframe) || h->param->successive_Bframe) {
         // stores for key frame
-        StoreLCUInf(td_rdo->pRealFD, h->lcu.i_scu_xy, h->param.org_width / MIN_CU_SIZE, td_rdo->CurMBQP, h->f_lambda_mode, h->i_type);
+        StoreLCUInf(td_rdo->pRealFD, h->lcu.i_scu_xy, h->param->org_width / MIN_CU_SIZE, td_rdo->CurMBQP, h->f_lambda_mode, h->i_type);
     }
 }

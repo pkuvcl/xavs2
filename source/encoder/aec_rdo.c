@@ -726,7 +726,7 @@ int aec_write_cu_cbp_rdo(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur
             biari_encode_symbol_rdo(p_aec, (uint8_t)transform_split_flag, p_aec->p_ctx_set->transform_split_flag);
 
             // write cbp for chroma
-            if (h->param.chroma_format != CHROMA_400) {
+            if (h->param->chroma_format != CHROMA_400) {
                 switch ((i_cu_cbp >> 4) & 0x03) {
                 case 0:
                     biari_encode_symbol_rdo(p_aec, 0, p_ctx);
@@ -775,7 +775,7 @@ int aec_write_cu_cbp_rdo(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur
         }
 
         // write bits for chroma
-        if (h->param.chroma_format != CHROMA_400) {
+        if (h->param->chroma_format != CHROMA_400) {
             switch ((i_cu_cbp >> 4) & 0x03) {
             case 0:
                 biari_encode_symbol_rdo(p_aec, 0, p_ctx + 1);
@@ -1552,11 +1552,11 @@ int write_cu_header_rdo(xavs2_t *h, aec_t *p_aec, cu_t *p_cu)
 
     // write bits for inter cu type
     if (h->i_type != SLICE_TYPE_I) {
-        rate += aec_write_cutype_rdo(p_aec, mode, level, p_cu->cu_info.i_cbp, h->param.enable_amp);
+        rate += aec_write_cutype_rdo(p_aec, mode, level, p_cu->cu_info.i_cbp, h->param->enable_amp);
 
         if (h->i_type == SLICE_TYPE_B && (mode >= PRED_2Nx2N && mode <= PRED_nRx2N)) {
             rate += aec_write_pdir_rdo(p_aec, mode, level, p_cu->cu_info.b8pdir[0], p_cu->cu_info.b8pdir[1]);
-        } else if (h->i_type == SLICE_TYPE_F && h->param.enable_dhp && (h->i_ref > 1) &&
+        } else if (h->i_type == SLICE_TYPE_F && h->param->enable_dhp && (h->i_ref > 1) &&
             ((mode >= PRED_2Nx2N && mode <= PRED_nRx2N && level > B8X8_IN_BIT) ||
              (mode == PRED_2Nx2N                       && level == B8X8_IN_BIT))) {
             rate += aec_write_pdir_dhp_rdo(p_aec, mode, p_cu->cu_info.b8pdir[0], p_cu->cu_info.b8pdir[1]);
@@ -1569,12 +1569,12 @@ int write_cu_header_rdo(xavs2_t *h, aec_t *p_aec, cu_t *p_cu)
             if (h->i_type == SLICE_TYPE_F) {
                 int weighted_skip_mode = p_cu->cu_info.directskip_wsm_idx;
                 /* write weighted skip mode */
-                if (h->param.enable_wsm && h->i_ref > 1) {
+                if (h->param->enable_wsm && h->i_ref > 1) {
                     rate += aec_write_wpm_rdo(p_aec, weighted_skip_mode, h->i_ref);
                 }
 
                 /* write bits for F-spatial-skip mode */
-                b_write_spatial_skip = (h->param.enable_mhp_skip && (weighted_skip_mode == 0));
+                b_write_spatial_skip = (h->param->enable_mhp_skip && (weighted_skip_mode == 0));
             }
 
             b_write_spatial_skip = b_write_spatial_skip || (SLICE_TYPE_B == h->i_type);
@@ -1590,14 +1590,14 @@ int write_cu_header_rdo(xavs2_t *h, aec_t *p_aec, cu_t *p_cu)
         int num_of_intra_block = mode != PRED_I_2Nx2N ? 4 : 1;
 
         /* write "transform_split_flag" and cu_type for SDIP */
-        rate += aec_write_intra_cutype_rdo(p_aec, mode, level, p_cu->cu_info.i_tu_split, h->param.enable_sdip);
+        rate += aec_write_intra_cutype_rdo(p_aec, mode, level, p_cu->cu_info.i_tu_split, h->param->enable_sdip);
 
         /* write intra pred mode */
         for (i = 0; i < num_of_intra_block; i++) {
             rate += aec_write_intra_pred_mode_rdo(p_aec, p_cu->cu_info.pred_intra_modes[i]);
         }
 
-        if (h->param.chroma_format != CHROMA_400) {
+        if (h->param->chroma_format != CHROMA_400) {
             int i_left_cmode = DM_PRED_C;
             /* check left */
             if (p_cu->p_left_cu != NULL) {
@@ -1655,7 +1655,7 @@ int write_cu_refs_mvds_rdo(xavs2_t *h, aec_t *p_aec, cu_t *p_cu)
     /* write backward reference indexes of this CU, no need for current AVS2 */
 
     /* write DMH mode, "dir_multi_hypothesis_mode" */
-    if (h->i_type == SLICE_TYPE_F /*&& h->param.enable_dmh*/ 
+    if (h->i_type == SLICE_TYPE_F /*&& h->param->enable_dmh*/ 
         && p_cu->cu_info.b8pdir[0] == PDIR_FWD && p_cu->cu_info.b8pdir[1] == PDIR_FWD 
         && p_cu->cu_info.b8pdir[2] == PDIR_FWD && p_cu->cu_info.b8pdir[3] == PDIR_FWD) {
         if (!(p_cu->cu_info.i_level == B8X8_IN_BIT && p_cu->cu_info.i_mode >= PRED_2NxN && p_cu->cu_info.i_mode <= PRED_nRx2N)) {
@@ -1696,7 +1696,7 @@ int write_cu_cbp_dqp_rdo(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int sli
         *last_dqp = 0;
     }
 
-    if (p_cu_info->i_cbp != 0 && h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (p_cu_info->i_cbp != 0 && h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         rate += aec_write_dqp_rdo(p_aec, cu_get_qp(h, p_cu_info), *last_dqp);
 
 #if ENABLE_RATE_CONTROL

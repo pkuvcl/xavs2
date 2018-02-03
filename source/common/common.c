@@ -219,7 +219,7 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
 void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...)
 {
     xavs2_t *h = (xavs2_t *)p;
-    if (h == NULL || (i_log_level & 0x0F) <= h->param.i_log_level) {
+    if (h == NULL || (i_log_level & 0x0F) <= h->param->i_log_level) {
         va_list arg;
         char str_in[2048];
         va_start(arg, psz_fmt);

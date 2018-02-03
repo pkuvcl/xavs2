@@ -173,8 +173,8 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
     xavs2_frame_t *frame;
     int img_w_l  = h->i_width;
     int img_h_l  = h->i_height;
-    int img_w_c  = img_w_l >> (h->param.chroma_format <= CHROMA_420 ? 1 : 0);
-    int img_h_c  = img_h_l >> (h->param.chroma_format <= CHROMA_420 ? 1 : 0);
+    int img_w_c  = img_w_l >> (h->param->chroma_format <= CHROMA_420 ? 1 : 0);
+    int img_h_c  = img_h_l >> (h->param->chroma_format <= CHROMA_420 ? 1 : 0);
     int align    = 32;
     int disalign = 1 << 16;
     int stride_l, stride_c;
@@ -230,7 +230,7 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
 
     if (alloc_type == FT_ENC) {
 #if XAVS2_ADAPT_LAYER
-        i_nal_info_size = (h->param.slice_num + 6) * sizeof(xavs2_nal_info_t);
+        i_nal_info_size = (h->param->slice_num + 6) * sizeof(xavs2_nal_info_t);
 #endif
         bs_size         = size_l * sizeof(uint8_t);    /* let the PSNR compute correctly */
     }
@@ -277,14 +277,14 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
     frame->i_frm_coi = -1;
     frame->i_gop_idr_coi = -1;
 
-    if (h->param.chroma_format == CHROMA_400) {
+    if (h->param->chroma_format == CHROMA_400) {
         frame->i_plane = 1;
     }
 
     frame->i_frm_type = XAVS2_TYPE_AUTO;
     frame->i_pts  = -1;
     frame->i_dts  = -1;
-    frame->b_enable_intra = (h->param.enable_intra);
+    frame->b_enable_intra = (h->param->enable_intra);
 
     /* buffer for fenc */
     if (alloc_type == FT_ENC) {
@@ -543,7 +543,7 @@ void xavs2_frame_expand_border_lcurow(xavs2_t *h, xavs2_frame_t *frame, int i_lc
     int b_end       = (i_lcu_y == h->i_height_in_lcu - 1);
     int i;
 
-    assert(h->param.slice_num == 1 || !h->param.b_cross_slice_loop_filter);
+    assert(h->param->slice_num == 1 || !h->param->b_cross_slice_loop_filter);
 
     for (i = 0; i < frame->i_plane; i++) {
         int chroma_shift = !!i;
@@ -583,10 +583,10 @@ void xavs2_frame_expand_border_mod8(xavs2_t *h, xavs2_frame_t *frame)
 
     for (i = 0; i < frame->i_plane; i++) {
         int i_scale  = !!i;
-        int i_width  = h->param.org_width  >> i_scale;
-        int i_height = h->param.org_height >> i_scale;
-        int i_padx   = (h->i_width  - h->param.org_width ) >> i_scale;
-        int i_pady   = (h->i_height - h->param.org_height) >> i_scale;
+        int i_width  = h->param->org_width  >> i_scale;
+        int i_height = h->param->org_height >> i_scale;
+        int i_padx   = (h->i_width  - h->param->org_width ) >> i_scale;
+        int i_pady   = (h->i_height - h->param->org_height) >> i_scale;
         int i_stride = frame->i_stride[i];
 
         /* expand right border */

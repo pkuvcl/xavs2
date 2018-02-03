@@ -184,7 +184,7 @@ void cu_set_tu_split_type(xavs2_t *h, cu_info_t *p_cu_info, int transform_split_
 {
     int mode = p_cu_info->i_mode;
     int level = p_cu_info->i_level;
-    int enable_nsqt_sdip = IS_INTRA_MODE(mode) ? h->param.enable_sdip : h->param.enable_nsqt;
+    int enable_nsqt_sdip = IS_INTRA_MODE(mode) ? h->param->enable_sdip : h->param->enable_nsqt;
 
     enable_nsqt_sdip = enable_nsqt_sdip && level > B8X8_IN_BIT;
     p_cu_info->i_tu_split = transform_split_flag ? TU_SPLIT_TYPE[mode][enable_nsqt_sdip] : TU_SPLIT_NON;
@@ -241,7 +241,7 @@ void cu_init(xavs2_t *h, cu_t *p_cu, cu_info_t *best, int i_level)
     /* set qp needed in loop filter (even if constant QP is used) */
     p_cu->cu_info.i_cu_qp = h->i_qp;
 
-    if (h->param.i_rc_method == XAVS2_RC_CBR_SCU) {
+    if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         int i_left_cu_qp;
         if (p_cu->i_pix_x > 0) {
             i_left_cu_qp = h->cu_info[p_cu->i_scu_xy - 1].i_cu_qp;
@@ -664,7 +664,7 @@ int tu_quant_forward(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *p_coeff, int
         41,     82,    165,    330,    660,   1321,   2642,   5285,
      10570,  21140,  42281,  84562, 169125, 338250, 676500, 1353001,
     };
-    const int shift = 15 + LIMIT_BIT - (h->param.sample_bit_depth + 1) - i_level;
+    const int shift = 15 + LIMIT_BIT - (h->param->sample_bit_depth + 1) - i_level;
     const int add = tab_quant_fwd_add[shift + b_intra];
 
     if (h->lcu.b_enable_rdoq) {
@@ -708,7 +708,7 @@ static INLINE
 void tu_quant_inverse(xavs2_t *h, cu_t *p_cu, coeff_t *coef, int num_coeff, int i_level, int qp, int b_luma)
 {
     const int scale = tab_IQ_TAB[qp];
-    const int shift = tab_IQ_SHIFT[qp] + (h->param.sample_bit_depth + 1) + i_level - LIMIT_BIT;
+    const int shift = tab_IQ_SHIFT[qp] + (h->param->sample_bit_depth + 1) + i_level - LIMIT_BIT;
 
 #if !ENABLE_WQUANT
     UNUSED_PARAMETER(h);
@@ -724,12 +724,12 @@ void tu_quant_inverse(xavs2_t *h, cu_t *p_cu, coeff_t *coef, int num_coeff, int 
         const int16_t(*AVS_SCAN)[2] = NULL;
         int wqm_size_id = 0;
         int wqm_stride = 0;
-        int wqm_shift = h->param.PicWQDataIndex == 1 ? 3 : 0;
+        int wqm_shift = h->param->PicWQDataIndex == 1 ? 3 : 0;
         int xy_shift = 0;
         int16_t *wq_matrix;
 
         // adaptive frequency weighting quantization
-        if ((h->param.enable_sdip || h->param.enable_nsqt) && (b_hor || b_ver)) {
+        if ((h->param->enable_sdip || h->param->enable_nsqt) && (b_hor || b_ver)) {
             xy_shift = XAVS2_MIN(2, i_level - B4X4_IN_BIT);
             wqm_size_id = xy_shift + 1;
 
@@ -816,7 +816,7 @@ static int cu_recon_chroma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, dist_t *distort
 
         qp_c = cu_get_qp(h, &p_cu->cu_info);
 #if ENABLE_WQUANT
-        qp_c += (uv == 0 ? h->param.chroma_quant_param_delta_u : h->param.chroma_quant_param_delta_v);
+        qp_c += (uv == 0 ? h->param->chroma_quant_param_delta_u : h->param->chroma_quant_param_delta_v);
 #endif
 
         qp_c = cu_get_chroma_qp(h, qp_c, uv);
@@ -884,7 +884,7 @@ int cu_recon_intra_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, pel_t *p_pred, int
     int w_tr = bsx >> used_wavelet;
     int h_tr = bsy >> used_wavelet;
     int num_non_zero;
-    int b_2nd_trans = h->param.enable_secT;
+    int b_2nd_trans = h->param->enable_secT;
     cu_parallel_t *p_enc  = cu_get_enc_context(h, p_cu->cu_info.i_level);
     pel_t      *p_fenc    = h->lcu.p_fenc[0] + pos_y * FENC_STRIDE + pos_x;
     pel_t      *p_fdec    = p_cu->cu_info.p_rec[0] + block_y * FREC_STRIDE + block_x;
@@ -1167,7 +1167,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
     }
 
     /* 3, Chroma mode decision and CU mode updating */
-    if (h->param.chroma_format != CHROMA_400) {
+    if (h->param->chroma_format != CHROMA_400) {
         int lmode;
         int num_rdo_chroma_mode;
         int idx_chroma_mode;
@@ -1184,7 +1184,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
             int cbp_c;
 
             /* 跳过色度分量第二次调用过程中的模式选择，直接选到最优模式完成RDOQ */
-            if ((h->param.i_rdoq_level == RDOQ_CU_LEVEL && h->lcu.b_enable_rdoq) && predmode_c != best->i_intra_mode_c) {
+            if ((h->param->i_rdoq_level == RDOQ_CU_LEVEL && h->lcu.b_enable_rdoq) && predmode_c != best->i_intra_mode_c) {
                 continue;
             }
             if (predmode_c != DM_PRED_C && predmode_c == lmode) {
@@ -1325,7 +1325,7 @@ bool_t isZeroCuFast(xavs2_t *h, cu_t *p_cu)
 {
     int i_level = p_cu->cu_info.i_level - MIN_PU_SIZE_IN_BIT;
     int i_qp = cu_get_qp(h, &p_cu->cu_info);
-    int thres_satd = (int)(tab_th_zero_block_sad[i_qp][i_level] * h->param.factor_zero_block);
+    int thres_satd = (int)(tab_th_zero_block_sad[i_qp][i_level] * h->param->factor_zero_block);
 
     return p_cu->sum_satd < thres_satd;
 }
@@ -1644,7 +1644,7 @@ int rdo_get_pred_inter(xavs2_t *h, cu_t *p_cu, int cal_luma_chroma)
         }
 
         /* u and v component */
-        if (h->param.chroma_format == CHROMA_420 && (cal_luma_chroma & 2)) {
+        if (h->param->chroma_format == CHROMA_420 && (cal_luma_chroma & 2)) {
             int uvoffset = (FREC_CSTRIDE >> 1);
             start_x >>= 1;
             width   >>= 1;
@@ -1693,8 +1693,8 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
         {1, 0},  /* 32x32 */
         {1, 0},  /* 64x64 */
     };
-    bool_t b_try_tu_nonsplit = h->param.b_fast_2lelvel_tu ? tab_try_2level_tu[p_cu->cu_info.i_level - MIN_CU_SIZE_IN_BIT][0] : 1;
-    bool_t b_try_tu_split    = h->param.b_fast_2lelvel_tu ? tab_try_2level_tu[p_cu->cu_info.i_level - MIN_CU_SIZE_IN_BIT][1] : 1;
+    bool_t b_try_tu_nonsplit = h->param->b_fast_2lelvel_tu ? tab_try_2level_tu[p_cu->cu_info.i_level - MIN_CU_SIZE_IN_BIT][0] : 1;
+    bool_t b_try_tu_split    = h->param->b_fast_2lelvel_tu ? tab_try_2level_tu[p_cu->cu_info.i_level - MIN_CU_SIZE_IN_BIT][1] : 1;
     int mode = p_cu->cu_info.i_mode;
     int cu_size = p_cu->i_size;
     int tmp_cbp;                /* cbp for i_tu_split = 1*/
@@ -1733,7 +1733,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
      * 3, tu decision
      */
     /* 3.1, check chroma residual coding */
-    if (h->param.chroma_format == CHROMA_420){
+    if (h->param->chroma_format == CHROMA_420){
         cbp_c = cu_recon_chroma(h, p_aec, p_cu, &dist_chroma);
 
         if (IS_ALG_ENABLE(OPT_ADVANCE_CHROMA_AEC)) {
@@ -1764,7 +1764,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
     }
 
     /* only get cost with tu depth equals 1 */
-    if ((h->param.enable_tu_2level == 1) || ((h->param.enable_tu_2level == 3) && (p_best->i_tu_split != 0))) {
+    if ((h->enable_tu_2level == 1) || ((h->enable_tu_2level == 3) && (p_best->i_tu_split != 0))) {
         if (b_try_tu_split && b_try_tu_nonsplit && (IS_ALG_ENABLE(OPT_FAST_ZBLOCK) && p_cu->is_zero_block)) {
             b_try_tu_split = FALSE;
         }
@@ -1799,7 +1799,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
             cu_store_parameters(h, p_cu, p_best);
             return 1;  /* return code = 1, means it is the best mode */
         }
-    } else if ((h->param.enable_tu_2level == 0) || ((h->param.enable_tu_2level == 3) && (p_best->i_tu_split == 0))) {   /* only get cost with tu depth equals 0 */
+    } else if ((h->enable_tu_2level == 0) || ((h->enable_tu_2level == 3) && (p_best->i_tu_split == 0))) {   /* only get cost with tu depth equals 0 */
         dist_notsplit = cu_recon_inter_luma(h, p_aec, p_cu, 0, 0, cbp_c, dist_chroma);
         tu_rdcost_inter(h, p_aec, p_cu, dist_notsplit, rate_chroma, &rdcost);
     } else {
@@ -2229,7 +2229,7 @@ void cu_check_inter_partition(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int mode, in
     cu_rdcost_inter(h, p_aec, p_cu, p_min_rdcost, best);
 
     /* 检查DMH模式 */
-    if (h->i_type == SLICE_TYPE_F && h->param.enable_dmh && !h->lcu.bypass_all_dmh && b_check_dmh
+    if (h->i_type == SLICE_TYPE_F && h->param->enable_dmh && !h->lcu.bypass_all_dmh && b_check_dmh
         && !(i_level == B8X8_IN_BIT && mode != PRED_2Nx2N)) {  // disable 8x4 or 4x8 2MVs/PU mode
         int dmh_mode_candidate = 0;
         int max_dmh_mode;
@@ -2454,7 +2454,7 @@ void cu_check_skip_direct_rough2(xavs2_t *h, aec_t *p_aec, cu_info_t *p_best, cu
     }
 
     /* 3, 四个spatial direct类型 (single first, single second, dual first, dual second) */
-    if ((h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param.enable_mhp_skip)) && (!h->fdec->rps.referd_by_others && h->i_type == SLICE_TYPE_B)) {
+    if ((h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param->enable_mhp_skip)) && (!h->fdec->rps.referd_by_others && h->i_type == SLICE_TYPE_B)) {
         p_cu->cu_info.directskip_wsm_idx = 0;
         for (i = 0; i < DS_MAX_NUM; i++) {
             int need_check_mv;
@@ -2480,7 +2480,7 @@ void cu_check_skip_direct_rough2(xavs2_t *h, aec_t *p_aec, cu_info_t *p_best, cu
         p_cu->cu_info.directskip_wsm_idx = (int8_t)best_weighted_skip;
         cu_set_mvs_skip(h, p_cu);
         cu_rdcost_inter(h, p_aec, p_cu, p_min_rdcost, p_best);
-    } else if ((h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param.enable_mhp_skip)) && (h->fdec->rps.poc == 2 || h->fdec->rps.poc == 6)) {
+    } else if ((h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param->enable_mhp_skip)) && (h->fdec->rps.poc == 2 || h->fdec->rps.poc == 6)) {
         if (p_cu->p_left_cu != NULL && p_cu->p_topA_cu != NULL && p_cu->p_topL_cu != NULL && p_cu->p_topR_cu != NULL) {
             if ((p_cu->p_left_cu->i_mode == 0 && p_cu->p_topA_cu->i_mode == 0 && p_cu->p_topL_cu->i_mode == 0 && p_cu->p_topR_cu->i_mode == 0) && (p_cu->p_left_cu->i_cbp == 0 || p_cu->p_topA_cu->i_cbp == 0 || p_cu->p_topL_cu->i_cbp == 0 || p_cu->p_topR_cu->i_cbp == 0)) {
                 p_cu->cu_info.directskip_wsm_idx = 0;
@@ -2527,7 +2527,7 @@ void cu_check_skip_direct_rough2(xavs2_t *h, aec_t *p_aec, cu_info_t *p_best, cu
                 cu_rdcost_inter(h, p_aec, p_cu, p_min_rdcost, p_best);
             }
         }
-    } else if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param.enable_mhp_skip)) {
+    } else if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param->enable_mhp_skip)) {
         if (p_cu->p_left_cu != NULL && p_cu->p_topA_cu != NULL && p_cu->p_topL_cu != NULL && p_cu->p_topR_cu != NULL) {
             if ((p_cu->p_left_cu->i_mode == 0 && p_cu->p_topA_cu->i_mode == 0 && p_cu->p_topL_cu->i_mode == 0 && p_cu->p_topR_cu->i_mode == 0) && (p_cu->p_left_cu->i_cbp == 0 && p_cu->p_topA_cu->i_cbp == 0 && p_cu->p_topL_cu->i_cbp == 0 && p_cu->p_topR_cu->i_cbp == 0)) {
                 p_cu->cu_info.directskip_wsm_idx = 0;
@@ -2643,7 +2643,7 @@ void cu_check_skip_direct_rough1(xavs2_t *h, aec_t *p_aec, cu_info_t *p_best, cu
     }
 
     /* 3, 四个spatial direct类型 (single first, single second, dual first, dual second) */
-    if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param.enable_mhp_skip)) {
+    if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param->enable_mhp_skip)) {
         p_cu->cu_info.directskip_wsm_idx = 0;
         for (i = 0; i < DS_MAX_NUM; i++) {
             int need_check_mv;
@@ -2708,7 +2708,7 @@ void cu_check_skip_direct_fullrdo(xavs2_t *h, aec_t *p_aec, cu_info_t *p_best, c
     }
 
     /* 3, 四个spatial direct类型 (single first, single second, dual first, dual second) */
-    if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param.enable_mhp_skip)) {
+    if (h->i_type == SLICE_TYPE_B || (h->i_type == SLICE_TYPE_F && h->param->enable_mhp_skip)) {
         p_cu->cu_info.directskip_wsm_idx = 0;
         for (i = 0; i < DS_MAX_NUM; i++) {
             p_cu->cu_info.directskip_mhp_idx = (int8_t)i;
@@ -2988,7 +2988,7 @@ rdcost_t compress_cu_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         split_flag_cost = h->f_lambda_mode * p_aec->binary.write_ctu_split_flag(p_aec, 0, i_level);
     }
 
-    h->lcu.b_enable_rdoq     = (h->param.i_rdoq_level == RDOQ_ALL);
+    h->lcu.b_enable_rdoq     = (h->param->i_rdoq_level == RDOQ_ALL);
     h->lcu.b_2nd_rdcost_pass = 1;
     h->lcu.get_intra_dir_for_rdo_luma = h->get_intra_candidates_luma;
 
@@ -3020,7 +3020,7 @@ rdcost_t compress_cu_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
     }
 
     /* 检查最优模式，带RDOQ */
-    if (h->param.i_rdoq_level == RDOQ_CU_LEVEL && best->i_cbp > 0) {
+    if (h->param->i_rdoq_level == RDOQ_CU_LEVEL && best->i_cbp > 0) {
         h->lcu.get_intra_dir_for_rdo_luma = rdo_get_pred_intra_luma_2nd_pass;
         h->lcu.b_enable_rdoq = 1;
         mode = best->i_mode;
@@ -3041,7 +3041,7 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                            rdcost_t min_rdcost,   // Cost of Skip/Direct mode
                            rdcost_t cost_limit)
 {
-    int b_dhp_enabled   = h->param.enable_dhp && h->i_type == SLICE_TYPE_F && h->i_ref > 1;
+    int b_dhp_enabled   = h->param->enable_dhp && h->i_type == SLICE_TYPE_F && h->i_ref > 1;
     int i_level = p_cu->cu_info.i_level;
     int b_bypass_intra  = 0;
     int b_check_dmh     = 1;
@@ -3053,8 +3053,8 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
      */
     UNUSED_PARAMETER(cost_limit);
     h->lcu.get_intra_dir_for_rdo_luma = h->get_intra_candidates_luma;
-    h->param.enable_tu_2level = IS_ALG_ENABLE(OPT_TU_LEVEL_DEC) ? 0 : 2;
-    h->lcu.b_enable_rdoq      = (h->param.i_rdoq_level == RDOQ_ALL);
+    h->enable_tu_2level = IS_ALG_ENABLE(OPT_TU_LEVEL_DEC) ? 0 : 2;
+    h->lcu.b_enable_rdoq      = (h->param->i_rdoq_level == RDOQ_ALL);
     h->lcu.b_2nd_rdcost_pass  = 0;
 
     for (mode = 0; mode < MAX_PRED_MODES; mode++) {
@@ -3173,7 +3173,7 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
 
     /* 做第二层TU划分，选出最优模式 */
     if (IS_ALG_ENABLE(OPT_TU_LEVEL_DEC) && best->i_cbp > 0) {
-        h->param.enable_tu_2level = 1;
+        h->enable_tu_2level = 1;
         mode = best->i_mode;
         cu_copy_info(&p_cu->cu_info, best);
         memcpy(&p_cu->mc, &p_layer->cu_mode.best_mc, sizeof(p_cu->mc));  /* 拷贝MV信息用于补偿 */
@@ -3249,11 +3249,11 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
     }   
 
     /* 检查最优模式,包括TU划分还是不划分的确定，带RDOQ */
-    if (h->param.i_rdoq_level == RDOQ_CU_LEVEL&& best->i_cbp > 0) {
+    if (h->param->i_rdoq_level == RDOQ_CU_LEVEL&& best->i_cbp > 0) {
         if (IS_ALG_ENABLE(OPT_TU_LEVEL_DEC)) {
-            h->param.enable_tu_2level = 3;
+            h->enable_tu_2level = 3;
         } else {
-            h->param.enable_tu_2level = 2;
+            h->enable_tu_2level = 2;
         }
         h->lcu.get_intra_dir_for_rdo_luma = rdo_get_pred_intra_luma_2nd_pass;
         h->lcu.b_enable_rdoq = 1;
@@ -3267,7 +3267,7 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
             cu_rdcost_inter(h, p_aec, p_cu, &min_rdcost, best);
         }
     } else if (IS_ALG_ENABLE(OPT_BIT_EST_PSZT) && i_level >= 5 && (best->i_mode != PRED_SKIP || best->i_cbp != 0)) {       
-        h->param.enable_tu_2level = 2;
+        h->enable_tu_2level = 2;
         h->lcu.get_intra_dir_for_rdo_luma = rdo_get_pred_intra_luma_2nd_pass;
         h->lcu.b_2nd_rdcost_pass = 1;
         // recheck RDCost
@@ -3324,9 +3324,9 @@ void xavs2_init_valid_mode_table(xavs2_t *h)
             if (inter_frame) {
                 valid_pred_modes |= 1 << PRED_SKIP;
                 valid_pred_modes |= 1 << PRED_2Nx2N;
-                valid_pred_modes |= h->param.inter_2pu << PRED_2NxN;
-                valid_pred_modes |= h->param.inter_2pu << PRED_Nx2N;
-                if (h->param.enable_amp && level > MIN_CU_SIZE_IN_BIT) {
+                valid_pred_modes |= h->param->inter_2pu << PRED_2NxN;
+                valid_pred_modes |= h->param->inter_2pu << PRED_Nx2N;
+                if (h->param->enable_amp && level > MIN_CU_SIZE_IN_BIT) {
                     valid_pred_modes |= 1 << PRED_2NxnU;
                     valid_pred_modes |= 1 << PRED_2NxnD;
                     valid_pred_modes |= 1 << PRED_nLx2N;
@@ -3335,12 +3335,12 @@ void xavs2_init_valid_mode_table(xavs2_t *h)
             }
 
             /* set validity of intra modes */
-            if (!inter_frame || h->param.enable_intra) {
+            if (!inter_frame || h->param->enable_intra) {
                 valid_pred_modes |= 1 << PRED_I_2Nx2N;
                 valid_pred_modes |= (level == MIN_CU_SIZE_IN_BIT) << PRED_I_NxN;
 
                 // only valid for 32x8,8x32, 16x4,4x16
-                if (h->param.enable_sdip && (level == B16X16_IN_BIT || level == B32X32_IN_BIT)) {
+                if (h->param->enable_sdip && (level == B16X16_IN_BIT || level == B32X32_IN_BIT)) {
                     valid_pred_modes |= 1 << PRED_I_2Nxn;
                     valid_pred_modes |= 1 << PRED_I_nx2N;
                 }

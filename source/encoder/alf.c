@@ -469,7 +469,7 @@ void deriveBoundaryAvail(xavs2_t *h, int pic_x, int pic_y,
     cuAbove = *isAboveAvail ? &(h->cu_info[mb_nr - pic_mb_width]) : NULL;
     cuBelow = *isBelowAvail ? &(h->cu_info[mb_nr + pic_mb_width]) : NULL;
 
-    if (!h->param.b_cross_slice_loop_filter) {
+    if (!h->param->b_cross_slice_loop_filter) {
         int curSliceNr = cu_get_slice_index(h, mb_x, mb_y);
         if (*isLeftAvail) {
             *isLeftAvail = cu_get_slice_index(h, mb_x - 1, mb_y) == curSliceNr;
@@ -1903,12 +1903,12 @@ void alf_init_buffer(xavs2_t *h, uint8_t *mem_base)
 
     int num_lcu = height_in_lcu * width_in_lcu;
     int compIdx, n;
-    int maxNumTemporalLayer = (int)(log10((float)(h->param.i_gop_size)) / log10(2.0) + 1);
+    int maxNumTemporalLayer = (int)(log10((float)(h->param->i_gop_size)) / log10(2.0) + 1);
     int mem_size;
     uint8_t *mem_ptr = mem_base;
     alf_ctx_t *Enc_ALF;
     
-    mem_size = alf_get_buffer_size(&h->param);
+    mem_size = alf_get_buffer_size(h->param);
     memset(mem_ptr, 0, mem_size);
 
     Enc_ALF                          = (alf_ctx_t *)mem_ptr;

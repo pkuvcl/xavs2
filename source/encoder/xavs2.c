@@ -510,7 +510,7 @@ xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
 {
     xavs2_handler_t *h_mgr   = (xavs2_handler_t *)coder;
     xavs2_t         *p_coder = h_mgr->p_coder;
-    xavs2_param_t   *param   = &p_coder->param;
+    xavs2_param_t   *param   = p_coder->param;
     xavs2_frame_t   *frame;
 
     assert(h_mgr != NULL && pic != NULL);
@@ -620,7 +620,7 @@ xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packe
         h = h_mgr->p_coder;
 
         /* expand border if need */
-        if (h->param.org_width != h->i_width || h->param.org_height != h->i_height) {
+        if (h->param->org_width != h->i_width || h->param->org_height != h->i_height) {
             xavs2_frame_expand_border_mod8(h, frame);
         }
 

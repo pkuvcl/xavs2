@@ -67,7 +67,7 @@ static const double tab_umh_alpha_3rd[MAX_INTER_MODES] = {
 static ALWAYS_INLINE
 int check_mvd(xavs2_t *h, int mvd_x, int mvd_y)
 {
-    if (h->param.i_frame_threads > 1) {
+    if (h->param->i_frame_threads > 1) {
         return (mvd_x < 4096 && mvd_x >= -4096 &&
                 mvd_y < ((1 << h->i_lcu_level) << 2) && mvd_y >= -((1 << h->i_lcu_level) << 2));
     }
@@ -826,7 +826,7 @@ int get_mv_predictors_pskip(xavs2_t *h, cu_t *p_cu)
 
         get_pskip_mv_spatial(p_cu_mode, p_neighbors);
 
-        if (h->param.enable_wsm) {
+        if (h->param->enable_wsm) {
             return h->i_ref;
         }
     }
@@ -932,7 +932,7 @@ int pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_m
         mv_t *pred_mv = &p_mode_mvs[pu_idx].all_mvp[ref_idx];
 
         /* get MVP (motion vector predictor) */
-        if (h->param.me_method == XAVS2_ME_UMH) {
+        if (h->param->me_method == XAVS2_ME_UMH) {
             get_mvp_default_sad(h, p_neighbors, p_cu, p_me, pred_mv, bwd_2nd, p_cb, ref_idx);
         } else {
             get_mvp_default(h, p_neighbors, pred_mv, bwd_2nd, p_cb, ref_idx);
@@ -940,7 +940,7 @@ int pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_m
 
         // 需在 MVP 获取之后执行，两者都会设置 p_me 状态
         p_me->i_ref_idx = (int16_t)ref_idx;
-        if (h->param.me_method == XAVS2_ME_UMH) {
+        if (h->param->me_method == XAVS2_ME_UMH) {
             fast_me_prepare_info(h, p_me, mode, ref_idx, pu_idx, all_min_costs[0]);
         }
 
@@ -971,7 +971,7 @@ int pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_m
         m = XAVS2_MAX(bsx >> (MIN_PU_SIZE_IN_BIT + pu_size_shift), 1);
         n = XAVS2_MAX(bsy >> (MIN_PU_SIZE_IN_BIT + pu_size_shift), 1);
 
-        if (h->param.me_method == XAVS2_ME_UMH) {
+        if (h->param->me_method == XAVS2_ME_UMH) {
             for (j = 0; j < n; j++) {
                 for (i = 0; i < m; i++) {
                     k = ((pu_idx_y + j) << 1) + (pu_idx_x + i);
@@ -991,7 +991,7 @@ int pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_m
         }
 
 
-        if (h->param.me_method == XAVS2_ME_UMH) {
+        if (h->param->me_method == XAVS2_ME_UMH) {
             m = XAVS2_MAX(bsx >> MIN_PU_SIZE_IN_BIT, 1);
             n = XAVS2_MAX(bsy >> MIN_PU_SIZE_IN_BIT, 1);
             for (j = 0; j < n; j++) {
