@@ -74,7 +74,7 @@ int get_frame_coi_to_write(xavs2_t *h, xavs2_frame_t *frm)
  */
 int xavs2_sequence_write(xavs2_t *h, bs_t *p_bs)
 {
-    xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
+    const xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
     int bits = 0;
     int i, j;
 

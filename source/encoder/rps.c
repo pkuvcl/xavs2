@@ -810,8 +810,10 @@ xavs2_frame_t *find_fdec_and_build_rps(xavs2_t *h, xavs2_frame_buffer_t *frm_buf
 /* ---------------------------------------------------------------------------
  * set picture reorder delay
  */
-static void set_picture_reorder_delay(xavs2_t *h)
+void rps_set_picture_reorder_delay(xavs2_t *h)
 {
+    h->i_gop_size = h->param->i_gop_size;
+
     if (!h->param->low_delay) {
         int delta_dd = 1000;
         int tmp_delta_dd;
@@ -837,7 +839,8 @@ static void set_picture_reorder_delay(xavs2_t *h)
 /* ---------------------------------------------------------------------------
  * check RPS config
  */
-int check_rps_config(xavs2_param_t *param)
+static
+int update_rps_config(xavs2_param_t *param)
 {
     xavs2_rps_t *p_seq_rps = param->cfg_ref_all;
 
@@ -874,23 +877,23 @@ int check_rps_config(xavs2_param_t *param)
 /* ---------------------------------------------------------------------------
  * config RPS
  */
-int parse_rps_config(xavs2_t *h)
+int rps_check_config(xavs2_param_t *param)
 {
-    xavs2_rps_t *p_seq_rps = h->param->cfg_ref_all;
+    xavs2_rps_t *p_seq_rps = param->cfg_ref_all;
     int rps_idx;
 
-    h->i_gop_size = h->param->i_gop_size;
+    if (update_rps_config(param) < 0) {
+        return -1;
+    }
 
     // set index
-    for (rps_idx = 0; rps_idx < h->i_gop_size; rps_idx++) {
+    for (rps_idx = 0; rps_idx < param->i_gop_size; rps_idx++) {
         p_seq_rps[rps_idx].idx_in_gop = rps_idx;
     }
 
-    set_picture_reorder_delay(h);
-
-    if (h->i_max_ref < 4) {
-        for (rps_idx = 0; rps_idx < h->i_gop_size; rps_idx++) {
-            p_seq_rps[rps_idx].num_of_ref = XAVS2_MIN(h->i_max_ref, p_seq_rps[rps_idx].num_of_ref);
+    if (param->num_max_ref < 4) {
+        for (rps_idx = 0; rps_idx < param->i_gop_size; rps_idx++) {
+            p_seq_rps[rps_idx].num_of_ref = XAVS2_MIN(param->num_max_ref, p_seq_rps[rps_idx].num_of_ref);
         }
     }
 

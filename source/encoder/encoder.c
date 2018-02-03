@@ -1202,7 +1202,7 @@ int encoder_check_parameters(xavs2_param_t *param)
         xavs2_log(NULL, XAVS2_LOG_ERROR, "The number of successive B-frame is wrong!\n");
         return -1;
     }
-    if (check_rps_config(param) < 0) {
+    if (rps_check_config(param) < 0) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "Error found in RPS configuration!\n");
         return -1;
     }
@@ -2096,10 +2096,7 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
 #endif
 
     /* parse RPS */
-    if (parse_rps_config(h) < 0) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "configure RPS fail\n");
-        goto fail;
-    }
+    rps_set_picture_reorder_delay(h);
 
 #if XAVS2_STAT
     show_frame_info_tab(h, h_mgr);

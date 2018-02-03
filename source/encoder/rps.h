@@ -58,8 +58,8 @@ xavs2_frame_t *find_fdec_and_build_rps(xavs2_t *h, xavs2_frame_buffer_t *frm_buf
                                        xavs2_frame_t *frefs[XAVS2_MAX_REFS]);
 
 
-int check_rps_config(xavs2_param_t *param);
+int rps_check_config(xavs2_param_t *param);
 
-int parse_rps_config(xavs2_t *h);
+void rps_set_picture_reorder_delay(xavs2_t *h);
 
 #endif  // __XAVS2_RPS_H__
