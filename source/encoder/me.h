@@ -110,7 +110,7 @@
  * ===========================================================================
  */
 
-int  xavs2_me_get_buf_size(xavs2_param_t *param);
+int  xavs2_me_get_buf_size(const xavs2_param_t *param);
 void xavs2_me_init(xavs2_t *h, uint8_t **mem_base);
 void xavs2_me_init_umh_threshold(xavs2_t *h, double *bsize, int i_qp);
 

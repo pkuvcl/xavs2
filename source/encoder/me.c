@@ -585,7 +585,7 @@ me_subpel_refine(xavs2_t *h, xavs2_me_t *p_me)
 /* ---------------------------------------------------------------------------
  * initialize the motion search
  */
-int xavs2_me_get_buf_size(xavs2_param_t *param)
+int xavs2_me_get_buf_size(const xavs2_param_t *param)
 {
     int me_range    = XAVS2_MAX(256, param->search_range);
     int subpel_num  = 4 * (2 * me_range + 3);

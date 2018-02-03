@@ -510,7 +510,7 @@ xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
 {
     xavs2_handler_t *h_mgr   = (xavs2_handler_t *)coder;
     xavs2_t         *p_coder = h_mgr->p_coder;
-    xavs2_param_t   *param   = p_coder->param;
+    const xavs2_param_t *param = p_coder->param;
     xavs2_frame_t   *frame;
 
     assert(h_mgr != NULL && pic != NULL);

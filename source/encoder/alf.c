@@ -1864,7 +1864,7 @@ void setCurAlfParam(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, ALFParam *alfP
 
 /* ---------------------------------------------------------------------------
  */
-int alf_get_buffer_size(xavs2_param_t *param)
+int alf_get_buffer_size(const xavs2_param_t *param)
 {
     int size_lcu      = 1 << param->lcu_bit_level;
     int width_in_lcu  = (param->org_width  + size_lcu - 1) >> param->lcu_bit_level;

@@ -60,8 +60,8 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
      *           |<---------- GOP0 ---------->||<----------- GOP1 ---------->|
      *
      */
-    lookahead_t *lookahead = &h_mgr->lookahead;
-    xavs2_param_t *param   = h_mgr->p_coder->param;
+    lookahead_t *lookahead     = &h_mgr->lookahead;
+    const xavs2_param_t *param = h_mgr->p_coder->param;
     int b_delayed = 0;            // the frame is normal to be encoded default
 
     /* slice type decision */
@@ -225,7 +225,7 @@ int lookahead_append_rest_frames(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs
 int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 {
     xavs2_t         *h               = h_mgr->p_coder;
-    xavs2_param_t   *param           = h->param;
+    const xavs2_param_t *param       = h->param;
     xavs2_frame_t  **blocked_frm_set = h_mgr->blocked_frm_set;
     int64_t         *blocked_pts_set = h_mgr->blocked_pts_set;
     xlist_t         *list_out        = &h_mgr->list_frames_ready;

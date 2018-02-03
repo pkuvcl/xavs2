@@ -37,7 +37,7 @@
 #ifndef __XAVS2_ALF_H__
 #define __XAVS2_ALF_H__
 
-int  alf_get_buffer_size(xavs2_param_t *param);
+int  alf_get_buffer_size(const xavs2_param_t *param);
 
 void alf_init_buffer(xavs2_t *h, uint8_t *mem_base);
 

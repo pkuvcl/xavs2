@@ -1359,7 +1359,7 @@ static void build_coding_tree(xavs2_t *h, cu_t *p_cu, int idx_zorder, int i_leve
 
 /* ---------------------------------------------------------------------------
  */
-static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
+static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
 {
     const int num_slices = param->slice_num;
     xavs2_t *h = NULL;
@@ -1398,7 +1398,6 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
 
     /* compute the space size and alloc buffer */
     mem_size = sizeof(xavs2_t)                       +  /* xavs2_t */
-               sizeof(xavs2_param_t)                 +  /* xavs2_param_t */
                sizeof(nal_t)   * (MAX_SLICES + 6)    +  /* all nal units */
                sizeof(uint8_t) * XAVS2_BS_HEAD_LEN   +  /* bitstream buffer (frame header only) */
                sizeof(uint8_t) * bs_size             +  /* bitstream buffer for all slices */
@@ -1437,10 +1436,7 @@ static xavs2_t *encoder_create_frame_context(xavs2_param_t *param)
     ALIGN_POINTER(mem_base);          /* align pointer */
 
     /* copy the input parameters */
-    h->param = (xavs2_param_t *)mem_base;
-    memcpy(h->param, param, sizeof(xavs2_param_t));
-    mem_base += sizeof(xavs2_param_t);
-    ALIGN_POINTER(mem_base);
+    h->param = param;
 
     /* const properties */
     h->i_width           = frame_w;
