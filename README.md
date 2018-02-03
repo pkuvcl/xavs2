@@ -9,9 +9,10 @@ A decoder, **davs2**, can be found at [Github][4] or  [Gitee (mirror in China)][
 [![GitHub forks](https://img.shields.io/github/forks/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/network)
 [![GitHub stars](https://img.shields.io/github/stars/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/stargazers)
 
-## Compile it
+## Build it
 ### Windows
-Use VS2013 or latest version of  visual studio open the `./build/vs2013/xavs2.sln` solution and set the `xavs2` as the start project.
+Use `VS2013` or later version of visual studio to open the solution file `./build/vs2013/xavs2.sln`,
+then set the `xavs2` as the start project and build it.
 
 #### Notes
 1. A `shell executor`, i.e. the bash in git for windows, is needed and should be found in `PATH` variable.
@@ -20,7 +21,6 @@ Use VS2013 or latest version of  visual studio open the `./build/vs2013/xavs2.sl
  A later version `1.3.0`, can be found in https://github.com/luofalei/yasm/tree/vs2013 .
 
 ### Linux
-`Makefile` is a simple way to organize code compilation and it had already exitst in the `./build/linux`. You can perform the following commands.
 ```
 $ cd build/linux
 $ ./configure
