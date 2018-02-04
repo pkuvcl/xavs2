@@ -1365,15 +1365,15 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
     xavs2_t *h = NULL;
     int frame_w  = ((param->org_width  + MIN_CU_SIZE - 1) >> MIN_CU_SIZE_IN_BIT) << MIN_CU_SIZE_IN_BIT;
     int frame_h  = ((param->org_height + MIN_CU_SIZE - 1) >> MIN_CU_SIZE_IN_BIT) << MIN_CU_SIZE_IN_BIT;
-    int i        = 1 << param->lcu_bit_level;       /* size of a normal lcu */
-    int w_in_lcu = (frame_w + i - 1) / i;
-    int h_in_lcu = (frame_h + i - 1) / i;
+    int size_lcu = 1 << param->lcu_bit_level;       /* size of a LCU (largest coding unit) */
+    int w_in_lcu = (frame_w + size_lcu - 1) >> param->lcu_bit_level;
+    int h_in_lcu = (frame_h + size_lcu - 1) >> param->lcu_bit_level;
     int w_in_scu = frame_w >> MIN_CU_SIZE_IN_BIT;
     int h_in_scu = frame_h >> MIN_CU_SIZE_IN_BIT;
     int w_in_4x4 = frame_w >> MIN_PU_SIZE_IN_BIT;
     int h_in_4x4 = frame_h >> MIN_PU_SIZE_IN_BIT;
     int bs_size  = frame_w * frame_h * 2;
-    int ipm_size = (w_in_4x4 + 16) * ((i >> MIN_PU_SIZE_IN_BIT) + 1);
+    int ipm_size = (w_in_4x4 + 16) * ((size_lcu >> MIN_PU_SIZE_IN_BIT) + 1);
     int size_4x4 = w_in_4x4 * h_in_4x4;
     int qpel_frame_size = (frame_w + 2 * XAVS2_PAD) * (frame_h + 2 * XAVS2_PAD);
     int info_size = sizeof(frame_info_t) + h_in_lcu * sizeof(row_info_t) + w_in_lcu * h_in_lcu * sizeof(lcu_info_t);
@@ -1386,7 +1386,7 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
     int frame_size_in_scu = w_in_scu * h_in_scu;
     int num_me_bytes = (w_in_4x4 * h_in_4x4)* sizeof(dist_t[MAX_INTER_MODES][MAX_REFS]);
     size_t size_extra_frame_buffer = 0;
-    int j;
+    int i, j;
     int scu_xy = 0;
     cu_info_t *p_cu_info;
     size_t mem_size = 0;
@@ -1489,7 +1489,7 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
         slice_t *p_slice = (slice_t *)mem_base;
         h->slices[i] = p_slice;
         mem_base    += sizeof(slice_t);
-        ALIGN_POINTER(mem_base);/* align pointer */
+        ALIGN_POINTER(mem_base);    /* align pointer */
 
         /* intra prediction mode buffer */
         p_slice->slice_ipredmode  = (int8_t *)mem_base;
@@ -1520,20 +1520,18 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
 
     /* -------------------------------------------------------------
      *      fenc                fdec
-     *      Y Y Y Y             y y y y y y y
-     *      Y Y Y Y             y Y Y Y Y
-     *      Y Y Y Y             y Y Y Y Y
-     *      Y Y Y Y             y Y Y Y Y
-     *      U U V V             y Y Y Y Y
-     *      U U V V             u u u   v v v
-     *                          u U U   v V V
-     *                          u U U   v V V
+     *      Y Y Y Y             Y Y Y Y
+     *      Y Y Y Y             Y Y Y Y
+     *      Y Y Y Y             Y Y Y Y
+     *      Y Y Y Y             Y Y Y Y
+     *      U U V V             U U V V
+     *      U U V V             U U V V
      */
 
     /* assign pointers for p_fenc (Y/U/V pointers) */
     h->lcu.p_fenc[0] = h->lcu.fenc_buf;
     h->lcu.p_fenc[1] = h->lcu.fenc_buf + FENC_STRIDE * MAX_CU_SIZE;
-    h->lcu.p_fenc[2] = h->lcu.fenc_buf + FENC_STRIDE * MAX_CU_SIZE + FENC_STRIDE / 2;
+    h->lcu.p_fenc[2] = h->lcu.fenc_buf + FENC_STRIDE * MAX_CU_SIZE + (FENC_STRIDE / 2);
 
     /* assign pointers for p_fdec (Y/U/V pointers) */
     h->lcu.p_fdec[0] = h->lcu.fdec_buf;
