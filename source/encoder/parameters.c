@@ -57,6 +57,7 @@
 #include "rps.h"
 #include "encoder/presets.h"
 #include "encoder/encoder.h"
+#include "encoder/wrapper.h"
 
 /**
  * ===========================================================================
@@ -567,7 +568,7 @@ static char *xavs2_get_configs(int argc, const char * const *argv)
  * Return     : none
  * ---------------------------------------------------------------------------
  */
-XAVS2_API int
+int
 xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
 {
     char *items[MAX_ITEMS];
@@ -684,7 +685,7 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
  * Return     : int   - zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-XAVS2_API int
+int
 xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value_string)
 {
     int map_index;
@@ -822,7 +823,7 @@ xavs2_encoder_opt_get(xavs2_param_t *param, const char *name)
  * Return     : none
  * ---------------------------------------------------------------------------
  */
-XAVS2_API void
+void
 xavs2_encoder_opt_help(void)
 {
     mapping_t *p_map = NULL;

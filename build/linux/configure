@@ -1288,6 +1288,9 @@ if [ "$opencl" = "yes" ]; then
         libdl="-ldl"
     fi
     LDFLAGS="$LDFLAGS $libdl"
+elif [ "$SYS" = "LINUX" -o "$SYS" = "MACOSX" ] ; then
+    libdl="-ldl"
+    LDFLAGS="$LDFLAGS $libdl"
 fi
 
 #define undefined vars as 0

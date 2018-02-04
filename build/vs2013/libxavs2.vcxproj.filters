@@ -152,6 +152,9 @@
     <ClCompile Include="..\..\source\encoder\xavs2.c">
       <Filter>encoder-src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\encoder\xavs2_api.c">
+      <Filter>encoder-src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\common\block_info.h">

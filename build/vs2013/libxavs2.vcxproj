@@ -60,6 +60,7 @@
     <ClCompile Include="..\..\source\encoder\wquant.c" />
     <ClCompile Include="..\..\source\encoder\wrapper.c" />
     <ClCompile Include="..\..\source\encoder\xavs2.c" />
+    <ClCompile Include="..\..\source\encoder\xavs2_api.c" />
     <ClCompile Include="..\..\source\encoder\xlist.c" />
     <ClCompile Include="..\..\source\encoder\yuv_writer.c" />
   </ItemGroup>

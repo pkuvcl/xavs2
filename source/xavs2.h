@@ -52,7 +52,7 @@ extern "C" {    // only need to export C interface if used by C++ source code
 
 /* xavs2 encoder build version, means different API interface
  * (10 * VER_MAJOR + VER_MINOR) */
-#define XAVS2_BUILD                10
+#define XAVS2_BUILD                11
 /* xavs2 encoder API version, version 2 the non-caller version */
 #define XAVS2_API_VERSION          1
 
@@ -232,161 +232,178 @@ typedef void(*xavs2_dump_func_t)(
  * interface function declares: parameters
  * ===========================================================================
  */
+typedef struct xavs2_api_t {
+    /**
+     * ===========================================================================
+     * version information
+     * ===========================================================================
+     */
+    const char *s_version_source;          /* source tree version SHA */
+    int         version_build;             /* XAVS2_BUILD */
+    int         version_callback;          /* XAVS2_API_VERSION */
+    int         internal_bit_depth;        /* internal bit-depth for encoding */
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : get buffer for the encoder caller
- * Parameters :
- *      [in ] : coder - pointer to wrapper of the xavs2 encoder
- *            : pic   - pointer to struct xavs2_picture_t
- *      [out] : none
- * Return     : zero for success, otherwise failed
- * ---------------------------------------------------------------------------
- */
-XAVS2_API int
-xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic);
+    /**
+     * ===========================================================================
+     * function pointers
+     * ===========================================================================
+     */
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : Output help parameters
- * Parameters :
- *      [in ] : param - pointer to struct xavs2_param_t
- *      [out] : none
- * Return     : none
- * ---------------------------------------------------------------------------
- */
-XAVS2_API void
-xavs2_encoder_opt_help(void);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : Output help parameters
+     * Parameters :
+     *      [in ] : param - pointer to struct xavs2_param_t
+     *      [out] : none
+     * Return     : none
+     * ---------------------------------------------------------------------------
+     */
+    void (*opt_help)(void);
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : initialize default parameters for the xavs2 video encoder
- * Parameters :
- *      [in ] : none
- * Return     : parameter handler, can be further configured
- * ---------------------------------------------------------------------------
- */
-XAVS2_API xavs2_param_t *
-xavs2_encoder_opt_alloc(void);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : initialize default parameters for the xavs2 video encoder
+     * Parameters :
+     *      [in ] : none
+     * Return     : parameter handler, can be further configured
+     * ---------------------------------------------------------------------------
+     */
+    xavs2_param_t *(*opt_alloc)(void);
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : Parsing encoding parameters
- * Parameters :
- *      [in ] : param - pointer to struct xavs2_param_t
- *      [in ] : argc  - number of command line parameters
- *      [in ] : argv  - pointer to parameter strings
- * Return     : int   - zero for success, otherwise failed
- * ---------------------------------------------------------------------------
- */
-XAVS2_API int
-xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[]);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : Parsing encoding parameters
+     * Parameters :
+     *      [in ] : param - pointer to struct xavs2_param_t
+     *      [in ] : argc  - number of command line parameters
+     *      [in ] : argv  - pointer to parameter strings
+     * Return     : int   - zero for success, otherwise failed
+     * ---------------------------------------------------------------------------
+     */
+    int (*opt_set)(xavs2_param_t *param, int argc, char *argv[]);
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : set parameter value
- * Parameters :
- *      [in ] : param - pointer to struct xavs2_param_t
- *      [in ] : name  - name of parameter
- *      [in ] : value_string - parameter value
- * Return     : int   - zero for success, otherwise failed
- * ---------------------------------------------------------------------------
- */
-XAVS2_API int
-xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value_string);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : Parsing encoding parameters
+     * Parameters :
+     *      [in ] : param - pointer to struct xavs2_param_t
+     *      [in ] : name  - name of parameter
+     *      [in ] : value_string - parameter value
+     * Return     : int   - zero for success, otherwise failed
+     * ---------------------------------------------------------------------------
+     */
+    int (*opt_set2)(xavs2_param_t *param, const char *name, const char *value_string);
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : get value of a specific parameter
- * Parameters :
- *      [in ] : param - pointer to struct xavs2_param_t
- *      [in ] : name  - name of a parameter (input, output, width, height, frames)
- * Return     : const char *: value string
- * ---------------------------------------------------------------------------
- */
-XAVS2_API const char *
-xavs2_encoder_opt_get(xavs2_param_t *param, const char *name);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : get value of a specific parameter
+     * Parameters :
+     *      [in ] : param - pointer to struct xavs2_param_t
+     *      [in ] : name  - name of a parameter (input, output, width, height, frames)
+     * Return     : const char *: value string
+     * ---------------------------------------------------------------------------
+     */
+    const char *(*opt_get)(xavs2_param_t *param, const char *name);
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : free memory of parameter
- * Parameters :
- *      [in ] : none
- *      [out] : parameter handler, can be further configured
- * Return     : none
- * ---------------------------------------------------------------------------
- */
-XAVS2_API void
-xavs2_encoder_opt_destroy(xavs2_param_t *param);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : free memory of parameter
+     * Parameters :
+     *      [in ] : none
+     *      [out] : parameter handler, can be further configured
+     * Return     : none
+     * ---------------------------------------------------------------------------
+     */
+    void (*opt_destroy)(xavs2_param_t *param);
+    
+    /**
+     * ===========================================================================
+     * encoder API
+     * ===========================================================================
+     */
 
-/**
- * ===========================================================================
- * interface function declares: encoding
- * ===========================================================================
- */
-
-/**
- * ---------------------------------------------------------------------------
- * Function   : create and initialize the xavs2 video encoder
- * Parameters :
- *      [in ] : param     - pointer to struct xavs2_param_t
- *            : dump_func - pointer to struct xavs2_dump_func_t
- *            : opaque    - user data
- *      [out] : none
- * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
- * ---------------------------------------------------------------------------
- */
-XAVS2_API void *
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : get buffer for the encoder caller
+     * Parameters :
+     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *            : pic   - pointer to struct xavs2_picture_t
+     *      [out] : none
+     * Return     : zero for success, otherwise failed
+     * ---------------------------------------------------------------------------
+     */
+    int (*encoder_get_buffer)(void *coder, xavs2_picture_t *pic);
+    
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : create and initialize the xavs2 video encoder
+     * Parameters :
+     *      [in ] : param     - pointer to struct xavs2_param_t
+     *            : dump_func - pointer to struct xavs2_dump_func_t
+     *            : opaque    - user data
+     *      [out] : none
+     * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
+     * ---------------------------------------------------------------------------
+     */
 #if XAVS2_API_VERSION < 2
-xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque);
+    void *(*encoder_create)(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque);
 #else
-xavs2_encoder_create(xavs2_param_t *param);
+    void *(*encoder_create)(xavs2_param_t *param);
+#endif
+    
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : destroy the xavs2 video encoder
+     * Parameters :
+     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *      [out] : none
+     * Return     : none
+     * Note       : this API is *NOT* thread-safe, 
+     *              and can not be called simultaneously with other APIs.
+     * ---------------------------------------------------------------------------
+     */
+    void (*encoder_destroy)(void *coder);
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : write (send) data to the xavs2 encoder
+     * Parameters :
+     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *            : pic   - pointer to struct xavs2_picture_t
+     *      [out] : none
+     * Return     : zero for success, otherwise failed
+     * ---------------------------------------------------------------------------
+     */
+#if XAVS2_API_VERSION < 2
+    int (*encoder_encode)(void *coder, xavs2_picture_t *pic);
+#else
+    int (*encoder_encode)(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet);
 #endif
 
-/**
- * ---------------------------------------------------------------------------
- * Function   : write (send) data to the xavs2 encoder
- * Parameters :
- *      [in ] : coder - pointer to wrapper of the xavs2 encoder
- *            : pic   - pointer to struct xavs2_picture_t
- *      [out] : none
- * Return     : zero for success, otherwise failed
- * ---------------------------------------------------------------------------
- */
-XAVS2_API int
-#if XAVS2_API_VERSION < 2
-xavs2_encoder_encode(void *coder, xavs2_picture_t *pic);
-#else
-xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet);
-#endif
-
-/**
- * ---------------------------------------------------------------------------
- * Function   : label a packet to be recycled
- * Parameters :
- *      [in ] : coder    - pointer to wrapper of the xavs2 encoder
- *            : packet   - pointer to struct xavs2_outpacket_t
- *      [out] : none
- * Return     : zero for success, otherwise failed
- * ---------------------------------------------------------------------------
- */
-XAVS2_API int
-xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet);
+    /**
+     * ---------------------------------------------------------------------------
+     * Function   : label a packet to be recycled
+     * Parameters :
+     *      [in ] : coder    - pointer to wrapper of the xavs2 encoder
+     *            : packet   - pointer to struct xavs2_outpacket_t
+     *      [out] : none
+     * Return     : zero for success, otherwise failed
+     * ---------------------------------------------------------------------------
+     */
+    int (*encoder_packet_unref)(void *coder, xavs2_outpacket_t *packet);
+} xavs2_api_t;
 
 
 /**
  * ---------------------------------------------------------------------------
- * Function   : destroy the xavs2 video encoder
+ * Function   : get xavs2 APi handler
  * Parameters :
- *      [in ] : coder - pointer to wrapper of the xavs2 encoder
- *      [out] : none
- * Return     : none
- * Note       : this API is *NOT* thread-safe, 
- *              and can not be called simultaneously with other APIs.
+ *      [in ] : bit_depth - required bit-depth for encoding
+ * Return     : NULL when failure
  * ---------------------------------------------------------------------------
  */
-XAVS2_API void
-xavs2_encoder_destroy(void *coder);
+XAVS2_API const xavs2_api_t *
+xavs2_api_get(int bit_depth);
 
 #ifdef __cplusplus
 }

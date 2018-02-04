@@ -39,7 +39,7 @@ SRCS += \
 	encoder/aec_rdo.c encoder/aec_fastrdo.c encoder/aec_vrdo.c \
 	encoder/alf.c encoder/encoder.c encoder/header.c \
 	encoder/me.c encoder/ratecontrol.c \
-	encoder/sao.c encoder/wquant.c encoder/xavs2.c \
+	encoder/sao.c encoder/wquant.c \
 	encoder/md_intra.c \
 	encoder/md_inter.c \
 	encoder/presets.c \
@@ -49,6 +49,7 @@ SRCS += \
 	encoder/tdrdo.c \
 	encoder/yuv_writer.c \
 	encoder/wrapper.c \
+	encoder/xavs2.c encoder/xavs2_api.c \
 	encoder/xlist.c \
 	encoder/parameters.c
 

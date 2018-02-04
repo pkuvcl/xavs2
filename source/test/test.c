@@ -73,6 +73,7 @@
  */
 static FILE *g_infile  = NULL;
 static FILE *g_outfile = NULL;
+const xavs2_api_t *api = NULL;
 
 /* ---------------------------------------------------------------------------
  */
@@ -84,7 +85,7 @@ static void dump_encoded_data(void *coder, xavs2_outpacket_t *packet)
         } else if (packet->state == XAVS2_STATE_FLUSH_END) {
             fwrite(packet->stream, packet->len, 1, g_outfile);
         }
-        xavs2_encoder_packet_unref(coder, packet);
+        api->encoder_packet_unref(coder, packet);
     }
 }
 
@@ -133,10 +134,10 @@ static int read_one_frame(xavs2_image_t *img, int shift_in)
 
 int start_encode(xavs2_param_t *param)
 {
-    const char *in_file = xavs2_encoder_opt_get(param, "input");
-    const char *bs_file = xavs2_encoder_opt_get(param, "output");
-    const int shift_in  = atoi(xavs2_encoder_opt_get(param, "SampleShift"));
-    int num_frames      = atoi(xavs2_encoder_opt_get(param, "frames"));
+    const char *in_file = api->opt_get(param, "input");
+    const char *bs_file = api->opt_get(param, "output");
+    const int shift_in  = atoi(api->opt_get(param, "SampleShift"));
+    int num_frames      = atoi(api->opt_get(param, "frames"));
     xavs2_picture_t pic;
     void *encoder = NULL;
     int k;
@@ -163,9 +164,9 @@ int start_encode(xavs2_param_t *param)
 
     /* create the xavs2 video encoder */
 #if XAVS2_API_VERSION >= 2
-    encoder = xavs2_encoder_create(param);
+    encoder = api->encoder_create(param);
 #else
-    encoder = xavs2_encoder_create(param, &dump_encoded_data, NULL);
+    encoder = api->encoder_create(param, &dump_encoded_data, NULL);
 #endif
     if (encoder == NULL) {
         fprintf(stderr, "Error: Can not create encoder. Null pointer returned.\n");
@@ -177,7 +178,7 @@ int start_encode(xavs2_param_t *param)
 
     /* read frame data and send to the xavs2 video encoder */
     for (k = 0; k < num_frames; k++) {
-        if (xavs2_encoder_get_buffer(encoder, &pic) < 0) {
+        if (api->encoder_get_buffer(encoder, &pic) < 0) {
             fprintf(stderr, "failed to get frame buffer [%3d,%3d].\n", k, num_frames);
             break;
         }
@@ -187,10 +188,10 @@ int start_encode(xavs2_param_t *param)
             /* return the buffer to the encoder */
             pic.i_state = XAVS2_STATE_NO_DATA;
 #if XAVS2_API_VERSION >= 2
-            xavs2_encoder_encode(encoder, &pic, &packet);
+            api->encoder_encode(encoder, &pic, &packet);
             dump_encoded_data(encoder, &packet);
 #else
-            xavs2_encoder_encode(encoder, &pic);
+            api->encoder_encode(encoder, &pic);
 #endif
             break;
         }
@@ -200,25 +201,25 @@ int start_encode(xavs2_param_t *param)
         pic.i_pts   = k;
 
 #if XAVS2_API_VERSION >= 2
-        xavs2_encoder_encode(encoder, &pic, &packet);
+        api->encoder_encode(encoder, &pic, &packet);
         dump_encoded_data(encoder, &packet);
 #else
-        xavs2_encoder_encode(encoder, &pic);
+        api->encoder_encode(encoder, &pic);
 #endif
     }
 
     /* flush delayed frames */
 #if XAVS2_API_VERSION >= 2
     for (; packet.state != XAVS2_STATE_FLUSH_END;) {
-        xavs2_encoder_encode(encoder, NULL, &packet);
+        api->encoder_encode(encoder, NULL, &packet);
         dump_encoded_data(encoder, &packet);
     }
 #else
-    xavs2_encoder_encode(encoder, NULL);
+    api->encoder_encode(encoder, NULL);
 #endif
 
     /* destroy the encoder */
-    xavs2_encoder_destroy(encoder);
+    api->encoder_destroy(encoder);
 
     return 0;
 }
@@ -227,17 +228,32 @@ int start_encode(xavs2_param_t *param)
  */
 int main(int argc, char **argv)
 {
-    /* fill param with default values */
-    xavs2_param_t *param = xavs2_encoder_opt_alloc();
+    /* encoding parameters */
+    const int bit_depth = 8;
+    xavs2_param_t *param = NULL;
     int ret;
 
+    /* get API handler */
+    api = xavs2_api_get(bit_depth);
+
+    if (api != NULL) {
+        fprintf(stdout, "libxavs2 loaded: version %s %d-bit\n", 
+                api->s_version_source, api->internal_bit_depth);
+        fflush(stdout);
+    } else {
+        fprintf(stdout, "libxavs2 load error: %d-bit\n", bit_depth);
+        fflush(stdout);
+        return -1;
+    }
+
     if (argc < 2) {
-        xavs2_encoder_opt_help();            /* test.exe encoder.cfg */
+        api->opt_help();            /* show help information */
         return -1;
     }
 
     /* parse parameters and modify the parameters */
-    if (xavs2_encoder_opt_set(param, argc, argv) < 0) {
+    param = api->opt_alloc();
+    if (api->opt_set(param, argc, argv) < 0) {
         fprintf(stderr, "parse contents error.");
         return -1;
     }
@@ -246,7 +262,7 @@ int main(int argc, char **argv)
     ret = start_encode(param);
 
     /* free spaces */
-    xavs2_encoder_opt_destroy(param);
+    api->opt_destroy(param);
 
     return ret;
 }

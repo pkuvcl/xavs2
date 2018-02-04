@@ -83,8 +83,7 @@ int get_num_frame_threads(xavs2_param_t *param, int num_frame_threads, int num_r
  * Return     : none
  * ---------------------------------------------------------------------------
  */
-XAVS2_API xavs2_param_t *
-xavs2_encoder_opt_alloc(void)
+xavs2_param_t *xavs2_encoder_opt_alloc(void)
 {
     xavs2_param_t *param = (xavs2_param_t *)xavs2_malloc(sizeof(xavs2_param_t));
 
@@ -228,8 +227,7 @@ xavs2_encoder_opt_alloc(void)
  * Return     : none
  * ---------------------------------------------------------------------------
  */
-XAVS2_API void
-xavs2_encoder_opt_destroy(xavs2_param_t *param)
+void xavs2_encoder_opt_destroy(xavs2_param_t *param)
 {
     if (param != NULL) {
         xavs2_free(param);
@@ -247,11 +245,10 @@ xavs2_encoder_opt_destroy(xavs2_param_t *param)
  * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
  * ---------------------------------------------------------------------------
  */
-XAVS2_API void *
 #if XAVS2_API_VERSION >= 2
-xavs2_encoder_create(xavs2_param_t *param)
+void *xavs2_encoder_create(xavs2_param_t *param)
 #else
-xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque)
+void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque)
 #endif
 {
     xavs2_handler_t *h_mgr   = NULL;
@@ -461,8 +458,7 @@ fail:
  * Return     : none
  * ---------------------------------------------------------------------------
  */
-XAVS2_API void
-xavs2_encoder_destroy(void *coder)
+void xavs2_encoder_destroy(void *coder)
 {
     xavs2_handler_t *h_mgr = (xavs2_handler_t *)coder;
     xavs2_frame_t frm_flush = { 0 };
@@ -505,8 +501,7 @@ xavs2_encoder_destroy(void *coder)
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-XAVS2_API int
-xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
+int xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
 {
     xavs2_handler_t *h_mgr   = (xavs2_handler_t *)coder;
     xavs2_t         *p_coder = h_mgr->p_coder;
@@ -554,8 +549,7 @@ xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-XAVS2_API int
-xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
+int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
 {
     if (coder == NULL || packet == NULL) {
         return 0;
@@ -581,11 +575,10 @@ xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-XAVS2_API int
 #if XAVS2_API_VERSION < 2
-xavs2_encoder_encode(void *coder, xavs2_picture_t *pic)
+int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic)
 #else
-xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet)
+int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet)
 #endif
 {
     xavs2_handler_t *h_mgr = (xavs2_handler_t *)coder;
