@@ -328,55 +328,57 @@ static void encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double 
 static void encoder_report_stat_info(xavs2_t *h)
 {
     xavs2_stat_t *p_stat = &h->h_top->stat;
-    double f_psnr_y = 0, f_psnr_u = 0, f_psnr_v = 0;
-    int64_t i_sum_size = 0;
     float f_bitrate;
-    int i_sum_frms = 0;
-    int i;
 
-    for (i = 0; i < 4; i++) {
-        i_sum_frms += p_stat->i_frame_count[i];
-        i_sum_size += p_stat->i_frame_size[i];
-    }
+    double f_psnr_y = p_stat->stat_total.f_psnr[0];
+    double f_psnr_u = p_stat->stat_total.f_psnr[1];
+    double f_psnr_v = p_stat->stat_total.f_psnr[2];
 
-    f_psnr_y += p_stat->stat_total.f_psnr[0];
-    f_psnr_u += p_stat->stat_total.f_psnr[1];
-    f_psnr_v += p_stat->stat_total.f_psnr[2];
+    int64_t i_total_bits = p_stat->stat_total.i_frame_size;
+    int num_total_frames = p_stat->stat_total.num_frames;
 
 #if XAVS2_STAT == 1
     xavs2_log(h, XAVS2_LOG_NOPREFIX, "\n");
 #endif
-    if (i_sum_frms == 0) {
+    if (num_total_frames == 0) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "------------------------------------------------------------------\n");
         xavs2_log(NULL, XAVS2_LOG_WARNING, "TOTAL TIME: %8.3f sec, NO FRAMES CODED\n",
                   (double)(p_stat->i_end_time - p_stat->i_start_time) / 1000000.0);
         return;
     }
 
-    f_bitrate = (i_sum_size * (8.0f / 1000.0f) * h->framerate) / ((float)i_sum_frms);
-
     xavs2_log(h, XAVS2_LOG_INFO, "---------------------------------------------------------------------\n");
 
     // FIXME: cause "Segmentation fault (core dumped)" in Linux, print directly (gcc 4.7)
     xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ PSNR:      %7.4f %7.4f %7.4f\n",
-              f_psnr_y / i_sum_frms, f_psnr_u / i_sum_frms, f_psnr_v / i_sum_frms);
+              f_psnr_y / num_total_frames, f_psnr_u / num_total_frames, f_psnr_v / num_total_frames);
 
     // BITRATE
+    f_bitrate = (i_total_bits * (8.0f / 1000.0f) * h->framerate) / ((float)num_total_frames);
     xavs2_log(h, XAVS2_LOG_INFO, "         BITRATE: %6.2f kb/s @ %4.1f Hz, xavs2 p%d \n",
-        f_bitrate, h->framerate, h->param->preset_level);
+              f_bitrate, h->framerate, h->param->preset_level);
 
     // TOTAL BITS
-    xavs2_log(h, XAVS2_LOG_INFO, "      TOTAL BITS: %lld (I: %lld, B: %lld, F: %lld, P: %lld)\n",
-        i_sum_size * 8, p_stat->i_frame_size[SLICE_TYPE_I] * 8,
-        p_stat->i_frame_size[SLICE_TYPE_B] * 8,
-        p_stat->i_frame_size[SLICE_TYPE_F] * 8,
-        p_stat->i_frame_size[SLICE_TYPE_P] * 8);
+    xavs2_log(h, XAVS2_LOG_INFO, "      TOTAL BITS: %lld (I: %lld, B: %lld, P/F: %lld)\n",
+              i_total_bits * 8,
+              p_stat->stat_i_frame.i_frame_size * 8,
+              p_stat->stat_b_frame.i_frame_size * 8,
+              p_stat->stat_p_frame.i_frame_size * 8);
 
     // TOTAL TIME
     xavs2_log(h, XAVS2_LOG_INFO, "      TOTAL TIME: %8.3f sec, total %d frames, speed: %5.2f fps \n",
-        (double)(p_stat->i_end_time - p_stat->i_start_time) / 1000000.0,
-        i_sum_frms,
-        (double)i_sum_frms / ((p_stat->i_end_time - p_stat->i_start_time) / 1000000.0));
+              (double)(p_stat->i_end_time - p_stat->i_start_time) / 1000000.0,
+              num_total_frames,
+              (double)num_total_frames / ((p_stat->i_end_time - p_stat->i_start_time) / 1000000.0));
+    // Time Distribution
+    xavs2_log(h, XAVS2_LOG_INFO, "      Frame Num :   I: %6.2f%%;   B: %6.2f%%;   P/F: %6.2f%%\n",
+              p_stat->stat_i_frame.num_frames * 100.0 / num_total_frames,
+              p_stat->stat_b_frame.num_frames * 100.0 / num_total_frames,
+              p_stat->stat_p_frame.num_frames * 100.0 / num_total_frames);
+    xavs2_log(h, XAVS2_LOG_INFO, "      Frame Time:   I: %6.2f%%;   B: %6.2f%%;   P/F: %6.2f%%\n",
+              (double)(p_stat->stat_i_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
+              (double)(p_stat->stat_b_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
+              (double)(p_stat->stat_p_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration);
     xavs2_log(h, XAVS2_LOG_INFO, "---------------------------------------------------------------------\n");
 }
 
@@ -384,9 +386,12 @@ static void encoder_report_stat_info(xavs2_t *h)
 /* ---------------------------------------------------------------------------
  */
 static INLINE
-void stat_add_frame_info(com_stat_t *sum_stat, com_stat_t *frm_stat)
+void stat_add_frame_info(com_stat_t *sum_stat, com_stat_t *frm_stat, int frm_bs_len)
 {
     sum_stat->num_frames++;
+    sum_stat->i_frame_size    += frm_bs_len;
+    sum_stat->i_time_duration += frm_stat->i_time_duration;
+
 #if XAVS2_STAT > 1
     sum_stat->f_psnr[0] += frm_stat->f_psnr[0];
     sum_stat->f_psnr[1] += frm_stat->f_psnr[1];
@@ -407,32 +412,29 @@ encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
 #endif
     xavs2_stat_t *p_stat  = &h->h_top->stat;
     frame_stat_t *frmstat = &frame->out_frm_stat;
+    int frm_bs_len = frame->frm_enc->i_bs_len;
 
     if (p_stat->i_start_time == 0) {
         p_stat->i_start_time = frame->frm_enc->i_time_start;
     }
 
     p_stat->i_end_time = frame->frm_enc->i_time_end;
+    frmstat->stat_frm.i_time_duration = frame->frm_enc->i_time_end - frame->frm_enc->i_time_start;
 
     /* frame info */
-    p_stat->i_frame_count[frmstat->i_type]++;
-    p_stat->i_frame_size[frmstat->i_type] += frame->frm_enc->i_bs_len;
-
-#if XAVS2_STAT
     switch (frmstat->i_type) {
     case 0:
-        stat_add_frame_info(&p_stat->stat_i_frame, &frmstat->stat_frm);
+        stat_add_frame_info(&p_stat->stat_i_frame, &frmstat->stat_frm, frm_bs_len);
         break;
     case 2:
-        stat_add_frame_info(&p_stat->stat_b_frame, &frmstat->stat_frm);
+        stat_add_frame_info(&p_stat->stat_b_frame, &frmstat->stat_frm, frm_bs_len);
         break;
     default:
-        stat_add_frame_info(&p_stat->stat_p_frame, &frmstat->stat_frm);
+        stat_add_frame_info(&p_stat->stat_p_frame, &frmstat->stat_frm, frm_bs_len);
         break;
     }
 
-    stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm);
-#endif
+    stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm, frm_bs_len);
 
 #if XAVS2_STAT > 1
     /* log */

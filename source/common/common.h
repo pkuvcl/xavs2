@@ -998,8 +998,10 @@ typedef struct xavs2_nal_info_t {
 typedef struct com_stat_t {
     double      f_psnr[3];                    /* psnr for all components: Y, U, V */
     double      f_lambda_frm;                 /* lambda of current frame */
-    int64_t     i_time_start;                 /* encoding start time */
-    int64_t     i_time_end;                   /* encoding end time */
+//  int64_t     i_time_start;                 /* encoding start time */
+//  int64_t     i_time_end;                   /* encoding end time */
+    int64_t     i_time_duration;              /* encoding time */
+    int64_t     i_frame_size;                 /* frame size  (bs len) */
     int         num_frames;
 } com_stat_t;
 
@@ -1285,8 +1287,6 @@ typedef struct frame_stat_t {
  * struct for encoding statistics of all frames
  */
 typedef struct xavs2_stat_t {
-    int         i_frame_count[6];     /* frame count for each type (I/P/B/F) */
-    int64_t     i_frame_size[4];      /* frame size  for each type (I/P/B/F) */
     int64_t     i_start_time;         /* encoding start time */
     int64_t     i_end_time;           /* encoding end time */
     com_stat_t  stat_i_frame;
