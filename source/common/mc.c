@@ -908,7 +908,7 @@ void xavs2_mem_oper_init(uint32_t cpuid)
         g_funcs.lowres_filter = xavs2_lowres_filter_core_ssse3;
     }
 
-    if (cpuid & XAVS2_CPU_AVX) {
+    if (cpuid & XAVS2_CPU_AVX2) {
         g_funcs.memzero_aligned = xavs2_memzero_aligned_c_avx;
         // g_funcs.mem_repeat_i    = xavs2_mem_repeat_i_c_avx;  // TODO: ±ÈC°æ±¾Âý£¬½ûÓÃ
         g_funcs.lowres_filter   = xavs2_lowres_filter_core_avx;
