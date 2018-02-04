@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_PRIMITIVES_H__
-#define __XAVS2_PRIMITIVES_H__
+#ifndef XAVS2_PRIMITIVES_H
+#define XAVS2_PRIMITIVES_H
 
 #include "pixel.h"
 
@@ -247,4 +247,4 @@ void xavs2_rdo_init         (uint32_t cpuid, intrinsic_func_t *pf);
 
 void init_all_primitives    (xavs2_param_t* param, intrinsic_func_t *p_funcs);
 
-#endif  // __XAVS2_PRIMITIVES_H__
+#endif  // XAVS2_PRIMITIVES_H

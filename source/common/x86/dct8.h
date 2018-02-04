@@ -24,8 +24,8 @@
  *****************************************************************************/
 
 
-#ifndef __XAVS2_I386_DCT8_H__
-#define __XAVS2_I386_DCT8_H__
+#ifndef XAVS2_I386_DCT8_H
+#define XAVS2_I386_DCT8_H
 
 void xavs2_dct_4x4_sse2   (const coeff_t *src, coeff_t *dst, int i_src);
 void xavs2_dct_4x4_avx2   (const coeff_t *src, coeff_t *dst, int i_src);
@@ -47,4 +47,4 @@ void xavs2_idct_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 void xavs2_idct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 #endif
 
-#endif // ifndef __XAVS2_I386_DCT8_H__
+#endif // ifndef XAVS2_I386_DCT8_H

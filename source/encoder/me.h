@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_ME_H__
-#define __XAVS2_ME_H__
+#ifndef XAVS2_ME_H
+#define XAVS2_ME_H
 
 
 /**
@@ -119,4 +119,4 @@ dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc
 dist_t xavs2_me_search_sym(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, mv_t *mv);
 dist_t xavs2_me_search_bid(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, mv_t *fwd_mv, mv_t *bwd_mv, cu_parallel_t *p_enc);
 
-#endif  // __XAVS2_ME_H__
+#endif  // XAVS2_ME_H

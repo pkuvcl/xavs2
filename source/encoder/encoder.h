@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_ENCODER_H__
-#define __XAVS2_ENCODER_H__
+#ifndef XAVS2_ENCODER_H
+#define XAVS2_ENCODER_H
 
 /**
  * ===========================================================================
@@ -66,4 +66,4 @@ void     encoder_fetch_one_encoded_frame(xavs2_handler_t *h_mgr, xavs2_outpacket
 void     xavs2_reconfigure_encoder(xavs2_t *h);
 
 
-#endif  // __XAVS2_ENCODER_H__
+#endif  // XAVS2_ENCODER_H

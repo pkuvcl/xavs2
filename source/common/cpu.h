@@ -36,8 +36,8 @@
 
 
 
-#ifndef __XAVS2_CPU_H__
-#define __XAVS2_CPU_H__
+#ifndef XAVS2_CPU_H
+#define XAVS2_CPU_H
 
 /**
  * ===========================================================================
@@ -107,4 +107,4 @@ void xavs2_cpu_xgetbv(uint32_t op, uint32_t *eax, uint32_t *edx);
 #define xavs2_emms()
 #endif
 
-#endif  // __XAVS2_CPU_H__
+#endif  // XAVS2_CPU_H

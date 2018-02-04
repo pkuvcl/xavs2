@@ -35,11 +35,11 @@
  */
 
 
-#ifndef __XAVS2_BLOCK_INFO_H__
-#define __XAVS2_BLOCK_INFO_H__
+#ifndef XAVS2_BLOCK_INFO_H
+#define XAVS2_BLOCK_INFO_H
 
 int  get_neighbor_cbp_y(xavs2_t *h, cu_info_t *p_cur, int slice_idx_cur_cu, int x_4x4, int y_4x4);
 void set_available_tables(xavs2_t *h);
 void check_neighbor_cu_avail(xavs2_t *h, cu_t *p_cu, int scu_x, int scu_y, int scu_xy);
 
-#endif  // __XAVS2_BLOCK_INFO_H__
+#endif  // XAVS2_BLOCK_INFO_H

@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_WIN32THREAD_H__
-#define __XAVS2_WIN32THREAD_H__
+#ifndef XAVS2_WIN32THREAD_H
+#define XAVS2_WIN32THREAD_H
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -85,4 +85,4 @@ void xavs2_win32_threading_destroy(void);
 
 int xavs2_pthread_num_processors_np(void);
 
-#endif  // __XAVS2_WIN32THREAD_H__
+#endif  // XAVS2_WIN32THREAD_H

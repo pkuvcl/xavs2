@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_THREADPOOL_H__
-#define __XAVS2_THREADPOOL_H__
+#ifndef XAVS2_THREADPOOL_H
+#define XAVS2_THREADPOOL_H
 
 typedef struct xavs2_threadpool_t xavs2_threadpool_t;
 
@@ -45,4 +45,4 @@ void  xavs2_threadpool_run   (xavs2_threadpool_t *pool, void *(*func)(void *), v
 void *xavs2_threadpool_wait  (xavs2_threadpool_t *pool, void *arg);
 void  xavs2_threadpool_delete(xavs2_threadpool_t *pool);
 
-#endif  // __XAVS2_THREADPOOL_H__
+#endif  // XAVS2_THREADPOOL_H

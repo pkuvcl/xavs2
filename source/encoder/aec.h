@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_AEC_H__
-#define __XAVS2_AEC_H__
+#ifndef XAVS2_AEC_H
+#define XAVS2_AEC_H
 
 #include "common.h"
 
@@ -274,4 +274,4 @@ void aec_done(aec_t *p_aec);
 void xavs2_lcu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, int i_level, int img_x, int img_y);
 void xavs2_lcu_terminat_bit_write(aec_t *p_aec, uint8_t bit);
 
-#endif  // __XAVS2_AEC_H__
+#endif  // XAVS2_AEC_H

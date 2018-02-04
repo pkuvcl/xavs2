@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_AVS2_DEFINITIONS_H__
-#define __XAVS2_AVS2_DEFINITIONS_H__
+#ifndef XAVS2_AVS2_DEFINITIONS_H
+#define XAVS2_AVS2_DEFINITIONS_H
 
 #include <assert.h>
 #include <stdint.h>
@@ -407,4 +407,4 @@ typedef union {
 #endif // defined(_MSC_VER) || defined(__ICL)
 
 
-#endif  // __XAVS2_BASIC_TYPES_H__
+#endif  // XAVS2_BASIC_TYPES_H

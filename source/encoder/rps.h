@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_RPS_H__
-#define __XAVS2_RPS_H__
+#ifndef XAVS2_RPS_H
+#define XAVS2_RPS_H
 
 // (1 - LDP, 2 - RA, 3 - RAP, 4 - AI)
 enum xavs2e_rps_cfg_e {
@@ -62,4 +62,4 @@ int rps_check_config(xavs2_param_t *param);
 
 void rps_set_picture_reorder_delay(xavs2_t *h);
 
-#endif  // __XAVS2_RPS_H__
+#endif  // XAVS2_RPS_H

@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_ALF_H__
-#define __XAVS2_ALF_H__
+#ifndef XAVS2_ALF_H
+#define XAVS2_ALF_H
 
 int  alf_get_buffer_size(const xavs2_param_t *param);
 
@@ -46,4 +46,4 @@ void alf_filter_one_frame(xavs2_t *h);
 void alf_get_statistics_lcu(xavs2_t *h, int lcu_x, int lcu_y,
                             xavs2_frame_t *p_org, xavs2_frame_t *p_rec);
 
-#endif  // __XAVS2_ALF_H__
+#endif  // XAVS2_ALF_H

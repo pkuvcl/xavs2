@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_INTRA_H__
-#define __XAVS2_INTRA_H__
+#ifndef XAVS2_INTRA_H
+#define XAVS2_INTRA_H
 
 typedef struct intra_candidate_t intra_candidate_t;
 
@@ -66,4 +66,4 @@ int rdo_get_pred_intra_chroma(xavs2_t *h, cu_t *p_cu, int i_level, int pix_y_c, 
 int rdo_get_pred_intra_chroma_fast(xavs2_t *h, cu_t *p_cu, int i_level, int pix_y_c, int pix_x_c,
                                    intra_candidate_t *p_candidate_list);
 
-#endif  // __XAVS2_INTRA_H__
+#endif  // XAVS2_INTRA_H

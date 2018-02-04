@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_IN_LOOP_FILTERS_H__
-#define __XAVS2_IN_LOOP_FILTERS_H__
+#ifndef XAVS2_IN_LOOP_FILTERS_H
+#define XAVS2_IN_LOOP_FILTERS_H
 
 /**
  * ===========================================================================
@@ -86,4 +86,4 @@ typedef struct sao_region_t {
 
 void xavs2_lcu_deblock(xavs2_t *h, xavs2_frame_t *frm);
 
-#endif  // __XAVS2_IN_LOOP_FILTERS_H__
+#endif  // XAVS2_IN_LOOP_FILTERS_H

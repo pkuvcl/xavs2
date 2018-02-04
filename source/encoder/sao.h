@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_SAO_H__
-#define __XAVS2_SAO_H__
+#ifndef XAVS2_SAO_H
+#define XAVS2_SAO_H
 
 void write_saoparam_one_lcu(xavs2_t *h, aec_t *p_aec, int lcu_x, int lcu_y, bool_t *slice_sao_on, SAOBlkParam *saoBlkParam);
 void sao_slice_onoff_decision(xavs2_t *h, bool_t *slice_sao_on);
@@ -46,4 +46,4 @@ void sao_get_lcu_param_after_deblock(xavs2_t *h, aec_t *p_aec, int i_lcu_x, int 
 
 /* conduct SAO filtering after one lcu row coding */
 void sao_filter_lcu(xavs2_t *h, SAOBlkParam blk_param[NUM_SAO_COMPONENTS], int lcu_x, int lcu_y);
-#endif  // __XAVS2_SAO_H__
+#endif  // XAVS2_SAO_H

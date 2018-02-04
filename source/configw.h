@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2Enc_CONFIGW_H__
-#define __XAVS2Enc_CONFIGW_H__
+#ifndef XAVS2_CONFIGW_H
+#define XAVS2_CONFIGW_H
 
 #if defined(__ICL) || defined(_MSC_VER)
 
@@ -92,4 +92,4 @@
 #define HAVE_AVS                0
 
 #endif
-#endif // __XAVS2Enc_CONFIGW_H__
+#endif // XAVS2_CONFIGW_H

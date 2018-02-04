@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_SLICE_H__
-#define __XAVS2_SLICE_H__
+#ifndef XAVS2_SLICE_H
+#define XAVS2_SLICE_H
 
 /**
  * ===========================================================================
@@ -256,4 +256,4 @@ void  slice_lcu_row_order_init(xavs2_t *h);
 
 void *xavs2e_encode_one_frame(void *arg);
 
-#endif  // __XAVS2_SLICE_H__
+#endif  // XAVS2_SLICE_H

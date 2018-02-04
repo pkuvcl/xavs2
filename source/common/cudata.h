@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_CUDATA_H__
-#define __XAVS2_CUDATA_H__
+#ifndef XAVS2_CUDATA_H
+#define XAVS2_CUDATA_H
 
 void cu_get_mvds(xavs2_t *h, cu_t *p_cu);
 
@@ -152,4 +152,4 @@ cu_parallel_t *cu_get_enc_context(xavs2_t *h, int i_cu_level)
 }
 
 
-#endif  // __XAVS2_CUDATA_H__
+#endif  // XAVS2_CUDATA_H

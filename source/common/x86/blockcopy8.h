@@ -23,8 +23,8 @@
  * For more information, contact us at license @ x265.com.
  *****************************************************************************/
 
-#ifndef __XAVS2_BLOCKCOPY_H__
-#define __XAVS2_BLOCKCOPY_H__
+#ifndef XAVS2_BLOCKCOPY_H
+#define XAVS2_BLOCKCOPY_H
 
 void xavs2_cpy2Dto1D_shl_4_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
 void xavs2_cpy2Dto1D_shl_8_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
@@ -260,4 +260,4 @@ void xavs2_blockcopy_ps_64x64_avx2(int16_t* a, intptr_t stridea, const uint8_t *
 #undef SETUP_BLOCKCOPY_SS_PP
 #undef SETUP_BLOCKCOPY_FUNC
 
-#endif // __xXAVS2_BLOCKCOPY_H__
+#endif // __xXAVS2_BLOCKCOPY_H

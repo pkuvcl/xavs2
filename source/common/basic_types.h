@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_BASIC_TYPES_H__
-#define __XAVS2_BASIC_TYPES_H__
+#ifndef XAVS2_BASIC_TYPES_H
+#define XAVS2_BASIC_TYPES_H
 
 #include <stdint.h>
 #include "osdep.h"
@@ -93,4 +93,4 @@ typedef struct SAOBlkParam {
 } SAOBlkParam;
 
 
-#endif  // __XAVS2_BASIC_TYPES_H__
+#endif  // XAVS2_BASIC_TYPES_H

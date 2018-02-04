@@ -29,11 +29,12 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  *****************************************************************************/
 
-#ifndef __XAVS2_QUANT8_H__
-#define __XAVS2_QUANT8_H__
+#ifndef XAVS2_QUANT8_H
+#define XAVS2_QUANT8_H
 
 int  xavs2_quant_sse4  (coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
 int  xavs2_quant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
 void xavs2_dequant_sse4(coeff_t *coef, const int i_coef, const int scale, const int shift);
 void xavs2_dequant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift);
-#endif // ifndef __XAVS2_QUANT8_H__
+
+#endif // ifndef XAVS2_QUANT8_H

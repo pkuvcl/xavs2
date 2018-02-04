@@ -22,8 +22,8 @@
  * For more information, contact us at license @ x265.com.
  *****************************************************************************/
 
-#ifndef __XAVS2_I386_MC_H__
-#define __XAVS2_I386_MC_H__
+#ifndef XAVS2_I386_MC_H
+#define XAVS2_I386_MC_H
 
 void xavs2_plane_copy_core_mmx2(pel_t *dst, intptr_t i_dst, pel_t *src, intptr_t i_src, int w, int h);
 void xavs2_plane_copy_deinterleave_mmx(pel_t *dstu, intptr_t i_dstu, pel_t *dstv, intptr_t i_dstv, pel_t *src, intptr_t i_src, int w, int h);
@@ -46,4 +46,4 @@ void xavs2_lowres_filter_core_sse2 (pel_t *src, int i_src, pel_t *dst, int i_dst
 void xavs2_lowres_filter_core_ssse3(pel_t *src, int i_src, pel_t *dst, int i_dst, int width, int height);
 void xavs2_lowres_filter_core_avx  (pel_t *src, int i_src, pel_t *dst, int i_dst, int width, int height);
 
-#endif  // __XAVS2_I386_MC_H__
+#endif  // XAVS2_I386_MC_H

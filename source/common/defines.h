@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_DEFINES_H__
-#define __XAVS2_DEFINES_H__
+#ifndef XAVS2_DEFINES_H
+#define XAVS2_DEFINES_H
 
 
 /**
@@ -372,4 +372,4 @@ enum frame_alloc_type_e {
 /* qp */
 #define XAVS2_QP_AUTO          0     /* get qp automatically */
 
-#endif /* #if __XAVS2_DEFINES_H__ */
+#endif /* #if XAVS2_DEFINES_H */

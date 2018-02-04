@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_COMMON_H__
-#define __XAVS2_COMMON_H__
+#ifndef XAVS2_COMMON_H
+#define XAVS2_COMMON_H
 
 
 /**
@@ -1715,4 +1715,4 @@ static ALWAYS_INLINE void xavs2_free(void *ptr)
  */
 #include "avs2tab.h"
 
-#endif  // __XAVS2_COMMON_H__
+#endif  // XAVS2_COMMON_H

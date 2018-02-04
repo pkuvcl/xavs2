@@ -35,11 +35,11 @@
  */
 
 
-#ifndef __XAVS2_PRESETS_H__
-#define __XAVS2_PRESETS_H__
+#ifndef XAVS2_PRESETS_H
+#define XAVS2_PRESETS_H
 
 void parse_preset_level(xavs2_param_t *p_param, int i_preset_level);
 void encoder_set_fast_algorithms(xavs2_t *h);
 void decide_ultimate_paramters(xavs2_param_t *p_param);
 
-#endif  // __XAVS2_PRESET_LEVELS_H__
+#endif  // XAVS2_PRESET_LEVELS_H

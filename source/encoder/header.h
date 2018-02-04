@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_HEADER_H__
-#define __XAVS2_HEADER_H__
+#ifndef XAVS2_HEADER_H
+#define XAVS2_HEADER_H
 
 int  xavs2_sequence_write(xavs2_t *h, bs_t *p_bs);
 int  xavs2_user_data_write(bs_t *p_bs);
@@ -45,4 +45,4 @@ int  xavs2_inter_picture_header_write(xavs2_t *h, bs_t *p_bs);
 void xavs2_picture_header_alf_write(xavs2_t *h, ALFParam *alfPictureParam, bs_t *p_bs);
 int  xavs2_slice_header_write(xavs2_t *h, slice_t *p_slice);
 
-#endif  // __XAVS2_HEADER_H__
+#endif  // XAVS2_HEADER_H

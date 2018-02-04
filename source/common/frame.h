@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_FRAME_H__
-#define __XAVS2_FRAME_H__
+#ifndef XAVS2_FRAME_H
+#define XAVS2_FRAME_H
 
 
 /**
@@ -59,4 +59,4 @@ void xavs2_frame_expand_border_lcurow(xavs2_t *h, xavs2_frame_t *frame, int i_lc
 
 void xavs2_frame_expand_border_mod8(xavs2_t *h, xavs2_frame_t *frame);
 
-#endif  /* __XAVS2_FRAME_H__ */
+#endif  /* XAVS2_FRAME_H */

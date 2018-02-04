@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_PREDICT_H__
-#define __XAVS2_PREDICT_H__
+#ifndef XAVS2_PREDICT_H
+#define XAVS2_PREDICT_H
 
 
 /**
@@ -203,4 +203,4 @@ int  pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_
 void pred_inter_search_bi    (xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, dist_t *sym_mcost, dist_t *bid_mcost);
 void pred_inter_search_dual  (xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, dist_t *dual_mcost, int *dual_best_fst_ref, int *dual_best_snd_ref);
 
-#endif  // __XAVS2_PREDICT_H__
+#endif  // XAVS2_PREDICT_H

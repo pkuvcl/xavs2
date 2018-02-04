@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_AVS2_TABLE_H_
-#define __XAVS2_AVS2_TABLE_H_
+#ifndef XAVS2_AVS2_TABLE_H
+#define XAVS2_AVS2_TABLE_H
 
 /* 变换系数扫描顺序表 */
 extern ALIGN32(const int16_t    tab_scan_4x4  [ 16][2]);
@@ -75,4 +75,4 @@ extern const float      FRAME_RATE[8];
 
 extern const char *     xavs2_preset_names[];
 
-#endif  // __XAVS2_AVS2_TABLE_H_
+#endif  // XAVS2_AVS2_TABLE_H

@@ -34,9 +34,9 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_RDOQ_H__
-#define __XAVS2_RDOQ_H__
+#ifndef XAVS2_RDOQ_H
+#define XAVS2_RDOQ_H
 
 int rdoq_block(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *cur_blk, int bsx, int bsy, int i_tu_level, int qp, int b_luma, int intra_mode);
 
-#endif  // __XAVS2_RDOQ_H__
+#endif  // XAVS2_RDOQ_H

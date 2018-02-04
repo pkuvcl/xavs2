@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_TDRDO_H__
-#define __XAVS2_TDRDO_H__
+#ifndef XAVS2_TDRDO_H
+#define XAVS2_TDRDO_H
 
 
 /**
@@ -53,4 +53,4 @@ void tdrdo_frame_done(xavs2_t *h);
 void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda);
 void tdrdo_lcu_update(xavs2_t *h);
 
-#endif  // __XAVS2_TDRDO_H__
+#endif  // XAVS2_TDRDO_H

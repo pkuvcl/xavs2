@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_OSDEP_H__
-#define __XAVS2_OSDEP_H__
+#ifndef XAVS2_OSDEP_H
+#define XAVS2_OSDEP_H
 
 
 /**
@@ -460,4 +460,4 @@ static void ALWAYS_INLINE xavs2_prefetch(void *p)
 #define log2(x)     (log(x)/0.693147180559945)
 #endif
 
-#endif /* __XAVS2_OSDEP_H__ */
+#endif /* XAVS2_OSDEP_H */

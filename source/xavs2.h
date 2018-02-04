@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2ENC_H__
-#define __XAVS2ENC_H__
+#ifndef XAVS2_XAVS2_H
+#define XAVS2_XAVS2_H
 
 #ifdef __cplusplus
 extern "C" {    // only need to export C interface if used by C++ source code
@@ -391,4 +391,4 @@ xavs2_encoder_destroy(void *coder);
 #ifdef __cplusplus
 }
 #endif
-#endif // __XAVS2ENC_H__
+#endif // XAVS2_XAVS2_H

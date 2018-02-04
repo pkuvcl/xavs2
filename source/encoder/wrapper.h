@@ -34,11 +34,11 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
+#ifndef XAVS2_WRAPPER_H
+#define XAVS2_WRAPPER_H
+
 #include "xlist.h"
 #include "threadpool.h"
-
-#ifndef __XAVS2_WRAPPER_H__
-#define __XAVS2_WRAPPER_H__
 
 
 /**
@@ -222,4 +222,4 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr);
 void *proc_wrapper_thread(void *args);
 
 
-#endif  // __XAVS2_WRAPPER_H__
+#endif  // XAVS2_WRAPPER_H

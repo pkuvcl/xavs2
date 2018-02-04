@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_BITSTREAM_H__
-#define __XAVS2_BITSTREAM_H__
+#ifndef XAVS2_BITSTREAM_H
+#define XAVS2_BITSTREAM_H
 
 
 /**
@@ -338,4 +338,4 @@ static ALWAYS_INLINE int xavs2_bs_write_uv(bs_t *bs, int len, int value)
 #define u_0(bs, len, value, trace_string)   xavs2_bs_write_uv(bs, len, value)
 #endif
 
-#endif  // __XAVS2_BITSTREAM_H__
+#endif  // XAVS2_BITSTREAM_H

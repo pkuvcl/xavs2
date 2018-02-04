@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_XLIST_H__
-#define __XAVS2_XLIST_H__
+#ifndef XAVS2_XLIST_H
+#define XAVS2_XLIST_H
 
 
 /**
@@ -86,4 +86,4 @@ void  xl_destroy(xlist_t *const xlist);
 void  xl_append(xlist_t *const xlist, void *node);
 void *xl_remove_head(xlist_t *const xlist, const int wait);
 
-#endif  // __XAVS2_XLIST_H__
+#endif  // XAVS2_XLIST_H

@@ -23,8 +23,8 @@
  * For more information, contact us at license @ x265.com.
  *****************************************************************************/
 
-#ifndef __XAVS2_PIXEL_UTIL_H__
-#define __XAVS2_PIXEL_UTIL_H__
+#ifndef XAVS2_PIXEL_UTIL_H
+#define XAVS2_PIXEL_UTIL_H
 
 void xavs2_getResidual4_sse2(const pel_t *fenc, const pel_t *pred, int16_t *residual, intptr_t stride);
 void xavs2_getResidual8_sse2(const pel_t *fenc, const pel_t *pred, int16_t *residual, intptr_t stride);
@@ -135,4 +135,4 @@ LUMA_PIXELVAR_DEF(_avx);
 #undef SETUP_LUMA_PIXELSUB_PS_FUNC
 #undef SETUP_LUMA_PIXELVAR_FUNC
 
-#endif // ifndef __XAVS2_PIXEL_UTIL_H__
+#endif // ifndef XAVS2_PIXEL_UTIL_H

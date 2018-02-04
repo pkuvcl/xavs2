@@ -28,8 +28,8 @@
  * For more information, contact us at license @ x265.com.
  *****************************************************************************/
 
-#ifndef __XAVS2_X86_PIXEL_H__
-#define __XAVS2_X86_PIXEL_H__
+#ifndef XAVS2_X86_PIXEL_H
+#define XAVS2_X86_PIXEL_H
 
 
 /**
@@ -138,4 +138,4 @@ DECL_PIXELS(avx2);
 
 #undef DECL_PIXELS
 
-#endif  // __XAVS2_X86_PIXEL_H__
+#endif  // XAVS2_X86_PIXEL_H

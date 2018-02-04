@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_MC_H__
-#define __XAVS2_MC_H__
+#ifndef XAVS2_MC_H
+#define XAVS2_MC_H
 
 /**
  * ===========================================================================
@@ -95,4 +95,4 @@ void mc_chroma(pel_t *p_pred_u, pel_t *p_pred_v, int i_pred,
                const xavs2_frame_t *p_ref_frm);
 
 
-#endif // __XAVS2_MC_H__
+#endif // XAVS2_MC_H

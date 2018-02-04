@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_WQUANT_H__
-#define __XAVS2_WQUANT_H__
+#ifndef XAVS2_WQUANT_H
+#define XAVS2_WQUANT_H
 
 #if ENABLE_WQUANT
 
@@ -70,4 +70,4 @@ extern const short tab_wq_param_default[2][6];
 
 #endif
 
-#endif  // __XAVS2_WQUANT_H__
+#endif  // XAVS2_WQUANT_H

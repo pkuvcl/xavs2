@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_RATECONTRAL_H__
-#define __XAVS2_RATECONTRAL_H__
+#ifndef XAVS2_RATECONTRAL_H
+#define XAVS2_RATECONTRAL_H
 
 int  xavs2_rc_get_buffer_size(xavs2_param_t *h);
 int  xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param);
@@ -54,4 +54,4 @@ void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp);
 
 void xavs2_ratecontrol_destroy(ratectrl_t *rc);
 
-#endif  // __XAVS2_RATECONTRAL_H__
+#endif  // XAVS2_RATECONTRAL_H

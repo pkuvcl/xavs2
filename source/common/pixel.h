@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_PIXEL_H__
-#define __XAVS2_PIXEL_H__
+#ifndef XAVS2_PIXEL_H
+#define XAVS2_PIXEL_H
 
 
 /**
@@ -194,4 +194,4 @@ uint64_t xavs2_pixel_ssd_wxh(pixel_funcs_t *pf,
 
 void xavs2_mad_init(uint32_t cpu, mad_funcs_t *madf);
 
-#endif  // __XAVS2_PIXEL_H__
+#endif  // XAVS2_PIXEL_H

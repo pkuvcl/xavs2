@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_RDO_H__
-#define __XAVS2_RDO_H__
+#ifndef XAVS2_RDO_H
+#define XAVS2_RDO_H
 
 void xavs2_init_valid_mode_table(xavs2_t *h);
 
@@ -45,4 +45,4 @@ rdcost_t compress_ctu_intra_downtop(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_
 
 typedef rdcost_t(*lcu_analyse_t)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, int i_min_level, int i_max_level, rdcost_t cost_limit);
 
-#endif  // __XAVS2_RDO_H__
+#endif  // XAVS2_RDO_H

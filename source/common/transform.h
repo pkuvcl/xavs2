@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_TRANSFORM_H__
-#define __XAVS2_TRANSFORM_H__
+#ifndef XAVS2_TRANSFORM_H
+#define XAVS2_TRANSFORM_H
 
 /**
  * ===========================================================================
@@ -49,4 +49,4 @@
  * ===========================================================================
  */
 
-#endif  // __XAVS2_TRANSFORM_H__
+#endif  // XAVS2_TRANSFORM_H

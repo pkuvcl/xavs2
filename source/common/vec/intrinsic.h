@@ -34,8 +34,8 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#ifndef __XAVS2_INTRINSIC_H__
-#define __XAVS2_INTRINSIC_H__
+#ifndef XAVS2_INTRINSIC_H
+#define XAVS2_INTRINSIC_H
 
 /* ---------------------------------------------------------------------------
  * macros used for quick access of __m128i
@@ -323,4 +323,4 @@ int mad_16x16_sse128(pel_t *p_src, int i_src, int cu_size);
 int mad_32x32_sse128(pel_t *p_src, int i_src, int cu_size);
 int mad_64x64_sse128(pel_t *p_src, int i_src, int cu_size);
 
-#endif // #ifndef __XAVS2_INTRINSIC_H__
+#endif // #ifndef XAVS2_INTRINSIC_H

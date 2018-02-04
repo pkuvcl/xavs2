@@ -35,8 +35,8 @@
  */
 
 
-#ifndef __XAVS2_NAL_H__
-#define __XAVS2_NAL_H__
+#ifndef XAVS2_NAL_H
+#define XAVS2_NAL_H
 
 #include "bitstream.h"
 
@@ -159,4 +159,4 @@ intptr_t encoder_encapsulate_nals(xavs2_t *h, xavs2_frame_t *frm, int start)
 }
 
 
-#endif // __XAVS2_NAL_H__
+#endif // XAVS2_NAL_H
