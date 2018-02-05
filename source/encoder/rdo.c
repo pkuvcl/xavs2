@@ -237,7 +237,7 @@ void cu_init(xavs2_t *h, cu_t *p_cu, cu_info_t *best, int i_level)
     /* init basic properties */
     p_cu->cu_info.i_cbp = 0;
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     /* set qp needed in loop filter (even if constant QP is used) */
     p_cu->cu_info.i_cu_qp = h->i_qp;
 
@@ -1199,7 +1199,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
 
             /* ------- GET RATE -------- */
             rate_chroma = p_aec->binary.est_cu_header(h, p_aec, p_cu);
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
             rate_chroma += p_aec->binary.write_cu_cbp_dqp(h, p_aec, &p_cu->cu_info, h->i_slice_index, h->last_dquant);
 #else
             rate_chroma += p_aec->binary.write_cu_cbp(p_aec, &p_cu->cu_info, h->i_slice_index, h);
@@ -1245,7 +1245,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
     } else {   /* YUV400 */
         /* ------- GET RATE -------- */
         int rate_hdr = p_aec->binary.est_cu_header(h, p_aec, p_cu);
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         rate_hdr += p_aec->binary.write_cu_cbp_dqp(h, p_aec, &p_cu->cu_info, h->i_slice_index, h->last_dquant);
 #else
         rate_hdr += p_aec->binary.write_cu_cbp(p_aec, &p_cu->cu_info, h->i_slice_index, h);
@@ -1532,7 +1532,7 @@ static int tu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
         int bits_left = rdo_get_left_bits(h, *rdcost, distortion);
         int cur_bits_left;
         /* rate of cbp & dqp */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         rate += p_aec->binary.write_cu_cbp_dqp(h, p_aec, &p_cu->cu_info, h->i_slice_index, h->last_dquant);
 #else
         rate += p_aec->binary.write_cu_cbp(p_aec, &p_cu->cu_info, h->i_slice_index, h);

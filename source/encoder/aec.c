@@ -1000,7 +1000,7 @@ int aec_write_cu_cbp(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu,
     return arienco_bits_written(p_aec) - org_bits;
 }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
 /* ---------------------------------------------------------------------------
  */
 static INLINE
@@ -1976,7 +1976,7 @@ int write_cu_refs_mvds(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info)
     return rate;
 }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
 /* ---------------------------------------------------------------------------
  */
 int write_cu_cbp_dqp(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu, int *last_dqp)
@@ -1996,7 +1996,7 @@ int write_cu_cbp_dqp(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int slice_i
     if (p_cu_info->i_cbp != 0 && h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         rate += aec_write_dqp(p_aec, cu_get_qp(h, p_cu_info), *last_dqp);
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         *last_dqp = p_cu_info->i_delta_qp;
 #endif
 
@@ -2104,7 +2104,7 @@ void xavs2_cu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, cu_info_t *p
         int is_tu_split = p_cu_info->i_tu_split != TU_SPLIT_NON;
 
         /* write CBP & DQP */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         write_cu_cbp_dqp(h, p_aec, p_cu_info, slice_index_cur_cu, &lcu_info->last_dqp);
 #else
         aec_write_cu_cbp(p_aec, p_cu_info, slice_index_cur_cu, h);
@@ -2228,7 +2228,7 @@ binary_t gf_aec_default = {
     // .est_luma_block_coeff    = write_luma_block_coeff,     // not available
     // .est_chroma_block_coeff  = write_chroma_block_coeff,   // not available
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     .write_cu_cbp_dqp          = write_cu_cbp_dqp,
 #else
     .write_cu_cbp              = aec_write_cu_cbp,

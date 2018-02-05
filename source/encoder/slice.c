@@ -382,7 +382,7 @@ void *xavs2_lcu_row_write(void *arg)
     int min_level = h->i_scu_level;
     int max_level = h->i_lcu_level;
     int i_lcu_x;
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     int temp_dquant;
 #endif
 
@@ -406,7 +406,7 @@ void *xavs2_lcu_row_write(void *arg)
         h->lcu.lcu_coeff[0] = lcu->coeffs_y;
         h->lcu.lcu_coeff[1] = lcu->coeffs_uv[0];
         h->lcu.lcu_coeff[2] = lcu->coeffs_uv[1];
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         h->last_dquant     = &lcu->last_dqp;
 #endif
 
@@ -424,7 +424,7 @@ void *xavs2_lcu_row_write(void *arg)
             tdrdo_lcu_adjust_lambda(h, &h->f_lambda_mode);
         }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         temp_dquant = *h->last_dquant;
 #endif
 
@@ -439,7 +439,7 @@ void *xavs2_lcu_row_write(void *arg)
             tdrdo_lcu_update(h);
         }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         *h->last_dquant = temp_dquant;
 #endif
 
@@ -570,7 +570,7 @@ void xavs2_slice_write_start(xavs2_t *h)
     slice_t *slice = h->slices[h->i_slice_index];
 
     /* init slice */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     h->frameinfo->rows[slice->i_first_lcu_y].lcus[0].last_dqp = 0;
 #endif
     slice->i_qp = h->i_qp;

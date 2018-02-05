@@ -422,7 +422,7 @@ typedef struct binary_t {
     int (*est_chroma_block_coeff)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *quant_coeff, runlevel_t *runlevel, 
                                   int i_level, int max_bits);
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     int (*write_cu_cbp_dqp)(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu, int *last_dqp);
 #else
     int (*write_cu_cbp)(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu, xavs2_t *h);
@@ -690,7 +690,7 @@ typedef struct ctx_set_t {
     context_t intra_luma_pred_mode          [NUM_INTRA_MODE_CTX    ];
     context_t intra_chroma_pred_mode        [NUM_INTRA_MODE_C_CTX  ];
     /* CU 级别QP调整 */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     context_t delta_qp_contexts             [NUM_DELTA_QP_CTX      ];
 #endif
     /* 变换系数编码 */
@@ -810,11 +810,11 @@ struct cu_info_t {
 
     int8_t      i_level;              /* cu level, 3: 8x8, 4: 16x16, 5: 32x32, 6: 64x64 */
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     /* qp */
     int8_t      i_cu_qp;              /* qp of current CU */
     int8_t      i_delta_qp;           /* delta qp */
-#endif   // ENABLE_RATE_CONTROL
+#endif   // ENABLE_RATE_CONTROL_CU
 
     /* mode */
     int8_t      i_mode;               /* cu type (partition into prediction units (PUs)) */
@@ -1245,7 +1245,7 @@ typedef struct lcu_info_t {
     int         pix_x;                /* horizontal position (in pixel) of lcu (luma) */
     int         pix_y;                /* vertical   position (in pixel) of lcu (luma) */
     int         slice_index;          /* slice index */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     int         last_dqp;             /* last delta QP */
 #endif
 } lcu_info_t;
@@ -1562,7 +1562,7 @@ struct xavs2_t {
 
     aec_t       aec;                  /* ac engine for RDO */
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     int        *last_dquant;
 #endif
 

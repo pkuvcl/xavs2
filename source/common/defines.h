@@ -137,11 +137,9 @@ enum xavs2_fast_algorithms_e {
 /* ---------------------------------------------------------------------------
  * Rate Control
  */
-#define ENABLE_RATE_CONTROL     0     /* 1: enable, 0: disable */
+#define ENABLE_RATE_CONTROL_CU  0     /* Enable Rate-Control on CU level: 1: enable, 0: disable */
 
-#if ENABLE_RATE_CONTROL
 #define ENABLE_AUTO_INIT_QP     1     /* 根据目标码率自动设置初始QP值 */
-#endif  // ENABLE_RATE_CONTROL
 
 
 /**

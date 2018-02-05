@@ -90,7 +90,7 @@ static ALWAYS_INLINE int pu_get_mv_index(int i_mode, int pu_idx)
  */
 static ALWAYS_INLINE int cu_get_qp(xavs2_t *h, cu_info_t *p_cu_info)
 {
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     UNUSED_PARAMETER(h);
     return p_cu_info->i_cu_qp;
 #else

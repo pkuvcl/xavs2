@@ -43,14 +43,15 @@ int  xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param);
 
 int  xavs2_ratecontrol_base_qp(xavs2_t *h);
 
-#if ENABLE_RATE_CONTROL
 int  xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp);
-int  xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp);
-
 void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, int frm_idx);
 
+
+#if ENABLE_RATE_CONTROL_CU
+int  xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp);
+
 void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp);
-#endif  // ENABLE_RATE_CONTROL
+#endif  // ENABLE_RATE_CONTROL_CU
 
 void xavs2_ratecontrol_destroy(ratectrl_t *rc);
 

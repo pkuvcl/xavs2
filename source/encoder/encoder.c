@@ -56,6 +56,7 @@
 #include "version.h"
 #include "alf.h"
 #include "sao.h"
+#include "ratecontrol.h"
 
 #if defined(__ARM_ARCH_7A__) | SYS_LINUX || !defined(_MSC_VER)
 #define sprintf_s snprintf
@@ -905,10 +906,8 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
     /* release the reconstructed frame */
     release_one_frame(h, h->fdec);
 
-#if ENABLE_RATE_CONTROL
     /* update rate control */
-    xavs2_ratecontrol_end(h, h->fenc->i_bs_len * 8, h->i_qp, h->fenc->i_frm_type, h->fenc->i_frame); //EKIN_MARK
-#endif  // ENABLE_RATE_CONTROL
+    xavs2_ratecontrol_end(h, h->fenc->i_bs_len * 8, h->i_qp, h->fenc->i_frm_type, h->fenc->i_frame);
 
     /* output this encoded frame */
     output_frame.frm_enc = h->fenc;
@@ -1285,11 +1284,11 @@ int encoder_check_parameters(xavs2_param_t *param)
         param->low_delay = FALSE;
     }
 
-    /* fixed picture qp? */
-#if !ENABLE_RATE_CONTROL
-    if (param->i_rc_method != XAVS2_RC_CQP) {
-        xavs2_log(NULL, XAVS2_LOG_WARNING, "Rate Control module disabled in this version.\n");
-        param->i_rc_method = XAVS2_RC_CQP;
+    /* Rate-Control */
+#if !ENABLE_RATE_CONTROL_CU
+    if (param->i_rc_method == XAVS2_RC_CBR_SCU) {
+        xavs2_log(NULL, XAVS2_LOG_WARNING, "Rate Control with CU level control disabled in this version.\n");
+        param->i_rc_method = XAVS2_RC_CBR_FRM;
     }
 #endif
 
@@ -2154,7 +2153,6 @@ void xavs2e_frame_coding_init(xavs2_t *h)
         tdrdo_frame_start(h);
     }
 
-#if ENABLE_RATE_CONTROL
     /* get frame level qp */
     if (h->param->i_rc_method != XAVS2_RC_CQP) {
         int new_qp = h->i_qp;
@@ -2167,7 +2165,6 @@ void xavs2e_frame_coding_init(xavs2_t *h)
             xavs2e_update_lambda(h, h->i_type, h->fenc->f_frm_lambda_ssd);
         }
     }
-#endif
 
     /* confirm the encoding QP in the right range */
     h->i_qp = clip_qp(h, h->i_qp);

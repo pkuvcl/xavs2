@@ -275,7 +275,7 @@ void lcu_start_init_pos(xavs2_t *h, int i_lcu_x, int i_lcu_y)
     int lcu_width   = 1 << h->i_lcu_level;
     int lcu_height  = 1 << h->i_lcu_level;
     cu_t  *p_cu = h->lcu.p_ctu; /* point to the CTU */
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     int w_in_scu;               /* width  in SCU of current lcu */
     int h_in_scu;               /* height in SCU of current lcu */
     int x, y;
@@ -303,7 +303,7 @@ void lcu_start_init_pos(xavs2_t *h, int i_lcu_x, int i_lcu_y)
      * 2, init qp for current CTU
      */
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         h->i_qp = xavs2_ratecontrol_qp_lcu(h, h->fenc->i_frame, h->i_qp);
     }
@@ -314,7 +314,7 @@ void lcu_start_init_pos(xavs2_t *h, int i_lcu_x, int i_lcu_y)
      */
     h->lcu_slice_idx[h->lcu.i_lcu_xy] = (int8_t)(h->i_slice_index);
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     w_in_scu = lcu_width  >> MIN_CU_SIZE_IN_BIT;
     h_in_scu = lcu_height >> MIN_CU_SIZE_IN_BIT;
     for (y = 0; y < h_in_scu; y++) {

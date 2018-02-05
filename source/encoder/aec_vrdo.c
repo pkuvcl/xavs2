@@ -643,7 +643,7 @@ int aec_write_cu_cbp_vrdo(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cu
     return arienco_bits_written(p_aec) - org_bits;
 }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
 /* ---------------------------------------------------------------------------
  */
 static INLINE
@@ -1366,7 +1366,7 @@ int write_cu_refs_mvds_vrdo(xavs2_t *h, aec_t *p_aec, cu_t *p_cu)
     return rate;
 }
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
 /* ---------------------------------------------------------------------------
  */
 int write_cu_cbp_dqp_vrdo(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu, int *last_dqp)
@@ -1380,7 +1380,7 @@ int write_cu_cbp_dqp_vrdo(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int sl
     if (p_cu_info->i_cbp != 0 && h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         rate += aec_write_dqp_vrdo(p_aec, cu_get_qp(h, p_cu_info), *last_dqp);
 
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
         *last_dqp = p_cu_info->i_delta_qp;
 #else
         *last_dqp = 0;
@@ -1483,7 +1483,7 @@ binary_t gf_aec_vrdo = {
     .est_luma_block_coeff      = write_luma_block_coeff_vrdo,
     .est_chroma_block_coeff    = write_chroma_block_coeff_vrdo,
     
-#if ENABLE_RATE_CONTROL
+#if ENABLE_RATE_CONTROL_CU
     .write_cu_cbp_dqp          = write_cu_cbp_dqp_vrdo,
 #else
     .write_cu_cbp              = aec_write_cu_cbp_vrdo,
