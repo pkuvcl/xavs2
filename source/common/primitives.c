@@ -61,7 +61,7 @@ void init_all_primitives(xavs2_param_t* param, intrinsic_func_t *p_funcs)
     }
 
     /* init memory operation function handlers */
-    xavs2_mem_oper_init(cpuid);
+    xavs2_mem_oper_init  (cpuid, p_funcs);
 
     /* init function handles */
     xavs2_intra_pred_init(cpuid, p_funcs);

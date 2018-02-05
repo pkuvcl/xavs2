@@ -865,53 +865,53 @@ static void lowres_filter_core_c(pel_t *src, int i_src, pel_t *dst, int i_dst, i
 /* ---------------------------------------------------------------------------
  * global function set initial
  */
-void xavs2_mem_oper_init(uint32_t cpuid)
+void xavs2_mem_oper_init(uint32_t cpuid, intrinsic_func_t *pf)
 {
-    g_funcs.fast_memcpy     = memcpy;
-    g_funcs.memcpy_aligned  = memcpy;
-    g_funcs.fast_memset     = memset;
-    g_funcs.fast_memzero    = memzero_aligned_c;
-    g_funcs.memzero_aligned = memzero_aligned_c;
-    g_funcs.mem_repeat_i    = mem_repeat_i_c;
-    g_funcs.mem_repeat_p    = memset;
-    g_funcs.lowres_filter   = lowres_filter_core_c;
+    pf->fast_memcpy     = memcpy;
+    pf->memcpy_aligned  = memcpy;
+    pf->fast_memset     = memset;
+    pf->fast_memzero    = memzero_aligned_c;
+    pf->memzero_aligned = memzero_aligned_c;
+    pf->mem_repeat_i    = mem_repeat_i_c;
+    pf->mem_repeat_p    = memset;
+    pf->lowres_filter   = lowres_filter_core_c;
     
 #if ARCH_X86_64
-    g_funcs.mem_repeat_i    = mem_repeat_8i_c;  // x64架构下，减少循环次数同时使用64位打包赋值
+    pf->mem_repeat_i    = mem_repeat_8i_c;  // x64架构下，减少循环次数同时使用64位打包赋值
 #endif
 
 #if HAVE_MMX
     if (cpuid & XAVS2_CPU_MMX) {
-        g_funcs.fast_memcpy     = xavs2_fast_memcpy_mmx;
-        g_funcs.memcpy_aligned  = xavs2_memcpy_aligned_mmx;
-        g_funcs.fast_memset     = xavs2_fast_memset_mmx;
-        g_funcs.fast_memzero    = xavs2_fast_memzero_mmx;
-        g_funcs.memzero_aligned = xavs2_fast_memzero_mmx;
+        pf->fast_memcpy     = xavs2_fast_memcpy_mmx;
+        pf->memcpy_aligned  = xavs2_memcpy_aligned_mmx;
+        pf->fast_memset     = xavs2_fast_memset_mmx;
+        pf->fast_memzero    = xavs2_fast_memzero_mmx;
+        pf->memzero_aligned = xavs2_fast_memzero_mmx;
     }
     if (cpuid & XAVS2_CPU_MMX2) {
-        g_funcs.lowres_filter = xavs2_lowres_filter_core_mmx2;
+        pf->lowres_filter = xavs2_lowres_filter_core_mmx2;
     }
 
     if (cpuid & XAVS2_CPU_SSE) {
-        // g_funcs.memcpy_aligned  = xavs2_memcpy_aligned_sse;
-        // g_funcs.memzero_aligned = xavs2_memzero_aligned_sse;
+        // pf->memcpy_aligned  = xavs2_memcpy_aligned_sse;
+        // pf->memzero_aligned = xavs2_memzero_aligned_sse;
     }
 
     if (cpuid & XAVS2_CPU_SSE2) {
-        g_funcs.memzero_aligned = xavs2_memzero_aligned_c_sse2;
-        // g_funcs.memcpy_aligned  = xavs2_memcpy_aligned_c_sse2;
-        g_funcs.lowres_filter  = xavs2_lowres_filter_core_sse2;
-        // g_funcs.mem_repeat_i  = xavs2_mem_repeat_i_c_sse2;  // TODO: 比C版本慢，禁用
+        pf->memzero_aligned = xavs2_memzero_aligned_c_sse2;
+        // pf->memcpy_aligned  = xavs2_memcpy_aligned_c_sse2;
+        pf->lowres_filter  = xavs2_lowres_filter_core_sse2;
+        // pf->mem_repeat_i  = xavs2_mem_repeat_i_c_sse2;  // TODO: 比C版本慢，禁用
     }
  
     if (cpuid & XAVS2_CPU_SSSE3) {
-        g_funcs.lowres_filter = xavs2_lowres_filter_core_ssse3;
+        pf->lowres_filter = xavs2_lowres_filter_core_ssse3;
     }
 
     if (cpuid & XAVS2_CPU_AVX2) {
-        g_funcs.memzero_aligned = xavs2_memzero_aligned_c_avx;
-        // g_funcs.mem_repeat_i    = xavs2_mem_repeat_i_c_avx;  // TODO: 比C版本慢，禁用
-        g_funcs.lowres_filter   = xavs2_lowres_filter_core_avx;
+        pf->memzero_aligned = xavs2_memzero_aligned_c_avx;
+        // pf->mem_repeat_i    = xavs2_mem_repeat_i_c_avx;  // TODO: 比C版本慢，禁用
+        pf->lowres_filter   = xavs2_lowres_filter_core_avx;
     }
 #else
     UNUSED_PARAMETER(cpuid);

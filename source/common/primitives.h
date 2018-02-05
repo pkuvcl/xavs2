@@ -227,7 +227,7 @@ extern intrinsic_func_t g_funcs;
  * interface function declares
  * ===========================================================================
  */
-void xavs2_mem_oper_init    (uint32_t cpuid);
+void xavs2_mem_oper_init    (uint32_t cpuid, intrinsic_func_t *pf);
 
 void xavs2_mc_init          (uint32_t cpuid, intrinsic_func_t *pf);
 
