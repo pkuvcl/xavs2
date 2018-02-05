@@ -1958,7 +1958,8 @@ static void encoder_init_func_handles(xavs2_t *h)
 /* ---------------------------------------------------------------------------
  */
 #if XAVS2_STAT
-static void show_head_info(xavs2_param_t *param)
+static INLINE
+void show_head_info(xavs2_param_t *param)
 {
     const char *s_gop_param = param->b_open_gop ? "Open" : "Closed";
     char buf_cpu[120] = "";
@@ -2005,10 +2006,15 @@ static void show_head_info(xavs2_param_t *param)
 
 /* ---------------------------------------------------------------------------
  */
-static void show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
+static INLINE
+void show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
 {
-    xavs2_log(NULL, XAVS2_LOG_NOPREFIX, " Threads (Allocated)  : %d / %d, threadpool %d, RowContexts %d \n", 
-        mgr->i_row_threads, mgr->i_frm_threads, mgr->num_pool_threads, mgr->num_row_contexts);
+    size_t space_alloc = xavs2_get_total_malloc_space();
+    space_alloc = (space_alloc + (1 << 20) - 1) >> 20;
+
+    xavs2_log(NULL, XAVS2_LOG_NOPREFIX, " Threads (Allocated)  : %d / %d, threadpool %d, RowContexts %d \n",
+              mgr->i_row_threads, mgr->i_frm_threads, mgr->num_pool_threads, mgr->num_row_contexts);
+    xavs2_log(NULL, XAVS2_LOG_NOPREFIX, " Memory  (Allocated)  : %d MB \n", (int)(space_alloc));
     xavs2_log(NULL, XAVS2_LOG_NOPREFIX, " Enabled Tools        : 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
                                         "                        DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
                                         "                        NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\

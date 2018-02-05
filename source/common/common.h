@@ -1673,39 +1673,10 @@ void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...);
 
 /* xavs2_malloc : will do or emulate a memalign
  * you have to use xavs2_free for buffers allocated with xavs2_malloc */
-static ALWAYS_INLINE
-void *xavs2_malloc(size_t i_size)
-{
-    intptr_t mask = CACHE_LINE_SIZE - 1;
-    uint8_t *align_buf = NULL;
-    uint8_t *buf = (uint8_t *)malloc(i_size + mask + sizeof(void **));
-
-    if (buf != NULL) {
-        align_buf = buf + mask + sizeof(void **);
-        align_buf -= (intptr_t)align_buf & mask;
-        *(((void **)align_buf) - 1) = buf;
-    } else {
-        fprintf(stderr, "malloc of size %zu failed\n", i_size);
-    }
-
-    return align_buf;
-}
-
-static ALWAYS_INLINE void *xavs2_calloc(size_t count, size_t size)
-{
-    void *p = xavs2_malloc(count * size);
-    if (p != NULL) {
-        memset(p, 0, size * sizeof(uint8_t));
-    }
-    return p;
-}
-
-static ALWAYS_INLINE void xavs2_free(void *ptr)
-{
-    if (ptr != NULL) {
-        free(*(((void **)ptr) - 1));
-    }
-}
+void *xavs2_malloc(size_t i_size);
+void *xavs2_calloc(size_t count, size_t size);
+void  xavs2_free(void *ptr);
+size_t xavs2_get_total_malloc_space(void);
 
 
 /**

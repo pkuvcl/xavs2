@@ -56,6 +56,7 @@
  * global variables
  * ===========================================================================
  */
+static size_t g_xavs2_size_mem_alloc = 0;
 
 const float FRAME_RATE[8] = {
     24000.0f / 1001.0f, 24.0f, 25.0f, 30000.0f / 1001.0f, 30.0f, 50.0f, 60000.0f / 1001.0f, 60.0f
@@ -227,6 +228,48 @@ void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...)
         xavs2_log_default(i_log_level, str_in);
         va_end(arg);
     }
+}
+
+/* xavs2_malloc : will do or emulate a memalign
+ * you have to use xavs2_free for buffers allocated with xavs2_malloc */
+void *xavs2_malloc(size_t i_size)
+{
+    intptr_t mask = CACHE_LINE_SIZE - 1;
+    uint8_t *align_buf = NULL;
+    size_t size_malloc = i_size + mask + sizeof(void **);
+    uint8_t *buf = (uint8_t *)malloc(size_malloc);
+
+    if (buf != NULL) {
+        g_xavs2_size_mem_alloc += size_malloc;
+        align_buf = buf + mask + sizeof(void **);
+        align_buf -= (intptr_t)align_buf & mask;
+        *(((void **)align_buf) - 1) = buf;
+    } else {
+        fprintf(stderr, "malloc of size %zu failed\n", i_size);
+    }
+
+    return align_buf;
+}
+
+void *xavs2_calloc(size_t count, size_t size)
+{
+    void *p = xavs2_malloc(count * size);
+    if (p != NULL) {
+        memset(p, 0, size * sizeof(uint8_t));
+    }
+    return p;
+}
+
+void xavs2_free(void *ptr)
+{
+    if (ptr != NULL) {
+        free(*(((void **)ptr) - 1));
+    }
+}
+
+size_t xavs2_get_total_malloc_space(void)
+{
+    return g_xavs2_size_mem_alloc;
 }
 
 
