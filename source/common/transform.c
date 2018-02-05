@@ -1271,6 +1271,23 @@ static void dct_32x32_c(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  * NOTE:
+ * i_src - the stride of src (the lowest bit is additional wavelet flag)
+ */
+static void dct_32x32_half_c(const coeff_t *src, coeff_t *dst, int i_src)
+{
+    int i;
+    dct_32x32_c(src, dst, i_src);
+
+    for (i = 0; i < 16; i++) {
+        memset(&dst[i * 32 + 16], 0, 16 * sizeof(coeff_t));
+    }
+    for (i = 16; i < 32; i++) {
+        memset(&dst[i * 32], 0, 32 * sizeof(coeff_t));
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * NOTE:
  * i_dst - the stride of dst (the lowest bit is additional wavelet flag)
  */
 static void idct_32x32_c(const coeff_t *src, coeff_t *dst, int i_dst)
@@ -1504,6 +1521,24 @@ static void dct_64x64_c(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  * NOTE:
+ * i_src - the stride of src (the lowest bit is additional wavelet flag)
+ */
+static void dct_64x64_half_c(const coeff_t *src, coeff_t *dst, int i_src)
+{
+    int i;
+    dct_64x64_c(src, dst, i_src);
+
+    for (i = 0; i < 32; i++) {
+        memset(&dst[i * 32 + 16], 0, 16 * sizeof(coeff_t));
+    }
+    for (i = 16; i < 32; i++) {
+        memset(&dst[i * 32], 0, 32 * sizeof(coeff_t));
+    }
+}
+
+
+/* ---------------------------------------------------------------------------
+ * NOTE:
  * i_dst - the stride of dst (the lowest bit is additional wavelet flag)
  */
 static void idct_64x64_c(const coeff_t *src, coeff_t *dst, int i_dst)
@@ -1604,20 +1639,20 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
     dctf->idct[LUMA_64x16] = idct_64x16_c;
     dctf->idct[LUMA_16x64] = idct_16x64_c;
 
-    memcpy(dctf->dct_half, dctf->dct, sizeof(dctf->dct_half));
-
     /* 2nd transform */
     dctf->transform_4x4_2nd     = transform_4x4_2nd_c;
     dctf->inv_transform_4x4_2nd = inv_transform_4x4_2nd_c;
     dctf->transform_2nd         = transform_2nd_c;
     dctf->inv_transform_2nd     = inv_transform_2nd_c;
 
+    /* DCT half */
+    dctf->dct_half[LUMA_32x32] = dct_32x32_half_c;
+    dctf->dct_half[LUMA_64x64] = dct_64x64_half_c;
+
 #if HAVE_MMX
     /* -------------------------------------------------------------
      * set handles with asm functions
      */
-
-    memcpy(dctf->dct_half, dctf->dct, sizeof(dctf->dct_half));
 
     /* functions defined in file intrinsic_dct.c */
     if (cpuid & XAVS2_CPU_SSE42) {
