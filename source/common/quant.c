@@ -222,8 +222,8 @@ void xavs2_quant_init(uint32_t cpuid, dct_funcs_t *dctf)
     /* init asm function handles */
 #if HAVE_MMX
     if (cpuid & XAVS2_CPU_SSE4) {
-        dctf->quant     = xavs2_quant_sse4;
-        dctf->dequant   = xavs2_dequant_sse4;
+        dctf->quant     = FPFX(quant_sse4);
+        dctf->dequant   = FPFX(dequant_sse4);
         dctf->abs_coeff = abs_coeff_sse128;
         dctf->add_sign  = add_sign_sse128;
     }
@@ -234,9 +234,10 @@ void xavs2_quant_init(uint32_t cpuid, dct_funcs_t *dctf)
         dctf->abs_coeff = abs_coeff_avx2;
         dctf->add_sign  = add_sign_avx2;
 
-        //asm
-        dctf->quant     = xavs2_quant_avx2;
-        dctf->dequant   = xavs2_dequant_avx2;
+#if _MSC_VER
+        dctf->quant     = FPFX(quant_avx2);   // would cause mis-match on some machine/system
+#endif
+        dctf->dequant   = FPFX(dequant_avx2);
     }
 #else
     UNUSED_PARAMETER(cpuid);
