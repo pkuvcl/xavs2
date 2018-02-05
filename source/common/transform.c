@@ -1279,11 +1279,10 @@ static void dct_32x32_half_c(const coeff_t *src, coeff_t *dst, int i_src)
     dct_32x32_c(src, dst, i_src);
 
     for (i = 0; i < 16; i++) {
-        memset(&dst[i * 32 + 16], 0, 16 * sizeof(coeff_t));
+        memset(dst + 16, 0, 16 * sizeof(coeff_t));
+        dst += 32;
     }
-    for (i = 16; i < 32; i++) {
-        memset(&dst[i * 32], 0, 32 * sizeof(coeff_t));
-    }
+    memset(dst, 0, 32 * 16 * sizeof(coeff_t));
 }
 
 /* ---------------------------------------------------------------------------
@@ -1525,15 +1524,9 @@ static void dct_64x64_c(const coeff_t *src, coeff_t *dst, int i_src)
  */
 static void dct_64x64_half_c(const coeff_t *src, coeff_t *dst, int i_src)
 {
-    int i;
-    dct_64x64_c(src, dst, i_src);
-
-    for (i = 0; i < 32; i++) {
-        memset(&dst[i * 32 + 16], 0, 16 * sizeof(coeff_t));
-    }
-    for (i = 16; i < 32; i++) {
-        memset(&dst[i * 32], 0, 32 * sizeof(coeff_t));
-    }
+    UNUSED_PARAMETER(i_src);
+    wavelet_64x64_c(src, dst);
+    dct_32x32_half_c(dst, dst, 32 | 0x01);  /* 32x32 dct */
 }
 
 
