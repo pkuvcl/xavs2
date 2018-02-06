@@ -245,6 +245,6 @@ void xavs2_alf_init         (uint32_t cpuid, intrinsic_func_t *pf);
 
 void xavs2_rdo_init         (uint32_t cpuid, intrinsic_func_t *pf);
 
-void init_all_primitives    (xavs2_param_t* param, intrinsic_func_t *p_funcs);
+void xavs2_init_all_primitives    (xavs2_param_t* param, intrinsic_func_t *p_funcs);
 
 #endif  // XAVS2_PRIMITIVES_H

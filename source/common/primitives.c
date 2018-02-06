@@ -50,7 +50,7 @@ intrinsic_func_t g_funcs;
 
 /* ---------------------------------------------------------------------------
  */
-void init_all_primitives(xavs2_param_t* param, intrinsic_func_t *p_funcs)
+void xavs2_init_all_primitives(xavs2_param_t* param, intrinsic_func_t *p_funcs)
 {
     uint32_t cpuid = p_funcs->cpuid;
 

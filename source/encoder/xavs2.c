@@ -264,7 +264,7 @@ void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, vo
 #if HAVE_MMX
     g_funcs.cpuid = xavs2_cpu_detect();
 #endif
-    init_all_primitives(param, &g_funcs);
+    xavs2_init_all_primitives(param, &g_funcs);
 
     /* check parameters */
     if (encoder_check_parameters(param) < 0) {
