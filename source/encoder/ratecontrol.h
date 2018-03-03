@@ -39,20 +39,20 @@
 #define XAVS2_RATECONTRAL_H
 
 int  xavs2_rc_get_buffer_size(xavs2_param_t *h);
-int  xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param);
+int  xavs2_rc_init(ratectrl_t *rc, xavs2_param_t *param);
 
-int  xavs2_ratecontrol_base_qp(xavs2_t *h);
+int  xavs2_rc_get_base_qp(xavs2_t *h);
 
-int  xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp);
-void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, int frm_idx);
+int  xavs2_rc_get_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp);
+void xavs2_rc_update_after_frame_coded(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, int frm_idx);
 
 
 #if ENABLE_RATE_CONTROL_CU
-int  xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp);
+int  xavs2_rc_get_lcu_qp(xavs2_t *h, int frm_idx, int qp);
 
-void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp);
+void xavs2_rc_update_after_lcu_coded(xavs2_t *h, int frm_idx, int qp);
 #endif  // ENABLE_RATE_CONTROL_CU
 
-void xavs2_ratecontrol_destroy(ratectrl_t *rc);
+void xavs2_rc_destroy(ratectrl_t *rc);
 
 #endif  // XAVS2_RATECONTRAL_H

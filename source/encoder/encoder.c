@@ -652,7 +652,7 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
                 }
 
                 /* decide frame QP and lambdas */
-                h->fenc->i_frm_qp = clip_qp(h, xavs2_ratecontrol_base_qp(h) + h->fenc->rps.qp_offset);
+                h->fenc->i_frm_qp = clip_qp(h, xavs2_rc_get_base_qp(h) + h->fenc->rps.qp_offset);
                 xavs2e_get_frame_lambda(h, h->fenc, h->fenc->i_frm_qp);
 
                 h->i_qp = h->fenc->i_frm_qp;
@@ -907,7 +907,7 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
     release_one_frame(h, h->fdec);
 
     /* update rate control */
-    xavs2_ratecontrol_end(h, h->fenc->i_bs_len * 8, h->i_qp, h->fenc->i_frm_type, h->fenc->i_frame);
+    xavs2_rc_update_after_frame_coded(h, h->fenc->i_bs_len * 8, h->i_qp, h->fenc->i_frm_type, h->fenc->i_frame);
 
     /* output this encoded frame */
     output_frame.frm_enc = h->fenc;
@@ -1858,7 +1858,7 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr)
     tdrdo_destroy(h_mgr->td_rdo);
 
     /* destroy the rate control */
-    xavs2_ratecontrol_destroy(h_mgr->rate_control);
+    xavs2_rc_destroy(h_mgr->rate_control);
 
 #if XAVS2_DUMP_REC
     /* close rec file */
@@ -2162,7 +2162,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
     /* get frame level qp */
     if (h->param->i_rc_method != XAVS2_RC_CQP) {
         int new_qp = h->i_qp;
-        new_qp = xavs2_ratecontrol_qp(h, h->fenc->i_frame, h->fenc->i_frm_type, h->fenc->i_qpplus1);
+        new_qp = xavs2_rc_get_frame_qp(h, h->fenc->i_frame, h->fenc->i_frm_type, h->fenc->i_qpplus1);
 
         /* calculate the lambda again */
         if (new_qp != h->i_qp) {

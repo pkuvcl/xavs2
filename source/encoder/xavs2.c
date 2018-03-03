@@ -364,7 +364,7 @@ void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, vo
     mem_ptr            += size_ratecontrol;
     ALIGN_POINTER(mem_ptr);
 
-    if (xavs2_ratecontrol_init(h_mgr->rate_control, param) < 0) {
+    if (xavs2_rc_init(h_mgr->rate_control, param) < 0) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "create rate control fail\n");
         goto fail;
 

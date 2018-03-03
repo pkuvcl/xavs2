@@ -305,7 +305,7 @@ void lcu_start_init_pos(xavs2_t *h, int i_lcu_x, int i_lcu_y)
 
 #if ENABLE_RATE_CONTROL_CU
     if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
-        h->i_qp = xavs2_ratecontrol_qp_lcu(h, h->fenc->i_frame, h->i_qp);
+        h->i_qp = xavs2_rc_get_lcu_qp(h, h->fenc->i_frame, h->i_qp);
     }
 #endif
 

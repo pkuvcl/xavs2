@@ -40,19 +40,19 @@
 
 #include "defines.h"
 /**
-* ===========================================================================
-* const defines
-* ===========================================================================
-*/
-#define PI                      (3.14159265358979)
-#define RC_MAX_INT              1024    // max frame number, used to refresh encoder when frame number is not known
-#define RC_MAX_DELTA_QP         3.5     // max delta QP between current key frame and its previous key frame
+ * ===========================================================================
+ * const defines
+ * ===========================================================================
+ */
+static const double PI               = (3.14159265358979);
+static const int    RC_MAX_INT       = 1024;    // max frame number, used to refresh encoder when frame number is not known
+static const double RC_MAX_DELTA_QP  = 3.5;     // max delta QP between current key frame and its previous key frame
 
 #define RC_LCU_LEVEL            0       // 1 - enable LCU level rate control, 0 - disable
 #define RC_AUTO_ADJUST          0       // 1 - enable auto adjust the qp
 
-#define RC_MODEL_HISTORY        2
-#define RC_MAX_TEMPORAL_LEVELS  5
+// #define RC_MODEL_HISTORY        2
+// #define RC_MAX_TEMPORAL_LEVELS  5
 
 
 /**
@@ -503,7 +503,7 @@ int xavs2_rc_get_buffer_size(xavs2_param_t *param)
  * Return     : return 0 on success, -1 on failure
  * ---------------------------------------------------------------------------
  */
-int xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param)
+int xavs2_rc_init(ratectrl_t *rc, xavs2_param_t *param)
 {
     /* clear memory for rate control handle */
     memset(rc, 0, sizeof(ratectrl_t));
@@ -576,7 +576,7 @@ int xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param)
 * Return     : none
 * ---------------------------------------------------------------------------
 */
-int xavs2_ratecontrol_base_qp(xavs2_t *h)
+int xavs2_rc_get_base_qp(xavs2_t *h)
 {
     return h->rc->i_base_qp;       // return the base qp directly
 }
@@ -590,7 +590,7 @@ int xavs2_ratecontrol_base_qp(xavs2_t *h)
 * Return     : none
 * ---------------------------------------------------------------------------
 */
-int xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
+int xavs2_rc_get_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
 {
     /* get QP for current frame */
     if (h->param->i_rc_method != XAVS2_RC_CQP && frm_type != XAVS2_TYPE_B) {
@@ -602,7 +602,7 @@ int xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
     } else {
         return h->i_qp;         // return the old value directly
     }
-    }
+}
 
 /**
 * ---------------------------------------------------------------------------
@@ -615,7 +615,7 @@ int xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
 * Return     : adjusted qp of the LCU
 * ---------------------------------------------------------------------------
 */
-int xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp)
+int xavs2_rc_get_lcu_qp(xavs2_t *h, int frm_idx, int qp)
 {
     UNUSED_PARAMETER(h);
     UNUSED_PARAMETER(frm_idx);
@@ -689,7 +689,7 @@ int xavs2_ratecontrol_qp_lcu(xavs2_t *h, int frm_idx, int qp)
 * Return     : none
 * ---------------------------------------------------------------------------
 */
-void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp)
+void xavs2_rc_update_after_lcu_coded(xavs2_t *h, int frm_idx, int qp)
 {
     UNUSED_PARAMETER(h);
     UNUSED_PARAMETER(frm_idx);
@@ -725,12 +725,10 @@ void xavs2_ratecontrol_end_lcu(xavs2_t *h, int frm_idx, int qp)
 * Return     : none
 * ---------------------------------------------------------------------------
 */
-void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, int frm_idx)
+void xavs2_rc_update_after_frame_coded(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, int frm_idx)
 {
     ratectrl_t *rc = h->rc;
     double frm_bpp = (double)frm_bits / rc->i_frame_size;   // bits per pixel
-
-    UNUSED_PARAMETER(frm_idx);
 
     if (h->param->i_rc_method == XAVS2_RC_CQP) {
         return;                 /* no need to update */
@@ -816,6 +814,8 @@ void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, i
             rc->f_target_buf_level = rc->f_target_buf_level - rc->f_delta_buf_level;
         }
     }
+#else
+    UNUSED_PARAMETER(frm_idx);
 #endif
 
     xavs2_pthread_mutex_unlock(&rc->rc_mutex);  // unlock
@@ -830,7 +830,7 @@ void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, i
 * Return     : none
 * ---------------------------------------------------------------------------
 */
-void xavs2_ratecontrol_destroy(ratectrl_t *rc)
+void xavs2_rc_destroy(ratectrl_t *rc)
 {
     xavs2_pthread_mutex_destroy(&rc->rc_mutex);
 }
