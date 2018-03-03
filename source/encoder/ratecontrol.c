@@ -155,17 +155,17 @@ struct ratectrl_t {    //EKIN_MARK
 static const double tab_fuzzy_initial[13][13] = {
     {-4.80, -4.80, -4.80, -4.80, -3.57, -3.57, -3.17, -3.17, -2.00, -2.00, -0.25, -0.25, 0.00},
     {-4.80, -4.80, -4.80, -4.80, -3.57, -3.57, -3.17, -3.17, -2.00, -2.00, -0.25, -0.25, 0.00},
-    {-4.80, -4.80, -3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 0.25},
-    {-4.80, -4.80, -3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 0.25},
-    {-3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00},
-    {-3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00},
-    {-3.17, -3.17, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00, 2.00, 3.17},
-    {-3.17, -3.17, -2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00, 2.00, 3.17},
-    {-2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00, 2.00, 3.57, 3.57, 3.57},
-    {-2.00, -2.00, -1.10, -1.10, 0.00, 0.00, 1.10, 1.10, 2.00, 2.00, 3.57, 3.57, 3.57},
-    {-0.25, -0.25, 0.00, 0.00, 1.10, 1.10, 2.44, 2.44, 3.57, 3.57, 3.57, 3.57, 4.80},
-    {-0.25, -0.25, 0.00, 0.00, 1.10, 1.10, 2.44, 2.44, 3.57, 3.57, 3.57, 3.57, 4.80},
-    {0.00, 0.00, 0.25, 0.25, 2.00, 2.00, 3.57, 3.57, 3.86, 3.86, 4.80, 4.80, 4.80}
+    {-4.80, -4.80, -3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00, 0.25},
+    {-4.80, -4.80, -3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00, 0.25},
+    {-3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10, 2.00},
+    {-3.57, -3.57, -3.57, -3.57, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10, 2.00},
+    {-3.17, -3.17, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10,  2.00,  2.00, 3.17},
+    {-3.17, -3.17, -2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10,  2.00,  2.00, 3.17},
+    {-2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10,  2.00,  2.00,  3.57,  3.57, 3.57},
+    {-2.00, -2.00, -1.10, -1.10,  0.00,  0.00,  1.10,  1.10,  2.00,  2.00,  3.57,  3.57, 3.57},
+    {-0.25, -0.25,  0.00,  0.00,  1.10,  1.10,  2.44,  2.44,  3.57,  3.57,  3.57,  3.57, 4.80},
+    {-0.25, -0.25,  0.00,  0.00,  1.10,  1.10,  2.44,  2.44,  3.57,  3.57,  3.57,  3.57, 4.80},
+    { 0.00,  0.00,  0.25,  0.25,  2.00,  2.00,  3.57,  3.57,  3.86,  3.86,  4.80,  4.80, 4.80},
 };
 
 /* ---------------------------------------------------------------------------
@@ -230,15 +230,18 @@ static void init_fuzzy_controller(double f_scale_factor)
 
 /* ---------------------------------------------------------------------------
 */
-static double get_frame_delta_qp_fuzzy_controller(double f_actual_val, double f_delta_val,
-                                                  double max_a, double min_a, double max_b, double min_b)
+static
+double fuzzy_get_delta_qp(double f_actual_val,
+                          double f_delta_val,
+                          double max_a, double min_a,
+                          double max_b, double min_b)
 {
     double dFuzAct = (12.0 / (max_a - min_a)) * (f_actual_val - (max_a + min_a) / 2.0);
-    double dFuzDel = (12.0 / (max_b - min_b)) * (f_delta_val - (max_b + min_b) / 2.0);
+    double dFuzDel = (12.0 / (max_b - min_b)) * (f_delta_val  - (max_b + min_b) / 2.0);
     int iFuzAct, iFuzDel;
 
-    dFuzAct = fabs(dFuzAct) > 6 ? 6.0 * dFuzAct / fabs(dFuzAct) : dFuzAct;
-    dFuzDel = fabs(dFuzDel) > 6 ? 6.0 * dFuzDel / fabs(dFuzDel) : dFuzDel;
+    dFuzAct = XAVS2_CLIP3F(-6.0, 6.0, dFuzAct);
+    dFuzDel = XAVS2_CLIP3F(-6.0, 6.0, dFuzDel);
 
     iFuzAct = (int)((dFuzAct < 0 ? floor(dFuzAct + 0.5) : ceil(dFuzAct - 0.5)) + 6);
     iFuzDel = (int)((dFuzDel < 0 ? floor(dFuzDel + 0.5) : ceil(dFuzDel - 0.5)) + 6);
@@ -250,7 +253,9 @@ static double get_frame_delta_qp_fuzzy_controller(double f_actual_val, double f_
 */
 static double rc_calculate_gop_delta_qp(ratectrl_t *rc, int frm_type, int gop_len)
 {
-    double buf_range, buf_range_delta, tmp_bpp;
+    double buf_range;
+    double buf_range_delta;
+    double tmp_bpp;
 
     /* get ERROR */
 #if RC_AUTO_ADJUST
@@ -288,7 +293,7 @@ static double rc_calculate_gop_delta_qp(ratectrl_t *rc, int frm_type, int gop_le
         buf_range_delta = buf_range / 2;
     }
 
-    return get_frame_delta_qp_fuzzy_controller(rc->f_buf_error, rc->f_buf_error_diff, buf_range, -buf_range, buf_range_delta, -buf_range_delta);
+    return fuzzy_get_delta_qp(rc->f_buf_error, rc->f_buf_error_diff, buf_range, -buf_range, buf_range_delta, -buf_range_delta);
 }
 
 /**
@@ -444,7 +449,7 @@ static int CalculateLCUDeltaQP(ratectrl_t *rc)
         buf_range = buf_range < 0.0001 ? 0.0001 : buf_range;
         buf_range_delta = buf_range * 2;
 
-        return get_frame_delta_qp_fuzzy_controller(rc->rc_lcu.LCUBufferError, rc->rc_lcu.LCUBufferDifError, buf_range, -buf_range, buf_range_delta, -buf_range_delta);
+        return fuzzy_get_delta_qp(rc->rc_lcu.LCUBufferError, rc->rc_lcu.LCUBufferDifError, buf_range, -buf_range, buf_range_delta, -buf_range_delta);
     }
 
     return 0;
