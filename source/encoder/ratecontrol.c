@@ -140,7 +140,7 @@ struct ratectrl_t {    //EKIN_MARK
     int         LCUbaseQP;            //
     RCLCU       rc_lcu;               //
 #endif
-
+    xavs2_pthread_mutex_t rc_mutex;
 };
 
 
@@ -560,6 +560,10 @@ int xavs2_ratecontrol_init(ratectrl_t *rc, xavs2_param_t *param)
         init_fuzzy_controller(0.75);
     }
 
+    if (xavs2_pthread_mutex_init(&rc->rc_mutex, NULL)) {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -590,7 +594,11 @@ int xavs2_ratecontrol_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
 {
     /* get QP for current frame */
     if (h->param->i_rc_method != XAVS2_RC_CQP && frm_type != XAVS2_TYPE_B) {
-        return rc_calculate_frame_qp(h, frm_idx, frm_type, force_qp); //EKIN_MARK
+        int i_qp;
+        xavs2_pthread_mutex_lock(&h->rc->rc_mutex);
+        i_qp = rc_calculate_frame_qp(h, frm_idx, frm_type, force_qp);
+        xavs2_pthread_mutex_unlock(&h->rc->rc_mutex);
+        return i_qp;
     } else {
         return h->i_qp;         // return the old value directly
     }
@@ -728,6 +736,8 @@ void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, i
         return;                 /* no need to update */
     }
 
+    xavs2_pthread_mutex_lock(&rc->rc_mutex);   // lock
+
 #if RC_LCU_LEVEL
     if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
         frm_qp = (int)((0.5 + rc->SumMBQP) / rc->NumMB);
@@ -807,19 +817,20 @@ void xavs2_ratecontrol_end(xavs2_t *h, int frm_bits, int frm_qp, int frm_type, i
         }
     }
 #endif
+
+    xavs2_pthread_mutex_unlock(&rc->rc_mutex);  // unlock
 }
 
 /**
 * ---------------------------------------------------------------------------
 * Function   : destroy the rate control
 * Parameters :
-*      [in ] : h - handle of the xavs2 encoder
+*      [in ] : rc - handle of the ratecontrol handler
 *      [out] : none
 * Return     : none
 * ---------------------------------------------------------------------------
 */
 void xavs2_ratecontrol_destroy(ratectrl_t *rc)
 {
-    /* nothing to do */
-    UNUSED_PARAMETER(rc);
+    xavs2_pthread_mutex_destroy(&rc->rc_mutex);
 }
