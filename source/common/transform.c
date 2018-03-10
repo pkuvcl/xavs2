@@ -1695,8 +1695,9 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
         dctf->dct [LUMA_8x8  ] = xavs2_dct_8x8_sse2;
 
         dctf->idct[LUMA_4x4  ] = xavs2_idct_4x4_sse2;
+#if ARCH_X86_64
         dctf->idct[LUMA_8x8  ] = xavs2_idct_8x8_sse2;
-
+#endif
     }
 
     if (cpuid & XAVS2_CPU_SSSE3) {
@@ -1710,6 +1711,7 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
     if (cpuid & XAVS2_CPU_AVX2) {
 
         dctf->dct [LUMA_4x4   ] = xavs2_dct_4x4_avx2;
+#if ARCH_X86_64
         dctf->dct [LUMA_8x8   ] = xavs2_dct_8x8_avx2;
         dctf->dct [LUMA_16x16 ] = xavs2_dct_16x16_avx2; // slower than dct_16x16_avx2
         dctf->dct [LUMA_32x32 ] = xavs2_dct_32x32_avx2;
@@ -1718,7 +1720,7 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
         dctf->idct[LUMA_8x8   ] = xavs2_idct_8x8_avx2;
         dctf->idct[LUMA_16x16 ] = xavs2_idct_16x16_avx2;
         dctf->idct[LUMA_32x32 ] = xavs2_idct_32x32_avx2;
-
+#endif
     }
 
 

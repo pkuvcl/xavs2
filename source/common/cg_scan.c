@@ -982,15 +982,19 @@ void xavs2_cg_scan_init(uint32_t cpuid, intrinsic_func_t *pf)
     if (cpuid & XAVS2_CPU_SSE42) {
         pf->transpose_coeff_scan[LUMA_4x4][0] = coeff_scan_4x4_xy_sse128;
         pf->transpose_coeff_scan[LUMA_4x4][1] = coeff_scan_4x4_yx_sse128;
+#if ARCH_X86_64
         pf->transpose_coeff_4x4[0]            = coeff_scan4_xy_sse128;
         pf->transpose_coeff_4x4[1]            = coeff_scan4_yx_sse128;
+#endif
     }
 
     /* AVX 256bit */
     if (cpuid & XAVS2_CPU_AVX2) {
+#if ARCH_X86_64
         /* avx函数比sse函数慢45%左右，默认关闭 */
-        //pf->transpose_coeff_4x4[0] = coeff_scan4_xy_avx;
-        //pf->transpose_coeff_4x4[1] = coeff_scan4_yx_avx;
+        // pf->transpose_coeff_4x4[0] = coeff_scan4_xy_avx;
+        // pf->transpose_coeff_4x4[1] = coeff_scan4_yx_avx;
+#endif
     }
 #else
     UNUSED_PARAMETER(cpuid);

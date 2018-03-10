@@ -237,7 +237,9 @@ void xavs2_quant_init(uint32_t cpuid, dct_funcs_t *dctf)
 #if _MSC_VER
         dctf->quant     = FPFX(quant_avx2);   // would cause mis-match on some machine/system
 #endif
+#if ARCH_X86_64
         dctf->dequant   = FPFX(dequant_avx2);
+#endif
     }
 #else
     UNUSED_PARAMETER(cpuid);

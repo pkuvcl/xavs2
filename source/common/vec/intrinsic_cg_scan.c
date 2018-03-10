@@ -123,6 +123,7 @@ void coeff_scan_4x4_yx_sse128(coeff_t *dst, const coeff_t *src, int i_src_shift)
     _mm_store_si128((__m128i*)(dst + 8), dst2);    
 }
 
+#if ARCH_X86_64
 /* ---------------------------------------------------------------------------
  */
 void coeff_scan4_xy_sse128(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4)
@@ -189,3 +190,4 @@ void coeff_scan4_yx_sse128(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, 
     _mm_store_si128((__m128i*)(dst + 0), dst1);
     _mm_store_si128((__m128i*)(dst + 8), dst2);    
 }
+#endif  // ARCH_X86_64

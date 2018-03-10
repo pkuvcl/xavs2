@@ -1440,6 +1440,7 @@ void xavs2_pixel_init(uint32_t cpuid, pixel_funcs_t* pixf)
 
     }
 
+#if ARCH_X86_64
     if (cpuid & XAVS2_CPU_AVX2) {
         pixf->sad   [LUMA_32x8 ] = xavs2_pixel_sad_32x8_avx2;
         pixf->sad   [LUMA_32x16] = xavs2_pixel_sad_32x16_avx2;
@@ -1510,6 +1511,7 @@ void xavs2_pixel_init(uint32_t cpuid, pixel_funcs_t* pixf)
         pixf->sa8d  [LUMA_16x16] = xavs2_pixel_sa8d_16x16_avx2;
         pixf->sa8d  [LUMA_32x32] = xavs2_pixel_sa8d_32x32_avx2;
     }
+#endif
 
     /* -------------------------------------------------------------
      * init AVG functions

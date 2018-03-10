@@ -44,7 +44,7 @@
 #include <smmintrin.h>
 #include <immintrin.h>
 
-
+#if ARCH_X86_64
 /* ---------------------------------------------------------------------------
  */
 void coeff_scan4_xy_avx(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4)
@@ -102,3 +102,4 @@ void coeff_scan4_yx_avx(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uin
 
     _mm256_storeu_si256((__m256i*)dst, m_in);
 }
+#endif  // ARCH_X86_64
