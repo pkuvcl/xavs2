@@ -65,11 +65,11 @@
 
 /* thread */
 #define HAVE_THREAD             1
-#define HAVE_WIN32THREAD        0
+#define HAVE_WIN32THREAD        1
 #define HAVE_PTHREAD            0
 #define HAVE_BEOSTHREAD         0
-#define HAVE_POSIXTHREAD        1
-#define PTW32_STATIC_LIB        1
+#define HAVE_POSIXTHREAD        0
+#define PTW32_STATIC_LIB        0
 
 /* interlace support */
 #define HAVE_INTERLACED         1
