@@ -101,6 +101,10 @@ enum xavs2_fast_algorithms_e {
                                          “uAVS2—Fast encoder for the 2nd generation IEEE 1857 video coding standard,”
                                          Signal Process. Image Commun., vol. 53, no. October 2016, pp. 13–23, 2017. */
 
+    /* fast transform and Quant */
+    OPT_BYPASS_INTRA_RDOQ    ,        /* 跳过B帧帧间编码中的帧内模式的RDOQ */
+    OPT_RDOQ_AZPC            ,        /* 通过对变换系数的阈值判断检测全零块进行RDOQ预处理，跳过色度分量的RDOQ过程*/
+
     /* others */
     OPT_FAST_ZBLOCK          ,        /* 快速零块估计 */
     OPT_TR_KEY_FRAME_MD      ,        /* 以更大概率跳过非关键帧的部分模式，能节省5%以上时间 */
@@ -112,6 +116,7 @@ enum xavs2_fast_algorithms_e {
     OPT_FAST_ALF             ,        /* ALF快速算法，在顶层B帧（不被其余帧参考）禁用ALF，在所有ALF的协方差矩阵计算时，进行step=2的下采样 */
     OPT_FAST_SAO             ,        /* SAO快速算法，在顶层B帧（不被其余帧参考）禁用SAO */
     OPT_SUBCU_SPLIT          ,        /* 根据划分子块的数目决策父块是否对非SKIP模式做RDO */
+    OPT_PU_RMS               ,        /* 关闭小块（8x8,16x16)划分的预测单元，仅保留2Nx2N的帧内，帧间以及SKIP模式*/
     NUM_FAST_ALGS                     /* 总的快速算法数量 */
 };
 

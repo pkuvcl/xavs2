@@ -249,20 +249,23 @@ uint64_t get_fast_algorithms(xavs2_t *h, int i_preset_level)
 
     switch (i_preset_level) {
     case 0:     // ultra fast
-    case 1:     // super fast
-    case 2:     // very fast
-    case 3:     // faster
         SWITCH_ON(OPT_ET_INTRA_DEPTH);
         SWITCH_ON(OPT_SKIP_DMH_THRES);
         SWITCH_ON(OPT_EARLY_SKIP);
         SWITCH_ON(OPT_BYPASS_MODE_FPIC);
-        SWITCH_ON(OPT_FAST_CBF_MODE);
         SWITCH_ON(OPT_BYPASS_SDIP);
         SWITCH_ON(OPT_BYPASS_INTRA_BPIC);
-        SWITCH_ON(OPT_FAST_RDO_INTRA_C);
-        SWITCH_ON(OPT_ET_RDO_INTRA_L);
-        SWITCH_ON(OPT_FAST_ZBLOCK);
+    case 1:     // super fast
         SWITCH_ON(OPT_ECU);
+    case 2:     // very fast
+        SWITCH_ON(OPT_FAST_ZBLOCK);
+        SWITCH_ON(OPT_FAST_RDO_INTRA_C);
+    case 3:     // faster
+        SWITCH_ON(OPT_FAST_CBF_MODE);
+        SWITCH_ON(OPT_ET_RDO_INTRA_L);
+        SWITCH_ON(OPT_BYPASS_INTRA_RDOQ);
+        SWITCH_ON(OPT_RDOQ_AZPC);
+        SWITCH_ON(OPT_PU_RMS);
     case 4:     // fast 
         SWITCH_ON(OPT_CU_DEPTH_CTRL);
         SWITCH_ON(OPT_SUBCU_SPLIT);

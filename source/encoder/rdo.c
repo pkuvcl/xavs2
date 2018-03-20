@@ -668,7 +668,7 @@ int tu_quant_forward(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *p_coeff, int
     const int add = tab_quant_fwd_add[shift + b_intra];
 
     if (h->lcu.b_enable_rdoq) {
-        if (IS_ALG_ENABLE(OPT_CODE_OPTIMZATION) && b_luma) {
+        if ((IS_ALG_ENABLE(OPT_CODE_OPTIMZATION) && b_luma) || (IS_ALG_ENABLE(OPT_RDOQ_AZPC))) {
             const int i_coef = bsx * bsy;
             const int th_RDOQ = (int)(((1 << shift) - add) / (double)(tab_Q_TAB[qp])); //ljr
             int i;
@@ -3261,7 +3261,9 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         mode = best->i_mode;
         cu_copy_info(&p_cu->cu_info, best);
         if (IS_INTRA_MODE(mode)) {
-            cu_check_intra(h, p_aec, p_cu, best, mode, &min_rdcost);
+            if((!IS_ALG_ENABLE(OPT_BYPASS_INTRA_RDOQ)) || h->i_type == SLICE_TYPE_F){
+                cu_check_intra(h, p_aec, p_cu, best, mode, &min_rdcost);
+            }
         } else {
             memcpy(&p_cu->mc, &p_layer->cu_mode.best_mc, sizeof(p_cu->mc));  /* 拷贝MV信息用于补偿 */
             cu_rdcost_inter(h, p_aec, p_cu, &min_rdcost, best);
@@ -3349,6 +3351,12 @@ void xavs2_init_valid_mode_table(xavs2_t *h)
             // @luofl: SDIP is disabled here for speedup in inter frames
             if (inter_frame && level != MIN_CU_SIZE_IN_BIT) {
                 valid_pred_modes &= ~((1 << PRED_I_2Nxn) | (1 << PRED_I_nx2N) | (1 << PRED_I_NxN));
+            }
+
+            if (inter_frame && IS_ALG_ENABLE(OPT_PU_RMS)) {
+                if (level == B8X8_IN_BIT || level == B16X16_IN_BIT) {
+                    valid_pred_modes &= (uint32_t)((1 << PRED_2Nx2N) | (1 << PRED_I_2Nx2N));
+                }
             }
             h->valid_modes[frm_type][level - MIN_CU_SIZE_IN_BIT] = valid_pred_modes;
         }
