@@ -56,27 +56,27 @@
 /* ---------------------------------------------------------------------------
  * partition map table
  */
-#define _U_ LUMA_INVALID
+#define INVALID LUMA_INVALID
 const uint8_t g_partition_map_tab[] = {
-    //  4      8          12          16          20   24          28   32          36   40   44   48           52   56   60   64
-    LUMA_4x4,  LUMA_4x8,  _U_,        LUMA_4x16,  _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 4
-    LUMA_8x4,  LUMA_8x8,  _U_,        LUMA_8x16,  _U_, _U_,        _U_, LUMA_8x32,  _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 8
-    _U_,       _U_,       _U_,        LUMA_12x16, _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 12
-    LUMA_16x4, LUMA_16x8, LUMA_16x12, LUMA_16x16, _U_, _U_,        _U_, LUMA_16x32, _U_, _U_, _U_, _U_,        _U_, _U_, _U_, LUMA_16x64,   // 16
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 20
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, LUMA_24x32, _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 24
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 28
-    _U_,       LUMA_32x8, _U_,        LUMA_32x16, _U_, LUMA_32x24, _U_, LUMA_32x32, _U_, _U_, _U_, _U_,        _U_, _U_, _U_, LUMA_32x64,   // 32
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 36
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 40
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 44
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, LUMA_48x64,   // 48
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 52
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 56
-    _U_,       _U_,       _U_,        _U_,        _U_, _U_,        _U_, _U_,        _U_, _U_, _U_, _U_,        _U_, _U_, _U_, _U_,          // 60
-    _U_,       _U_,       _U_,        LUMA_64x16, _U_, _U_,        _U_, LUMA_64x32, _U_, _U_, _U_, LUMA_64x48, _U_, _U_, _U_, LUMA_64x64    // 64
+    //  4         8             12          16         20         24         28           32        36       40      44         48        52       56       60       64
+     LUMA_4x4,   LUMA_4x8,     INVALID,  LUMA_4x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 4
+     LUMA_8x4,   LUMA_8x8,     INVALID,  LUMA_8x16,   INVALID,    INVALID,   INVALID,  LUMA_8x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 8
+      INVALID,    INVALID,     INVALID, LUMA_12x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 12
+    LUMA_16x4,  LUMA_16x8,  LUMA_16x12, LUMA_16x16,   INVALID,    INVALID,   INVALID, LUMA_16x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_16x64,   // 16
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 20
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID, LUMA_24x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 24
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 28
+      INVALID,  LUMA_32x8,     INVALID, LUMA_32x16,   INVALID, LUMA_32x24,   INVALID, LUMA_32x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_32x64,   // 32
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 36
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 40
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 44
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_48x64,   // 48
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 52
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 56
+      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 60
+      INVALID,    INVALID,     INVALID, LUMA_64x16,   INVALID,    INVALID,   INVALID, LUMA_64x32,  INVALID, INVALID, INVALID, LUMA_64x48, INVALID, INVALID, INVALID, LUMA_64x64    // 64
 };
-#undef _U_
+#undef INVALID
 
 
 /**
