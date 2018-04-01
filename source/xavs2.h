@@ -253,8 +253,8 @@ typedef struct xavs2_api_t {
      * ---------------------------------------------------------------------------
      * Function   : Output help parameters
      * Parameters :
-     *      [in ] : param - pointer to struct xavs2_param_t
-     *      [out] : none
+     *      [in ] : none
+     *      [out] : instructions would be output through standard output stream (stdout)
      * Return     : none
      * ---------------------------------------------------------------------------
      */
@@ -310,7 +310,7 @@ typedef struct xavs2_api_t {
      * Function   : free memory of parameter
      * Parameters :
      *      [in ] : none
-     *      [out] : parameter handler, can be further configured
+     *      [out] : none
      * Return     : none
      * ---------------------------------------------------------------------------
      */
@@ -326,7 +326,7 @@ typedef struct xavs2_api_t {
      * ---------------------------------------------------------------------------
      * Function   : get buffer for the encoder caller
      * Parameters :
-     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *      [in ] : coder - pointer to handle of xavs2 encoder
      *            : pic   - pointer to struct xavs2_picture_t
      *      [out] : none
      * Return     : zero for success, otherwise failed
@@ -342,7 +342,7 @@ typedef struct xavs2_api_t {
      *            : dump_func - pointer to struct xavs2_dump_func_t
      *            : opaque    - user data
      *      [out] : none
-     * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
+     * Return     : handle of xavs2 encoder, none zero for success, otherwise false
      * ---------------------------------------------------------------------------
      */
 #if XAVS2_API_VERSION < 2
@@ -355,7 +355,7 @@ typedef struct xavs2_api_t {
      * ---------------------------------------------------------------------------
      * Function   : destroy the xavs2 video encoder
      * Parameters :
-     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *      [in ] : coder - pointer to handle of xavs2 encoder (return by `encoder_create()`)
      *      [out] : none
      * Return     : none
      * Note       : this API is *NOT* thread-safe, 
@@ -368,7 +368,7 @@ typedef struct xavs2_api_t {
      * ---------------------------------------------------------------------------
      * Function   : write (send) data to the xavs2 encoder
      * Parameters :
-     *      [in ] : coder - pointer to wrapper of the xavs2 encoder
+     *      [in ] : coder - pointer to handle of xavs2 encoder (return by `encoder_create()`)
      *            : pic   - pointer to struct xavs2_picture_t
      *      [out] : none
      * Return     : zero for success, otherwise failed
@@ -384,7 +384,7 @@ typedef struct xavs2_api_t {
      * ---------------------------------------------------------------------------
      * Function   : label a packet to be recycled
      * Parameters :
-     *      [in ] : coder    - pointer to wrapper of the xavs2 encoder
+     *      [in ] : coder    - pointer to handle of xavs2 encoder (return by `encoder_create()`)
      *            : packet   - pointer to struct xavs2_outpacket_t
      *      [out] : none
      * Return     : zero for success, otherwise failed
