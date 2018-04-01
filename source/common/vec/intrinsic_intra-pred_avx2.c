@@ -555,7 +555,7 @@ void intra_pred_ang_x_3_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         __m256i coeff7 = _mm256_set1_epi16(7);
         __m256i coeff8 = _mm256_set1_epi16(8);
 
-        ALIGN16(pel_t first_line[(64 + 176 + 16) << 2]);
+        ALIGN32(pel_t first_line[(64 + 176 + 16) << 2]);
         int line_size = bsx + (((bsy - 4) * 11) >> 2);
         int aligned_line_size = 64 + 176 + 16;
         int i;
@@ -945,7 +945,7 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         intra_pred_ang_x_4_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
         return;
     }
-    ALIGN16(pel_t first_line[64 + 128]);
+    ALIGN32(pel_t first_line[64 + 128]);
     int line_size = bsx + ((bsy - 1) << 1);
 
     int iHeight2 = bsy << 1;
@@ -1158,7 +1158,7 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
     int i;
     if (((bsy > 4) && (bsx > 8))) {
-        ALIGN16(pel_t first_line[(64 + 80 + 16) << 3]);
+        ALIGN32(pel_t first_line[(64 + 80 + 16) << 3]);
         int line_size = bsx + ((bsy - 8) >> 3) * 11;
         int aligned_line_size = (((line_size + 15) >> 4) << 4) + 16;
         pel_t *pfirst[8];
@@ -1766,7 +1766,7 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
 void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    ALIGN16(pel_t first_line[64 + 64]);
+    ALIGN32(pel_t first_line[64 + 64]);
     int line_size = bsx + bsy - 1;
 
     int i;
@@ -2092,7 +2092,7 @@ void intra_pred_ang_x_7_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
 
-    ALIGN16(pel_t first_line[2 * (64 + 48)]);
+    ALIGN32(pel_t first_line[2 * (64 + 48)]);
     int line_size = bsx + (bsy >> 1) - 1;
     int i;
     int aligned_line_size = ((line_size + 31) >> 4) << 4;
@@ -2628,7 +2628,7 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i coeff7 = _mm256_set1_epi16(7);
         __m256i coeff8 = _mm256_set1_epi16(8);
 
-        ALIGN16(pel_t first_line[4 * (64 + 32)]);
+        ALIGN32(pel_t first_line[4 * (64 + 32)]);
         int line_size = bsx + bsy / 4 - 1;
         int aligned_line_size = ((line_size + 31) >> 4) << 4;
         pel_t *pfirst[4];
@@ -3205,7 +3205,7 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
     if (bsx > 8) {
 
-        ALIGN16(pel_t first_line[64 + (64 << 3)]);
+        ALIGN32(pel_t first_line[64 + (64 << 3)]);
         int line_size = bsx + ((bsy - 1) << 3);
         int iHeight8 = bsy << 3;
         pel_t *pfirst = first_line;
@@ -3510,7 +3510,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i shuffle = _mm256_setr_epi8(7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8,
             7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8);
 
-        ALIGN16(pel_t first_line[64 + 256]);
+        ALIGN32(pel_t first_line[64 + 256]);
         int line_size = bsx + (bsy - 1) * 4;
         int iHeight4 = bsy << 2;
 
@@ -3809,7 +3809,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
 void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    ALIGN16(pel_t first_line[64 + 128]);
+    ALIGN32(pel_t first_line[64 + 128]);
     int line_size = bsx + (bsy - 1) * 2;
 
     int i;
@@ -4047,7 +4047,7 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
 void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    ALIGN16(pel_t first_line[64 + 64]);
+    ALIGN32(pel_t first_line[64 + 64]);
     int line_size = bsx + bsy - 1;
     UNUSED_PARAMETER(dir_mode);
     int i;
@@ -4356,8 +4356,8 @@ void intra_pred_ang_y_31_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
     UNUSED_PARAMETER(dir_mode);
 
     if (bsx >= bsy){
-        ALIGN16(pel_t dst_tran[MAX_CU_SIZE * MAX_CU_SIZE]);
-        ALIGN16(pel_t src_tran[MAX_CU_SIZE << 3]);
+        ALIGN32(pel_t dst_tran[MAX_CU_SIZE * MAX_CU_SIZE]);
+        ALIGN32(pel_t src_tran[MAX_CU_SIZE << 3]);
 
         for (i = 0; i < (bsy + bsx * 11 / 8 + 3); i++){
             src_tran[i] = src[-i];
@@ -4411,7 +4411,7 @@ void intra_pred_ang_y_31_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
 void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    ALIGN16(pel_t first_line[2 * (64 + 64)]);
+    ALIGN32(pel_t first_line[2 * (64 + 64)]);
     int line_size = (bsy >> 1) + bsx - 1;
 
     int i;
@@ -4779,7 +4779,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         __m256i coeff15 = _mm256_set1_epi16(15);
         __m256i coeff16 = _mm256_set1_epi16(16);
 
-        ALIGN16(pel_t first_line[(64 + 16) << 3]);
+        ALIGN32(pel_t first_line[(64 + 16) << 3]);
         int line_size = bsx + (bsy >> 3) - 1;
         int left_size = line_size - bsx;
         int aligned_line_size = ((line_size + 15) >> 4) << 4;
@@ -5359,7 +5359,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
     __m256i coeff8 = _mm256_set1_epi16(8);
 
     if (bsy != 4) {
-        ALIGN16(pel_t first_line[4 * (64 + 32)]);
+        ALIGN32(pel_t first_line[4 * (64 + 32)]);
         int line_size = bsx + bsy / 4 - 1;
         int left_size = line_size - bsx;
         int aligned_line_size = ((line_size + 31) >> 4) << 4;
@@ -5876,7 +5876,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
 void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {  
-    ALIGN16(pel_t first_line[2 * (64 + 48)]);
+    ALIGN32(pel_t first_line[2 * (64 + 48)]);
     int line_size = bsx + bsy / 2 - 1;
     int left_size = line_size - bsx;
     int aligned_line_size = ((line_size + 31) >> 4) << 4;
@@ -6281,7 +6281,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
 void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {          
-    ALIGN16(pel_t first_line[64 + 64]);
+    ALIGN32(pel_t first_line[64 + 64]);
     int line_size = bsx + bsy - 1;
     int i;
     pel_t *pfirst = first_line + bsy - 1;
@@ -6501,7 +6501,7 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
 void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {  
-    ALIGN16(pel_t first_line[64 + 128]);
+    ALIGN32(pel_t first_line[64 + 128]);
     int left_size = (bsy - 1) * 2 + 1;
     int top_size = bsx - 1;
     int line_size = left_size + top_size;
@@ -6852,7 +6852,7 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
     if (bsx != 4) {
         src -= bsy;
-        ALIGN16(pel_t first_line[64 + 256]);
+        ALIGN32(pel_t first_line[64 + 256]);
         int left_size = (bsy - 1) * 4 + 3;
         int top_size = bsx - 3;
         int line_size = left_size + top_size;
@@ -7246,7 +7246,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
     UNUSED_PARAMETER(dir_mode);
 
     if (bsx > 8) {
-        ALIGN16(pel_t first_line[64 + 512]);
+        ALIGN32(pel_t first_line[64 + 512]);
         int left_size = (bsy << 3) - 1;
         int top_size = bsx - 7;
         int line_size = left_size + top_size;
