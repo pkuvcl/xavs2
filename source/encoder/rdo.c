@@ -1225,19 +1225,13 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 h->copy_aec_state_rdo(&p_layer->cs_cu, p_aec);    /* store coding state for the best mode */
                 cu_store_parameters(h, p_cu, best);
                 b_need_swap_buf = 1;
-            } else {
-                if (IS_ALG_ENABLE(OPT_FAST_RDO_INTRA_C)) {
-                    if (rdcost > *min_rdcost * 2) {
-                        h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
-                        break;
-                    }
-                }
             }
 
             h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
 
             if (IS_ALG_ENABLE(OPT_FAST_RDO_INTRA_C)) {
-                if (cbp_c == 0) {
+                if (rdcost > *min_rdcost * 2 ||
+                    cbp_c == 0) {
                     break;
                 }
             }
