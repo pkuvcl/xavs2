@@ -1386,10 +1386,8 @@ typedef struct cu_parallel_t {
     /* parameters for RDOQ */
     ALIGN16(rdoq_t  rdoq_info);
 
-    // aec_t  cs_cu;                /* coding state after encoding each cu partition mode for current CU level */
     aec_t  cs_tu;                   /* coding state after encoding cu with different TU partition, or PU partition in intra */
     aec_t  cs_pu_init;              /* coding state before encoding one CU partition */
-    // aec_t  cs_rdo;               /* coding state for mode decision (rdo) */
 } cu_parallel_t;
 
 /* ---------------------------------------------------------------------------
