@@ -1793,8 +1793,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
             p_cu->cu_info.i_cbp = (int8_t)tmp_cbp;
             *min_rdcost = rdcost_split;
             p_cu->best_dist_total = dist_split;
-            h->copy_aec_state_rdo(p_aec, &p_enc->cs_tu);
-            h->copy_aec_state_rdo(&p_layer->cs_cu, p_aec);
+            h->copy_aec_state_rdo(&p_layer->cs_cu, &p_enc->cs_tu);
             h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
             cu_store_parameters(h, p_cu, p_best);
             return 1;  /* return code = 1, means it is the best mode */
