@@ -1056,7 +1056,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                                                         block_x, block_y, block_w, block_h);
 
         // store the coding state
-        h->copy_aec_state_rdo(&p_layer->cs_rdo, p_aec);
+        h->copy_aec_state_rdo(&p_enc->cs_pu_init, p_aec);
 
         /* RDO */
         for (i = 0; i < num_for_rdo; i++) {
@@ -1111,7 +1111,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 h->copy_aec_state_rdo(&p_enc->cs_tu, p_aec);
             }
 
-            h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
+            h->copy_aec_state_rdo(p_aec, &p_enc->cs_pu_init);
 
             if (IS_ALG_ENABLE(OPT_ET_RDO_INTRA_L)) {
                 if (rdcost > best_rdcost * 1.2) {
@@ -1227,7 +1227,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 b_need_swap_buf = 1;
             }
 
-            h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
+            h->copy_aec_state_rdo(p_aec, &p_enc->cs_tu);   /* revert to AEC context of best Luma mode */
 
             if (IS_ALG_ENABLE(OPT_FAST_RDO_INTRA_C)) {
                 if (rdcost > *min_rdcost * 2 ||
@@ -1252,8 +1252,9 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
             cu_store_parameters(h, p_cu, best);
             b_need_swap_buf = 1;
         }
-        h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
     }
+
+    h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);  /* revert to initial AEC context */
 
     /* 4, confirm the buffer pointers and record the best information */
     if (best->p_rec[0] == rec_bak_y && b_need_swap_buf) {
