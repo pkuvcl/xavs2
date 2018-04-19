@@ -65,5 +65,20 @@ void     encoder_fetch_one_encoded_frame(xavs2_handler_t *h_mgr, xavs2_outpacket
 
 void     xavs2_reconfigure_encoder(xavs2_t *h);
 
+#if XAVS2_STAT
+/**
+ * ===========================================================================
+ * interface function defines (encode report)
+ * ===========================================================================
+ */
+void     encoder_show_head_info(xavs2_param_t *param);
+void     encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr);
+
+void     encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double *psnr_v);
+
+void     encoder_report_one_frame(xavs2_t *h, outputframe_t *frame);
+
+void     encoder_report_stat_info(xavs2_t *h);
+#endif
 
 #endif  // XAVS2_ENCODER_H
