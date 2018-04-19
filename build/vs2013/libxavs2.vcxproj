@@ -43,6 +43,7 @@
     <ClCompile Include="..\..\source\encoder\aec_vrdo.c" />
     <ClCompile Include="..\..\source\encoder\alf.c" />
     <ClCompile Include="..\..\source\encoder\encoder.c" />
+    <ClCompile Include="..\..\source\encoder\encoder_report.c" />
     <ClCompile Include="..\..\source\encoder\header.c" />
     <ClCompile Include="..\..\source\encoder\md_inter.c" />
     <ClCompile Include="..\..\source\encoder\md_intra.c" />
