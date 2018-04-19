@@ -669,7 +669,7 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
     }
 
     h->fenc->i_time_end = xavs2_mdate();
-#if XAVS2_STAT > 1
+
     if (h->param->enable_psnr) {
         encoder_cal_psnr(h, &frm_stat->stat_frm.f_psnr[0], &frm_stat->stat_frm.f_psnr[1], &frm_stat->stat_frm.f_psnr[2]);
     } else {
@@ -677,7 +677,6 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
         frm_stat->stat_frm.f_psnr[1] = 0;
         frm_stat->stat_frm.f_psnr[2] = 0;
     }
-#endif //  XAVS2_STAT > 1
 #endif
 
     /* make sure all row context has been released */

@@ -48,7 +48,7 @@
  * debug */
 #define XAVS2_DUMP_REC        1     /* dump reconstruction frames, 1: ON, 0: OFF */
 #define XAVS2_TRACE           0     /* write trace file,    1: ON, 0: OFF */
-#define XAVS2_STAT            2     /* stat encoder info,   2: On with PSNR; 1: On, 0: OFF */
+#define XAVS2_STAT            1     /* stat encoder info,   1: On, 0: OFF */
 
 
 /**

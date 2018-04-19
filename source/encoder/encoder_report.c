@@ -114,9 +114,6 @@ void encoder_report_stat_info(xavs2_t *h)
     int64_t i_total_bits = p_stat->stat_total.i_frame_size;
     int num_total_frames = p_stat->stat_total.num_frames;
 
-#if XAVS2_STAT == 1
-    xavs2_log(h, XAVS2_LOG_NOPREFIX, "\n");
-#endif
     if (num_total_frames == 0) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "------------------------------------------------------------------\n");
         xavs2_log(NULL, XAVS2_LOG_WARNING, "TOTAL TIME: %8.3f sec, NO FRAMES CODED\n",
@@ -168,11 +165,9 @@ void stat_add_frame_info(com_stat_t *sum_stat, com_stat_t *frm_stat, int frm_bs_
     sum_stat->i_frame_size    += frm_bs_len;
     sum_stat->i_time_duration += frm_stat->i_time_duration;
 
-#if XAVS2_STAT > 1
     sum_stat->f_psnr[0] += frm_stat->f_psnr[0];
     sum_stat->f_psnr[1] += frm_stat->f_psnr[1];
     sum_stat->f_psnr[2] += frm_stat->f_psnr[2];
-#endif
 }
 
 /* ---------------------------------------------------------------------------
@@ -203,10 +198,8 @@ void get_reference_list_str(char *s_ref_list, int *p_poc, int num_ref)
 void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
 {
     static const char frm_type[4] = {'I', 'P', 'B', 'F'};
-#if XAVS2_STAT > 1
     char s_out_base[128];
     char s_ref_list[32] = "";
-#endif
     xavs2_stat_t *p_stat  = &h->h_top->stat;
     frame_stat_t *frmstat = &frame->out_frm_stat;
     int frm_bs_len = frame->frm_enc->i_bs_len;
