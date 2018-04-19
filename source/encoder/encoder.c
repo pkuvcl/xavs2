@@ -1833,7 +1833,9 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr)
     xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_CONTEXT_ALLOCATED]);
 
     /* destroy the AEC thread pool */
-    xavs2_threadpool_delete(h_mgr->threadpool_aec);
+    if (h_mgr->threadpool_aec != NULL) {
+        xavs2_threadpool_delete(h_mgr->threadpool_aec);
+    }
 
     /* wait until the output thread finish its job */
     xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
@@ -2223,7 +2225,7 @@ void *xavs2e_encode_one_frame(void *arg)
     }
 
     /* start AEC frame coding */
-    if (!h->param->enable_alf) {
+    if (h->h_top->threadpool_aec != NULL && !h->param->enable_alf) {
         xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
     }
 
@@ -2332,7 +2334,9 @@ void *xavs2e_encode_one_frame(void *arg)
         }
 #endif
 
-        xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
+        if (h->h_top->threadpool_aec != NULL) {
+            xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
+        }
     }
 
 
@@ -2350,6 +2354,10 @@ void *xavs2e_encode_one_frame(void *arg)
 
     /* recycle frame */
     encoder_release_frames(h);
+
+    if (h->h_top->threadpool_aec == NULL) {
+        encoder_aec_encode_one_frame(h);
+    }
 
     return 0;
 }

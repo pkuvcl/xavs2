@@ -640,6 +640,7 @@ typedef struct xavs2_param_t {
     int     num_parallel_gop;         /* number of parallel GOP */
     int     i_frame_threads;          /* number of thread in frame   level parallel */
     int     i_lcurow_threads;         /* number of thread in LCU-row level parallel */
+    int     enable_aec_thread;        /* enable AEC threadpool or not */
 
     /* --- log -------------------------------------------------- */
     int     i_log_level;              /* log level */

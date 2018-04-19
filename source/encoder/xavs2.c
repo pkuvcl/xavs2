@@ -205,6 +205,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->num_parallel_gop           = 1;
     param->i_frame_threads            = 0;
     param->i_lcurow_threads           = 0;
+    param->enable_aec_thread          = 1;
 
     /* --- log -------------------------------------------------- */
     param->i_log_level                = 3;
@@ -347,7 +348,10 @@ void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, vo
     }
 
     /* create AEC thread pool */
-    xavs2_threadpool_init(&h_mgr->threadpool_aec, h_mgr->i_frm_threads, NULL, NULL);
+    h_mgr->threadpool_aec = NULL;
+    if (param->enable_aec_thread) {
+        xavs2_threadpool_init(&h_mgr->threadpool_aec, h_mgr->i_frm_threads, NULL, NULL);
+    }
 
     /* init all lists */
     if (xl_init(&h_mgr->list_frames_free)  != 0 ||
