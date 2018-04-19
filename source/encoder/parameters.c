@@ -263,6 +263,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("num_parallel_gop",             &p->num_parallel_gop,           MAP_NUM, "number of parallel GOPs (0,1: no GOP parallelization)");
     MAP("thread_frames",                &p->i_frame_threads,            MAP_NUM, "number of parallel threads for frames ( 0: auto )");
     MAP("thread_rows",                  &p->i_lcurow_threads,           MAP_NUM, "number of parallel threads for rows   ( 0: auto )");
+    MAP("EnableAecThread",              &p->enable_aec_thread,          MAP_NUM, "Enable AEC thread or not (default: enabled)");
 
     MAP("log_level",                    &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
     MAP("log",                          &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
