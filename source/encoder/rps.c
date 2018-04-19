@@ -572,10 +572,8 @@ xavs2_frame_t *frame_buffer_find_free_frame_dpb(xavs2_handler_t *h_mgr, xavs2_t 
             xavs2_pthread_mutex_lock(&frame->mutex);          /* lock */
 
             if (frame_is_free(h_mgr, cur_frm->i_frame, frame)) {
-                frame->cnt_refered++;
-//#if XAVS2_STAT
-                frame->cnt_refered++; // for PSNR calculation
-//#endif
+                frame->cnt_refered++;  // for Encoding decision
+                frame->cnt_refered++;  // for entropy encoding
                 fdec_frm = frame;
                 xavs2_pthread_mutex_unlock(&frame->mutex);    /* unlock */
                 break;
@@ -586,41 +584,35 @@ xavs2_frame_t *frame_buffer_find_free_frame_dpb(xavs2_handler_t *h_mgr, xavs2_t 
     }
 
     // fdec must exist
-    if (fdec_frm == NULL) {
-        // should not reach here ?
-        for (;;) {
-            for (i = 0; i < num_frames; i++) {
-                xavs2_frame_t *frame = DPB[i];
-                if (frame != NULL) {
-                    xavs2_pthread_mutex_lock(&frame->mutex);          /* unlock */
+    for (; fdec_frm == NULL;) {
+        for (i = 0; i < num_frames; i++) {
+            xavs2_frame_t *frame = DPB[i];
+            if (frame != NULL) {
+                xavs2_pthread_mutex_lock(&frame->mutex);          /* unlock */
 
-                    if (frame_is_writable(h_mgr, frame)) {
-                        p_rps->rm_pic[p_rps->num_to_rm++] = cur_frm->i_frm_coi - frame->i_frm_coi;
-                        p_rps->idx_in_gop = -1;
+                if (frame_is_writable(h_mgr, frame)) {
+                    p_rps->rm_pic[p_rps->num_to_rm++] = cur_frm->i_frm_coi - frame->i_frm_coi;
+                    p_rps->idx_in_gop = -1;
 
-                        frame->cnt_refered++;
+                    frame->cnt_refered++;  // for Encoding decision
+                    frame->cnt_refered++;  // for entropy encoding
 
-//#if XAVS2_STAT
-                        frame->cnt_refered++; // for PSNR calculation
-//#endif
+                    fdec_frm = frame;
 
-                        fdec_frm = frame;
+                    xavs2_pthread_mutex_unlock(&frame->mutex);    /* unlock */
 
-                        xavs2_pthread_mutex_unlock(&frame->mutex);    /* unlock */
-
-                        break;
-                    }
-
-                    xavs2_pthread_mutex_unlock(&frame->mutex);        /* unlock */
+                    break;
                 }
-            }
 
-            if (fdec_frm) {
-                break;
+                xavs2_pthread_mutex_unlock(&frame->mutex);        /* unlock */
             }
-
-            xavs2_pthread_cond_wait(&h_mgr->cond[SIG_FRM_BUFFER_RELEASED], &h_mgr->mutex);
         }
+
+        if (fdec_frm) {
+            break;
+        }
+
+        xavs2_pthread_cond_wait(&h_mgr->cond[SIG_FRM_BUFFER_RELEASED], &h_mgr->mutex);
     }
 
     if (fdec_frm) {
