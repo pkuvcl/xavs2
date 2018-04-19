@@ -233,32 +233,29 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
 
     stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm, frm_bs_len);
 
-#if XAVS2_STAT > 1
-    /* log */
-    sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %5d",
-              frmstat->i_frame,
-              frm_type[frmstat->i_type],
-              frmstat->i_qp,
-              // frmstat->stat_frm.f_lambda_frm,  // %7.2f
-              frame->frm_enc->i_bs_len * 8,
-              frmstat->stat_frm.f_psnr[0],
-              frmstat->stat_frm.f_psnr[1],
-              frmstat->stat_frm.f_psnr[2],
-              (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
-
+    if (h->param->enable_psnr) {
+        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %5d",
+                  frmstat->i_frame,
+                  frm_type[frmstat->i_type],
+                  frmstat->i_qp,
+                  // frmstat->stat_frm.f_lambda_frm,  // %7.2f
+                  frame->frm_enc->i_bs_len * 8,
+                  frmstat->stat_frm.f_psnr[0],
+                  frmstat->stat_frm.f_psnr[1],
+                  frmstat->stat_frm.f_psnr[2],
+                  (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
+    } else {
+        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %5d",
+                  frmstat->i_frame,
+                  frm_type[frmstat->i_type],
+                  frmstat->i_qp,
+                  // frmstat->stat_frm.f_lambda_frm,  // %7.2f
+                  frame->frm_enc->i_bs_len * 8,
+                  (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
+    }
     get_reference_list_str(s_ref_list, frmstat->ref_poc_set, frmstat->i_ref);
 
     xavs2_log(h, XAVS2_LOG_INFO, "%s  %s\n", s_out_base, s_ref_list);
-#else
-    {
-        int i;
-        int sum_frames = 0;
-        for (i = 0; i < 4; i++) {
-            sum_frames += p_stat->i_frame_count[i];
-        }
-        xavs2_log(h, XAVS2_LOG_DEBUG, "\rEncoded Frames: %8d ", sum_frames);
-    }
-#endif // #if XAVS2_STAT > 1
 }
 
 /* ---------------------------------------------------------------------------
@@ -332,7 +329,11 @@ void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
         h->param->i_rd_level, h->param->i_rdoq_level, h->param->enable_sao, h->param->enable_alf);
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "--------------------------------------------------------------------------------\n");
-    xavs2_log(NULL, XAVS2_LOG_INFO,     "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
+    if (h->param->enable_psnr) {
+        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
+    } else {
+        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits     Time  [ RefList ]\n");
+    }
 }
 
 #endif  // #if XAVS2_STAT

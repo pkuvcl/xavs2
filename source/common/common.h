@@ -644,6 +644,7 @@ typedef struct xavs2_param_t {
 
     /* --- log -------------------------------------------------- */
     int     i_log_level;              /* log level */
+    int     enable_psnr;              /* enable PSNR calculation or not */
 
     /* --- reference management --------------------------------- */
     int     i_cfg_type;               /* coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI) */
