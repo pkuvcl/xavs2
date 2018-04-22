@@ -54,7 +54,7 @@ extern "C" {    // only need to export C interface if used by C++ source code
  * (10 * VER_MAJOR + VER_MINOR) */
 #define XAVS2_BUILD                11
 /* xavs2 encoder API version, version 2 the non-caller version */
-#define XAVS2_API_VERSION          1
+#define XAVS2_API_VERSION          2
 
 /**
  * ===========================================================================
