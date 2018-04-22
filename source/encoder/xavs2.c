@@ -488,7 +488,7 @@ void xavs2_encoder_destroy(void *coder)
  * Parameters :
  *      [in ] : coder - pointer to wrapper of the xavs2 encoder
  *            : pic   - pointer to struct xavs2_picture_t
- *      [out] : none
+ *      [out] : pic   - memory would be allocated for the image planes
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
@@ -535,7 +535,8 @@ int xavs2_encoder_get_buffer(void *coder, xavs2_picture_t *pic)
  * ---------------------------------------------------------------------------
  * Function   : label a packet to be recycled
  * Parameters :
- *      [in ] : packet   - pointer to struct xavs2_outpacket_t
+ *      [in ] : coder    - pointer to handle of xavs2 encoder (return by `encoder_create()`)
+ *            : packet   - pointer to struct xavs2_outpacket_t, whose bit-stream buffer would be recycled
  *      [out] : none
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
@@ -560,7 +561,7 @@ int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
  * Parameters :
  *      [in ] : coder - pointer to wrapper of the xavs2 encoder
  *            : pic   - pointer to struct xavs2_picture_t
- *      [out] : none
+ *      [out] : packet- output bit-stream
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */

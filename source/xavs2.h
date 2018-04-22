@@ -316,7 +316,7 @@ typedef struct xavs2_api_t {
      * Parameters :
      *      [in ] : coder - pointer to handle of xavs2 encoder
      *            : pic   - pointer to struct xavs2_picture_t
-     *      [out] : none
+     *      [out] : pic   - memory would be allocated for the image planes
      * Return     : zero for success, otherwise failed
      * ---------------------------------------------------------------------------
      */
@@ -365,7 +365,7 @@ typedef struct xavs2_api_t {
      * Function   : label a packet to be recycled
      * Parameters :
      *      [in ] : coder    - pointer to handle of xavs2 encoder (return by `encoder_create()`)
-     *            : packet   - pointer to struct xavs2_outpacket_t
+     *            : packet   - pointer to struct xavs2_outpacket_t, whose bit-stream buffer would be recycled
      *      [out] : none
      * Return     : zero for success, otherwise failed
      * ---------------------------------------------------------------------------
