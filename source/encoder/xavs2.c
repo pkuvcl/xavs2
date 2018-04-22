@@ -241,17 +241,11 @@ void xavs2_encoder_opt_destroy(xavs2_param_t *param)
  * Function   : create and initialize the xavs2 video encoder
  * Parameters :
  *      [in ] : param     - pointer to struct xavs2_param_t
- *            : p_ref_man - pointer to struct ref_man, using the internal default setting when it is NULL
- *            : i_ref_man - number of ref_man, using the internal default setting when it is 0
- *      [out] : none
+ *      [out] : handle of xavs2 encoder wrapper
  * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
  * ---------------------------------------------------------------------------
  */
-#if XAVS2_API_VERSION >= 2
 void *xavs2_encoder_create(xavs2_param_t *param)
-#else
-void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque)
-#endif
 {
     xavs2_handler_t *h_mgr   = NULL;
     xavs2_frame_t   *frm     = NULL;
@@ -356,9 +350,7 @@ void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, vo
 
     /* init all lists */
     if (xl_init(&h_mgr->list_frames_free)  != 0 ||
-#if XAVS2_API_VERSION >= 2
         xl_init(&h_mgr->list_frames_output) != 0 ||
-#endif
         xl_init(&h_mgr->list_frames_ready) != 0) {
         goto fail;
     }
@@ -429,12 +421,6 @@ void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, vo
     memset(h_mgr->blocked_frm_set, 0, sizeof(h_mgr->blocked_frm_set));
     memset(h_mgr->blocked_pts_set, 0, sizeof(h_mgr->blocked_pts_set));
     h_mgr->index_in_gop = 0; 
-
-#if XAVS2_API_VERSION < 2
-    /* init function handles in the encoder wrapper */
-    h_mgr->dump_func = dump_func; // function handle
-    h_mgr->user_data = opaque;    // user data
-#endif
 
     h_mgr->fp_trace = NULL;
 
@@ -559,14 +545,12 @@ int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
     if (coder == NULL || packet == NULL) {
         return 0;
     }
-#if XAVS2_API_VERSION < 2
-    /* no anything to do with API version lower than 2 */
-#else
+
     if (packet->private_data != NULL) {
         xavs2_handler_t *h_mgr = (xavs2_handler_t *)coder;
         xl_append(&h_mgr->list_frames_free, packet->private_data);
     }
-#endif
+
     return 0;
 }
 
@@ -580,11 +564,7 @@ int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-#if XAVS2_API_VERSION < 2
-int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic)
-#else
 int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet)
-#endif
 {
     xavs2_handler_t *h_mgr = (xavs2_handler_t *)coder;
     xavs2_frame_t *frame;
@@ -642,10 +622,8 @@ int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *p
     /* decide slice type and send frames into encoding queue */
     send_frame_to_enc_queue(h_mgr, frame);
 
-#if XAVS2_API_VERSION >= 2
     /* fetch a frame */
     encoder_fetch_one_encoded_frame(h_mgr, packet, pic == NULL);
-#endif
 
     return 0;
 }

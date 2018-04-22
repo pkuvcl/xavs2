@@ -141,9 +141,7 @@ int start_encode(xavs2_param_t *param)
     xavs2_picture_t pic;
     void *encoder = NULL;
     int k;
-#if XAVS2_API_VERSION >= 2
     xavs2_outpacket_t packet = {0};
-#endif
 
     /* open input & output files */
     if ((g_infile = fopen(in_file, "rb")) == NULL) {
@@ -163,11 +161,8 @@ int start_encode(xavs2_param_t *param)
     }
 
     /* create the xavs2 video encoder */
-#if XAVS2_API_VERSION >= 2
     encoder = api->encoder_create(param);
-#else
-    encoder = api->encoder_create(param, &dump_encoded_data, NULL);
-#endif
+
     if (encoder == NULL) {
         fprintf(stderr, "Error: Can not create encoder. Null pointer returned.\n");
         fclose(g_infile);
@@ -187,12 +182,9 @@ int start_encode(xavs2_param_t *param)
             fprintf(stderr, "failed to read one YUV frame [%3d/%3d]\n", k, num_frames);
             /* return the buffer to the encoder */
             pic.i_state = XAVS2_STATE_NO_DATA;
-#if XAVS2_API_VERSION >= 2
+
             api->encoder_encode(encoder, &pic, &packet);
             dump_encoded_data(encoder, &packet);
-#else
-            api->encoder_encode(encoder, &pic);
-#endif
             break;
         }
 
@@ -200,23 +192,15 @@ int start_encode(xavs2_param_t *param)
         pic.i_type  = XAVS2_TYPE_AUTO;
         pic.i_pts   = k;
 
-#if XAVS2_API_VERSION >= 2
         api->encoder_encode(encoder, &pic, &packet);
         dump_encoded_data(encoder, &packet);
-#else
-        api->encoder_encode(encoder, &pic);
-#endif
     }
 
     /* flush delayed frames */
-#if XAVS2_API_VERSION >= 2
     for (; packet.state != XAVS2_STATE_FLUSH_END;) {
         api->encoder_encode(encoder, NULL, &packet);
         dump_encoded_data(encoder, &packet);
     }
-#else
-    api->encoder_encode(encoder, NULL);
-#endif
 
     /* destroy the encoder */
     api->encoder_destroy(encoder);

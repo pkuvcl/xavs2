@@ -57,7 +57,6 @@
 static xavs2_api_t api_default = {
     XVERSION_STR,
     XAVS2_BUILD,
-    XAVS2_API_VERSION,
     BIT_DEPTH,
     xavs2_encoder_opt_help,
     xavs2_encoder_opt_alloc,

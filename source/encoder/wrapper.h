@@ -149,9 +149,7 @@ struct xavs2_handler_t {
     /* frames and lists */
     xlist_t         list_frames_free;         /* list[0]: frames which are free to use */
     xlist_t         list_frames_ready;        /* list[1]: frames which are ready for encoding (slice type configured) */
-#if XAVS2_API_VERSION >= 2
     xlist_t         list_frames_output;       /* list[2]: frames which are ready for output */
-#endif
 
     /* lookahead and slice type decision */
     xavs2_frame_t  *blocked_frm_set[XAVS2_MAX_GOP_SIZE + 4];
@@ -170,9 +168,6 @@ struct xavs2_handler_t {
     FILE             *fp_trace;       /* for trace output */
 #endif
 
-#if XAVS2_API_VERSION < 2
-    xavs2_dump_func_t dump_func;      /* handle of dump function, called inside */
-#endif
     void             *user_data;      /* handle of user data */
     int64_t           create_time;    /* time of encoder creation, used for encoding speed test */
 
@@ -323,11 +318,7 @@ void xavs2_encoder_opt_destroy(xavs2_param_t *param);
  * Return     : handle of xavs2 encoder wrapper, none zero for success, otherwise false
  * ---------------------------------------------------------------------------
  */
-#if XAVS2_API_VERSION < 2
-void *xavs2_encoder_create(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque);
-#else
 void *xavs2_encoder_create(xavs2_param_t *param);
-#endif
 
 /**
  * ---------------------------------------------------------------------------
@@ -339,11 +330,7 @@ void *xavs2_encoder_create(xavs2_param_t *param);
  * Return     : zero for success, otherwise failed
  * ---------------------------------------------------------------------------
  */
-#if XAVS2_API_VERSION < 2
-int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic);
-#else
 int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet);
-#endif
 
 /**
  * ---------------------------------------------------------------------------

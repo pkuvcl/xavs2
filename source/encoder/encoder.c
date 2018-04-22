@@ -171,26 +171,11 @@ void encoder_fill_packet_data(xavs2_handler_t *h_mgr, xavs2_outpacket_t *packet,
 static INLINE
 void encoder_output_frame_bitstream(xavs2_handler_t *h_mgr, xavs2_frame_t *frame)
 {
-#if XAVS2_API_VERSION < 2
-    xavs2_outpacket_t packet;
-    packet.private_data = NULL;
-
-    encoder_fill_packet_data(h_mgr, &packet, frame);
-    if (packet.len > 0) {
-        h_mgr->dump_func(h_mgr, &packet);
-    }
-
-    if (frame != NULL) {
-        xl_append(&h_mgr->list_frames_free, frame);
-    }
-#else
     if (frame != NULL) {
         xl_append(&h_mgr->list_frames_output, frame);
     }
-#endif
 }
 
-#if XAVS2_API_VERSION >= 2
 /**
  * ---------------------------------------------------------------------------
  * Function   : fetch bit-stream of one encoded frame
@@ -224,7 +209,6 @@ void encoder_fetch_one_encoded_frame(xavs2_handler_t *h_mgr, xavs2_outpacket_t *
         }
     }
 }
-#endif
 
 /* ---------------------------------------------------------------------------
  * check pseudo code and merge slice data with slice header bits

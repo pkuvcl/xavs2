@@ -120,9 +120,7 @@ void destroy_all_lists(xavs2_handler_t *h_mgr)
 
     assert(h_mgr != NULL);
 
-#if XAVS2_API_VERSION >= 2
     xl_destroy(&h_mgr->list_frames_output);
-#endif
     xl_destroy(&h_mgr->list_frames_ready);
     xl_destroy(&h_mgr->list_frames_free);
 

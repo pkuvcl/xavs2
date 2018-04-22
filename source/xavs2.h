@@ -53,8 +53,6 @@ extern "C" {    // only need to export C interface if used by C++ source code
 /* xavs2 encoder build version, means different API interface
  * (10 * VER_MAJOR + VER_MINOR) */
 #define XAVS2_BUILD                11
-/* xavs2 encoder API version, version 2 the non-caller version */
-#define XAVS2_API_VERSION          2
 
 /**
  * ===========================================================================
@@ -218,15 +216,6 @@ typedef struct xavs2_outpacket_t {
     void           *opaque;           /* pointer to user data */
 } xavs2_outpacket_t;
 
-#if XAVS2_API_VERSION < 2
-/* ---------------------------------------------------------------------------
- * type define of dump function
- */
-typedef void(*xavs2_dump_func_t)(
-    void *coder,                      /* handler of the encoder */
-    xavs2_outpacket_t *packet);       /* output bitstream */
-#endif
-
 /**
  * ===========================================================================
  * interface function declares: parameters
@@ -240,7 +229,6 @@ typedef struct xavs2_api_t {
      */
     const char *s_version_source;          /* source tree version SHA */
     int         version_build;             /* XAVS2_BUILD */
-    int         version_callback;          /* XAVS2_API_VERSION */
     int         internal_bit_depth;        /* internal bit-depth for encoding */
 
     /**
@@ -345,11 +333,7 @@ typedef struct xavs2_api_t {
      * Return     : handle of xavs2 encoder, none zero for success, otherwise false
      * ---------------------------------------------------------------------------
      */
-#if XAVS2_API_VERSION < 2
-    void *(*encoder_create)(xavs2_param_t *param, xavs2_dump_func_t dump_func, void *opaque);
-#else
     void *(*encoder_create)(xavs2_param_t *param);
-#endif
     
     /**
      * ---------------------------------------------------------------------------
@@ -370,15 +354,11 @@ typedef struct xavs2_api_t {
      * Parameters :
      *      [in ] : coder - pointer to handle of xavs2 encoder (return by `encoder_create()`)
      *            : pic   - pointer to struct xavs2_picture_t
-     *      [out] : none
+     *      [out] : packet- output bit-stream
      * Return     : zero for success, otherwise failed
      * ---------------------------------------------------------------------------
      */
-#if XAVS2_API_VERSION < 2
-    int (*encoder_encode)(void *coder, xavs2_picture_t *pic);
-#else
     int (*encoder_encode)(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet);
-#endif
 
     /**
      * ---------------------------------------------------------------------------
