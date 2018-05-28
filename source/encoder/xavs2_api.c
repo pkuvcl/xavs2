@@ -56,7 +56,7 @@
  */
 static xavs2_api_t api_default = {
     XVERSION_STR,
-    XAVS2_BUILD,
+    VER_MAJOR * 10 + VER_MINOR,
     BIT_DEPTH,
     xavs2_encoder_opt_help,
     xavs2_encoder_opt_alloc,
@@ -119,7 +119,7 @@ xavs2_api_get(int bit_depth)
     case BIT_DEPTH:
         return &api_default;
     default:
-        sprintf(s_lib_name, "libxavs2-%d-%dbit.%s", XAVS2_BUILD, bit_depth, ext_dyn_lib);
+        sprintf(s_lib_name, "libxavs2-%d-%dbit.%s", VER_MAJOR * 10 + VER_MINOR, bit_depth, ext_dyn_lib);
         return xavs2_load_new_module(s_lib_name, method_name, bit_depth);
     }
 }

@@ -43,10 +43,6 @@
 extern "C" {    // only need to export C interface if used by C++ source code
 #endif
 
-/* xavs2 encoder build version, means different API interface
- * (10 * VER_MAJOR + VER_MINOR) */
-#define XAVS2_BUILD                12
-
 /**
  * ===========================================================================
  * define XAVS2_API
@@ -221,7 +217,7 @@ typedef struct xavs2_api_t {
      * ===========================================================================
      */
     const char *s_version_source;          /* source tree version SHA */
-    int         version_build;             /* XAVS2_BUILD */
+    int         version_build;             /* XAVS2_BUILD version (10 * VER_MAJOR + VER_MINOR)  */
     int         internal_bit_depth;        /* internal bit-depth for encoding */
 
     /**
