@@ -42,9 +42,9 @@
 /* ---------------------------------------------------------------------------
  * Macros
  */
-#if _WIN32
+#if SYS_WINDOWS
 #define ext_dyn_lib "dll"
-#elif MACOS
+#elif SYS_MACOSX
 #include <dlfcn.h>
 #define ext_dyn_lib "dylib"
 #else

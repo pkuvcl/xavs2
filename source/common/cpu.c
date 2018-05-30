@@ -29,7 +29,7 @@
 #include "common.h"
 #include "cpu.h"
 
-#if MACOS || SYS_FREEBSD
+#if SYS_MACOSX || SYS_FREEBSD
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #endif
