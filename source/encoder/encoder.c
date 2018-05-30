@@ -498,7 +498,7 @@ static void encoder_release_frames(xavs2_t *h)
 
         for (i = 0; i < h->i_height_in_lcu; i++) {
             if (num_lcu_coded[i] <= h->i_width_in_lcu) {
-                Sleep(1);
+                xavs2_sleep_ms(1);
             }
         }
     }
@@ -597,7 +597,7 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
             slice = h->slices[lcu->slice_index];
 
             // while (fdec->num_lcu_coded_in_row[lcu_y] <= lcu_x) {
-            //     Sleep(1);
+            //     xavs2_sleep_ms(1);
             // }
 
             if (lcu_xy == slice->i_first_lcu_xy) {
@@ -665,7 +665,7 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
 
     /* make sure all row context has been released */
     while (h->b_all_row_ctx_released == 0) {
-        Sleep(1);
+        xavs2_sleep_ms(1);
     }
 
     /* release the reconstructed frame */

@@ -341,8 +341,10 @@ xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
 #define xavs2_lower_thread_priority(p)
 #endif
 
-#if !SYS_WINDOWS
-#define Sleep(x)              usleep(x * 1000)
+#if SYS_WINDOWS
+#define xavs2_sleep_ms(x)              Sleep(x)
+#else
+#define xavs2_sleep_ms(x)              usleep(x * 1000)
 #endif
 
 
