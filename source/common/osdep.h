@@ -341,41 +341,8 @@ xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
 #define xavs2_lower_thread_priority(p)
 #endif
 
-
-/**
- * ===========================================================================
- * type defines
- * ===========================================================================
- */
-/* custom spin lock - the initial value of spin lock must be 0 */
-#if (defined(__ICL) || defined(_MSC_VER)) && defined(_WIN32)
-typedef void                   *semaphore_t;
-typedef volatile long           spinlock_t;
-#  define SPIN_INIT(lock)       (lock) = 0
-#  define SPIN_LOCK(lock)       while (InterlockedExchange(&(lock), 1) == 1) Sleep(0)
-#  define SPIN_UNLOCK(lock)     InterlockedExchange(&(lock), 0)
-#  define SPIN_DESTROY(lock)    
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7__)
-#include <unistd.h>
-#include <semaphore.h>
-typedef sem_t                   semaphore_t;
-typedef pthread_mutex_t         spinlock_t;
-#  define Sleep(x)              usleep(x * 1000)
-#  define SPIN_INIT(lock)       pthread_mutex_init(&(lock), NULL)
-#  define SPIN_LOCK(lock)       pthread_mutex_lock(&(lock))
-#  define SPIN_UNLOCK(lock)     pthread_mutex_unlock(&(lock))
-#  define SPIN_DESTROY(lock)    pthread_mutex_destroy(&(lock))
-#else
-#include <unistd.h>
-#include <semaphore.h>
-#include <pthread.h>
-typedef sem_t                   semaphore_t;
-typedef pthread_spinlock_t      spinlock_t;
-#  define Sleep(x)              usleep(x * 1000)
-#  define SPIN_INIT(lock)       pthread_spin_init(&(lock), PTHREAD_PROCESS_PRIVATE)
-#  define SPIN_LOCK(lock)       pthread_spin_lock(&(lock))
-#  define SPIN_UNLOCK(lock)     pthread_spin_unlock(&(lock))
-#  define SPIN_DESTROY(lock)    pthread_spin_destroy(&(lock))
+#if !SYS_WINDOWS
+#define Sleep(x)              usleep(x * 1000)
 #endif
 
 

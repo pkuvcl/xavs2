@@ -44,85 +44,6 @@
 
 /**
  * ===========================================================================
- * semaphore
- * ===========================================================================
- */
-
-/* ---------------------------------------------------------------------------
- */
-int create_semaphore(semaphore_t *sem, void *attributes, int init_count, int max_count, const char *name)
-{
-#if (defined(__ICL) || defined(_MSC_VER)) && defined(_WIN32)
-    *sem = CreateSemaphore((LPSECURITY_ATTRIBUTES)attributes, init_count, max_count, name);
-
-    if (*sem == 0) {
-        return GetLastError();
-    } else {
-        return 0;
-    }
-
-#else
-    return sem_init(sem, 0, init_count);
-#endif
-}
-
-/* ---------------------------------------------------------------------------
- */
-int release_semaphore(semaphore_t *sem)
-{
-#if (defined(__ICL) || defined(_MSC_VER)) && defined(_WIN32)
-    if (ReleaseSemaphore(*sem, 1, NULL) == TRUE) {
-        return 0;
-    } else {
-        return errno;
-    }
-
-#else
-    return sem_post(sem);
-#endif
-}
-
-/* ---------------------------------------------------------------------------
- */
-int close_semaphore(semaphore_t *sem)
-{
-#if (defined(__ICL) || defined(_MSC_VER)) && defined(_WIN32)
-    if (CloseHandle(*sem) == TRUE) {
-        return 0;
-    } else {
-        return errno;
-    }
-
-#else
-    return sem_destroy(sem);
-#endif
-}
-
-/**
- * ---------------------------------------------------------------------------
- * Function   : wait for a semaphore object
- * Parameters :
- *      [ in] : sem - handle of the semaphore
- *      [out] : none
- * Return     : value indicates the event that caused the function to return
- * ---------------------------------------------------------------------------
- */
-int xavs2_wait_for_object(semaphore_t *sem)
-{
-#if (defined(__ICL) || defined(_MSC_VER)) && defined(_WIN32)
-    return WaitForSingleObject((HANDLE)(*sem), INFINITE);
-#else
-    int ret;
-    while ((ret = sem_wait((sem_t *)sem)) == -1 && errno == EINTR) {
-        continue;
-    }
-    return ret;
-#endif
-}
-
-
-/**
- * ===========================================================================
  * xlist
  * ===========================================================================
  */
@@ -150,11 +71,12 @@ int xl_init(xlist_t *const xlist)
     /* set node number */
     xlist->i_node_num = 0;
 
-    /* create semaphore */
-    create_semaphore(&(xlist->list_sem), NULL, 0, INT_MAX, NULL);
-
-    /* init list lock */
-    SPIN_INIT(xlist->list_lock);
+    /* create lock and conditions */
+    if (xavs2_pthread_mutex_init(&xlist->list_mutex, NULL) < 0 ||
+        xavs2_pthread_cond_init(&xlist->list_cond, NULL) < 0) {
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "Failed to init lock for xl_init()");
+        return -1;
+    }
 
     return 0;
 }
@@ -174,11 +96,9 @@ void xl_destroy(xlist_t *const xlist)
         return;
     }
 
-    /* destroy the spin lock */
-    SPIN_DESTROY(xlist->list_lock);
-
-    /* close handles */
-    close_semaphore(&(xlist->list_sem));
+    /* destroy lock and conditions */
+    xavs2_pthread_mutex_destroy(&xlist->list_mutex);
+    xavs2_pthread_cond_destroy(&xlist->list_cond);
 
     /* clear */
     memset(xlist, 0, sizeof(xlist_t));
@@ -204,9 +124,9 @@ void xl_append(xlist_t *const xlist, void *node)
 
     new_node->next = NULL;            /* set NULL */
 
-    /* append this node */
-    SPIN_LOCK(xlist->list_lock);
+    xavs2_pthread_mutex_lock(&xlist->list_mutex);   /* lock */
 
+    /* append this node */
     if (xlist->p_list_tail != NULL) {
         /* append this node at tail */
         xlist->p_list_tail->next = new_node;
@@ -216,10 +136,11 @@ void xl_append(xlist_t *const xlist, void *node)
 
     xlist->p_list_tail = new_node;    /* point to the tail node */
     xlist->i_node_num++;              /* increase the node number */
-    SPIN_UNLOCK(xlist->list_lock);
 
-    /* all is done, release a semaphore */
-    release_semaphore(&(xlist->list_sem));
+    xavs2_pthread_mutex_unlock(&xlist->list_mutex);  /* unlock */
+
+    /* all is done, notify one waiting thread to work */
+    xavs2_pthread_cond_signal(&xlist->list_cond);
 }
 
 /**
@@ -240,20 +161,18 @@ void *xl_remove_head(xlist_t *const xlist, const int wait)
         return NULL;                  /* error */
     }
 
-    if (wait) {
-        xavs2_wait_for_object(&(xlist->list_sem));
-    }
+    xavs2_pthread_mutex_lock(&xlist->list_mutex);
 
-    SPIN_LOCK(xlist->list_lock);
+    while (wait && !xlist->i_node_num) {
+        xavs2_pthread_cond_wait(&xlist->list_cond, &xlist->list_mutex);
+    }
 
     /* remove the header node */
     if (xlist->i_node_num > 0) {
         node = xlist->p_list_head;    /* point to the header node */
 
         /* modify the list */
-        if (node != NULL) {
-            xlist->p_list_head = node->next;
-        }
+        xlist->p_list_head = node->next;
 
         if (xlist->p_list_head == NULL) {
             /* there are no any node in this list, reset the tail pointer */
@@ -263,7 +182,7 @@ void *xl_remove_head(xlist_t *const xlist, const int wait)
         xlist->i_node_num--;          /* decrease the number */
     }
 
-    SPIN_UNLOCK(xlist->list_lock);
+    xavs2_pthread_mutex_unlock(&xlist->list_mutex);
 
     return node;
 }

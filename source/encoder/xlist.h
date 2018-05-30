@@ -56,11 +56,11 @@ struct node_t {
  * xlist_t
  */
 typedef struct xlist_t {
-    node_t     *p_list_head;          /* pointer to head of node list */
-    node_t     *p_list_tail;          /* pointer to tail of node list */
-    int         i_node_num;           /* node number in the list */
-    semaphore_t list_sem;             /* semaphore */
-    spinlock_t  list_lock;            /* list lock */
+    node_t               *p_list_head;     /* pointer to head of node list */
+    node_t               *p_list_tail;     /* pointer to tail of node list */
+    xavs2_pthread_cond_t  list_cond;       /* list condition variable */
+    xavs2_pthread_mutex_t list_mutex;      /* list mutex lock */
+    int                   i_node_num;      /* node number in the list */
 } xlist_t;
 
 
@@ -69,14 +69,6 @@ typedef struct xlist_t {
  * interface function declares
  * ===========================================================================
  */
-
-/* ---------------------------------------------------------------------------
- * semaphore
- */
-int create_semaphore(semaphore_t *sem, void *attributes, int init_count, int max_count, const char *name);
-int release_semaphore(semaphore_t *sem);
-int close_semaphore(semaphore_t *sem);
-int xavs2_wait_for_object(semaphore_t *sem);
 
 /* ---------------------------------------------------------------------------
  * xlist
