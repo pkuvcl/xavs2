@@ -72,8 +72,8 @@ int xl_init(xlist_t *const xlist)
     xlist->i_node_num = 0;
 
     /* create lock and conditions */
-    if (xavs2_pthread_mutex_init(&xlist->list_mutex, NULL) < 0 ||
-        xavs2_pthread_cond_init(&xlist->list_cond, NULL) < 0) {
+    if (xavs2_thread_mutex_init(&xlist->list_mutex, NULL) < 0 ||
+        xavs2_thread_cond_init(&xlist->list_cond, NULL) < 0) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "Failed to init lock for xl_init()");
         return -1;
     }
@@ -97,8 +97,8 @@ void xl_destroy(xlist_t *const xlist)
     }
 
     /* destroy lock and conditions */
-    xavs2_pthread_mutex_destroy(&xlist->list_mutex);
-    xavs2_pthread_cond_destroy(&xlist->list_cond);
+    xavs2_thread_mutex_destroy(&xlist->list_mutex);
+    xavs2_thread_cond_destroy(&xlist->list_cond);
 
     /* clear */
     memset(xlist, 0, sizeof(xlist_t));
@@ -124,7 +124,7 @@ void xl_append(xlist_t *const xlist, void *node)
 
     new_node->next = NULL;            /* set NULL */
 
-    xavs2_pthread_mutex_lock(&xlist->list_mutex);   /* lock */
+    xavs2_thread_mutex_lock(&xlist->list_mutex);   /* lock */
 
     /* append this node */
     if (xlist->p_list_tail != NULL) {
@@ -137,10 +137,10 @@ void xl_append(xlist_t *const xlist, void *node)
     xlist->p_list_tail = new_node;    /* point to the tail node */
     xlist->i_node_num++;              /* increase the node number */
 
-    xavs2_pthread_mutex_unlock(&xlist->list_mutex);  /* unlock */
+    xavs2_thread_mutex_unlock(&xlist->list_mutex);  /* unlock */
 
     /* all is done, notify one waiting thread to work */
-    xavs2_pthread_cond_signal(&xlist->list_cond);
+    xavs2_thread_cond_signal(&xlist->list_cond);
 }
 
 /**
@@ -161,10 +161,10 @@ void *xl_remove_head(xlist_t *const xlist, const int wait)
         return NULL;                  /* error */
     }
 
-    xavs2_pthread_mutex_lock(&xlist->list_mutex);
+    xavs2_thread_mutex_lock(&xlist->list_mutex);
 
     while (wait && !xlist->i_node_num) {
-        xavs2_pthread_cond_wait(&xlist->list_cond, &xlist->list_mutex);
+        xavs2_thread_cond_wait(&xlist->list_cond, &xlist->list_mutex);
     }
 
     /* remove the header node */
@@ -182,7 +182,7 @@ void *xl_remove_head(xlist_t *const xlist, const int wait)
         xlist->i_node_num--;          /* decrease the number */
     }
 
-    xavs2_pthread_mutex_unlock(&xlist->list_mutex);
+    xavs2_thread_mutex_unlock(&xlist->list_mutex);
 
     return node;
 }

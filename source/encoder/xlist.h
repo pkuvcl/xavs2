@@ -58,8 +58,8 @@ struct node_t {
 typedef struct xlist_t {
     node_t               *p_list_head;     /* pointer to head of node list */
     node_t               *p_list_tail;     /* pointer to tail of node list */
-    xavs2_pthread_cond_t  list_cond;       /* list condition variable */
-    xavs2_pthread_mutex_t list_mutex;      /* list mutex lock */
+    xavs2_thread_cond_t  list_cond;       /* list condition variable */
+    xavs2_thread_mutex_t list_mutex;      /* list mutex lock */
     int                   i_node_num;      /* node number in the list */
 } xlist_t;
 

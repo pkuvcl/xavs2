@@ -75,7 +75,7 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
     int i = 0;
     int j;
 
-    xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
 
     while (i < size_dpb) {
         int next_output_frame_idx;
@@ -85,7 +85,7 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
             continue;
         }
 
-        xavs2_pthread_mutex_lock(&frame->mutex);  /* lock */
+        xavs2_thread_mutex_lock(&frame->mutex);  /* lock */
 
         next_output_frame_idx = get_next_frame_id(h_mgr->i_output);
         if (frame->i_frame == next_output_frame_idx) {
@@ -98,7 +98,7 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
 
             if (j < h->i_height_in_lcu) {
                 /* frame doesn't finish reconstruction */
-                xavs2_pthread_mutex_unlock(&frame->mutex);   /* unlock */
+                xavs2_thread_mutex_unlock(&frame->mutex);   /* unlock */
                 break;
             }
 
@@ -108,16 +108,16 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
 #if XAVS2_DUMP_REC
             dump_yuv_out(h, h_mgr->h_rec_file, frame, h->param->org_width, h->param->org_height);
 #endif //if XAVS2_DUMP_REC
-            xavs2_pthread_mutex_unlock(&frame->mutex);   /* unlock */
+            xavs2_thread_mutex_unlock(&frame->mutex);   /* unlock */
 
             /* start over for the next reconstruction frame */
             i = 0;
             continue;
         }
 
-        xavs2_pthread_mutex_unlock(&frame->mutex);    /* unlock */
+        xavs2_thread_mutex_unlock(&frame->mutex);    /* unlock */
         i++;
     }
 
-    xavs2_pthread_mutex_unlock(&h_mgr->mutex);     /* unlock */
+    xavs2_thread_mutex_unlock(&h_mgr->mutex);     /* unlock */
 }

@@ -140,7 +140,7 @@ struct ratectrl_t {    //EKIN_MARK
     int         LCUbaseQP;            //
     RCLCU       rc_lcu;               //
 #endif
-    xavs2_pthread_mutex_t rc_mutex;
+    xavs2_thread_mutex_t rc_mutex;
 };
 
 
@@ -560,7 +560,7 @@ int xavs2_rc_init(ratectrl_t *rc, xavs2_param_t *param)
         init_fuzzy_controller(0.75);
     }
 
-    if (xavs2_pthread_mutex_init(&rc->rc_mutex, NULL)) {
+    if (xavs2_thread_mutex_init(&rc->rc_mutex, NULL)) {
         return -1;
     }
 
@@ -595,9 +595,9 @@ int xavs2_rc_get_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int force_qp)
     /* get QP for current frame */
     if (h->param->i_rc_method != XAVS2_RC_CQP && frm_type != XAVS2_TYPE_B) {
         int i_qp;
-        xavs2_pthread_mutex_lock(&h->rc->rc_mutex);
+        xavs2_thread_mutex_lock(&h->rc->rc_mutex);
         i_qp = rc_calculate_frame_qp(h, frm_idx, frm_type, force_qp);
-        xavs2_pthread_mutex_unlock(&h->rc->rc_mutex);
+        xavs2_thread_mutex_unlock(&h->rc->rc_mutex);
         return i_qp;
     } else {
         return h->i_qp;         // return the old value directly
@@ -734,7 +734,7 @@ void xavs2_rc_update_after_frame_coded(xavs2_t *h, int frm_bits, int frm_qp, int
         return;                 /* no need to update */
     }
 
-    xavs2_pthread_mutex_lock(&rc->rc_mutex);   // lock
+    xavs2_thread_mutex_lock(&rc->rc_mutex);   // lock
 
 #if RC_LCU_LEVEL
     if (h->param->i_rc_method == XAVS2_RC_CBR_SCU) {
@@ -818,7 +818,7 @@ void xavs2_rc_update_after_frame_coded(xavs2_t *h, int frm_bits, int frm_qp, int
     UNUSED_PARAMETER(frm_idx);
 #endif
 
-    xavs2_pthread_mutex_unlock(&rc->rc_mutex);  // unlock
+    xavs2_thread_mutex_unlock(&rc->rc_mutex);  // unlock
 }
 
 /**
@@ -832,5 +832,5 @@ void xavs2_rc_update_after_frame_coded(xavs2_t *h, int frm_bits, int frm_qp, int
 */
 void xavs2_rc_destroy(ratectrl_t *rc)
 {
-    xavs2_pthread_mutex_destroy(&rc->rc_mutex);
+    xavs2_thread_mutex_destroy(&rc->rc_mutex);
 }

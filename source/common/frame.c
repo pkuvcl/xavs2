@@ -414,10 +414,10 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
     frame->cnt_refered = 0;
 
     /* initialize signals */
-    if (xavs2_pthread_mutex_init(&frame->mutex, NULL)) {
+    if (xavs2_thread_mutex_init(&frame->mutex, NULL)) {
         goto fail;
     }
-    if (xavs2_pthread_cond_init(&frame->cond, NULL)) {
+    if (xavs2_thread_cond_init(&frame->cond, NULL)) {
         goto fail;
     }
 
@@ -438,9 +438,9 @@ void xavs2_frame_delete(xavs2_handler_t *h_mgr, xavs2_frame_t *frame)
 
     UNUSED_PARAMETER(h_mgr);
 
-    xavs2_pthread_cond_destroy(&frame->cond);
+    xavs2_thread_cond_destroy(&frame->cond);
 
-    xavs2_pthread_mutex_destroy(&frame->mutex);
+    xavs2_thread_mutex_destroy(&frame->mutex);
 
     /* free the frame itself */
     xavs2_free(frame);
@@ -456,8 +456,8 @@ void xavs2_frame_destroy_objects(xavs2_handler_t *h_mgr, xavs2_frame_t *frame)
 
     UNUSED_PARAMETER(h_mgr);
 
-    xavs2_pthread_cond_destroy(&frame->cond);
-    xavs2_pthread_mutex_destroy(&frame->mutex);
+    xavs2_thread_cond_destroy(&frame->cond);
+    xavs2_thread_mutex_destroy(&frame->mutex);
 }
 
 /**

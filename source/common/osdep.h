@@ -246,9 +246,9 @@
  */
 #if HAVE_BEOSTHREAD
 #include <kernel/OS.h>
-#define xavs2_pthread_t       thread_id
+#define xavs2_thread_t       thread_id
 static int ALWAYS_INLINE
-xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
+xavs2_thread_create(xavs2_thread_t *t, void *a, void *(*f)(void *), void *d)
 {
     *t = spawn_thread(f, "", 10, d);
     if (*t < B_NO_ERROR) {
@@ -258,7 +258,7 @@ xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
     return 0;
 }
 
-#define xavs2_pthread_join(t,s) \
+#define xavs2_thread_join(t,s) \
 {\
     long tmp; \
     wait_for_thread(t,(s)?(long*)(*(s)):&tmp);\
@@ -272,50 +272,50 @@ xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
 #pragma comment(lib, "pthread_lib.lib")
 #endif
 #include <pthread.h>
-#define xavs2_pthread_t                   pthread_t
-#define xavs2_pthread_create              pthread_create
-#define xavs2_pthread_join                pthread_join
-#define xavs2_pthread_mutex_t             pthread_mutex_t
-#define xavs2_pthread_mutex_init          pthread_mutex_init
-#define xavs2_pthread_mutex_destroy       pthread_mutex_destroy
-#define xavs2_pthread_mutex_lock          pthread_mutex_lock
-#define xavs2_pthread_mutex_unlock        pthread_mutex_unlock
-#define xavs2_pthread_cond_t              pthread_cond_t
-#define xavs2_pthread_cond_init           pthread_cond_init
-#define xavs2_pthread_cond_destroy        pthread_cond_destroy
-#define xavs2_pthread_cond_signal         pthread_cond_signal
-#define xavs2_pthread_cond_broadcast      pthread_cond_broadcast
-#define xavs2_pthread_cond_wait           pthread_cond_wait
-#define xavs2_pthread_attr_t              pthread_attr_t
-#define xavs2_pthread_attr_init           pthread_attr_init
-#define xavs2_pthread_attr_destroy        pthread_attr_destroy
-#define xavs2_pthread_attr_setdetachstate pthread_attr_setdetachstate
-#define xavs2_pthread_num_processors_np   pthread_num_processors_np
+#define xavs2_thread_t                   pthread_t
+#define xavs2_thread_create              pthread_create
+#define xavs2_thread_join                pthread_join
+#define xavs2_thread_mutex_t             pthread_mutex_t
+#define xavs2_thread_mutex_init          pthread_mutex_init
+#define xavs2_thread_mutex_destroy       pthread_mutex_destroy
+#define xavs2_thread_mutex_lock          pthread_mutex_lock
+#define xavs2_thread_mutex_unlock        pthread_mutex_unlock
+#define xavs2_thread_cond_t              pthread_cond_t
+#define xavs2_thread_cond_init           pthread_cond_init
+#define xavs2_thread_cond_destroy        pthread_cond_destroy
+#define xavs2_thread_cond_signal         pthread_cond_signal
+#define xavs2_thread_cond_broadcast      pthread_cond_broadcast
+#define xavs2_thread_cond_wait           pthread_cond_wait
+#define xavs2_thread_attr_t              pthread_attr_t
+#define xavs2_thread_attr_init           pthread_attr_init
+#define xavs2_thread_attr_destroy        pthread_attr_destroy
+#define xavs2_thread_attr_setdetachstate pthread_attr_setdetachstate
+#define xavs2_thread_num_processors_np   pthread_num_processors_np
 #define XAVS2_PTHREAD_MUTEX_INITIALIZER   PTHREAD_MUTEX_INITIALIZER
 
 #elif HAVE_WIN32THREAD
 #include "win32thread.h"
 
 #else
-#define xavs2_pthread_t                   int
-#define xavs2_pthread_create(t,u,f,d)     0
-#define xavs2_pthread_join(t,s)
+#define xavs2_thread_t                   int
+#define xavs2_thread_create(t,u,f,d)     0
+#define xavs2_thread_join(t,s)
 #endif // HAVE_*THREAD
 
 #if !HAVE_POSIXTHREAD && !HAVE_WIN32THREAD
-#define xavs2_pthread_mutex_t             int
-#define xavs2_pthread_mutex_init(m,f)     0
-#define xavs2_pthread_mutex_destroy(m)
-#define xavs2_pthread_mutex_lock(m)
-#define xavs2_pthread_mutex_unlock(m)
-#define xavs2_pthread_cond_t              int
-#define xavs2_pthread_cond_init(c,f)      0
-#define xavs2_pthread_cond_destroy(c)
-#define xavs2_pthread_cond_broadcast(c)
-#define xavs2_pthread_cond_wait(c,m)
-#define xavs2_pthread_attr_t              int
-#define xavs2_pthread_attr_init(a)        0
-#define xavs2_pthread_attr_destroy(a)
+#define xavs2_thread_mutex_t             int
+#define xavs2_thread_mutex_init(m,f)     0
+#define xavs2_thread_mutex_destroy(m)
+#define xavs2_thread_mutex_lock(m)
+#define xavs2_thread_mutex_unlock(m)
+#define xavs2_thread_cond_t              int
+#define xavs2_thread_cond_init(c,f)      0
+#define xavs2_thread_cond_destroy(c)
+#define xavs2_thread_cond_broadcast(c)
+#define xavs2_thread_cond_wait(c,m)
+#define xavs2_thread_attr_t              int
+#define xavs2_thread_attr_init(a)        0
+#define xavs2_thread_attr_destroy(a)
 #define XAVS2_PTHREAD_MUTEX_INITIALIZER   0
 #endif
 
@@ -323,7 +323,7 @@ xavs2_pthread_create(xavs2_pthread_t *t, void *a, void *(*f)(void *), void *d)
 #if SYS_WINDOWS
 #define xavs2_lower_thread_priority(p) \
 {\
-    xavs2_pthread_t handle = pthread_self();\
+    xavs2_thread_t handle = pthread_self();\
     struct sched_param sp;\
     int policy = SCHED_OTHER;\
     pthread_getschedparam(handle, &policy, &sp);\

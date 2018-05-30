@@ -59,9 +59,9 @@ typedef struct threadpool_job_t {
  * synchronized job list
  */
 typedef struct xavs2_sync_job_list_t {
-    xavs2_pthread_mutex_t mutex;
-    xavs2_pthread_cond_t  cv_fill;  /* event signaling that the list became fuller */
-    xavs2_pthread_cond_t  cv_empty; /* event signaling that the list became emptier */
+    xavs2_thread_mutex_t mutex;
+    xavs2_thread_cond_t  cv_fill;  /* event signaling that the list became fuller */
+    xavs2_thread_cond_t  cv_empty; /* event signaling that the list became emptier */
     int                   i_max_size;
     int                   i_size;
     threadpool_job_t     *list[XAVS2_THREAD_MAX + 1];
@@ -83,7 +83,7 @@ struct xavs2_threadpool_t {
     xavs2_sync_job_list_t done;         /* list of jobs that have finished processing */
 
     /* handler of threads */
-    xavs2_pthread_t       thread_handle[XAVS2_THREAD_MAX];
+    xavs2_thread_t       thread_handle[XAVS2_THREAD_MAX];
     uint8_t               cpu_core_used[64];
 };
 
@@ -169,9 +169,9 @@ static int xavs2_sync_job_list_init(xavs2_sync_job_list_t *slist, int i_max_size
     slist->i_max_size = i_max_size;
     slist->i_size     = 0;
 
-    if (xavs2_pthread_mutex_init(&slist->mutex,   NULL) ||
-        xavs2_pthread_cond_init(&slist->cv_fill,  NULL) ||
-        xavs2_pthread_cond_init(&slist->cv_empty, NULL)) {
+    if (xavs2_thread_mutex_init(&slist->mutex,   NULL) ||
+        xavs2_thread_cond_init(&slist->cv_fill,  NULL) ||
+        xavs2_thread_cond_init(&slist->cv_empty, NULL)) {
         return -1;
     }
 
@@ -182,23 +182,23 @@ static int xavs2_sync_job_list_init(xavs2_sync_job_list_t *slist, int i_max_size
  */
 static void xavs2_sync_job_list_delete(xavs2_sync_job_list_t *slist)
 {
-    xavs2_pthread_mutex_destroy(&slist->mutex);
-    xavs2_pthread_cond_destroy(&slist->cv_fill);
-    xavs2_pthread_cond_destroy(&slist->cv_empty);
+    xavs2_thread_mutex_destroy(&slist->mutex);
+    xavs2_thread_cond_destroy(&slist->cv_fill);
+    xavs2_thread_cond_destroy(&slist->cv_empty);
 }
 
 /* ---------------------------------------------------------------------------
  */
 static void xavs2_sync_job_list_push(xavs2_sync_job_list_t *slist, threadpool_job_t *job)
 {
-    xavs2_pthread_mutex_lock(&slist->mutex);      /* lock */
+    xavs2_thread_mutex_lock(&slist->mutex);      /* lock */
     while (slist->i_size == slist->i_max_size) {
-        xavs2_pthread_cond_wait(&slist->cv_empty, &slist->mutex);
+        xavs2_thread_cond_wait(&slist->cv_empty, &slist->mutex);
     }
     slist->list[slist->i_size++] = job;
-    xavs2_pthread_mutex_unlock(&slist->mutex);    /* unlock */
+    xavs2_thread_mutex_unlock(&slist->mutex);    /* unlock */
 
-    xavs2_pthread_cond_broadcast(&slist->cv_fill);
+    xavs2_thread_cond_broadcast(&slist->cv_fill);
 }
 
 /* ---------------------------------------------------------------------------
@@ -207,14 +207,14 @@ static threadpool_job_t *xavs2_sync_job_list_pop(xavs2_sync_job_list_t *slist)
 {
     threadpool_job_t *job;
 
-    xavs2_pthread_mutex_lock(&slist->mutex);      /* lock */
+    xavs2_thread_mutex_lock(&slist->mutex);      /* lock */
     while (!slist->i_size) {
-        xavs2_pthread_cond_wait(&slist->cv_fill, &slist->mutex);
+        xavs2_thread_cond_wait(&slist->cv_fill, &slist->mutex);
     }
     job = slist->list[--slist->i_size];
     slist->list[slist->i_size] = NULL;
-    xavs2_pthread_cond_broadcast(&slist->cv_empty);
-    xavs2_pthread_mutex_unlock(&slist->mutex);    /* unlock */
+    xavs2_thread_cond_broadcast(&slist->cv_empty);
+    xavs2_thread_mutex_unlock(&slist->mutex);    /* unlock */
 
     return job;
 }
@@ -235,7 +235,7 @@ void set_thread_running_cpu(xavs2_threadpool_t *pool)
     int cpu_idx = 0;
     int i;
 
-    xavs2_pthread_mutex_lock(&pool->run.mutex);   /* lock */
+    xavs2_thread_mutex_lock(&pool->run.mutex);   /* lock */
     for (i = num_cores; i != 0; i--) {
         int cpu_used = 0;
         cpu_idx = rand() % num_cores;
@@ -253,7 +253,7 @@ void set_thread_running_cpu(xavs2_threadpool_t *pool)
     } else {
         xavs2_thread_set_cpu(num_cores);
     }
-    xavs2_pthread_mutex_unlock(&pool->run.mutex); /* unlock */
+    xavs2_thread_mutex_unlock(&pool->run.mutex); /* unlock */
 }
 
 /* ---------------------------------------------------------------------------
@@ -272,15 +272,15 @@ static void *proc_xavs2_threadpool_thread(xavs2_threadpool_t *pool)
         threadpool_job_t *job = NULL;
 
         /* fetch a job */
-        xavs2_pthread_mutex_lock(&pool->run.mutex);   /* lock */
+        xavs2_thread_mutex_lock(&pool->run.mutex);   /* lock */
         while (pool->i_exit != XAVS2_EXIT_THREAD && !pool->run.i_size) {
-            xavs2_pthread_cond_wait(&pool->run.cv_fill, &pool->run.mutex);
+            xavs2_thread_cond_wait(&pool->run.cv_fill, &pool->run.mutex);
         }
         if (pool->run.i_size) {
             job = xavs2_job_shift(pool->run.list);
             pool->run.i_size--;
         }
-        xavs2_pthread_mutex_unlock(&pool->run.mutex); /* unlock */
+        xavs2_thread_mutex_unlock(&pool->run.mutex); /* unlock */
 
         /* do the job */
         if (!job) {
@@ -374,7 +374,7 @@ void *xavs2_threadpool_wait(xavs2_threadpool_t *pool, void *arg)
     void *ret;
     int i;
 
-    xavs2_pthread_mutex_lock(&pool->done.mutex);      /* lock */
+    xavs2_thread_mutex_lock(&pool->done.mutex);      /* lock */
     while (!job) {
         for (i = 0; i < pool->done.i_size; i++) {
             threadpool_job_t *t = pool->done.list[i];
@@ -385,10 +385,10 @@ void *xavs2_threadpool_wait(xavs2_threadpool_t *pool, void *arg)
             }
         }
         if (!job) {
-            xavs2_pthread_cond_wait(&pool->done.cv_fill, &pool->done.mutex);
+            xavs2_thread_cond_wait(&pool->done.cv_fill, &pool->done.mutex);
         }
     }
-    xavs2_pthread_mutex_unlock(&pool->done.mutex);    /* unlock */
+    xavs2_thread_mutex_unlock(&pool->done.mutex);    /* unlock */
 
     ret = job->ret;
     xavs2_sync_job_list_push(&pool->uninit, job);
@@ -402,13 +402,13 @@ void xavs2_threadpool_delete(xavs2_threadpool_t *pool)
 {
     int i;
 
-    xavs2_pthread_mutex_lock(&pool->run.mutex);   /* lock */
+    xavs2_thread_mutex_lock(&pool->run.mutex);   /* lock */
     pool->i_exit = XAVS2_EXIT_THREAD;
-    xavs2_pthread_cond_broadcast(&pool->run.cv_fill);
-    xavs2_pthread_mutex_unlock(&pool->run.mutex); /* unlock */
+    xavs2_thread_cond_broadcast(&pool->run.cv_fill);
+    xavs2_thread_mutex_unlock(&pool->run.mutex); /* unlock */
 
     for (i = 0; i < pool->i_threads; i++) {
-        xavs2_pthread_join(pool->thread_handle[i], NULL);
+        xavs2_thread_join(pool->thread_handle[i], NULL);
     }
 
     xavs2_sync_job_list_delete(&pool->uninit);

@@ -74,11 +74,11 @@ static ALWAYS_INLINE
 void wait_lcu_row_coded(row_info_t *last_row, int wait_lcu_coded)
 {
     if (last_row != NULL && last_row->coded < wait_lcu_coded) {
-        xavs2_pthread_mutex_lock(&last_row->mutex);   /* lock */
+        xavs2_thread_mutex_lock(&last_row->mutex);   /* lock */
         while (last_row->coded < wait_lcu_coded) {
-            xavs2_pthread_cond_wait(&last_row->cond, &last_row->mutex);
+            xavs2_thread_cond_wait(&last_row->cond, &last_row->mutex);
         }
-        xavs2_pthread_mutex_unlock(&last_row->mutex); /* unlock */
+        xavs2_thread_mutex_unlock(&last_row->mutex); /* unlock */
     }
 }
 
@@ -138,7 +138,7 @@ void xavs2e_release_row_task(row_info_t *row)
             }
         }
 
-        xavs2_pthread_mutex_lock(&fdec->mutex);           /* lock */
+        xavs2_thread_mutex_lock(&fdec->mutex);           /* lock */
         if (h->param->b_cross_slice_loop_filter == FALSE) {
             if (b_slice_boundary_done == FALSE && row->b_top_slice_border && row->row > 0) {
                 if (is_lcu_row_finished(h, fdec, row->row - 1)) {
@@ -159,17 +159,17 @@ void xavs2e_release_row_task(row_info_t *row)
             /* TODO: 多Slice并行时，对Slice边界的处理 */
         }
         set_lcu_row_finished(h, fdec, row->row);
-        xavs2_pthread_mutex_unlock(&fdec->mutex);         /* unlock */
+        xavs2_thread_mutex_unlock(&fdec->mutex);         /* unlock */
 
         /* broadcast to the aec thread and all waiting contexts */
-        xavs2_pthread_cond_broadcast(&fdec->cond);
+        xavs2_thread_cond_broadcast(&fdec->cond);
 
         if (h->task_type == XAVS2_TASK_ROW) {
-            xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+            xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
             h->task_status = XAVS2_TASK_FREE;
-            xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+            xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
             /* signal a free row context available */
-            xavs2_pthread_cond_signal(&h_mgr->cond[SIG_ROW_CONTEXT_RELEASED]);
+            xavs2_thread_cond_signal(&h_mgr->cond[SIG_ROW_CONTEXT_RELEASED]);
         }
     }
 }
@@ -193,11 +193,11 @@ void xavs2e_inter_sync(xavs2_t *h, int lcu_y, int lcu_x)
             xavs2_frame_t *p_ref = h->fref[i];
 
             for (j = low_bound; j <= up_bound; j++) {
-                xavs2_pthread_mutex_lock(&p_ref->mutex);    /* lock */
+                xavs2_thread_mutex_lock(&p_ref->mutex);    /* lock */
                 while (p_ref->num_lcu_coded_in_row[j] < col_coded) {
-                    xavs2_pthread_cond_wait(&p_ref->cond, &p_ref->mutex);
+                    xavs2_thread_cond_wait(&p_ref->cond, &p_ref->mutex);
                 }
-                xavs2_pthread_mutex_unlock(&p_ref->mutex);  /* unlock */
+                xavs2_thread_mutex_unlock(&p_ref->mutex);  /* unlock */
             }
         }
     }
@@ -214,7 +214,7 @@ xavs2_t *xavs2e_alloc_row_task(xavs2_t *h)
 
     assert(h->task_type == XAVS2_TASK_FRAME && h->frameinfo);
 
-    xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
 
     /* wait until we successfully get one free row context */
     for (; h_mgr->i_exit_flag != XAVS2_EXIT_THREAD;) {
@@ -232,17 +232,17 @@ xavs2_t *xavs2e_alloc_row_task(xavs2_t *h)
                 /* 这里h->aec的位置不同导致性能不一样，但是在LCU行编码时重新做了同步保证了一致性 */
                 aec_copy_aec_state(&h_row_coder->aec, &h->aec);
                 /* unlock */
-                xavs2_pthread_mutex_unlock(&h_mgr->mutex);
+                xavs2_thread_mutex_unlock(&h_mgr->mutex);
 
                 return h_row_coder;
             }
         }
 
-        xavs2_pthread_cond_wait(&h_mgr->cond[SIG_ROW_CONTEXT_RELEASED], &h_mgr->mutex);
+        xavs2_thread_cond_wait(&h_mgr->cond[SIG_ROW_CONTEXT_RELEASED], &h_mgr->mutex);
     }
 
     /* unlock */
-    xavs2_pthread_mutex_unlock(&h_mgr->mutex);
+    xavs2_thread_mutex_unlock(&h_mgr->mutex);
     return NULL;
 }
 

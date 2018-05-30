@@ -476,14 +476,14 @@ void *xavs2_lcu_row_write(void *arg)
             }
         }
 
-        xavs2_pthread_mutex_lock(&row->mutex);    /* lock */
+        xavs2_thread_mutex_lock(&row->mutex);    /* lock */
         row->coded = i_lcu_x;
         // h->fdec->num_lcu_coded_in_row[row->row]++;
-        xavs2_pthread_mutex_unlock(&row->mutex);  /* unlock */
+        xavs2_thread_mutex_unlock(&row->mutex);  /* unlock */
 
         /* signal to the next row */
         if (i_lcu_x >= 1) {
-            xavs2_pthread_cond_signal(&row->cond);
+            xavs2_thread_cond_signal(&row->cond);
         }
     }
 
@@ -547,11 +547,11 @@ void *xavs2_lcu_row_write(void *arg)
             /* make sure the top row have finished interpolation and padding */
             xavs2_frame_t *fdec = h->fdec;
 
-            xavs2_pthread_mutex_lock(&fdec->mutex);   /* lock */
+            xavs2_thread_mutex_lock(&fdec->mutex);   /* lock */
             while (fdec->num_lcu_coded_in_row[last_row->row] < h->i_width_in_lcu) {
-                xavs2_pthread_cond_wait(&fdec->cond, &fdec->mutex);
+                xavs2_thread_cond_wait(&fdec->cond, &fdec->mutex);
             }
-            xavs2_pthread_mutex_unlock(&fdec->mutex); /* unlock */
+            xavs2_thread_mutex_unlock(&fdec->mutex); /* unlock */
         }
     }
 

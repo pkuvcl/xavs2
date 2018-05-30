@@ -140,10 +140,10 @@ struct xavs2_handler_t {
     int                   num_row_contexts;   /* number of row contexts */
     xavs2_threadpool_t   *threadpool_rdo;     /* the thread pool (for parallel encoding) */
     xavs2_threadpool_t   *threadpool_aec;     /* the thread pool for aec encoding */
-    xavs2_pthread_t       thread_wrapper;     /* thread for wrapper proceeding */
+    xavs2_thread_t       thread_wrapper;     /* thread for wrapper proceeding */
 
-    xavs2_pthread_cond_t  cond[SIG_COUNT];
-    xavs2_pthread_mutex_t mutex;              /* mutex */
+    xavs2_thread_cond_t  cond[SIG_COUNT];
+    xavs2_thread_mutex_t mutex;              /* mutex */
 
 
     /* frames and lists */

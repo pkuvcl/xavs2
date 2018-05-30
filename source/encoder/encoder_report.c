@@ -212,7 +212,7 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
     frmstat->stat_frm.i_time_duration = frame->frm_enc->i_time_end - frame->frm_enc->i_time_start;
 
     /* frame info */
-    xavs2_pthread_mutex_lock(&h->h_top->mutex);
+    xavs2_thread_mutex_lock(&h->h_top->mutex);
     switch (frmstat->i_type) {
     case 0:
         stat_add_frame_info(&p_stat->stat_i_frame, &frmstat->stat_frm, frm_bs_len);
@@ -226,7 +226,7 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
     }
 
     stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm, frm_bs_len);
-    xavs2_pthread_mutex_unlock(&h->h_top->mutex);
+    xavs2_thread_mutex_unlock(&h->h_top->mutex);
 
     if (h->param->enable_psnr) {
         sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %5d",

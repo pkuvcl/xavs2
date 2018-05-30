@@ -1074,8 +1074,8 @@ struct xavs2_frame_t {
 
     int        *num_lcu_coded_in_row; /* 0, not ready, 1, ready */
 
-    xavs2_pthread_cond_t  cond;
-    xavs2_pthread_mutex_t mutex;
+    xavs2_thread_cond_t  cond;
+    xavs2_thread_mutex_t mutex;
 
 #if XAVS2_ADAPT_LAYER
     /* nal */
@@ -1265,8 +1265,8 @@ typedef struct row_info_t {
     xavs2_t         *h;               /* context for the row */
     lcu_info_t      *lcus;            /* [LCUs] */
 
-    xavs2_pthread_cond_t  cond;       /* lcu cond */
-    xavs2_pthread_mutex_t mutex;
+    xavs2_thread_cond_t  cond;       /* lcu cond */
+    xavs2_thread_mutex_t mutex;
 
     aec_t           aec_set;          /* aec contexts of the 2nd LCU which will be
                                        * referenced by the next row on startup */
@@ -1664,7 +1664,7 @@ int xavs2_threading_init(void);
 #define xavs2_threading_init()            0
 #endif
 
-int xavs2_create_thread(xavs2_pthread_t *tid, xavs2_tfunc_t start, void *arg);
+int xavs2_create_thread(xavs2_thread_t *tid, xavs2_tfunc_t start, void *arg);
 
 void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...);
 

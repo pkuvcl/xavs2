@@ -311,7 +311,7 @@ int64_t xavs2_mdate(void)
 
 /* ---------------------------------------------------------------------------
  */
-int xavs2_create_thread(xavs2_pthread_t *tid, xavs2_tfunc_t tfunc, void *targ)
+int xavs2_create_thread(xavs2_thread_t *tid, xavs2_tfunc_t tfunc, void *targ)
 {
-    return xavs2_pthread_create(tid, NULL, tfunc, targ);
+    return xavs2_thread_create(tid, NULL, tfunc, targ);
 }

@@ -62,12 +62,12 @@ typedef struct {
     USHORT      reserved[3];
 } xavs2_group_affinity_t;
 
-typedef void (WINAPI *cond_func_t)(xavs2_pthread_cond_t *cond);
-typedef BOOL (WINAPI *cond_wait_t)(xavs2_pthread_cond_t *cond, xavs2_pthread_mutex_t *mutex, DWORD milliseconds);
+typedef void (WINAPI *cond_func_t)(xavs2_thread_cond_t *cond);
+typedef BOOL (WINAPI *cond_wait_t)(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mutex, DWORD milliseconds);
 
 typedef struct {
     /* global mutex for replacing MUTEX_INITIALIZER instances */
-    xavs2_pthread_mutex_t static_mutex;
+    xavs2_thread_mutex_t static_mutex;
 
     /* function pointers to conditional variable API on windows 6.0+ kernels */
     cond_func_t cond_broadcast;
@@ -88,14 +88,14 @@ static xavs2_win32thread_control_t thread_control;
 /* _beginthreadex requires that the start routine is __stdcall */
 static unsigned __stdcall xavs2_win32thread_worker(void *arg)
 {
-    xavs2_pthread_t *h = arg;
+    xavs2_thread_t *h = arg;
 
     h->ret = h->func(h->arg);
 
     return 0;
 }
 
-int xavs2_pthread_create(xavs2_pthread_t *thread, const xavs2_pthread_attr_t *attr,
+int xavs2_thread_create(xavs2_thread_t *thread, const xavs2_thread_attr_t *attr,
                         void *(*start_routine)(void *), void *arg)
 {
     UNUSED_PARAMETER(attr);
@@ -106,7 +106,7 @@ int xavs2_pthread_create(xavs2_pthread_t *thread, const xavs2_pthread_attr_t *at
     return !thread->handle;
 }
 
-int xavs2_pthread_join(xavs2_pthread_t thread, void **value_ptr)
+int xavs2_thread_join(xavs2_thread_t thread, void **value_ptr)
 {
     DWORD ret = WaitForSingleObject(thread.handle, INFINITE);
 
@@ -121,23 +121,23 @@ int xavs2_pthread_join(xavs2_pthread_t thread, void **value_ptr)
     return 0;
 }
 
-int xavs2_pthread_mutex_init(xavs2_pthread_mutex_t *mutex, const xavs2_pthread_mutexattr_t *attr)
+int xavs2_thread_mutex_init(xavs2_thread_mutex_t *mutex, const xavs2_thread_mutexattr_t *attr)
 {
     UNUSED_PARAMETER(attr);
     return !InitializeCriticalSectionAndSpinCount(mutex, XAVS2_SPIN_COUNT);
 }
 
-int xavs2_pthread_mutex_destroy(xavs2_pthread_mutex_t *mutex)
+int xavs2_thread_mutex_destroy(xavs2_thread_mutex_t *mutex)
 {
     DeleteCriticalSection(mutex);
     return 0;
 }
 
-int xavs2_pthread_mutex_lock(xavs2_pthread_mutex_t *mutex)
+int xavs2_thread_mutex_lock(xavs2_thread_mutex_t *mutex)
 {
-    static xavs2_pthread_mutex_t init = XAVS2_PTHREAD_MUTEX_INITIALIZER;
+    static xavs2_thread_mutex_t init = XAVS2_PTHREAD_MUTEX_INITIALIZER;
 
-    if (!memcmp(mutex, &init, sizeof(xavs2_pthread_mutex_t))) {
+    if (!memcmp(mutex, &init, sizeof(xavs2_thread_mutex_t))) {
         *mutex = thread_control.static_mutex;
     }
     EnterCriticalSection(mutex);
@@ -145,7 +145,7 @@ int xavs2_pthread_mutex_lock(xavs2_pthread_mutex_t *mutex)
     return 0;
 }
 
-int xavs2_pthread_mutex_unlock(xavs2_pthread_mutex_t *mutex)
+int xavs2_thread_mutex_unlock(xavs2_thread_mutex_t *mutex)
 {
     LeaveCriticalSection(mutex);
     return 0;
@@ -153,15 +153,15 @@ int xavs2_pthread_mutex_unlock(xavs2_pthread_mutex_t *mutex)
 
 /* for pre-Windows 6.0 platforms we need to define and use our own condition variable and api */
 typedef struct {
-    xavs2_pthread_mutex_t mtx_broadcast;
-    xavs2_pthread_mutex_t mtx_waiter_count;
+    xavs2_thread_mutex_t mtx_broadcast;
+    xavs2_thread_mutex_t mtx_waiter_count;
     int waiter_count;
     HANDLE semaphore;
     HANDLE waiters_done;
     int is_broadcast;
 } xavs2_win32_cond_t;
 
-int xavs2_pthread_cond_init(xavs2_pthread_cond_t *cond, const xavs2_pthread_condattr_t *attr)
+int xavs2_thread_cond_init(xavs2_thread_cond_t *cond, const xavs2_thread_condattr_t *attr)
 {
     xavs2_win32_cond_t *win32_cond;
 
@@ -183,10 +183,10 @@ int xavs2_pthread_cond_init(xavs2_pthread_cond_t *cond, const xavs2_pthread_cond
         return -1;
     }
 
-    if (xavs2_pthread_mutex_init(&win32_cond->mtx_waiter_count, NULL)) {
+    if (xavs2_thread_mutex_init(&win32_cond->mtx_waiter_count, NULL)) {
         return -1;
     }
-    if (xavs2_pthread_mutex_init(&win32_cond->mtx_broadcast, NULL)) {
+    if (xavs2_thread_mutex_init(&win32_cond->mtx_broadcast, NULL)) {
         return -1;
     }
 
@@ -198,7 +198,7 @@ int xavs2_pthread_cond_init(xavs2_pthread_cond_t *cond, const xavs2_pthread_cond
     return 0;
 }
 
-int xavs2_pthread_cond_destroy(xavs2_pthread_cond_t *cond)
+int xavs2_thread_cond_destroy(xavs2_thread_cond_t *cond)
 {
     xavs2_win32_cond_t *win32_cond;
 
@@ -211,14 +211,14 @@ int xavs2_pthread_cond_destroy(xavs2_pthread_cond_t *cond)
     win32_cond = cond->ptr;
     CloseHandle(win32_cond->semaphore);
     CloseHandle(win32_cond->waiters_done);
-    xavs2_pthread_mutex_destroy(&win32_cond->mtx_broadcast);
-    xavs2_pthread_mutex_destroy(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_destroy(&win32_cond->mtx_broadcast);
+    xavs2_thread_mutex_destroy(&win32_cond->mtx_waiter_count);
     xavs2_free(win32_cond);
 
     return 0;
 }
 
-int xavs2_pthread_cond_broadcast(xavs2_pthread_cond_t *cond)
+int xavs2_thread_cond_broadcast(xavs2_thread_cond_t *cond)
 {
     xavs2_win32_cond_t *win32_cond;
     int have_waiter = 0;
@@ -230,8 +230,8 @@ int xavs2_pthread_cond_broadcast(xavs2_pthread_cond_t *cond)
 
     /* non native condition variables */
     win32_cond = cond->ptr;
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_broadcast);
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
 
     if (win32_cond->waiter_count) {
         win32_cond->is_broadcast = 1;
@@ -240,17 +240,17 @@ int xavs2_pthread_cond_broadcast(xavs2_pthread_cond_t *cond)
 
     if (have_waiter) {
         ReleaseSemaphore(win32_cond->semaphore, win32_cond->waiter_count, NULL);
-        xavs2_pthread_mutex_unlock(&win32_cond->mtx_waiter_count);
+        xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
         WaitForSingleObject(win32_cond->waiters_done, INFINITE);
         win32_cond->is_broadcast = 0;
     } else {
-        xavs2_pthread_mutex_unlock(&win32_cond->mtx_waiter_count);
+        xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
     }
 
-    return xavs2_pthread_mutex_unlock(&win32_cond->mtx_broadcast);
+    return xavs2_thread_mutex_unlock(&win32_cond->mtx_broadcast);
 }
 
-int xavs2_pthread_cond_signal(xavs2_pthread_cond_t *cond)
+int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
 {
     xavs2_win32_cond_t *win32_cond;
     int have_waiter;
@@ -262,9 +262,9 @@ int xavs2_pthread_cond_signal(xavs2_pthread_cond_t *cond)
 
     /* non-native condition variables */
     win32_cond = cond->ptr;
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     have_waiter = win32_cond->waiter_count;
-    xavs2_pthread_mutex_unlock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
 
     if (have_waiter) {
         ReleaseSemaphore(win32_cond->semaphore, 1, NULL);
@@ -273,7 +273,7 @@ int xavs2_pthread_cond_signal(xavs2_pthread_cond_t *cond)
     return 0;
 }
 
-int xavs2_pthread_cond_wait(xavs2_pthread_cond_t *cond, xavs2_pthread_mutex_t *mutex)
+int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mutex)
 {
     xavs2_win32_cond_t *win32_cond;
     int last_waiter;
@@ -285,28 +285,28 @@ int xavs2_pthread_cond_wait(xavs2_pthread_cond_t *cond, xavs2_pthread_mutex_t *m
     /* non native condition variables */
     win32_cond = cond->ptr;
 
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_broadcast);
-    xavs2_pthread_mutex_unlock(&win32_cond->mtx_broadcast);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
+    xavs2_thread_mutex_unlock(&win32_cond->mtx_broadcast);
 
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     win32_cond->waiter_count++;
-    xavs2_pthread_mutex_unlock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
 
     // unlock the external mutex
-    xavs2_pthread_mutex_unlock(mutex);
+    xavs2_thread_mutex_unlock(mutex);
     WaitForSingleObject(win32_cond->semaphore, INFINITE);
 
-    xavs2_pthread_mutex_lock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     win32_cond->waiter_count--;
     last_waiter = !win32_cond->waiter_count && win32_cond->is_broadcast;
-    xavs2_pthread_mutex_unlock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
 
     if (last_waiter) {
         SetEvent(win32_cond->waiters_done);
     }
 
     // lock the external mutex
-    return xavs2_pthread_mutex_lock(mutex);
+    return xavs2_thread_mutex_lock(mutex);
 }
 
 int xavs2_win32_threading_init(void)
@@ -321,16 +321,16 @@ int xavs2_win32_threading_init(void)
         thread_control.cond_signal = (cond_func_t)GetProcAddress(kernel_dll, "WakeConditionVariable");
         thread_control.cond_wait = (cond_wait_t)GetProcAddress(kernel_dll, "SleepConditionVariableCS");
     }
-    return xavs2_pthread_mutex_init(&thread_control.static_mutex, NULL);
+    return xavs2_thread_mutex_init(&thread_control.static_mutex, NULL);
 }
 
 void xavs2_win32_threading_destroy(void)
 {
-    xavs2_pthread_mutex_destroy(&thread_control.static_mutex);
+    xavs2_thread_mutex_destroy(&thread_control.static_mutex);
     memset(&thread_control, 0, sizeof(xavs2_win32thread_control_t));
 }
 
-int xavs2_pthread_num_processors_np()
+int xavs2_thread_num_processors_np()
 {
     DWORD_PTR system_cpus, process_cpus = 0;
     int cpus = 0;

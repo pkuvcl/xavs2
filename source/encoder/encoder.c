@@ -110,16 +110,16 @@ static void release_one_frame(xavs2_t *h, xavs2_frame_t *frame)
 {
     xavs2_handler_t *h_mgr = h->h_top;
 
-    xavs2_pthread_mutex_lock(&frame->mutex);      /* lock */
+    xavs2_thread_mutex_lock(&frame->mutex);      /* lock */
 
     assert(frame->cnt_refered > 0);
     frame->cnt_refered--;
 
-    xavs2_pthread_mutex_unlock(&frame->mutex);    /* unlock */
+    xavs2_thread_mutex_unlock(&frame->mutex);    /* unlock */
 
     if (frame->cnt_refered == 0) {
         /* signal to the h_mgr */
-        xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_BUFFER_RELEASED]);
+        xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_BUFFER_RELEASED]);
     }
 }
 
@@ -361,7 +361,7 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
     int refs_unavailable = 0;
     int i, j;
 
-    xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
 
     /* wait until we successfully get one frame context */
     for (;;) {
@@ -429,9 +429,9 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
                 h->i_layer = h->fenc->rps.temporal_id;
                 assert(h->i_ref <= XAVS2_MAX_REFS);
 
-                xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+                xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
                 /* signal to the aec thread */
-                xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_CONTEXT_ALLOCATED]);
+                xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_CONTEXT_ALLOCATED]);
 
                 return h;
             }
@@ -441,10 +441,10 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
             break;
         }
 
-        xavs2_pthread_cond_wait(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED], &h_mgr->mutex);
+        xavs2_thread_cond_wait(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED], &h_mgr->mutex);
     }
 
-    xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+    xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
 
     return 0;
 }
@@ -458,7 +458,7 @@ static void encoder_set_task_status(xavs2_t *h, task_status_e status)
 
     assert(h->task_type == XAVS2_TASK_FRAME);
 
-    xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
 
     if ((status == XAVS2_TASK_RDO_DONE && h->task_status == XAVS2_TASK_AEC_DONE) ||
         (status == XAVS2_TASK_AEC_DONE && h->task_status == XAVS2_TASK_RDO_DONE)) {
@@ -467,16 +467,16 @@ static void encoder_set_task_status(xavs2_t *h, task_status_e status)
         h->task_status = status;
     }
 
-    xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+    xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
 
     if (status == XAVS2_TASK_AEC_DONE) {
         /* signal to the output proc */
-        xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
+        xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
     }
 
     if (h->task_status == XAVS2_TASK_FREE) {
         /* broadcast to the task manager & flush */
-        xavs2_pthread_cond_broadcast(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED]);
+        xavs2_thread_cond_broadcast(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED]);
     }
 }
 
@@ -585,11 +585,11 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
         row = &frame->rows[lcu_y];
 
         /* wait until the row finishes RDO */
-        xavs2_pthread_mutex_lock(&fdec->mutex);   /* lock */
+        xavs2_thread_mutex_lock(&fdec->mutex);   /* lock */
         while (fdec->num_lcu_coded_in_row[lcu_y] < h->i_width_in_lcu) {
-            xavs2_pthread_cond_wait(&fdec->cond, &fdec->mutex);
+            xavs2_thread_cond_wait(&fdec->cond, &fdec->mutex);
         }
-        xavs2_pthread_mutex_unlock(&fdec->mutex); /* unlock */
+        xavs2_thread_mutex_unlock(&fdec->mutex); /* unlock */
 
         /* row is clear: start aec for every LCU */
         for (lcu_x = 0; lcu_x < h->i_width_in_lcu; lcu_x++, lcu_xy++) {
@@ -708,10 +708,10 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
             }
         }
 
-        xavs2_pthread_mutex_lock(&h_mgr->mutex); /* lock */
+        xavs2_thread_mutex_lock(&h_mgr->mutex); /* lock */
         encoder_output_frame_bitstream(h_mgr, output_frame.frm_enc);
         h_mgr->i_frame_aec = Advance2NextFrame(h_mgr, h_mgr->i_frame_aec);
-        xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+        xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
     }
 
     /* set task status */
@@ -738,14 +738,14 @@ static void encoder_flush(xavs2_handler_t *h_mgr)
         return;
     }
 
-    xavs2_pthread_mutex_lock(&h_mgr->mutex);   /* lock */
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
 
     /* wait until all tasks free */
     while (i < h_mgr->i_frm_threads) {
         xavs2_t *h_frm_coder = h_mgr->frm_contexts[i];
         if (h_frm_coder && h_frm_coder->task_status != XAVS2_TASK_FREE) {
             /* use 'sleep()' instead ? */
-            xavs2_pthread_cond_wait(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED], &h_mgr->mutex);
+            xavs2_thread_cond_wait(&h_mgr->cond[SIG_FRM_CONTEXT_RELEASED], &h_mgr->mutex);
             /* recheck all */
             i = 0;
             continue;
@@ -754,7 +754,7 @@ static void encoder_flush(xavs2_handler_t *h_mgr)
         i++;
     }
 
-    xavs2_pthread_mutex_unlock(&h_mgr->mutex); /* unlock */
+    xavs2_thread_mutex_unlock(&h_mgr->mutex); /* unlock */
 
     encoder_write_rec_frame(h_mgr);
 }
@@ -1385,11 +1385,11 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
         row->lcus  = (lcu_info_t *)mem_base;
         mem_base  += sizeof(lcu_info_t) * w_in_lcu;
 
-        if (xavs2_pthread_mutex_init(&row->mutex, NULL)) {
+        if (xavs2_thread_mutex_init(&row->mutex, NULL)) {
             goto fail;
         }
 
-        if (xavs2_pthread_cond_init(&row->cond, NULL)) {
+        if (xavs2_thread_cond_init(&row->cond, NULL)) {
             goto fail;
         }
     }
@@ -1490,8 +1490,8 @@ static void encoder_destroy_frame_context(xavs2_t *h)
             /* free a row */
             row_info_t *row = &h->frameinfo->rows[i];
             if (row) {
-                xavs2_pthread_mutex_destroy(&row->mutex);
-                xavs2_pthread_cond_destroy(&row->cond);
+                xavs2_thread_mutex_destroy(&row->mutex);
+                xavs2_thread_cond_destroy(&row->cond);
             }
         }
     }
@@ -1595,7 +1595,7 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr)
     h_mgr->i_exit_flag = XAVS2_EXIT_THREAD;
 
     /* wait until the aec thread finish its job */
-    xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_CONTEXT_ALLOCATED]);
+    xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_CONTEXT_ALLOCATED]);
 
     /* destroy the AEC thread pool */
     if (h_mgr->threadpool_aec != NULL) {
@@ -1603,12 +1603,12 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr)
     }
 
     /* wait until the output thread finish its job */
-    xavs2_pthread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
+    xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
 
-    xavs2_pthread_mutex_destroy(&h_mgr->mutex);
+    xavs2_thread_mutex_destroy(&h_mgr->mutex);
         
     for (i = 0; i < SIG_COUNT; i++) {
-        xavs2_pthread_cond_destroy(&h_mgr->cond[i]);
+        xavs2_thread_cond_destroy(&h_mgr->cond[i]);
     }
 
     /* destroy the RDO thread pool */
@@ -1974,11 +1974,11 @@ void *xavs2e_encode_one_frame(void *arg)
         xavs2_frame_t *p_fdec = h->fdec;
 
         for (i = 0; i < h->i_height_in_lcu; i++) {
-            xavs2_pthread_mutex_lock(&p_fdec->mutex);    /* lock */
+            xavs2_thread_mutex_lock(&p_fdec->mutex);    /* lock */
             while (p_fdec->num_lcu_coded_in_row[i] < h->i_width_in_lcu) {
-                xavs2_pthread_cond_wait(&p_fdec->cond, &p_fdec->mutex);
+                xavs2_thread_cond_wait(&p_fdec->cond, &p_fdec->mutex);
             }
-            xavs2_pthread_mutex_unlock(&p_fdec->mutex);  /* unlock */
+            xavs2_thread_mutex_unlock(&p_fdec->mutex);  /* unlock */
         }
     }
 

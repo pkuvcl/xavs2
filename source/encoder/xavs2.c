@@ -310,12 +310,12 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     }
 #endif
 
-    if (xavs2_pthread_mutex_init(&h_mgr->mutex, NULL)) {
+    if (xavs2_thread_mutex_init(&h_mgr->mutex, NULL)) {
         goto fail;
     }
 
     for (i = 0; i < SIG_COUNT; i++) {
-        if (xavs2_pthread_cond_init(&h_mgr->cond[i], NULL)) {
+        if (xavs2_thread_cond_init(&h_mgr->cond[i], NULL)) {
             goto fail;
         }
     }
@@ -463,7 +463,7 @@ void xavs2_encoder_destroy(void *coder)
         send_frame_to_enc_queue(h_mgr, &frm_exit);
 
         /* wait until the RDO process exit, then memory can be released */
-        xavs2_pthread_join(h_mgr->thread_wrapper, NULL);
+        xavs2_thread_join(h_mgr->thread_wrapper, NULL);
     }
 
     /* close the encoder */

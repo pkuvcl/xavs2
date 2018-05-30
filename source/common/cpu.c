@@ -368,7 +368,7 @@ int xavs2_cpu_num_processors(void)
 #elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7__)
     return 2;
 #elif SYS_WINDOWS
-    return xavs2_pthread_num_processors_np();
+    return xavs2_thread_num_processors_np();
 #elif SYS_LINUX
     unsigned int bit;
     int np = 0;
