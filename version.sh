@@ -22,7 +22,7 @@ VER_MAJOR=`echo $api | cut -c -$end1`
 VER_MINOR=`echo $api | cut -c $len-`
 
 # date and time information
-BUILD_TIME=`date --date='0 hours ago' "+%Y-%m-%d %H:%M:%S"`
+BUILD_TIME=`date "+%Y-%m-%d %H:%M:%S"`
 
 # generate the file version.h
 echo "// ==========================================================================="  > version.h
