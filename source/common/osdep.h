@@ -154,7 +154,9 @@
 #endif
 
 #if (defined(__GNUC__) || defined(__INTEL_COMPILER)) && (ARCH_X86 || ARCH_X86_64)
+#ifndef HAVE_X86_INLINE_ASM
 #define HAVE_X86_INLINE_ASM     1
+#endif
 #endif
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
