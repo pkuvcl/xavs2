@@ -599,6 +599,8 @@ case $host_os in
         if [ "$pic" = "no" ]; then
             cc_check "" -mdynamic-no-pic && CFLAGS="$CFLAGS -mdynamic-no-pic"
         fi
+        # TODO: Fix compiling error under mac osx (force disabled now)
+        asm="no"
         ;;
     freebsd*)
         SYS="FREEBSD"
