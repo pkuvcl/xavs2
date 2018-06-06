@@ -16,10 +16,8 @@ VER_R=`git rev-list --count origin/master`
 VER_SHA=`git rev-parse HEAD | cut -c -16`
 
 # generate version numbers
-len=`expr length $api`
-end1=`expr $len - 1`
-VER_MAJOR=`echo $api | cut -c -$end1`
-VER_MINOR=`echo $api | cut -c $len-`
+VER_MAJOR=`echo $(($api / 10))`
+VER_MINOR=`echo $(($api % 10))`
 
 # date and time information
 BUILD_TIME=`date "+%Y-%m-%d %H:%M:%S"`
