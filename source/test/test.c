@@ -42,16 +42,6 @@
 #endif
 
 /* ---------------------------------------------------------------------------
- * alias of fseek/ftell */
-#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
-#define file_seek       _fseeki64
-#define file_tell       _ftelli64
-#else
-#define file_seek       fseek
-#define file_tell       ftell
-#endif
-
-/* ---------------------------------------------------------------------------
  * include files */
 #include <stdio.h>
 #include <string.h>
