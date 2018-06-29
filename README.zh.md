@@ -22,8 +22,8 @@
  那么将 `C:\Program Files\Git\bin` 添加到环境变量中即可.
 2. 需要安装 `vsyasm`, 我们建议的版本号是 `1.2.0`, 因为官方更新的版本存在编译问题.
   下载地址: http://yasm.tortall.net/Download.html .
-  一个修改过可以正常编译的 `1.3.0` 版本可以在这里找到: https://github.com/luofalei/yasm/tree/vs2013 .
-  其典型的安装步骤如下:
+  一个修改过可以正常编译的 `1.3.0` 版本(注意:此修改非官方, 编译请参考yasm的编译指南)可以在这里找到: https://github.com/luofalei/yasm/tree/vs2013 .
+  其典型的安装步骤如下(使用VS2013时):
 ```
 (1) 将vsyasm.exe文件拷贝到如下目录: 
     "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\"
