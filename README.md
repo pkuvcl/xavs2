@@ -22,7 +22,7 @@ then set the `xavs2` as the start project and build it.
  A later version `1.3.0` (unofficial revision, please read the instructions of `yasm` to build it for your work), can be found in https://github.com/luofalei/yasm/tree/vs2013 .
    The installation of `vsyasm` is as follows (if you were using `VS2013`):
 ```
-(1) Copy `syasm.exe` to the following directory, 
+(1) Copy `vsyasm.exe` to the following directory, 
     "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\"
 (2)	Copy the other 3 files in `vsyasm` to the `MSBuild template` directorty, as follows, 
     "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\BuildCustomizations\"
