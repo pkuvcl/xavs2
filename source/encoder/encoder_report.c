@@ -101,6 +101,109 @@ void encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double *psnr_v
 }
 
 /* ---------------------------------------------------------------------------
+ * calculate SSIM 
+ */
+double ssim_calculate_plane(xavs2_t *h, int comp_id)
+{
+    uint32_t g_uiBitDepth = 8;    // base bit-depth
+    uint32_t g_uiBitIncrement = 0;    // increments
+
+    double k_ssim_1 = 0.01;
+    double k_ssim_2 = 0.03;
+
+    int m_uiWidth = h->param->org_width;
+    int m_uiHeight = h->param->org_height;
+
+    int iStride1 = h->fenc->i_stride[comp_id];
+    int iStride2 = h->fdec->i_stride[comp_id];
+
+    // xavs2_log(h, XAVS2_LOG_INFO, "iStride: %d",iStride);
+    uint32_t uiWinWidth = 8;
+    uint32_t uiWinHeight= 8;
+
+    uint32_t uiWidth  = comp_id ? m_uiWidth >> 1 : m_uiWidth;
+    uint32_t uiHeight = comp_id ? m_uiHeight >> 1 : m_uiHeight;
+
+    double dLocSSIM, dLocMeanRef, dLocMeanRec, dLocVarRef, dLocVarRec, dLocCovar, Num1, Num2, Den1, Den2, dMSSIM = 0;
+    uint32_t i, j, x, y;
+    // xavs2_log(h, XAVS2_LOG_INFO, "uiHeight: %d uiWinHeight: %d uiWidth: %d uiWinWidth:%d\n",uiHeight,uiWinHeight,uiWidth,uiWinWidth);
+    
+    uint32_t uiNumWin = (uiHeight - uiWinHeight + 1)*(uiWidth - uiWinWidth + 1);
+    uint32_t iWinPixel = uiWinWidth * uiWinHeight;
+    uint32_t uiMaxval = 255 * (1 << (g_uiBitDepth + g_uiBitIncrement - 8));
+    // xavs2_log(h, XAVS2_LOG_INFO, "uiNumWin : %d uiMaxval : %d\n",uiNumWin,uiMaxval);
+    
+    double C1 = k_ssim_1 * k_ssim_1 * uiMaxval * uiMaxval;
+    double C2 = k_ssim_2 * k_ssim_2 * uiMaxval * uiMaxval;
+    
+    pel_t*  pOrg = h->fenc->planes[comp_id];
+    pel_t*  pRec = h->fdec->planes[comp_id];
+    // xavs2_log(h, XAVS2_LOG_INFO, "pOrg : %p pRec : %p\n",pOrg,pRec);
+    
+    pel_t*  pOrgPel = pOrg;
+    pel_t*  pRecPel = pRec;
+
+    for (j = 0; j <= uiHeight - uiWinHeight; j++) {
+        for (i = 0; i <= uiWidth - uiWinWidth; i++) {
+            dLocMeanRef = 0;
+            dLocMeanRec = 0;
+            dLocVarRef = 0;
+            dLocVarRec = 0;
+            dLocCovar = 0;
+            pOrgPel = pOrg + i + iStride1*j;
+            pRecPel = pRec + i + iStride2*j;
+           // xavs2_log(h, XAVS2_LOG_INFO, "pOrgPel[0] : %d pRecPel[0] : %d\n",pOrgPel[0],pRecPel[0]);
+           // xavs2_log(h, XAVS2_LOG_INFO, "uiWinWidth : %d uiWinHeight : %d\n",uiWinWidth,uiWinHeight);
+           
+            for (y = 0; y < uiWinHeight; y++) {
+                for (x = 0; x < uiWinWidth; x++) {
+                    // xavs2_log(h, XAVS2_LOG_INFO, "pOrgPel[%d] : %d pRecPel[%d] : %d\n",x,pOrgPel[x],x,pRecPel[x]);
+           
+                    dLocMeanRef += pOrgPel[x];
+                    dLocMeanRec += pRecPel[x];
+                    dLocVarRef += pOrgPel[x] * pOrgPel[x];
+                    dLocVarRec += pRecPel[x] * pRecPel[x];
+                    dLocCovar += pOrgPel[x] * pRecPel[x];
+
+                }
+                pOrgPel += iStride1;
+                pRecPel += iStride2;
+            }
+
+            dLocMeanRef /= iWinPixel;
+            dLocMeanRec /= iWinPixel;
+            // xavs2_log(h, XAVS2_LOG_INFO, "dLocMeanRef : %7.4f dLocMeanRec : %7.4f \n",dLocMeanRef,dLocMeanRec);
+           
+            dLocVarRef = (dLocVarRef - dLocMeanRef * dLocMeanRef * iWinPixel) / iWinPixel;
+            dLocVarRec = (dLocVarRec - dLocMeanRec * dLocMeanRec * iWinPixel) / iWinPixel;
+            dLocCovar = (dLocCovar - dLocMeanRef * dLocMeanRec * iWinPixel) / iWinPixel;
+
+            Num1 = 2.0 * dLocMeanRef * dLocMeanRec + C1;
+            Num2 = 2.0 * dLocCovar + C2;
+            Den1 = dLocMeanRef * dLocMeanRef + dLocMeanRec * dLocMeanRec + C1;
+            Den2 = dLocVarRef + dLocVarRec + C2;
+
+            dLocSSIM = (Num1 * Num2) / (Den1 * Den2);
+
+            dMSSIM += dLocSSIM;
+        }
+    }
+
+    // xavs2_log(h, XAVS2_LOG_INFO,"ssim: %7.4f \n ", dMSSIM / (double)uiNumWin);
+    return dMSSIM / (double)uiNumWin;
+}
+
+/* ---------------------------------------------------------------------------
+ * calculate SSIM for all three components (Y, U and V)
+ */
+void encoder_cal_ssim(xavs2_t *h, double *ssim_y, double *ssim_u, double *ssim_v)
+{
+    *ssim_y = ssim_calculate_plane(h, 0);
+    *ssim_u = ssim_calculate_plane(h, 1);
+    *ssim_v = ssim_calculate_plane(h, 2);
+}
+
+/* ---------------------------------------------------------------------------
  */
 void encoder_report_stat_info(xavs2_t *h)
 {
@@ -130,7 +233,7 @@ void encoder_report_stat_info(xavs2_t *h)
     // FIXME: cause "Segmentation fault (core dumped)" in Linux, print directly (gcc 4.7)
     xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ PSNR:      %7.4f %7.4f %7.4f\n",
               f_psnr_y / num_total_frames, f_psnr_u / num_total_frames, f_psnr_v / num_total_frames);
-    xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.4f %7.4f %7.4f\n",
+    xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.5f %7.5f %7.5f\n",
               ssim_y / num_total_frames, ssim_u / num_total_frames, ssim_v / num_total_frames);
     
     // BITRATE

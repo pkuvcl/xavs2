@@ -1000,7 +1000,7 @@ typedef struct xavs2_nal_info_t {
 
 typedef struct com_stat_t {
     double      f_psnr[3];                    /* psnr for all components: Y, U, V */
-    double      f_ssim[3];                    /* ssim for all components: Y, U, V */
+    double      f_ssim[3];                    /* SSIM for all components: Y, U, V */
     double      f_lambda_frm;                 /* lambda of current frame */
 //  int64_t     i_time_start;                 /* encoding start time */
 //  int64_t     i_time_end;                   /* encoding end time */

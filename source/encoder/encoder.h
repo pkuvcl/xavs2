@@ -75,6 +75,7 @@ void     encoder_show_head_info(xavs2_param_t *param);
 void     encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr);
 
 void     encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double *psnr_v);
+void     encoder_cal_ssim(xavs2_t *h, double *ssim_y, double *ssim_u, double *ssim_v);
 
 void     encoder_report_one_frame(xavs2_t *h, outputframe_t *frame);
 

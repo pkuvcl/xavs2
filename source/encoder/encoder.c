@@ -661,6 +661,14 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
         frm_stat->stat_frm.f_psnr[1] = 0;
         frm_stat->stat_frm.f_psnr[2] = 0;
     }
+
+    if (h->param->enable_ssim) {
+        encoder_cal_ssim(h, &frm_stat->stat_frm.f_ssim[0], &frm_stat->stat_frm.f_ssim[1], &frm_stat->stat_frm.f_ssim[2]);
+    } else {
+        frm_stat->stat_frm.f_ssim[0] = 0;
+        frm_stat->stat_frm.f_ssim[1] = 0;
+        frm_stat->stat_frm.f_ssim[2] = 0;
+    }
 #endif
 
     /* make sure all row context has been released */
