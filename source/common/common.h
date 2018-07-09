@@ -645,6 +645,7 @@ typedef struct xavs2_param_t {
     /* --- log -------------------------------------------------- */
     int     i_log_level;              /* log level */
     int     enable_psnr;              /* enable PSNR calculation or not */
+    int     enable_ssim;              /* enable SSIM calculation or not */
 
     /* --- reference management --------------------------------- */
     int     i_cfg_type;               /* coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI) */
@@ -999,6 +1000,7 @@ typedef struct xavs2_nal_info_t {
 
 typedef struct com_stat_t {
     double      f_psnr[3];                    /* psnr for all components: Y, U, V */
+    double      f_ssim[3];                    /* ssim for all components: Y, U, V */
     double      f_lambda_frm;                 /* lambda of current frame */
 //  int64_t     i_time_start;                 /* encoding start time */
 //  int64_t     i_time_end;                   /* encoding end time */

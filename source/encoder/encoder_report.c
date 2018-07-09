@@ -111,6 +111,10 @@ void encoder_report_stat_info(xavs2_t *h)
     double f_psnr_u = p_stat->stat_total.f_psnr[1];
     double f_psnr_v = p_stat->stat_total.f_psnr[2];
 
+    double ssim_y = p_stat->stat_total.f_ssim[0];
+    double ssim_u = p_stat->stat_total.f_ssim[1];
+    double ssim_v = p_stat->stat_total.f_ssim[2];
+
     int64_t i_total_bits = p_stat->stat_total.i_frame_size;
     int num_total_frames = p_stat->stat_total.num_frames;
 
@@ -126,7 +130,9 @@ void encoder_report_stat_info(xavs2_t *h)
     // FIXME: cause "Segmentation fault (core dumped)" in Linux, print directly (gcc 4.7)
     xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ PSNR:      %7.4f %7.4f %7.4f\n",
               f_psnr_y / num_total_frames, f_psnr_u / num_total_frames, f_psnr_v / num_total_frames);
-
+    xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.4f %7.4f %7.4f\n",
+              ssim_y / num_total_frames, ssim_u / num_total_frames, ssim_v / num_total_frames);
+    
     // BITRATE
     f_bitrate = (i_total_bits * (8.0f / 1000.0f) * h->framerate) / ((float)num_total_frames);
     xavs2_log(h, XAVS2_LOG_INFO, "         BITRATE: %6.2f kb/s @ %4.1f Hz, xavs2 p%d \n",
@@ -168,6 +174,10 @@ void stat_add_frame_info(com_stat_t *sum_stat, com_stat_t *frm_stat, int frm_bs_
     sum_stat->f_psnr[0] += frm_stat->f_psnr[0];
     sum_stat->f_psnr[1] += frm_stat->f_psnr[1];
     sum_stat->f_psnr[2] += frm_stat->f_psnr[2];
+
+    sum_stat->f_ssim[0] += frm_stat->f_ssim[0];
+    sum_stat->f_ssim[1] += frm_stat->f_ssim[1];
+    sum_stat->f_ssim[2] += frm_stat->f_ssim[2];
 }
 
 /* ---------------------------------------------------------------------------
@@ -228,8 +238,8 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
     stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm, frm_bs_len);
     xavs2_thread_mutex_unlock(&h->h_top->mutex);
 
-    if (h->param->enable_psnr) {
-        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %5d",
+    if (h->param->enable_psnr ) {
+        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %5d",
                   frmstat->i_frame,
                   frm_type[frmstat->i_type],
                   frmstat->i_qp,
@@ -238,6 +248,9 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
                   frmstat->stat_frm.f_psnr[0],
                   frmstat->stat_frm.f_psnr[1],
                   frmstat->stat_frm.f_psnr[2],
+                  frmstat->stat_frm.f_ssim[0],
+                  frmstat->stat_frm.f_ssim[1],
+                  frmstat->stat_frm.f_ssim[2],
                   (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
     } else {
         sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %5d",
@@ -248,6 +261,7 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
                   frame->frm_enc->i_bs_len * 8,
                   (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
     }
+
     get_reference_list_str(s_ref_list, frmstat->ref_poc_set, frmstat->i_ref);
 
     xavs2_log(h, XAVS2_LOG_INFO, "%s  %s\n", s_out_base, s_ref_list);
@@ -324,7 +338,9 @@ void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
         h->param->i_rd_level, h->param->i_rdoq_level, h->param->enable_sao, h->param->enable_alf);
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "--------------------------------------------------------------------------------\n");
-    if (h->param->enable_psnr) {
+    if (h->param->enable_psnr && h->param->enable_ssim){
+        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   SsimY   SsimU   SsimV   Time  [ RefList ]\n");
+    } else if (h->param->enable_psnr) {
         xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
     } else {
         xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits     Time  [ RefList ]\n");

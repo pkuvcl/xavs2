@@ -210,6 +210,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     /* --- log -------------------------------------------------- */
     param->i_log_level                = 3;
     param->enable_psnr                = 1;
+    param->enable_ssim                = 0;
 
     /* --- input/output for testing ----------------------------- */
     param->infile_header              = 0;
