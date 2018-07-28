@@ -10,10 +10,14 @@
 
 # setting API version
 api=12
+VER_R=0
+VER_SHA='not-in-git-tree'
 
-# get version of remote and local repository
-VER_R=`git rev-list --count origin/master`
-VER_SHA=`git rev-parse HEAD | cut -c -16`
+# get version of remote origin/master and local HEAD
+if [ -d .git ] && command -v git >/dev/null 2>&1 ; then
+    VER_R=`git rev-list --count origin/master`
+    VER_SHA=`git rev-parse HEAD | cut -c -16`
+fi
 
 # generate version numbers
 VER_MAJOR=`echo $(($api / 10))`
