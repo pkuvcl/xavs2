@@ -496,6 +496,9 @@ for opt do
             if [ "$bit_depth" -lt "8" -o "$bit_depth" -gt "10" ]; then
                 echo "Supplied bit depth must be in range [8,10]."
                 exit 1
+            elif [[ "$bit_depth" = "9" || "$bit_depth" = "10" ]]; then
+                echo "BitDepth $bit_depth not supported currently."
+                exit 1
             fi
             bit_depth=`expr $bit_depth + 0`
             ;;
