@@ -231,10 +231,14 @@ void encoder_report_stat_info(xavs2_t *h)
     xavs2_log(h, XAVS2_LOG_INFO, "---------------------------------------------------------------------\n");
 
     // FIXME: cause "Segmentation fault (core dumped)" in Linux, print directly (gcc 4.7)
-    xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ PSNR:      %7.4f %7.4f %7.4f\n",
-              f_psnr_y / num_total_frames, f_psnr_u / num_total_frames, f_psnr_v / num_total_frames);
-    xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.5f %7.5f %7.5f\n",
-              ssim_y / num_total_frames, ssim_u / num_total_frames, ssim_v / num_total_frames);
+    if (h->param->enable_psnr) {
+        xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ PSNR:      %7.4f %7.4f %7.4f\n",
+                  f_psnr_y / num_total_frames, f_psnr_u / num_total_frames, f_psnr_v / num_total_frames);
+    }
+    if (h->param->enable_ssim) {
+        xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.5f %7.5f %7.5f\n",
+                  ssim_y / num_total_frames, ssim_u / num_total_frames, ssim_v / num_total_frames);
+    }
     
     // BITRATE
     f_bitrate = (i_total_bits * (8.0f / 1000.0f) * h->framerate) / ((float)num_total_frames);
@@ -311,7 +315,8 @@ void get_reference_list_str(char *s_ref_list, int *p_poc, int num_ref)
 void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
 {
     static const char frm_type[4] = {'I', 'P', 'B', 'F'};
-    char s_out_base[128];
+    char s_out_base[256];
+    char s_psnr[64] = "";
     char s_ref_list[32] = "";
     xavs2_stat_t *p_stat  = &h->h_top->stat;
     frame_stat_t *frmstat = &frame->out_frm_stat;
@@ -341,29 +346,29 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
     stat_add_frame_info(&p_stat->stat_total, &frmstat->stat_frm, frm_bs_len);
     xavs2_thread_mutex_unlock(&h->h_top->mutex);
 
-    if (h->param->enable_psnr ) {
-        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %5d",
-                  frmstat->i_frame,
-                  frm_type[frmstat->i_type],
-                  frmstat->i_qp,
-                  // frmstat->stat_frm.f_lambda_frm,  // %7.2f
-                  frame->frm_enc->i_bs_len * 8,
+    if (h->param->enable_psnr && h->param->enable_ssim) {
+        sprintf_s(s_psnr, 64, " %7.4f %7.4f %7.4f %7.5f %7.5f %7.5f",
                   frmstat->stat_frm.f_psnr[0],
                   frmstat->stat_frm.f_psnr[1],
                   frmstat->stat_frm.f_psnr[2],
                   frmstat->stat_frm.f_ssim[0],
                   frmstat->stat_frm.f_ssim[1],
-                  frmstat->stat_frm.f_ssim[2],
-                  (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
-    } else {
-        sprintf_s(s_out_base, 128, "%4d (%c) %2d  %8d  %5d",
-                  frmstat->i_frame,
-                  frm_type[frmstat->i_type],
-                  frmstat->i_qp,
-                  // frmstat->stat_frm.f_lambda_frm,  // %7.2f
-                  frame->frm_enc->i_bs_len * 8,
-                  (int)((frame->frm_enc->i_time_end - frame->frm_enc->i_time_start) / 1000));
+                  frmstat->stat_frm.f_ssim[2]);
+    } else if (h->param->enable_psnr) {
+        sprintf_s(s_psnr, 64, " %7.4f %7.4f %7.4f",
+                  frmstat->stat_frm.f_psnr[0],
+                  frmstat->stat_frm.f_psnr[1],
+                  frmstat->stat_frm.f_psnr[2]);
     }
+
+    sprintf_s(s_out_base, 256, "%4d (%c) %2d  %8d %s %5d",
+              frmstat->i_frame,
+              frm_type[frmstat->i_type],
+              frmstat->i_qp,
+              // frmstat->stat_frm.f_lambda_frm,  // %7.2f
+              frame->frm_enc->i_bs_len * 8,
+              s_psnr,
+              (int)((frmstat->stat_frm.i_time_duration) / 1000));
 
     get_reference_list_str(s_ref_list, frmstat->ref_poc_set, frmstat->i_ref);
 
