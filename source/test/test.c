@@ -122,7 +122,7 @@ static int read_one_frame(xavs2_image_t *img, int shift_in)
     return 0;
 }
 
-int start_encode(xavs2_param_t *param)
+int test_encoder(xavs2_param_t *param)
 {
     const char *in_file = api->opt_get(param, "input");
     const char *bs_file = api->opt_get(param, "output");
@@ -200,40 +200,77 @@ int start_encode(xavs2_param_t *param)
 
 /* ---------------------------------------------------------------------------
  */
+const xavs2_api_t *load_xavs2_library(int argc, char **argv, xavs2_param_t **p_param)
+{
+    const xavs2_api_t *api = NULL;
+    /* encoding parameters */
+    int guess_bit_depth;
+    xavs2_param_t *param = NULL;
+
+    /* get API handler */
+    for (guess_bit_depth = 8; guess_bit_depth <= 10; guess_bit_depth += 2) {
+        int enc_bit_depth = 0;
+        api = xavs2_api_get(guess_bit_depth);
+
+        if (api == NULL) {
+            continue;
+        }
+
+        fprintf(stdout, "CAVS2Enc lib loaded: version %s %d-bit\n",
+                api->s_version_source, api->internal_bit_depth);
+        fflush(stdout);
+
+        if (argc < 2) {
+            api->opt_help(); /* at lease one additional parameter needed */
+            return NULL;
+        }
+
+        /* parse parameters and modify the parameters */
+        param = api->opt_alloc();
+        if (api->opt_set(param, argc, argv) < 0) {
+            fprintf(stdout, "parse contents error.\n");
+            return NULL;
+        }
+
+        enc_bit_depth = atoi(api->opt_get(param, "BitDepth"));
+        if (enc_bit_depth == api->internal_bit_depth) {
+            fprintf(stdout, "using CAVS2Enc lib: version %s %d-bit success\n",
+                    api->s_version_source, api->internal_bit_depth);
+            break;
+        }
+
+        fprintf(stdout, "Incompatible encoding bit-depth to library: %d-bit lib for encoding %d-bit source\n",
+                api->internal_bit_depth, enc_bit_depth);
+
+        /* free spaces */
+        api->opt_destroy(param);
+        param = NULL;
+        api = NULL;
+    }
+
+    *p_param = param;
+    return api;
+}
+
+/* ---------------------------------------------------------------------------
+ */
 int main(int argc, char **argv)
 {
     /* encoding parameters */
-    const int bit_depth = 8;
     xavs2_param_t *param = NULL;
     int ret;
 
     /* get API handler */
-    api = xavs2_api_get(bit_depth);
+    api = load_xavs2_library(argc, argv, &param);
 
-    if (api != NULL) {
-        fprintf(stdout, "libxavs2 loaded: version %s %d-bit\n", 
-                api->s_version_source, api->internal_bit_depth);
-        fflush(stdout);
-    } else {
-        fprintf(stdout, "libxavs2 load error: %d-bit\n", bit_depth);
-        fflush(stdout);
+    if (api == NULL) {
+        fprintf(stdout, "CAVS2Enc lib load error\n");
         return -1;
     }
-
-    if (argc < 2) {
-        api->opt_help();            /* show help information */
-        return -1;
-    }
-
-    /* parse parameters and modify the parameters */
-    param = api->opt_alloc();
-    if (api->opt_set(param, argc, argv) < 0) {
-        fprintf(stderr, "parse contents error.");
-        return -1;
-    }
+    fflush(NULL);    // flush all output streams
 
     /* test encoding */
-    ret = start_encode(param);
+    ret = test_encoder(param);
 
     /* free spaces */
     api->opt_destroy(param);

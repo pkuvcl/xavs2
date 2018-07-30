@@ -809,6 +809,9 @@ xavs2_encoder_opt_get(xavs2_param_t *param, const char *name)
     } else if (!strcmp(name, "frames")) {
         sprintf(buf, "%d", param->num_frames);
         return buf;
+    } else if (!strcmp(name, "BitDepth")) {
+        sprintf(buf, "%d", param->sample_bit_depth);
+        return buf;
     } else if (!strcmp(name, "SampleShift")) {
         sprintf(buf, "%d", param->sample_bit_depth - param->input_sample_bit_depth);
         return buf;
