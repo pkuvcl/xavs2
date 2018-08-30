@@ -1650,24 +1650,32 @@ struct xavs2_t {
  */
 
 /* time (us) */
+
+#define xavs2_mdate FPFX(mdate)
 int64_t xavs2_mdate(void);
 
 /* trace */
 #if XAVS2_TRACE
+#define xavs2_trace_init FPFX(trace_init)
 int  xavs2_trace_init(xavs2_param_t *param);
+#define xavs2_trace_destroy FPFX(trace_destroy)
 void xavs2_trace_destroy(void);
+#define xavs2_trace FPFX(trace)
 int  xavs2_trace(const char *psz_fmt, ...);
 #endif
 
 /* thread */
 #if HAVE_WIN32THREAD || PTW32_STATIC_LIB
+#define xavs2_threading_init FPFX(threading_init)
 int xavs2_threading_init(void);
 #else
 #define xavs2_threading_init()            0
 #endif
 
+#define xavs2_create_thread FPFX(create_thread)
 int xavs2_create_thread(xavs2_thread_t *tid, xavs2_tfunc_t start, void *arg);
 
+#define xavs2_log FPFX(log)
 void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...);
 
 /* ---------------------------------------------------------------------------
@@ -1676,9 +1684,13 @@ void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...);
 
 /* xavs2_malloc : will do or emulate a memalign
  * you have to use xavs2_free for buffers allocated with xavs2_malloc */
+#define xavs2_malloc FPFX(malloc)
 void *xavs2_malloc(size_t i_size);
+#define xavs2_calloc FPFX(calloc)
 void *xavs2_calloc(size_t count, size_t size);
+#define xavs2_free FPFX(free)
 void  xavs2_free(void *ptr);
+#define xavs2_get_total_malloc_space FPFX(get_total_malloc_space)
 size_t xavs2_get_total_malloc_space(void);
 
 
