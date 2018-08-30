@@ -44,8 +44,8 @@
  * common include files
  * ===========================================================================
  */
-#include "osdep.h"
 #include "defines.h"
+#include "osdep.h"
 #include "avs2_defs.h"
 #include <stdarg.h>
 #include <stddef.h>

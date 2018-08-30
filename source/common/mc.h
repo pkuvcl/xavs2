@@ -52,10 +52,6 @@
 static INLINE
 int cu_get_mc_pos(int img_size, int blk_size, int blk_pos, int mv)
 {
-    // WARNING: 10bit下插值时的移位不等于加权系数之和，
-    // 这样导致：超过上下边界4个点外的xy型分像素点的值与x型(仅x为分像素)分像素点的值不一致；
-    //           超过左右边界4个点外的xy型分像素点的值与y型(仅y为分像素)分像素点的值不一致。
-    // 为保证编解码匹配，这里需要将MV按照1/8精度进行Clip，不同于8bit编码情况。
     int imv = mv >> 2;  // MV的整像素精度
     int fmv = mv & 7;   // MV的分像素精度部分，保留到 1/8 精度
 
@@ -93,6 +89,7 @@ void interpolate_sample_rows(xavs2_t *h, xavs2_frame_t* frm, int start_y, int he
 void mc_luma  (pel_t *p_pred, int i_pred, 
                int pic_pix_x, int pic_pix_y, int width, int height, 
                const xavs2_frame_t *p_ref_frm);
+
 #define mc_chroma FPFX(mc_chroma)
 void mc_chroma(pel_t *p_pred_u, pel_t *p_pred_v, int i_pred, 
                int pix_quad_x, int pix_quad_y, int width, int height,

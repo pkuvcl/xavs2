@@ -45,7 +45,7 @@
 #include <tmmintrin.h>  // SSSE3
 #include <smmintrin.h>
 
-int quant_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
+int quant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
 {
     __m128i mScale, mAdd;
     __m128i data0, data1;
@@ -111,7 +111,7 @@ int quant_sse128(coeff_t *coef, const int i_coef, const int scale, const int shi
     return i_coef - *(int16_t *)&mCount;
 }
 
-void dequant_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
+void dequant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
 {
     __m128i mScale, mAdd;
     __m128i data0, data1;

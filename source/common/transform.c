@@ -1650,34 +1650,34 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
     /* functions defined in file intrinsic_dct.c */
     if (cpuid & XAVS2_CPU_SSE42) {
         /* dct: square */
-        dctf->dct [LUMA_4x4  ] = dct_4x4_sse128;
-        dctf->dct [LUMA_8x8  ] = dct_8x8_sse128;
-        dctf->dct [LUMA_16x16] = dct_16x16_sse128;
-        dctf->dct [LUMA_32x32] = dct_32x32_sse128;
-        dctf->dct [LUMA_64x64] = dct_64x64_sse128;
+        dctf->dct [LUMA_4x4  ] = dct_c_4x4_sse128;
+        dctf->dct [LUMA_8x8  ] = dct_c_8x8_sse128;
+        dctf->dct [LUMA_16x16] = dct_c_16x16_sse128;
+        dctf->dct [LUMA_32x32] = dct_c_32x32_sse128;
+        dctf->dct [LUMA_64x64] = dct_c_64x64_sse128;
 
         /* dct: asymmetrical */
-        dctf->dct[LUMA_16x4] = dct_16x4_sse128;
-        dctf->dct[LUMA_4x16] = dct_4x16_sse128;//第一次变换没写移位
-        dctf->dct[LUMA_32x8] = dct_32x8_sse128;
-        dctf->dct[LUMA_8x32] = dct_8x32_sse128;
-        dctf->dct[LUMA_64x16] = dct_64x16_sse128;
-        dctf->dct[LUMA_16x64] = dct_16x64_sse128;
+        dctf->dct[LUMA_16x4 ] = dct_c_16x4_sse128;
+        dctf->dct[LUMA_4x16 ] = dct_c_4x16_sse128;//第一次变换没写移位
+        dctf->dct[LUMA_32x8 ] = dct_c_32x8_sse128;
+        dctf->dct[LUMA_8x32 ] = dct_c_8x32_sse128;
+        dctf->dct[LUMA_64x16] = dct_c_64x16_sse128;
+        dctf->dct[LUMA_16x64] = dct_c_16x64_sse128;
 
         /* idct: square */
-        dctf->idct[LUMA_4x4  ] = idct_4x4_sse128;
-        dctf->idct[LUMA_8x8  ] = idct_8x8_sse128;
-        dctf->idct[LUMA_16x16] = idct_16x16_sse128;
-        dctf->idct[LUMA_32x32] = idct_32x32_sse128;
-        dctf->idct[LUMA_64x64] = idct_64x64_sse128;
+        dctf->idct[LUMA_4x4  ] = idct_c_4x4_sse128;
+        dctf->idct[LUMA_8x8  ] = idct_c_8x8_sse128;
+        dctf->idct[LUMA_16x16] = idct_c_16x16_sse128;
+        dctf->idct[LUMA_32x32] = idct_c_32x32_sse128;
+        dctf->idct[LUMA_64x64] = idct_c_64x64_sse128;
 
         /* idct: asymmetrical */
-        dctf->idct[LUMA_16x4 ] = idct_16x4_sse128;
-        dctf->idct[LUMA_4x16 ] = idct_4x16_sse128;
-        dctf->idct[LUMA_32x8 ] = idct_32x8_sse128;
-        dctf->idct[LUMA_8x32 ] = idct_8x32_sse128;
-        dctf->idct[LUMA_64x16] = idct_64x16_sse128;
-        dctf->idct[LUMA_16x64] = idct_16x64_sse128;
+        dctf->idct[LUMA_16x4 ] = idct_c_16x4_sse128;
+        dctf->idct[LUMA_4x16 ] = idct_c_4x16_sse128;
+        dctf->idct[LUMA_32x8 ] = idct_c_32x8_sse128;
+        dctf->idct[LUMA_8x32 ] = idct_c_8x32_sse128;
+        dctf->idct[LUMA_64x16] = idct_c_64x16_sse128;
+        dctf->idct[LUMA_16x64] = idct_c_16x64_sse128;
 
         /* 2nd transform */
         dctf->transform_4x4_2nd     = transform_4x4_2nd_sse128;
@@ -1686,8 +1686,8 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
         dctf->inv_transform_2nd     = inv_transform_2nd_sse128;
 
         // half  transform
-        dctf->dct_half[LUMA_32x32] = dct_32x32_half_sse128;
-        dctf->dct_half[LUMA_64x64] = dct_64x64_half_sse128;
+        dctf->dct_half[LUMA_32x32] = dct_c_32x32_half_sse128;
+        dctf->dct_half[LUMA_64x64] = dct_c_64x64_half_sse128;
     }
 
     if (cpuid & XAVS2_CPU_SSE2) {
@@ -1725,33 +1725,30 @@ void xavs2_dct_init(uint32_t cpuid, dct_funcs_t *dctf)
 
 
 #if ARCH_X86_64
-
     if (cpuid & XAVS2_CPU_AVX2) {
-
-        // dctf->dct[LUMA_4x4] = dct_4x4_avx2;   /* futl: dct_4x4_avx2的速度比dct_4x4_sse128略慢一点 */
-        // dctf->dct[LUMA_8x8] = dct_8x8_avx2;   /* futl: dct_8x8_avx2的速度比xavs2_dct_8x8_avx2慢 */
-        // dctf->dct[LUMA_4x16] = dct_4x16_avx2; /* futl: dct_4x16_avx2的速度比dct_4x16_sse128慢 */
-        dctf->dct[LUMA_16x4 ] = dct_16x4_avx2;   /* 姜波：速度比sse128快两倍 */
-        dctf->dct[LUMA_8x32 ] = dct_8x32_avx2;
-        dctf->dct[LUMA_32x8 ] = dct_32x8_avx2;
-        dctf->dct[LUMA_16x16] = dct_16x16_avx2;
+        // dctf->dct[LUMA_4x4 ] = dct_c_4x4_avx2;   /* futl: dct_4x4_avx2的速度比dct_4x4_sse128略慢一点 */
+        // dctf->dct[LUMA_8x8 ] = dct_c_8x8_avx2;   /* futl: dct_8x8_avx2的速度比xavs2_dct_8x8_avx2慢 */
+        // dctf->dct[LUMA_4x16] = dct_c_4x16_avx2; /* futl: dct_4x16_avx2的速度比dct_4x16_sse128慢 */
+        dctf->dct[LUMA_16x4 ] = dct_c_16x4_avx2;   /* 姜波：速度比sse128快两倍 */
+        dctf->dct[LUMA_8x32 ] = dct_c_8x32_avx2;
+        dctf->dct[LUMA_32x8 ] = dct_c_32x8_avx2;
+        dctf->dct[LUMA_16x16] = dct_c_16x16_avx2;
         
-        // dctf->dct[LUMA_32x32] = dct_32x32_avx2; /* asm faster than intrinsic */
+        // dctf->dct[LUMA_32x32] = dct_c_32x32_avx2; /* asm faster than intrinsic */
         
-        dctf->dct[LUMA_64x64] = dct_64x64_avx2;
-        dctf->dct[LUMA_64x16] = dct_64x16_avx2;
-        dctf->dct[LUMA_16x64] = dct_16x64_avx2;
+        dctf->dct[LUMA_64x64] = dct_c_64x64_avx2;
+        dctf->dct[LUMA_64x16] = dct_c_64x16_avx2;
+        dctf->dct[LUMA_16x64] = dct_c_16x64_avx2;
 
-        dctf->idct[LUMA_8x8]   = idct_8x8_avx2;
-        dctf->idct[LUMA_16x16] = idct_16x16_avx2;
-        dctf->idct[LUMA_32x32] = idct_32x32_avx2;
-        dctf->idct[LUMA_64x64] = idct_64x64_avx2;
-        dctf->idct[LUMA_64x16] = idct_64x16_avx2;
-        dctf->idct[LUMA_16x64] = idct_16x64_avx2;
+        dctf->idct[LUMA_8x8]   = idct_c_8x8_avx2;
+        dctf->idct[LUMA_16x16] = idct_c_16x16_avx2;
+        dctf->idct[LUMA_32x32] = idct_c_32x32_avx2;
+        dctf->idct[LUMA_64x64] = idct_c_64x64_avx2;
+        dctf->idct[LUMA_64x16] = idct_c_64x16_avx2;
+        dctf->idct[LUMA_16x64] = idct_c_16x64_avx2;
 
-        dctf->dct_half[LUMA_32x32] = dct_32x32_half_avx2;
-        dctf->dct_half[LUMA_64x64] = dct_64x64_half_avx2;
-
+        dctf->dct_half[LUMA_32x32] = dct_c_32x32_half_avx2;
+        dctf->dct_half[LUMA_64x64] = dct_c_64x64_half_avx2;
     }
 #endif  // ARCH_X86_64
 #else

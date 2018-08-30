@@ -40,8 +40,8 @@
 
 #include <assert.h>
 #include <stdint.h>
-#include "osdep.h"
 #include "defines.h"
+#include "osdep.h"
 #include "basic_types.h"
 #if (ARCH_X86 || ARCH_X86_64)
 #include <xmmintrin.h>

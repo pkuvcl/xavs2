@@ -39,8 +39,8 @@
 #define XAVS2_BASIC_TYPES_H
 
 #include <stdint.h>
-#include "osdep.h"
 #include "defines.h"
+#include "osdep.h"
 
 /*
  * ===========================================================================

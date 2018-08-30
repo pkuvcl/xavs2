@@ -45,7 +45,7 @@
 #include <smmintrin.h>
 #include <immintrin.h>
 
-int quant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
+int quant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
 {
     __m256i mScale, mAdd;
     __m256i data0, data1;
@@ -188,7 +188,7 @@ int quant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift
     return i_coef - *(int16_t *) &mCount - *(((int16_t *) &mCount) + 4);
 }
 
-void dequant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift)
+void dequant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift)
 {
     __m256i mScale, mAdd;
     __m256i data0, data1;

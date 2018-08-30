@@ -32,13 +32,12 @@
 #ifndef XAVS2_QUANT8_H
 #define XAVS2_QUANT8_H
 
-#define xavs2_quant_sse4 FPFX(quant_sse4)
-int  xavs2_quant_sse4  (coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
-#define xavs2_quant_avx2 FPFX(quant_avx2)
-int  xavs2_quant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
-#define xavs2_dequant_sse4 FPFX(dequant_sse4)
-void xavs2_dequant_sse4(coeff_t *coef, const int i_coef, const int scale, const int shift);
-#define xavs2_dequant_avx2 FPFX(dequant_avx2)
-void xavs2_dequant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift);
+int  FPFX(quant_sse4)(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
+
+int  FPFX(quant_avx2)(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
+
+void FPFX(dequant_sse4)(coeff_t *coef, const int i_coef, const int scale, const int shift);
+
+void FPFX(dequant_avx2)(coeff_t *coef, const int i_coef, const int scale, const int shift);
 
 #endif // ifndef XAVS2_QUANT8_H
