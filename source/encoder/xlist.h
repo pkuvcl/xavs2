@@ -73,9 +73,13 @@ typedef struct xlist_t {
 /* ---------------------------------------------------------------------------
  * xlist
  */
+#define xl_init FPFX(xl_init)
 int   xl_init(xlist_t *const xlist);
+#define xl_destroy FPFX(xl_destroy)
 void  xl_destroy(xlist_t *const xlist);
+#define xl_append FPFX(xl_append)
 void  xl_append(xlist_t *const xlist, void *node);
+#define xl_remove_head FPFX(xl_remove_head)
 void *xl_remove_head(xlist_t *const xlist, const int wait);
 
 #endif  // XAVS2_XLIST_H

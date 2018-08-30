@@ -202,18 +202,24 @@ int get_next_frame_id(int idx_cur)
 /* ---------------------------------------------------------------------------
  * frame buffer operation
  */
+#define frame_buffer_init FPFX(frame_buffer_init)
 void frame_buffer_init(xavs2_handler_t *h_mgr, uint8_t **mem_base, xavs2_frame_buffer_t *frm_buf, int num_frm, int frm_type);
+#define frame_buffer_destroy FPFX(frame_buffer_destroy)
 void frame_buffer_destroy(xavs2_handler_t *h_mgr, xavs2_frame_buffer_t *frm_buf);
 
+#define frame_buffer_update FPFX(frame_buffer_update)
 void frame_buffer_update(xavs2_t *h, xavs2_frame_buffer_t *frm_buf, xavs2_frame_t *frm);
 
 /* ---------------------------------------------------------------------------
  * wrapper
  */
+#define destroy_all_lists FPFX(destroy_all_lists)
 void destroy_all_lists(xavs2_handler_t *h_mgr);
 
+#define encoder_task_manager_free FPFX(encoder_task_manager_free)
 void encoder_task_manager_free(xavs2_handler_t *h_mgr);
 
+#define proc_wrapper_thread FPFX(proc_wrapper_thread)
 void *proc_wrapper_thread(void *args);
 
 /**

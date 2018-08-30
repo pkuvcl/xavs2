@@ -62,8 +62,11 @@
  * ===========================================================================
  */
 
+#define xavs2_wq_init_seq_quant_param FPFX(wq_init_seq_quant_param)
 void xavs2_wq_init_seq_quant_param(xavs2_t *h);
+#define xavs2_wq_init_pic_quant_param FPFX(wq_init_pic_quant_param)
 void xavs2_wq_init_pic_quant_param(xavs2_t *h);
+#define xavs2_wq_update_pic_matrix FPFX(wq_update_pic_matrix)
 void xavs2_wq_update_pic_matrix(xavs2_t *h);
 
 extern const short tab_wq_param_default[2][6];
