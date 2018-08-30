@@ -26,44 +26,74 @@
 #ifndef XAVS2_BLOCKCOPY_H
 #define XAVS2_BLOCKCOPY_H
 
-void xavs2_cpy2Dto1D_shl_4_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
-void xavs2_cpy2Dto1D_shl_8_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
-void xavs2_cpy2Dto1D_shl_16_sse2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
-void xavs2_cpy2Dto1D_shl_32_sse2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_4_sse2 FPFX(cpy2Dto1D_shr_4_sse2)
 void xavs2_cpy2Dto1D_shr_4_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_8_sse2 FPFX(cpy2Dto1D_shr_8_sse2)
 void xavs2_cpy2Dto1D_shr_8_sse2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_16_sse2 FPFX(cpy2Dto1D_shr_16_sse2)
 void xavs2_cpy2Dto1D_shr_16_sse2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_32_sse2 FPFX(cpy2Dto1D_shr_32_sse2)
 void xavs2_cpy2Dto1D_shr_32_sse2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shl_4_avx2 FPFX(cpy1Dto2D_shl_4_avx2)
 void xavs2_cpy1Dto2D_shl_4_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shl_8_avx2 FPFX(cpy1Dto2D_shl_8_avx2)
 void xavs2_cpy1Dto2D_shl_8_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shl_16_avx2 FPFX(cpy1Dto2D_shl_16_avx2)
 void xavs2_cpy1Dto2D_shl_16_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shl_32_avx2 FPFX(cpy1Dto2D_shl_32_avx2)
 void xavs2_cpy1Dto2D_shl_32_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shl_4_sse2 FPFX(cpy1Dto2D_shl_4_sse2)
 void xavs2_cpy1Dto2D_shl_4_sse2 (int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shl_8_sse2 FPFX(cpy1Dto2D_shl_8_sse2)
 void xavs2_cpy1Dto2D_shl_8_sse2 (int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shl_16_sse2 FPFX(cpy1Dto2D_shl_16_sse2)
 void xavs2_cpy1Dto2D_shl_16_sse2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shl_32_sse2 FPFX(cpy1Dto2D_shl_32_sse2)
 void xavs2_cpy1Dto2D_shl_32_sse2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_4_avx2 FPFX(cpy1Dto2D_shr_4_avx2)
 void xavs2_cpy1Dto2D_shr_4_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy1Dto2D_shr_8_avx2 FPFX(cpy1Dto2D_shr_8_avx2)
 void xavs2_cpy1Dto2D_shr_8_avx2 (int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_16_avx2 FPFX(cpy1Dto2D_shr_16_avx2)
 void xavs2_cpy1Dto2D_shr_16_avx2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_32_avx2 FPFX(cpy1Dto2D_shr_32_avx2)
 void xavs2_cpy1Dto2D_shr_32_avx2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_4_sse2 FPFX(cpy1Dto2D_shr_4_sse2)
 void xavs2_cpy1Dto2D_shr_4_sse2 (int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_8_sse2 FPFX(cpy1Dto2D_shr_8_sse2)
 void xavs2_cpy1Dto2D_shr_8_sse2 (int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_16_sse2 FPFX(cpy1Dto2D_shr_16_sse2)
 void xavs2_cpy1Dto2D_shr_16_sse2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy1Dto2D_shr_32_sse2 FPFX(cpy1Dto2D_shr_32_sse2)
 void xavs2_cpy1Dto2D_shr_32_sse2(int16_t* dst, const int16_t* src, intptr_t dstStride, int shift);
+#define xavs2_cpy2Dto1D_shl_8_avx2 FPFX(cpy2Dto1D_shl_8_avx2)
 void xavs2_cpy2Dto1D_shl_8_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shl_16_avx2 FPFX(cpy2Dto1D_shl_16_avx2)
 void xavs2_cpy2Dto1D_shl_16_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shl_32_avx2 FPFX(cpy2Dto1D_shl_32_avx2)
 void xavs2_cpy2Dto1D_shl_32_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_8_avx2 FPFX(cpy2Dto1D_shr_8_avx2)
 void xavs2_cpy2Dto1D_shr_8_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_16_avx2 FPFX(cpy2Dto1D_shr_16_avx2)
 void xavs2_cpy2Dto1D_shr_16_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
+#define xavs2_cpy2Dto1D_shr_32_avx2 FPFX(cpy2Dto1D_shr_32_avx2)
 void xavs2_cpy2Dto1D_shr_32_avx2(int16_t* dst, const int16_t* src, intptr_t srcStride, int shift);
 
+#define xavs2_copy_cnt_4_sse4 FPFX(copy_cnt_4_sse4)
 uint32_t xavs2_copy_cnt_4_sse4  (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_8_sse4 FPFX(copy_cnt_8_sse4)
 uint32_t xavs2_copy_cnt_8_sse4  (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_16_sse4 FPFX(copy_cnt_16_sse4)
 uint32_t xavs2_copy_cnt_16_sse4 (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_32_sse4 FPFX(copy_cnt_32_sse4)
 uint32_t xavs2_copy_cnt_32_sse4 (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_4_avx2 FPFX(copy_cnt_4_avx2)
 uint32_t xavs2_copy_cnt_4_avx2  (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_8_avx2 FPFX(copy_cnt_8_avx2)
 uint32_t xavs2_copy_cnt_8_avx2  (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_16_avx2 FPFX(copy_cnt_16_avx2)
 uint32_t xavs2_copy_cnt_16_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride);
+#define xavs2_copy_cnt_32_avx2 FPFX(copy_cnt_32_avx2)
 uint32_t xavs2_copy_cnt_32_avx2 (int16_t* dst, const int16_t* src, intptr_t srcStride);
 
 #define SETUP_BLOCKCOPY_FUNC(W, H, cpu) \
@@ -189,66 +219,113 @@ BLOCKCOPY_PS(_sse4)
 
 BLOCKCOPY_SP(_sse2)
 
+#define xavs2_blockfill_s_4x4_sse2 FPFX(blockfill_s_4x4_sse2)
 void xavs2_blockfill_s_4x4_sse2  (int16_t* dst, intptr_t dstride, int16_t val);
+#define xavs2_blockfill_s_8x8_sse2 FPFX(blockfill_s_8x8_sse2)
 void xavs2_blockfill_s_8x8_sse2  (int16_t* dst, intptr_t dstride, int16_t val);
+#define xavs2_blockfill_s_16x16_sse2 FPFX(blockfill_s_16x16_sse2)
 void xavs2_blockfill_s_16x16_sse2(int16_t* dst, intptr_t dstride, int16_t val);
+#define xavs2_blockfill_s_32x32_sse2 FPFX(blockfill_s_32x32_sse2)
 void xavs2_blockfill_s_32x32_sse2(int16_t* dst, intptr_t dstride, int16_t val);
+#define xavs2_blockcopy_ss_16x4_avx FPFX(blockcopy_ss_16x4_avx)
 void xavs2_blockcopy_ss_16x4_avx (int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x8_avx FPFX(blockcopy_ss_16x8_avx)
 void xavs2_blockcopy_ss_16x8_avx (int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x12_avx FPFX(blockcopy_ss_16x12_avx)
 void xavs2_blockcopy_ss_16x12_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x16_avx FPFX(blockcopy_ss_16x16_avx)
 void xavs2_blockcopy_ss_16x16_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x24_avx FPFX(blockcopy_ss_16x24_avx)
 void xavs2_blockcopy_ss_16x24_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x32_avx FPFX(blockcopy_ss_16x32_avx)
 void xavs2_blockcopy_ss_16x32_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_16x64_avx FPFX(blockcopy_ss_16x64_avx)
 void xavs2_blockcopy_ss_16x64_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_64x16_avx FPFX(blockcopy_ss_64x16_avx)
 void xavs2_blockcopy_ss_64x16_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_64x32_avx FPFX(blockcopy_ss_64x32_avx)
 void xavs2_blockcopy_ss_64x32_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_64x48_avx FPFX(blockcopy_ss_64x48_avx)
 void xavs2_blockcopy_ss_64x48_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_64x64_avx FPFX(blockcopy_ss_64x64_avx)
 void xavs2_blockcopy_ss_64x64_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x8_avx FPFX(blockcopy_ss_32x8_avx)
 void xavs2_blockcopy_ss_32x8_avx (int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x16_avx FPFX(blockcopy_ss_32x16_avx)
 void xavs2_blockcopy_ss_32x16_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x24_avx FPFX(blockcopy_ss_32x24_avx)
 void xavs2_blockcopy_ss_32x24_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x32_avx FPFX(blockcopy_ss_32x32_avx)
 void xavs2_blockcopy_ss_32x32_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x48_avx FPFX(blockcopy_ss_32x48_avx)
 void xavs2_blockcopy_ss_32x48_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_32x64_avx FPFX(blockcopy_ss_32x64_avx)
 void xavs2_blockcopy_ss_32x64_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_48x64_avx FPFX(blockcopy_ss_48x64_avx)
 void xavs2_blockcopy_ss_48x64_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_24x32_avx FPFX(blockcopy_ss_24x32_avx)
 void xavs2_blockcopy_ss_24x32_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
+#define xavs2_blockcopy_ss_24x64_avx FPFX(blockcopy_ss_24x64_avx)
 void xavs2_blockcopy_ss_24x64_avx(int16_t* dst, intptr_t dstStride, const int16_t* src, intptr_t srcStride);
 
+#define xavs2_blockcopy_pp_32x8_avx FPFX(blockcopy_pp_32x8_avx)
 void xavs2_blockcopy_pp_32x8_avx (uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_32x16_avx FPFX(blockcopy_pp_32x16_avx)
 void xavs2_blockcopy_pp_32x16_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_32x24_avx FPFX(blockcopy_pp_32x24_avx)
 void xavs2_blockcopy_pp_32x24_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_32x32_avx FPFX(blockcopy_pp_32x32_avx)
 void xavs2_blockcopy_pp_32x32_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_32x48_avx FPFX(blockcopy_pp_32x48_avx)
 void xavs2_blockcopy_pp_32x48_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_32x64_avx FPFX(blockcopy_pp_32x64_avx)
 void xavs2_blockcopy_pp_32x64_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_64x16_avx FPFX(blockcopy_pp_64x16_avx)
 void xavs2_blockcopy_pp_64x16_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_64x32_avx FPFX(blockcopy_pp_64x32_avx)
 void xavs2_blockcopy_pp_64x32_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_64x48_avx FPFX(blockcopy_pp_64x48_avx)
 void xavs2_blockcopy_pp_64x48_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_64x64_avx FPFX(blockcopy_pp_64x64_avx)
 void xavs2_blockcopy_pp_64x64_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_pp_48x64_avx FPFX(blockcopy_pp_48x64_avx)
 void xavs2_blockcopy_pp_48x64_avx(uint8_t *a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
 
+#define xavs2_blockfill_s_16x16_avx2 FPFX(blockfill_s_16x16_avx2)
 void xavs2_blockfill_s_16x16_avx2(int16_t* dst, intptr_t dstride, int16_t val);
+#define xavs2_blockfill_s_32x32_avx2 FPFX(blockfill_s_32x32_avx2)
 void xavs2_blockfill_s_32x32_avx2(int16_t* dst, intptr_t dstride, int16_t val);
 // copy_sp primitives
 // 16 x N
+#define xavs2_blockcopy_sp_16x16_avx2 FPFX(blockcopy_sp_16x16_avx2)
 void xavs2_blockcopy_sp_16x16_avx2(uint8_t *a, intptr_t stridea, const int16_t* b, intptr_t strideb);
+#define xavs2_blockcopy_sp_16x32_avx2 FPFX(blockcopy_sp_16x32_avx2)
 void xavs2_blockcopy_sp_16x32_avx2(uint8_t *a, intptr_t stridea, const int16_t* b, intptr_t strideb);
 
 // 32 x N
+#define xavs2_blockcopy_sp_32x32_avx2 FPFX(blockcopy_sp_32x32_avx2)
 void xavs2_blockcopy_sp_32x32_avx2(uint8_t *a, intptr_t stridea, const int16_t* b, intptr_t strideb);
+#define xavs2_blockcopy_sp_32x64_avx2 FPFX(blockcopy_sp_32x64_avx2)
 void xavs2_blockcopy_sp_32x64_avx2(uint8_t *a, intptr_t stridea, const int16_t* b, intptr_t strideb);
 
 // 64 x N
+#define xavs2_blockcopy_sp_64x64_avx2 FPFX(blockcopy_sp_64x64_avx2)
 void xavs2_blockcopy_sp_64x64_avx2(uint8_t *a, intptr_t stridea, const int16_t* b, intptr_t strideb);
 // copy_ps primitives
 // 16 x N
+#define xavs2_blockcopy_ps_16x16_avx2 FPFX(blockcopy_ps_16x16_avx2)
 void xavs2_blockcopy_ps_16x16_avx2(int16_t* a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_ps_16x32_avx2 FPFX(blockcopy_ps_16x32_avx2)
 void xavs2_blockcopy_ps_16x32_avx2(int16_t* a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
 
 // 32 x N
+#define xavs2_blockcopy_ps_32x32_avx2 FPFX(blockcopy_ps_32x32_avx2)
 void xavs2_blockcopy_ps_32x32_avx2(int16_t* a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
+#define xavs2_blockcopy_ps_32x64_avx2 FPFX(blockcopy_ps_32x64_avx2)
 void xavs2_blockcopy_ps_32x64_avx2(int16_t* a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
 
 // 64 x N
+#define xavs2_blockcopy_ps_64x64_avx2 FPFX(blockcopy_ps_64x64_avx2)
 void xavs2_blockcopy_ps_64x64_avx2(int16_t* a, intptr_t stridea, const uint8_t *b, intptr_t strideb);
 
 #undef BLOCKCOPY_COMMON
