@@ -45,21 +45,28 @@ enum xavs2e_rps_cfg_e {
     XAVS2_RPS_CFG_AI  = 4
 };
 
+#define frame_buffer_get_free_frame_ipb FPFX(frame_buffer_get_free_frame_ipb)
 xavs2_frame_t *frame_buffer_get_free_frame_ipb(xavs2_handler_t *h_mgr);
+#define frame_buffer_update_remove_frames FPFX(frame_buffer_update_remove_frames)
 void frame_buffer_update_remove_frames(xavs2_frame_buffer_t *frm_buf, xavs2_frame_t *cur_frm);
+#define frame_buffer_remove_frames FPFX(frame_buffer_remove_frames)
 void frame_buffer_remove_frames(xavs2_frame_buffer_t *frm_buf);
 
+#define rps_build FPFX(rps_build)
 int rps_build(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
               xavs2_frame_t *cur_frm,
               xavs2_rps_t *p_rps, xavs2_frame_t *frefs[XAVS2_MAX_REFS]);
 
+#define find_fdec_and_build_rps FPFX(find_fdec_and_build_rps)
 xavs2_frame_t *find_fdec_and_build_rps(xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
                                        xavs2_frame_t *cur_frm,
                                        xavs2_frame_t *frefs[XAVS2_MAX_REFS]);
 
 
+#define rps_check_config FPFX(rps_check_config)
 int rps_check_config(xavs2_param_t *param);
 
+#define rps_set_picture_reorder_delay FPFX(rps_set_picture_reorder_delay)
 void rps_set_picture_reorder_delay(xavs2_t *h);
 
 #endif  // XAVS2_RPS_H

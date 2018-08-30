@@ -37,6 +37,7 @@
 #ifndef XAVS2_RDOQ_H
 #define XAVS2_RDOQ_H
 
+#define rdoq_block FPFX(rdoq_block)
 int rdoq_block(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *cur_blk, int bsx, int bsy, int i_tu_level, int qp, int b_luma, int intra_mode);
 
 #endif  // XAVS2_RDOQ_H

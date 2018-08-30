@@ -37,10 +37,14 @@
 #ifndef XAVS2_RDO_H
 #define XAVS2_RDO_H
 
+#define xavs2_init_valid_mode_table FPFX(init_valid_mode_table)
 void xavs2_init_valid_mode_table(xavs2_t *h);
 
+#define compress_ctu_inter FPFX(compress_ctu_inter)
 rdcost_t compress_ctu_inter        (xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, int i_min_level, int i_max_level, rdcost_t cost_limit);
+#define compress_ctu_intra_topdown FPFX(compress_ctu_intra_topdown)
 rdcost_t compress_ctu_intra_topdown(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, int i_min_level, int i_max_level, rdcost_t cost_limit);
+#define compress_ctu_intra_downtop FPFX(compress_ctu_intra_downtop)
 rdcost_t compress_ctu_intra_downtop(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, int i_min_level, int i_max_level, rdcost_t cost_limit);
 
 typedef rdcost_t(*lcu_analyse_t)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, int i_min_level, int i_max_level, rdcost_t cost_limit);
