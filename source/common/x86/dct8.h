@@ -27,23 +27,37 @@
 #ifndef XAVS2_I386_DCT8_H
 #define XAVS2_I386_DCT8_H
 
+#define xavs2_dct_4x4_sse2 FPFX(dct_4x4_sse2)
 void xavs2_dct_4x4_sse2   (const coeff_t *src, coeff_t *dst, int i_src);
+#define xavs2_dct_4x4_avx2 FPFX(dct_4x4_avx2)
 void xavs2_dct_4x4_avx2   (const coeff_t *src, coeff_t *dst, int i_src);
+#define xavs2_dct_8x8_sse2 FPFX(dct_8x8_sse2)
 void xavs2_dct_8x8_sse2   (const coeff_t *src, coeff_t *dst, int i_src);
+#define xavs2_dct_8x8_sse4 FPFX(dct_8x8_sse4)
 void xavs2_dct_8x8_sse4   (const coeff_t *src, coeff_t *dst, int i_src);
 #if ARCH_X86_64
+#define xavs2_dct_8x8_avx2 FPFX(dct_8x8_avx2)
 void xavs2_dct_8x8_avx2   (const coeff_t *src, coeff_t *dst, int i_src);
+#define xavs2_dct_16x16_avx2 FPFX(dct_16x16_avx2)
 void xavs2_dct_16x16_avx2 (const coeff_t *src, coeff_t *dst, int i_src);
+#define xavs2_dct_32x32_avx2 FPFX(dct_32x32_avx2)
 void xavs2_dct_32x32_avx2 (const coeff_t *src, coeff_t *dst, int i_src);
 #endif
 
+#define xavs2_idct_4x4_sse2 FPFX(idct_4x4_sse2)
 void xavs2_idct_4x4_sse2  (const coeff_t *src, coeff_t *dst, int i_dst);
+#define xavs2_idct_8x8_ssse3 FPFX(idct_8x8_ssse3)
 void xavs2_idct_8x8_ssse3 (const coeff_t *src, coeff_t *dst, int i_dst);
 #if ARCH_X86_64
+#define xavs2_idct_4x4_avx2 FPFX(idct_4x4_avx2)
 void xavs2_idct_4x4_avx2  (const coeff_t *src, coeff_t *dst, int i_dst);
+#define xavs2_idct_8x8_sse2 FPFX(idct_8x8_sse2)
 void xavs2_idct_8x8_sse2  (const coeff_t *src, coeff_t *dst, int i_dst);
+#define xavs2_idct_8x8_avx2 FPFX(idct_8x8_avx2)
 void xavs2_idct_8x8_avx2  (const coeff_t *src, coeff_t *dst, int i_dst);
+#define xavs2_idct_16x16_avx2 FPFX(idct_16x16_avx2)
 void xavs2_idct_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+#define xavs2_idct_32x32_avx2 FPFX(idct_32x32_avx2)
 void xavs2_idct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 #endif
 
