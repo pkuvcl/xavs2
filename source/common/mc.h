@@ -83,13 +83,17 @@ void get_mv_for_mc(xavs2_t *h, mv_t *mv, int pic_pix_x, int pic_pix_y, int blk_w
  * function declares
  * ===========================================================================
  */
+#define interpolate_lcu_row FPFX(interpolate_lcu_row)
 void interpolate_lcu_row(xavs2_t *h, xavs2_frame_t* frm, int i_lcu_y);
 
+#define interpolate_sample_rows FPFX(interpolate_sample_rows)
 void interpolate_sample_rows(xavs2_t *h, xavs2_frame_t* frm, int start_y, int height, int b_start, int b_end);
 
+#define mc_luma FPFX(mc_luma)
 void mc_luma  (pel_t *p_pred, int i_pred, 
                int pic_pix_x, int pic_pix_y, int width, int height, 
                const xavs2_frame_t *p_ref_frm);
+#define mc_chroma FPFX(mc_chroma)
 void mc_chroma(pel_t *p_pred_u, pel_t *p_pred_v, int i_pred, 
                int pix_quad_x, int pix_quad_y, int width, int height,
                const xavs2_frame_t *p_ref_frm);

@@ -183,8 +183,10 @@ extern const uint8_t g_partition_map_tab[];
  * ===========================================================================
  */
 
+#define xavs2_pixel_init FPFX(pixel_init)
 void xavs2_pixel_init(uint32_t cpu, pixel_funcs_t* pixf);
 
+#define xavs2_pixel_ssd_wxh FPFX(xpixel_ssd_wxh)
 uint64_t xavs2_pixel_ssd_wxh(pixel_funcs_t *pf,
     pel_t *p_pix1, intptr_t i_pix1,
     pel_t *p_pix2, intptr_t i_pix2,
@@ -192,6 +194,7 @@ uint64_t xavs2_pixel_ssd_wxh(pixel_funcs_t *pf,
     int inout_shift);
 
 
+#define xavs2_mad_init FPFX(mad_init)
 void xavs2_mad_init(uint32_t cpu, mad_funcs_t *madf);
 
 #endif  // XAVS2_PIXEL_H

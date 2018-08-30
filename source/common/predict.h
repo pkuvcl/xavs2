@@ -194,13 +194,19 @@ static ALWAYS_INLINE int16_t scale_mv_biskip_y(xavs2_t *h, int mvy, int dist_dst
  * ===========================================================================
  */
 
+#define get_mv_predictors_bskip FPFX(get_mv_predictors_bskip)
 int  get_mv_predictors_bskip(xavs2_t *h, cu_t *p_cu);
+#define get_mv_predictors_pskip FPFX(get_mv_predictors_pskip)
 int  get_mv_predictors_pskip(xavs2_t *h, cu_t *p_cu);
 
+#define get_mvp_default FPFX(get_mvp_default)
 void get_mvp_default         (xavs2_t *h, const neighbor_inter_t *p_neighbors, mv_t *pmv, int bwd_2nd, cb_t *p_cb, int ref_idx);
 
+#define pred_inter_search_single FPFX(pred_inter_search_single)
 int  pred_inter_search_single(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, dist_t *fwd_cost, dist_t *bwd_cost);
+#define pred_inter_search_bi FPFX(pred_inter_search_bi)
 void pred_inter_search_bi    (xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, dist_t *sym_mcost, dist_t *bid_mcost);
+#define pred_inter_search_dual FPFX(pred_inter_search_dual)
 void pred_inter_search_dual  (xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, dist_t *dual_mcost, int *dual_best_fst_ref, int *dual_best_snd_ref);
 
 #endif  // XAVS2_PREDICT_H
