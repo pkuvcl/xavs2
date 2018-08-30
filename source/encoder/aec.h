@@ -255,23 +255,29 @@ int tu_get_cg_run_level_info(runlevel_t *runlevel,
 
 #if CTRL_OPT_AEC
 /* init AEC context table */
+#define init_aec_context_tab FPFX(init_aec_context_tab)
 void init_aec_context_tab(void);
 #endif
 
 /* ---------------------------------------------------------------------------
  * coding state initialization (no need to destroy, just free the space is OK)
  */
+#define aec_init_coding_state FPFX(aec_init_coding_state)
 void aec_init_coding_state   (aec_t *p_aec);
 
 
 /* ---------------------------------------------------------------------------
  * aec functions
  */
+#define aec_start FPFX(aec_start)
 void aec_start(xavs2_t *h, aec_t *p_aec, uint8_t *p_bs_start, uint8_t *p_bs_end, int b_writing);
+#define aec_done FPFX(aec_done)
 void aec_done(aec_t *p_aec);
 
 /* AEC */
+#define xavs2_lcu_write FPFX(lcu_write)
 void xavs2_lcu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, int i_level, int img_x, int img_y);
+#define xavs2_lcu_terminat_bit_write FPFX(lcu_terminat_bit_write)
 void xavs2_lcu_terminat_bit_write(aec_t *p_aec, uint8_t bit);
 
 #endif  // XAVS2_AEC_H
