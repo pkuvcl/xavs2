@@ -38,8 +38,11 @@
 #ifndef XAVS2_PRESETS_H
 #define XAVS2_PRESETS_H
 
+#define parse_preset_level FPFX(parse_preset_level)
 void parse_preset_level(xavs2_param_t *p_param, int i_preset_level);
+#define encoder_set_fast_algorithms FPFX(encoder_set_fast_algorithms)
 void encoder_set_fast_algorithms(xavs2_t *h);
+#define decide_ultimate_paramters FPFX(decide_ultimate_paramters)
 void decide_ultimate_paramters(xavs2_param_t *p_param);
 
 #endif  // XAVS2_PRESET_LEVELS_H

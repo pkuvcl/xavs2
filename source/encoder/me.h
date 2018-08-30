@@ -110,13 +110,19 @@
  * ===========================================================================
  */
 
+#define xavs2_me_get_buf_size FPFX(me_get_buf_size)
 int  xavs2_me_get_buf_size(const xavs2_param_t *param);
+#define xavs2_me_init FPFX(me_init)
 void xavs2_me_init(xavs2_t *h, uint8_t **mem_base);
+#define xavs2_me_init_umh_threshold FPFX(me_init_umh_threshold)
 void xavs2_me_init_umh_threshold(xavs2_t *h, double *bsize, int i_qp);
 
+#define xavs2_me_search FPFX(me_search)
 dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc);
 
+#define xavs2_me_search_sym FPFX(me_search_sym)
 dist_t xavs2_me_search_sym(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, mv_t *mv);
+#define xavs2_me_search_bid FPFX(me_search_bid)
 dist_t xavs2_me_search_bid(xavs2_t *h, xavs2_me_t *p_me, pel_t *buf_pixel_temp, mv_t *fwd_mv, mv_t *bwd_mv, cu_parallel_t *p_enc);
 
 #endif  // XAVS2_ME_H
