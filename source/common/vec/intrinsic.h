@@ -234,8 +234,8 @@ void coeff_scan4_yx_avx(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uin
 void abs_coeff_sse128(coeff_t *dst, const coeff_t *src, const int i_coef);
 int add_sign_sse128(coeff_t *dst, const coeff_t *abs_val, const int i_coef);
 
-int quant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
-void dequant_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift);
+int quant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
+void dequant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift);
 void abs_coeff_avx2(coeff_t *dst, const coeff_t *src, const int i_coef);
 int add_sign_avx2(coeff_t *dst, const coeff_t *abs_val, const int i_coef);
 
