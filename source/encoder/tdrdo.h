@@ -44,13 +44,20 @@
  * function declares
  * ===========================================================================
  */
+#define tdrdo_get_buffer_size FPFX(tdrdo_get_buffer_size)
 int  tdrdo_get_buffer_size(xavs2_param_t *param);
+#define tdrdo_init FPFX(tdrdo_init)
 int  tdrdo_init(td_rdo_t *td_rdo, xavs2_param_t *param);
+#define tdrdo_destroy FPFX(tdrdo_destroy)
 void tdrdo_destroy(td_rdo_t *td_rdo);
 
+#define tdrdo_frame_start FPFX(tdrdo_frame_start)
 void tdrdo_frame_start(xavs2_t *h);
+#define tdrdo_frame_done FPFX(tdrdo_frame_done)
 void tdrdo_frame_done(xavs2_t *h);
+#define tdrdo_lcu_adjust_lambda FPFX(tdrdo_lcu_adjust_lambda)
 void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda);
+#define tdrdo_lcu_update FPFX(tdrdo_lcu_update)
 void tdrdo_lcu_update(xavs2_t *h);
 
 #endif  // XAVS2_TDRDO_H

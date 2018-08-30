@@ -246,14 +246,19 @@ xavs2_t *xavs2e_alloc_row_task(xavs2_t *h)
     return NULL;
 }
 
+#define xavs2_slices_init FPFX(slices_init)
 void  xavs2_slices_init(xavs2_t *h);
 
+#define xavs2_slice_write_start FPFX(slice_write_start)
 void  xavs2_slice_write_start(xavs2_t *h);
 
+#define xavs2_lcu_row_write FPFX(lcu_row_write)
 void *xavs2_lcu_row_write(void *arg);
 
+#define slice_lcu_row_order_init FPFX(slice_lcu_row_order_init)
 void  slice_lcu_row_order_init(xavs2_t *h);
 
+#define xavs2e_encode_one_frame FPFX(xavs2e_encode_one_frame)
 void *xavs2e_encode_one_frame(void *arg);
 
 #endif  // XAVS2_SLICE_H
