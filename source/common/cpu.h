@@ -92,15 +92,23 @@
  * declarations
  * ===========================================================================
  */
+#define xavs2_cpu_detect FPFX(cpu_detect)
 uint32_t xavs2_cpu_detect(void);
+#define xavs2_cpu_num_processors FPFX(cpu_num_processors)
 int  xavs2_cpu_num_processors(void);
+#define xavs2_cpu_emms FPFX(cpu_emms)
 void xavs2_cpu_emms(void);
+#define xavs2_cpu_sfence FPFX(cpu_sfence)
 void xavs2_cpu_sfence(void);
+#define xavs2_get_simd_capabilities FPFX(get_simd_capabilities)
 char *xavs2_get_simd_capabilities(char *buf, int cpuid);
 
 #if HAVE_MMX
+#define xavs2_cpu_cpuid_test FPFX(cpu_cpuid_test)
 int xavs2_cpu_cpuid_test(void);
+#define xavs2_cpu_cpuid FPFX(cpu_cpuid)
 uint32_t xavs2_cpu_cpuid(uint32_t op, uint32_t * eax, uint32_t * ebx, uint32_t * ecx, uint32_t * edx);
+#define xavs2_cpu_xgetbv FPFX(cpu_xgetbv)
 void xavs2_cpu_xgetbv(uint32_t op, uint32_t *eax, uint32_t *edx);
 #define xavs2_emms() xavs2_cpu_emms()
 #else

@@ -84,6 +84,7 @@ typedef struct sao_region_t {
     int8_t b_down_left;
 } sao_region_t;
 
+#define xavs2_lcu_deblock FPFX(lcu_deblock)
 void xavs2_lcu_deblock(xavs2_t *h, xavs2_frame_t *frm);
 
 #endif  // XAVS2_IN_LOOP_FILTERS_H
