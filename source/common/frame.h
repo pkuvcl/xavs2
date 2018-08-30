@@ -44,19 +44,27 @@
  * ===========================================================================
  */
 
+#define xavs2_frame_new FPFX(frame_new)
 xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type);
+#define xavs2_frame_delete FPFX(frame_delete)
 void xavs2_frame_delete(xavs2_handler_t *h_mgr, xavs2_frame_t *frame);
 
+#define xavs2_frame_buffer_size FPFX(frame_buffer_size)
 size_t xavs2_frame_buffer_size(const xavs2_param_t *param, int alloc_type);
+#define xavs2_frame_destroy_objects FPFX(frame_destroy_objects)
 void xavs2_frame_destroy_objects(xavs2_handler_t *h_mgr, xavs2_frame_t *frame);
 
+#define xavs2_frame_copy_planes FPFX(frame_copy_planes)
 void xavs2_frame_copy_planes(xavs2_t *h, xavs2_frame_t *dst, xavs2_frame_t *src);
 
+#define xavs2_frame_expand_border_frame FPFX(frame_expand_border_frame)
 void plane_expand_border(pel_t *p_pix, int i_stride, int i_width, int i_height,
                          int i_padh, int i_padv, int b_pad_top, int b_pad_bottom); 
 void xavs2_frame_expand_border_frame(xavs2_t *h, xavs2_frame_t *frame);
+#define xavs2_frame_expand_border_lcurow FPFX(frame_expand_border_lcurow)
 void xavs2_frame_expand_border_lcurow(xavs2_t *h, xavs2_frame_t *frame, int i_lcu_y);
 
+#define xavs2_frame_expand_border_mod8 FPFX(frame_expand_border_mod8)
 void xavs2_frame_expand_border_mod8(xavs2_t *h, xavs2_frame_t *frame);
 
 #endif  /* XAVS2_FRAME_H */

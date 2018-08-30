@@ -227,24 +227,35 @@ extern intrinsic_func_t g_funcs;
  * interface function declares
  * ===========================================================================
  */
+#define xavs2_mem_oper_init FPFX(mem_oper_init)
 void xavs2_mem_oper_init    (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_mc_init FPFX(mc_init)
 void xavs2_mc_init          (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_intra_pred_init FPFX(intra_pred_init)
 void xavs2_intra_pred_init  (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_dct_init FPFX(dct_init)
 void xavs2_dct_init         (uint32_t cpuid, dct_funcs_t *dctf);
+#define xavs2_quant_init FPFX(quant_init)
 void xavs2_quant_init       (uint32_t cpuid, dct_funcs_t *quantf);
 
+#define xavs2_cg_scan_init FPFX(cg_scan_init)
 void xavs2_cg_scan_init     (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_deblock_init FPFX(deblock_init)
 void xavs2_deblock_init     (uint32_t cpuid, intrinsic_func_t* lf);
 
+#define xavs2_sao_init FPFX(sao_init)
 void xavs2_sao_init         (uint32_t cpuid, intrinsic_func_t *pf);
+#define xavs2_alf_init FPFX(alf_init)
 void xavs2_alf_init         (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_rdo_init FPFX(rdo_init)
 void xavs2_rdo_init         (uint32_t cpuid, intrinsic_func_t *pf);
 
+#define xavs2_init_all_primitives FPFX(init_all_primitives)
 void xavs2_init_all_primitives    (xavs2_param_t* param, intrinsic_func_t *p_funcs);
 
 #endif  // XAVS2_PRIMITIVES_H
