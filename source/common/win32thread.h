@@ -62,27 +62,41 @@ typedef struct {
 } xavs2_thread_cond_t;
 #define xavs2_thread_condattr_t int
 
+#define xavs2_thread_create FPFX(thread_create)
 int xavs2_thread_create(xavs2_thread_t *thread, const xavs2_thread_attr_t *attr,
                         void *(*start_routine)(void *), void *arg);
+#define xavs2_thread_join FPFX(thread_join)
 int xavs2_thread_join(xavs2_thread_t thread, void **value_ptr);
 
+#define xavs2_thread_mutex_init FPFX(thread_mutex_init)
 int xavs2_thread_mutex_init(xavs2_thread_mutex_t *mutex, const xavs2_thread_mutexattr_t *attr);
+#define xavs2_thread_mutex_destroy FPFX(thread_mutex_destroy)
 int xavs2_thread_mutex_destroy(xavs2_thread_mutex_t *mutex);
+#define xavs2_thread_mutex_lock FPFX(thread_mutex_lock)
 int xavs2_thread_mutex_lock(xavs2_thread_mutex_t *mutex);
+#define xavs2_thread_mutex_unlock FPFX(thread_mutex_unlock)
 int xavs2_thread_mutex_unlock(xavs2_thread_mutex_t *mutex);
 
+#define xavs2_thread_cond_init FPFX(thread_cond_init)
 int xavs2_thread_cond_init(xavs2_thread_cond_t *cond, const xavs2_thread_condattr_t *attr);
+#define xavs2_thread_cond_destroy FPFX(thread_cond_destroy)
 int xavs2_thread_cond_destroy(xavs2_thread_cond_t *cond);
+#define xavs2_thread_cond_broadcast FPFX(thread_cond_broadcast)
 int xavs2_thread_cond_broadcast(xavs2_thread_cond_t *cond);
+#define xavs2_thread_cond_wait FPFX(thread_cond_wait)
 int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mutex);
+#define xavs2_thread_cond_signal FPFX(thread_cond_signal)
 int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond);
 
 #define xavs2_thread_attr_init(a) 0
 #define xavs2_thread_attr_destroy(a) 0
 
+#define xavs2_win32_threading_init FPFX(win32_threading_init)
 int  xavs2_win32_threading_init(void);
+#define xavs2_win32_threading_destroy FPFX(win32_threading_destroy)
 void xavs2_win32_threading_destroy(void);
 
+#define xavs2_thread_num_processors_np FPFX(thread_num_processors_np)
 int xavs2_thread_num_processors_np(void);
 
 #endif  // XAVS2_WIN32THREAD_H

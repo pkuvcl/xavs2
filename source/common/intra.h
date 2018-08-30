@@ -39,30 +39,38 @@
 
 typedef struct intra_candidate_t intra_candidate_t;
 
+#define xavs2_intra_get_cu_neighbors FPFX(intra_get_cu_neighbors)
 uint32_t xavs2_intra_get_cu_neighbors(xavs2_t *h, cu_t *p_cu, int img_x, int img_y, int cu_size);
 
+#define xavs2_intra_fill_ref_samples_luma FPFX(intra_fill_ref_samples_luma)
 void xavs2_intra_fill_ref_samples_luma(xavs2_t *h, cu_t *p_cu, int img_x, int img_y, 
                                        int block_x, int block_y, int bsx, int bsy);
 
+#define rdo_get_pred_intra_luma FPFX(rdo_get_pred_intra_luma)
 int rdo_get_pred_intra_luma(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
                             pel_t *p_fenc, int mpm[], int blockidx,
                             int block_x, int block_y, int block_w, int block_h);
 
+#define rdo_get_pred_intra_luma_rmd FPFX(rdo_get_pred_intra_luma_rmd)
 int rdo_get_pred_intra_luma_rmd(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
                                 pel_t *p_fenc, int mpm[], int blockidx,
                                 int block_x, int block_y, int block_w, int block_h);
 
+#define rdo_get_pred_intra_luma_cuda FPFX(rdo_get_pred_intra_luma_cuda)
 int rdo_get_pred_intra_luma_cuda(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
                                  pel_t *p_fenc, int mpm[], int blockidx,
                                  int block_x, int block_y, int block_w, int block_h);
 
+#define rdo_get_pred_intra_luma_2nd_pass FPFX(rdo_get_pred_intra_luma_2nd_pass)
 int rdo_get_pred_intra_luma_2nd_pass(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
                                      pel_t *p_fenc, int mpm[], int blockidx,
                                      int block_x, int block_y, int block_w, int block_h);
 
+#define rdo_get_pred_intra_chroma FPFX(rdo_get_pred_intra_chroma)
 int rdo_get_pred_intra_chroma(xavs2_t *h, cu_t *p_cu, int i_level, int pix_y_c, int pix_x_c,
                               intra_candidate_t *p_candidate_list);
 
+#define rdo_get_pred_intra_chroma_fast FPFX(rdo_get_pred_intra_chroma_fast)
 int rdo_get_pred_intra_chroma_fast(xavs2_t *h, cu_t *p_cu, int i_level, int pix_y_c, int pix_x_c,
                                    intra_candidate_t *p_candidate_list);
 

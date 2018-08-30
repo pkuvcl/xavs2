@@ -39,10 +39,14 @@
 
 typedef struct xavs2_threadpool_t xavs2_threadpool_t;
 
+#define xavs2_threadpool_init FPFX(threadpool_init)
 int   xavs2_threadpool_init  (xavs2_threadpool_t **p_pool, int threads,
                               xavs2_tfunc_t init_func, void *init_arg);
+#define xavs2_threadpool_run FPFX(threadpool_run)
 void  xavs2_threadpool_run   (xavs2_threadpool_t *pool, void *(*func)(void *), void *arg, int wait_sign);
+#define xavs2_threadpool_wait FPFX(threadpool_wait)
 void *xavs2_threadpool_wait  (xavs2_threadpool_t *pool, void *arg);
+#define xavs2_threadpool_delete FPFX(threadpool_delete)
 void  xavs2_threadpool_delete(xavs2_threadpool_t *pool);
 
 #endif  // XAVS2_THREADPOOL_H
