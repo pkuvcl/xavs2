@@ -397,7 +397,7 @@ ALIGN16(static const int16_t g_2TC_V[8 * (2 * SEC_TR_SIZE)]) = {
 
 /* ---------------------------------------------------------------------------
 futl change 2016.12.19*/
-void dct_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int SHIFT1 = B4X4_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
     const int SHIFT2 = B4X4_IN_BIT + FACTO_BIT;
@@ -485,7 +485,7 @@ void dct_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
 futl change 2016.12.19*/
-void dct_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int SHIFT1 = B8X8_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
     const int SHIFT2 = B8X8_IN_BIT + FACTO_BIT;
@@ -686,7 +686,7 @@ void dct_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int shift1 = B16X16_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
     const int shift2 = B16X16_IN_BIT + FACTO_BIT - 2;
@@ -974,7 +974,7 @@ void dct_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int SHIFT1 = B16X16_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT - 2;
     const int ADD1 = (1 << SHIFT1) >> 1;
@@ -1344,7 +1344,7 @@ void dct_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int SHIFT1 = B16X16_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
     const int SHIFT2 = B16X16_IN_BIT + FACTO_BIT;
@@ -1766,7 +1766,7 @@ void dct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_8x32_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_8x32_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     int i;
     int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT - 2 + (i_src & 0x01);
@@ -2174,7 +2174,7 @@ void dct_8x32_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     int i;
     int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
@@ -2536,7 +2536,7 @@ void dct_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_32x32_half_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x32_half_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT + (i_src & 0x01);
     const int SHIFT2 = B32X32_IN_BIT + FACTO_BIT;
@@ -2921,7 +2921,7 @@ void dct_32x32_half_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 }
 
 //optimize 32x32 size transform
-void dct_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT + (i_src & 0x01);
     const int SHIFT2 = B32X32_IN_BIT + FACTO_BIT;
@@ -4987,40 +4987,40 @@ void wavelet_64x64_sse128(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x64_sse128(dst);
-    dct_32x32_sse128(dst, dst, 32 | 1);
+    dct_c_32x32_sse128(dst, dst, 32 | 1);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x64_half_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x64_half_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x64_sse128(dst);
-    dct_32x32_half_sse128(dst, dst, 32 | 1);
+    dct_c_32x32_half_sse128(dst, dst, 32 | 1);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x16_sse128(dst);
-    dct_32x8_sse128(dst, dst, 32 | 0x01);
+    dct_c_32x8_sse128(dst, dst, 32 | 0x01);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_16x64_sse128(dst);
-    dct_8x32_sse128(dst, dst, 8 | 0x01);
+    dct_c_8x32_sse128(dst, dst, 8 | 0x01);
 }

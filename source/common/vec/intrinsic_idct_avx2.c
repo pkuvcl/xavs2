@@ -66,7 +66,7 @@ ALIGN32(static const coeff_t tab_idct_8x8_256[12][16]) =
     { 17, -42, 17, -42, 17, -42, 17, -42, 17, -42, 17, -42, 17, -42, 17, -42 }
 };
 
-void idct_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int SHIFT1 = 5;
     // const int CLIP1 = LIMIT_BIT;
@@ -281,7 +281,7 @@ void idct_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 }
 
 
-void idct_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int shift = 20-g_bit_depth;
     const int clip = g_bit_depth + 1;
@@ -686,7 +686,7 @@ void idct_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 }
 
 
-void idct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     int shift = 20 - g_bit_depth - (i_dst & 0x01);
     int clip = g_bit_depth + 1 + (i_dst & 0x01);
@@ -2146,28 +2146,28 @@ void inv_wavelet_64x64_avx2(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
 */
-void idct_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_32x32_avx2(src, dst, 32 | 0x01);
+    idct_c_32x32_avx2(src, dst, 32 | 0x01);
     inv_wavelet_64x64_avx2(dst);
 }
 
 /* ---------------------------------------------------------------------------
 */
-void idct_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_32x8_sse128(src, dst, 32 | 0x01);
+    idct_c_32x8_sse128(src, dst, 32 | 0x01);
     inv_wavelet_64x16_avx2(dst);
 }
 
 /* ---------------------------------------------------------------------------
 */
-void idct_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_8x32_sse128(src, dst, 8 | 0x01);
+    idct_c_8x32_sse128(src, dst, 8 | 0x01);
     inv_wavelet_16x64_avx2(dst);
 }
 

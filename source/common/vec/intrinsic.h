@@ -153,57 +153,57 @@ void deblock_edge_ver_avx2(pel_t *SrcPtr, int stride, int Alpha, int Beta, uint8
 void deblock_edge_hor_c_avx2(pel_t *SrcPtrU, pel_t *SrcPtrV, int stride, int Alpha, int Beta, uint8_t *flt_flag);
 void deblock_edge_ver_c_avx2(pel_t *SrcPtrU, pel_t *SrcPtrV, int stride, int Alpha, int Beta, uint8_t *flt_flag);
 
-void dct_4x4_sse128  (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_8x8_sse128  (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_4x4_sse128  (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_8x8_sse128  (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_src);
 
-void dct_4x16_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_8x32_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_16x4_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_32x8_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
-void dct_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_4x16_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_8x32_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x4_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x8_sse128 (const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_src);
 
 //futl
-void dct_4x4_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_16x4_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_4x4_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x4_avx2(const coeff_t *src, coeff_t *dst, int i_src);
 
-void dct_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src);
-void dct_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src);
+void dct_c_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src);
 //avx2 function  -zhangjiaqi
-void dct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src);
 
-void dct_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_src);
 
 /* half DCT, only keep low frequency coefficients */
-void dct_32x32_half_sse128(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_64x64_half_sse128(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src);
-void dct_64x64_half_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x32_half_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x64_half_sse128(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src);
+void dct_c_64x64_half_avx2(const coeff_t *src, coeff_t *dst, int i_src);
 
 void transform_4x4_2nd_sse128(coeff_t *coeff, int i_coeff);
 void transform_2nd_sse128    (coeff_t *coeff, int i_coeff, int i_mode, int b_top, int b_left);
 
-void idct_4x4_sse128  (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_8x8_sse128  (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_4x4_sse128  (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_8x8_sse128  (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
 
-void idct_16x4_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_32x8_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_16x4_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_32x8_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
 
-void idct_4x16_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_8x32_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_4x16_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_8x32_sse128 (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst);
 
 void inv_transform_4x4_2nd_sse128(coeff_t *coeff, int i_coeff);
 void inv_transform_2nd_sse128    (coeff_t *coeff, int i_coeff, int i_mode, int b_top, int b_left);
@@ -212,12 +212,12 @@ void inv_wavelet_64x16_sse128(coeff_t *coeff);
 void inv_wavelet_16x64_sse128(coeff_t *coeff);
 
 //zhangjiaqi add 2016.11.30    avx2
-void idct_8x8_avx2  (const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
-void idct_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_8x8_avx2  (const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
+void idct_c_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 void inv_wavelet_64x16_avx2(coeff_t *coeff);
 void inv_wavelet_16x64_avx2(coeff_t *coeff);
 void inv_wavelet_64x64_avx2(coeff_t *coeff);

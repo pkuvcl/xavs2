@@ -65,7 +65,7 @@ extern ALIGN16(const int16_t g_2T_C[SEC_TR_SIZE * SEC_TR_SIZE]);
 
 /* ---------------------------------------------------------------------------
  */
-void idct_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int shift1 = 5;
     const int shift2 = 20 - g_bit_depth;
@@ -145,7 +145,7 @@ void idct_4x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int shift1 = 5;
     const int shift2 = 20 - g_bit_depth;
@@ -449,7 +449,7 @@ void idct_4x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int shift1 = 5;
     const int shift2 = 20 - g_bit_depth;
@@ -717,7 +717,7 @@ void idct_16x4_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     // const int shift1 = 5;
     const int shift2 = 20 - g_bit_depth;
@@ -987,7 +987,7 @@ void idct_8x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const int shift1 = 5;
     const int shift2 = 20 - g_bit_depth;
@@ -1415,7 +1415,7 @@ void idct_16x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     int a_flag = i_dst & 0x01;
     //int shift1 = 5;
@@ -2206,7 +2206,7 @@ void idct_32x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     __m128i m128iS0[4], m128iS1[4], m128iS2[4], m128iS3[4], m128iS4[4], m128iS5[4], m128iS6[4], m128iS7[4];
     __m128i m128iAdd, m128Tmp0, m128Tmp1, m128Tmp2, m128Tmp3;
@@ -3044,7 +3044,7 @@ void idct_32x8_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_8x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_8x32_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     const __m128i c16_p45_p45 = _mm_set1_epi32(0x002D002D);
     const __m128i c16_p43_p44 = _mm_set1_epi32(0x002B002C);
@@ -4767,27 +4767,27 @@ void inv_wavelet_16x64_sse128(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void idct_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_64x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_32x32_sse128(src, dst, 32 | 0x01); /* 32x32 idct */
+    idct_c_32x32_sse128(src, dst, 32 | 0x01); /* 32x32 idct */
     inv_wavelet_64x64_sse128(dst);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void idct_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_64x16_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_32x8_sse128(src, dst, 32 | 0x01);
+    idct_c_32x8_sse128(src, dst, 32 | 0x01);
     inv_wavelet_64x16_sse128(dst);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void idct_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
+void idct_c_16x64_sse128(const coeff_t *src, coeff_t *dst, int i_dst)
 {
     UNUSED_PARAMETER(i_dst);
-    idct_8x32_sse128(src, dst, 8 | 0x01);
+    idct_c_8x32_sse128(src, dst, 8 | 0x01);
     inv_wavelet_16x64_sse128(dst);
 }

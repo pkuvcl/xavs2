@@ -428,7 +428,7 @@ ALIGN32(static const int16_t tab_dct_4_avx2[][16]) = {
 
 /* ---------------------------------------------------------------------------
  */
-void dct_4x4_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_4x4_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
 #define ADD1    0
 #define ADD2    64
@@ -505,7 +505,7 @@ ALIGN32(static const int16_t tab_dct_8_avx2[][16]) = {
 
 /* ---------------------------------------------------------------------------
  */
-void dct_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
 #define ADD1    1
 #define ADD2    128
@@ -681,7 +681,7 @@ void dct_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src)
+void dct_c_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src)
 {
     const int SHIFT1 = B16X16_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT;
     const int ADD1 = 1 << (SHIFT1 - 1);
@@ -1109,7 +1109,7 @@ ALIGN32(static const int32_t tab_dct2_32x32_avx2[][8]) = {
 
 /* ---------------------------------------------------------------------------
  */
-void dct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT + (i_src & 0x01);
     const int ADD1 = 1 << (shift1 - 1);
@@ -1815,7 +1815,7 @@ void dct_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const int shift1 = B32X32_IN_BIT + FACTO_BIT + g_bit_depth + 1 - LIMIT_BIT + (i_src & 0x01);
     const int ADD1 = 1 << (shift1 - 1);
@@ -2473,7 +2473,7 @@ void dct_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     __m256i line00, line10, line20, line30, line40, line50, line60, line70;
     __m256i line01, line11, line21, line31, line41, line51, line61, line71;
@@ -2741,7 +2741,7 @@ void dct_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
 
     //const int shift1 = SHIFT1 + (i_src & 0x01);
@@ -4001,42 +4001,42 @@ void wavelet_64x64_avx2(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x64_avx2(dst);
-    dct_32x32_avx2(dst, dst, 32 | 1);
+    dct_c_32x32_avx2(dst, dst, 32 | 1);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x64_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x64_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x64_avx2(dst);
-    dct_32x32_half_avx2(dst, dst, 32 | 1);
+    dct_c_32x32_half_avx2(dst, dst, 32 | 1);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_64x16_avx2(dst);
-    dct_32x8_avx2(dst, dst, 32 | 0x01);
+    dct_c_32x8_avx2(dst, dst, 32 | 0x01);
 }
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     UNUSED_PARAMETER(src);
     UNUSED_PARAMETER(i_src);
     wavelet_16x64_avx2(dst);
-    dct_8x32_avx2(dst, dst, 8 | 0x01);
+    dct_c_8x32_avx2(dst, dst, 8 | 0x01);
 }
 
 
@@ -4097,7 +4097,7 @@ ALIGN32(static const int16_t tab_dct_16_1_avx[][16]) = {
 
 /* ---------------------------------------------------------------------------
  */
-void dct_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
+void dct_c_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 {
     const __m256i k_p32_p32 = _mm256_set1_epi16(32);
     const __m256i k_p32_m32 = pair256_set_epi16(32, -32);
@@ -4452,7 +4452,7 @@ ALIGN32(static const int16_t tab_dct1_4_avx2[][16]) = {
 
 /* ---------------------------------------------------------------------------
  */
-void dct_16x4_avx2(const coeff_t * src, coeff_t * dst, int i_src)
+void dct_c_16x4_avx2(const coeff_t * src, coeff_t * dst, int i_src)
 {
     int shift1 = B16X16_IN_BIT + FACTO_BIT +g_bit_depth + 1 - LIMIT_BIT;
     int shift2 = B16X16_IN_BIT + FACTO_BIT - 2;
