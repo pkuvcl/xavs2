@@ -166,6 +166,14 @@ void xavs2_pixel_average_avx   (pel_t *dst, int i_dst, pel_t *src1, int i_src1, 
 void padding_rows_sse128   (pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
 #define padding_rows_lr_sse128 FPFX(padding_rows_lr_sse128)
 void padding_rows_lr_sse128(pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
+#define padding_rows_sse256 FPFX(padding_rows_sse256)
+void padding_rows_sse256(pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
+#define padding_rows_sse256_10bit FPFX(padding_rows_sse256_10bit)
+void padding_rows_sse256_10bit(pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
+#define padding_rows_lr_sse256 FPFX(padding_rows_lr_sse256_10bit)
+void padding_rows_lr_sse256(pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
+#define padding_rows_lr_sse256_10bit FPFX(padding_rows_lr_sse256)
+void padding_rows_lr_sse256_10bit(pel_t *src, int i_src, int width, int height, int start, int rows, int pad);
 
 #define xavs2_memzero_aligned_c_sse2 FPFX(memzero_aligned_c_sse2)
 void *xavs2_memzero_aligned_c_sse2(void *dst, size_t n);
@@ -297,6 +305,8 @@ void inv_transform_2nd_sse128    (coeff_t *coeff, int i_coeff, int i_mode, int b
 void inv_wavelet_64x16_sse128(coeff_t *coeff);
 #define inv_wavelet_16x64_sse128 FPFX(inv_wavelet_16x64_sse128)
 void inv_wavelet_16x64_sse128(coeff_t *coeff);
+#define inv_wavelet_64x64_sse128 FPFX(inv_wavelet_64x64_sse128)
+void inv_wavelet_64x64_sse128(coeff_t *coeff);
 
 //zhangjiaqi add 2016.11.30    avx2
 #define idct_c_8x8_avx2 FPFX(idct_c_8x8_avx2)
@@ -317,6 +327,13 @@ void inv_wavelet_64x16_avx2(coeff_t *coeff);
 void inv_wavelet_16x64_avx2(coeff_t *coeff);
 #define inv_wavelet_64x64_avx2 FPFX(inv_wavelet_64x64_avx2)
 void inv_wavelet_64x64_avx2(coeff_t *coeff);
+
+#define wavelet_64x16_avx2 FPFX(wavelet_64x16_avx2)
+void wavelet_64x16_avx2(coeff_t *coeff);
+#define wavelet_16x64_avx2 FPFX(wavelet_16x64_avx2)
+void wavelet_16x64_avx2(coeff_t *coeff);
+#define wavelet_64x64_avx2 FPFX(wavelet_64x64_avx2)
+void wavelet_64x64_avx2(coeff_t *coeff);
 
 // scan the cg coefficient
 #define coeff_scan_4x4_xy_sse128 FPFX(coeff_scan_4x4_xy_sse128)
@@ -342,6 +359,10 @@ int add_sign_sse128(coeff_t *dst, const coeff_t *abs_val, const int i_coef);
 int quant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
 #define dequant_c_avx2 FPFX(dequant_c_avx2)
 void dequant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift);
+#define quant_c_sse128 FPFX(quant_c_avx2)
+int quant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
+#define dequant_c_sse128 FPFX(dequant_c_sse128)
+void dequant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add);
 #define abs_coeff_avx2 FPFX(abs_coeff_avx2)
 void abs_coeff_avx2(coeff_t *dst, const coeff_t *src, const int i_coef);
 #define add_sign_avx2 FPFX(add_sign_avx2)

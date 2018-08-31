@@ -50,4 +50,7 @@ void alf_filter_one_frame(xavs2_t *h);
 void alf_get_statistics_lcu(xavs2_t *h, int lcu_x, int lcu_y,
                             xavs2_frame_t *p_org, xavs2_frame_t *p_rec);
 
+#define compare_coef FPFX(compare_coef)
+int compare_coef(const void *value1, const void *value2);
+
 #endif  // XAVS2_ALF_H
