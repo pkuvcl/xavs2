@@ -301,12 +301,6 @@ void inv_transform_4x4_2nd_sse128(coeff_t *coeff, int i_coeff);
 #define inv_transform_2nd_sse128 FPFX(inv_transform_2nd_sse128)
 void inv_transform_2nd_sse128    (coeff_t *coeff, int i_coeff, int i_mode, int b_top, int b_left);
 
-#define inv_wavelet_64x16_sse128 FPFX(inv_wavelet_64x16_sse128)
-void inv_wavelet_64x16_sse128(coeff_t *coeff);
-#define inv_wavelet_16x64_sse128 FPFX(inv_wavelet_16x64_sse128)
-void inv_wavelet_16x64_sse128(coeff_t *coeff);
-#define inv_wavelet_64x64_sse128 FPFX(inv_wavelet_64x64_sse128)
-void inv_wavelet_64x64_sse128(coeff_t *coeff);
 
 //zhangjiaqi add 2016.11.30    avx2
 #define idct_c_8x8_avx2 FPFX(idct_c_8x8_avx2)
@@ -321,19 +315,6 @@ void idct_c_64x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 void idct_c_64x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
 #define idct_c_16x64_avx2 FPFX(idct_c_16x64_avx2)
 void idct_c_16x64_avx2(const coeff_t *src, coeff_t *dst, int i_dst);
-#define inv_wavelet_64x16_avx2 FPFX(inv_wavelet_64x16_avx2)
-void inv_wavelet_64x16_avx2(coeff_t *coeff);
-#define inv_wavelet_16x64_avx2 FPFX(inv_wavelet_16x64_avx2)
-void inv_wavelet_16x64_avx2(coeff_t *coeff);
-#define inv_wavelet_64x64_avx2 FPFX(inv_wavelet_64x64_avx2)
-void inv_wavelet_64x64_avx2(coeff_t *coeff);
-
-#define wavelet_64x16_avx2 FPFX(wavelet_64x16_avx2)
-void wavelet_64x16_avx2(coeff_t *coeff);
-#define wavelet_16x64_avx2 FPFX(wavelet_16x64_avx2)
-void wavelet_16x64_avx2(coeff_t *coeff);
-#define wavelet_64x64_avx2 FPFX(wavelet_64x64_avx2)
-void wavelet_64x64_avx2(coeff_t *coeff);
 
 // scan the cg coefficient
 #define coeff_scan_4x4_xy_sse128 FPFX(coeff_scan_4x4_xy_sse128)

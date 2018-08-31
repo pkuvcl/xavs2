@@ -4072,7 +4072,7 @@ void inv_transform_4x4_2nd_sse128(coeff_t *coeff, int i_coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void inv_wavelet_64x64_sse128(coeff_t *coeff)
+static void inv_wavelet_64x64_sse128(coeff_t *coeff)
 {
     int i;
     //按行 64*64
@@ -4354,7 +4354,7 @@ void inv_wavelet_64x64_sse128(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void inv_wavelet_64x16_sse128(coeff_t *coeff)
+static void inv_wavelet_64x16_sse128(coeff_t *coeff)
 {
     int i;
     //按行 64*16
@@ -4567,7 +4567,7 @@ void inv_wavelet_64x16_sse128(coeff_t *coeff)
 
 /* ---------------------------------------------------------------------------
  */
-void inv_wavelet_16x64_sse128(coeff_t *coeff)
+static void inv_wavelet_16x64_sse128(coeff_t *coeff)
 {
     //src coeff 8*32
     __m128i S00, S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28, S29, S30, S31;

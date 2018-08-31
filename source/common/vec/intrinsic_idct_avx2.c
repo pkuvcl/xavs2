@@ -1564,7 +1564,7 @@ void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
         O15 = _mm256_permute2x128_si256(t7, t15, 0x31);
 
 //inv_wavelet_64x16_sse128
-void inv_wavelet_64x16_avx2(coeff_t *coeff)
+static void inv_wavelet_64x16_avx2(coeff_t *coeff)
 {
     int i;
 
@@ -1686,8 +1686,7 @@ void inv_wavelet_64x16_avx2(coeff_t *coeff)
     }
 }
 
-
-void inv_wavelet_16x64_avx2(coeff_t *coeff)
+static void inv_wavelet_16x64_avx2(coeff_t *coeff)
 {
     //src blk 8*32
 
@@ -1907,8 +1906,7 @@ void inv_wavelet_16x64_avx2(coeff_t *coeff)
     _mm256_storeu_si256((__m256i*)&coeff[16 * 63], V63);
 }
 
-
-void inv_wavelet_64x64_avx2(coeff_t *coeff)
+static void inv_wavelet_64x64_avx2(coeff_t *coeff)
 {
     int i;
 
