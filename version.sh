@@ -9,7 +9,7 @@
 # ============================================================================
 
 # setting API version
-api=12
+api="$(grep '#define XAVS2_BUILD' < source/xavs2.h | sed 's/^.* \([1-9][0-9]*\).*$/\1/')"
 VER_R=0
 VER_SHA='not-in-git-tree'
 
@@ -58,5 +58,5 @@ echo "#endif // __VERSION_H__"                                                  
 mv version.h source/version.h
 
 # show version informations
-echo "#define XAVS2_BUILD    $api"
+echo "#define XAVS2_VERSION      $api"
 echo "#define XAVS2_POINTVER \"$VER_MAJOR.$VER_MINOR.$VER_R\""
