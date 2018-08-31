@@ -1683,6 +1683,7 @@ void xfindBestFilterVarPred(alf_ctx_t *Enc_ALF, double ySym[ALF_MAX_NUM_COEF][AL
 
 /* ---------------------------------------------------------------------------
  */
+static
 int compare_coef(const void *value1, const void *value2)
 {
     DhNc *a = (DhNc*)value1;
@@ -1693,7 +1694,8 @@ int compare_coef(const void *value1, const void *value2)
 
 /* ---------------------------------------------------------------------------
  */
-static void xQuantFilterCoef(double *hh, int *qh)
+static
+void xQuantFilterCoef(double *hh, int *qh)
 {
     int i;
     const int N = (int)ALF_MAX_NUM_COEF;
