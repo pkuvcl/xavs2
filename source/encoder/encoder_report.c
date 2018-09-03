@@ -394,17 +394,17 @@ void encoder_show_head_info(xavs2_param_t *param)
 
     /* algorithms and controls in the encoder */
     if (param->enable_refine_qp) {
-        xavs2_log(NULL, XAVS2_LOG_INFO, " RefinedQp is on, the input QP might be changed;\n");
+        xavs2_log(NULL, XAVS2_LOG_DEBUG, " RefinedQp is on, the input QP might be changed;\n");
     }
-
+    /* input/output properties */
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " xavs2enc version     : %s  %s\n",
+              XVERSION_STR, XBUILD_TIME);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Input YUV file       : %s \n", param->psz_in_file);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Output bitstream     : %s \n", param->psz_bs_file);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Recon YUV file       : %s \n", param->psz_dump_yuv);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Total Frames         : %d \n", param->num_frames);
     /* basic parameters */
     xavs2_log(NULL, XAVS2_LOG_INFO, "--------------------------------------------------------------------------------\n");
-    xavs2_log(NULL, XAVS2_LOG_INFO, " xavs2enc version     : %s  %s\n",
-              XVERSION_STR, XBUILD_TIME);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Input YUV file       : %s \n", param->psz_in_file);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Output bitstream     : %s \n", param->psz_bs_file);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Recon YUV file       : %s \n", param->psz_dump_yuv);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Total Frames         : %d \n", param->num_frames);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Profile & Level      : 0x%02X-0x%02X, BitDepth: %d/%d, size(pel): %d \n",
               param->profile_id, param->level_id, param->input_sample_bit_depth, param->sample_bit_depth, sizeof(pel_t));
     xavs2_log(NULL, XAVS2_LOG_INFO, " Video Property       : %dx%d, %.3f Hz (FrameRateCode: %d)\n",
