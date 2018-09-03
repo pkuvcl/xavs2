@@ -189,12 +189,6 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
     case XAVS2_LOG_DEBUG:
         psz_prefix = "[debug]: ";
         break;
-    case XAVS2_LOG_NOPREFIX:
-        psz_prefix = null_prefix;
-#if !defined(_MSC_VER)
-        cur_color = str_color[3];
-#endif
-        break;
     default:
         psz_prefix = "[unknown]: ";
 #if !defined(_MSC_VER)
@@ -207,7 +201,7 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
     fprintf(stdout, "%s%s", psz_prefix, psz_fmt);
     xavs2_set_font_color(4);     /* restore to white color */
 #else
-    if (i_log_level != XAVS2_LOG_INFO && i_log_level != XAVS2_LOG_NOPREFIX) {
+    if (i_log_level != XAVS2_LOG_INFO) {
         fprintf(stdout, "%s%s%s%s", cur_color, psz_prefix, psz_fmt, str_color_clear);
     } else {
         fprintf(stdout, "%s%s", psz_prefix, psz_fmt);

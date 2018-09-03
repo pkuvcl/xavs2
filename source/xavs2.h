@@ -118,7 +118,6 @@ enum log_level_e {
     XAVS2_LOG_WARNING  = 1,   /* level 1 */
     XAVS2_LOG_INFO     = 2,   /* level 2 */
     XAVS2_LOG_DEBUG    = 3,   /* level 3 */
-    XAVS2_LOG_NOPREFIX = 0x80 /* special using: without prefix */
 };
 
 /* ---------------------------------------------------------------------------

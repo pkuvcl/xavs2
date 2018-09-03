@@ -834,8 +834,8 @@ xavs2_encoder_opt_help(void)
 {
     mapping_t *p_map = NULL;
     xavs2_param_t param;
-    xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "Usage:\n\t [-f EncoderFile.cfg] [-p ParameterName=Value] [--ParameterName=value]\n");
-    xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "Supported parameters:\n");
+    xavs2_log(NULL, XAVS2_LOG_INFO, "Usage:\n\t [-f EncoderFile.cfg] [-p ParameterName=Value] [--ParameterName=value]\n");
+    xavs2_log(NULL, XAVS2_LOG_INFO, "Supported parameters:\n");
 
     memset(&g_param_map, 0, sizeof(g_param_map));
     mapping_default(&g_param_map, &param);
@@ -846,7 +846,7 @@ xavs2_encoder_opt_help(void)
             break;
         }
 
-        xavs2_log(NULL, XAVS2_LOG_NOPREFIX, "    %-20s : %s\n", p_map->name, p_map->s_instruction);
+        xavs2_log(NULL, XAVS2_LOG_INFO, "    %-20s : %s\n", p_map->name, p_map->s_instruction);
         p_map++;
     }
 }
