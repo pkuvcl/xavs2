@@ -372,7 +372,7 @@ void encoder_report_one_frame(xavs2_t *h, outputframe_t *frame)
 
     get_reference_list_str(s_ref_list, frmstat->ref_poc_set, frmstat->i_ref);
 
-    xavs2_log(h, XAVS2_LOG_INFO, "%s  %s\n", s_out_base, s_ref_list);
+    xavs2_log(h, XAVS2_LOG_DEBUG, "%s  %s\n", s_out_base, s_ref_list);
 }
 
 /* ---------------------------------------------------------------------------
@@ -447,11 +447,11 @@ void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_INFO, "--------------------------------------------------------------------------------\n");
     if (h->param->enable_psnr && h->param->enable_ssim){
-        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   SsimY   SsimU   SsimV   Time  [ RefList ]\n");
+        xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   SsimY   SsimU   SsimV   Time  [ RefList ]\n");
     } else if (h->param->enable_psnr) {
-        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
+        xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
     } else {
-        xavs2_log(NULL, XAVS2_LOG_INFO, "POC Type QP +   Bits     Time  [ RefList ]\n");
+        xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits     Time  [ RefList ]\n");
     }
 }
 
