@@ -1703,6 +1703,9 @@ void  xavs2_free(void *ptr);
 size_t xavs2_get_total_malloc_space(void);
 
 
+#define g_xavs2_default_log          FPFX(g_xavs2_default_log)
+extern xavs2_log_t    g_xavs2_default_log;
+
 /**
  * ===========================================================================
  * global const tables

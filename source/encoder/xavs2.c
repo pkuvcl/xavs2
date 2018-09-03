@@ -251,10 +251,24 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     xavs2_handler_t *h_mgr   = NULL;
     xavs2_frame_t   *frm     = NULL;
     uint8_t         *mem_ptr = NULL;
-    int size_ratecontrol = xavs2_rc_get_buffer_size(param);      /* rate control */
-    int size_tdrdo       = tdrdo_get_buffer_size(param);
+    size_t size_ratecontrol;      /* size for rate control module */
+    size_t size_tdrdo;
     size_t mem_size;
     int i;
+
+    if (param == NULL) {
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "Null input parameters for encoder creation\n");
+        return NULL;
+    }
+
+    /* confirm the input parameters (log_level)  */
+    if (param->i_log_level < XAVS2_LOG_NONE ||
+        param->i_log_level > XAVS2_LOG_DEBUG) {
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "Invalid parameter: log_level %d\n",
+                  param->i_log_level);
+        return NULL;
+    }
+    g_xavs2_default_log.i_log_level = param->i_log_level;
 
     /* init all function handlers */
     memset(&g_funcs, 0, sizeof(g_funcs));
@@ -268,7 +282,10 @@ void *xavs2_encoder_create(xavs2_param_t *param)
         xavs2_log(NULL, XAVS2_LOG_ERROR, "error encoder parameters\n");
         goto fail;
     }
-    
+
+    size_ratecontrol = xavs2_rc_get_buffer_size(param);      /* rate control */
+    size_tdrdo       = tdrdo_get_buffer_size(param);
+
     /* compute the memory size */
     mem_size = sizeof(xavs2_handler_t)                           +   /* M0, size of the encoder wrapper */
     xavs2_frame_buffer_size(param, FT_ENC) * XAVS2_INPUT_NUM     +   /* M4, size of buffered input frames */

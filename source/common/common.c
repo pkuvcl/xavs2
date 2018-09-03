@@ -66,6 +66,11 @@ const char *xavs2_preset_names[] = {
     "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo", NULL
 };
 
+xavs2_log_t    g_xavs2_default_log = {
+    XAVS2_LOG_DEBUG,
+    "default"
+};
+
 #if XAVS2_TRACE
 FILE *h_trace = NULL;           /* global file handle for trace file */
 int g_sym_count = 0;            /* global symbol count for trace */
@@ -214,8 +219,13 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
 void xavs2_log(void *p, int i_log_level, const char *psz_fmt, ...)
 {
     xavs2_log_t *h = (xavs2_log_t *)p;
+    int i_output_log_level = g_xavs2_default_log.i_log_level;
 
-    if (h == NULL || (i_log_level & 0x0F) <= h->i_log_level) {
+    if (h != NULL) {
+        i_output_log_level = h->i_log_level;
+    }
+
+    if ((i_log_level & 0x0F) <= i_output_log_level) {
         va_list arg;
         char str_in[2048];
         va_start(arg, psz_fmt);
