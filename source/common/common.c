@@ -178,19 +178,19 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
 
     switch (i_log_level) {
     case XAVS2_LOG_ERROR:
-        psz_prefix = "[error]: ";
+        psz_prefix = "xavs2[e]: ";
         break;
     case XAVS2_LOG_WARNING:
-        psz_prefix = "[warning]: ";
+        psz_prefix = "xavs2[w]: ";
         break;
     case XAVS2_LOG_INFO:
-        psz_prefix = "[info]: ";
+        psz_prefix = "xavs2[i]: ";
         break;
     case XAVS2_LOG_DEBUG:
-        psz_prefix = "[debug]: ";
+        psz_prefix = "xavs2[d]: ";
         break;
     default:
-        psz_prefix = "[unknown]: ";
+        psz_prefix = "xavs2[u]: ";
 #if !defined(_MSC_VER)
         cur_color  = str_color[0];
 #endif
