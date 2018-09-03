@@ -242,8 +242,8 @@ void encoder_report_stat_info(xavs2_t *h)
     
     // BITRATE
     f_bitrate = (i_total_bits * (8.0f / 1000.0f) * h->framerate) / ((float)num_total_frames);
-    xavs2_log(h, XAVS2_LOG_INFO, "         BITRATE: %6.2f kb/s @ %4.1f Hz, xavs2 p%d \n",
-              f_bitrate, h->framerate, h->param->preset_level);
+    xavs2_log(h, XAVS2_LOG_INFO, "         BITRATE: %6.2f kb/s @ %4.1f Hz, %d frames, xavs2 p%d \n",
+              f_bitrate, h->framerate, num_total_frames, h->param->preset_level);
 
     // TOTAL BITS
     xavs2_log(h, XAVS2_LOG_INFO, "      TOTAL BITS: %lld (I: %lld, B: %lld, P/F: %lld)\n",
