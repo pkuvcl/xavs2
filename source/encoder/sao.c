@@ -375,14 +375,16 @@ sao_pf gf_sao_stat[5] =
 
 /* ---------------------------------------------------------------------------
  */
-static ALWAYS_INLINE long distortion_cal(long count, int offset, long diff)
+static ALWAYS_INLINE
+long distortion_cal(long count, int offset, long diff)
 {
     return (count * offset * offset - diff * offset * 2);
 }
 
 /* ---------------------------------------------------------------------------
  */
-static int offset_estimation(int typeIdx, int classIdx, rdcost_t lambda, long offset_ori, int count, long diff, rdcost_t *bestCost)
+static
+int offset_estimation(int typeIdx, int classIdx, rdcost_t lambda, long offset_ori, int count, long diff, rdcost_t *bestCost)
 {
     const int tab_EO_OFFSET_MAP[8] = {4, 2, 1, 3, 5, 6, 7, 7};  // -1, 0, ..., 6
     int cur_offset = offset_ori;
@@ -540,7 +542,8 @@ static void find_offset(int typeIdc, SAOStatData *p_stat, SAOBlkParam *p_param, 
 
 /* ---------------------------------------------------------------------------
  */
-static ALWAYS_INLINE long get_distortion(int compIdx, int type, SAOStatData stat_data[NUM_SAO_COMPONENTS][NUM_SAO_NEW_TYPES], SAOBlkParam *sao_cur_param)
+static ALWAYS_INLINE
+long get_distortion(int compIdx, int type, SAOStatData stat_data[NUM_SAO_COMPONENTS][NUM_SAO_NEW_TYPES], SAOBlkParam *sao_cur_param)
 {
     int classIdc, bandIdx;
     long dist = 0;
@@ -1151,7 +1154,7 @@ void sao_get_lcu_param_after_deblock(xavs2_t *h, aec_t *p_aec, int i_lcu_x, int 
                     // memset(&tmp, 0, sizeof(tmp));
                     // gf_sao_stat[type](h->fdec, h->fenc, &tmp, &region, compIdx);
                     // if (memcmp(&tmp, &h->sao_stat_datas[i_lcu_xy][compIdx][type], sizeof(tmp)) != 0) {
-                    //     xavs2_log(NULL, XAVS2_LOG_ERROR, "SAO mismatch!\n");
+                    //     xavs2_log(h, XAVS2_LOG_ERROR, "SAO mismatch!\n");
                     //     gf_sao_stat[type](h->img_sao, h->fenc, &h->sao_stat_datas[i_lcu_xy][compIdx][type], &region, compIdx);
                     //     gf_sao_stat[type](h->fdec, h->fenc, &tmp, &region, compIdx);
                     // }

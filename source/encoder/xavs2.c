@@ -327,7 +327,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     if (strlen(param->psz_dump_yuv) > 0) {
         /* open dump file */
         if ((h_mgr->h_rec_file = fopen(param->psz_dump_yuv, "wb")) == NULL) {
-            xavs2_log(NULL, XAVS2_LOG_ERROR, "Error open file %s\n", param->psz_dump_yuv);
+            xavs2_log(h_mgr, XAVS2_LOG_ERROR, "Error open file %s\n", param->psz_dump_yuv);
         }
     }
 #endif
@@ -358,7 +358,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
 
         /* create the thread pool */
         if (xavs2_threadpool_init(&h_mgr->threadpool_rdo, thread_num, NULL, NULL)) {
-            xavs2_log(NULL, XAVS2_LOG_ERROR, "Error init thread pool RDO. %d", thread_num);
+            xavs2_log(h_mgr, XAVS2_LOG_ERROR, "Error init thread pool RDO. %d", thread_num);
             goto fail;
         }
         h_mgr->num_pool_threads = thread_num;
@@ -384,7 +384,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     ALIGN_POINTER(mem_ptr);
 
     if (xavs2_rc_init(h_mgr->rate_control, param) < 0) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "create rate control fail\n");
+        xavs2_log(h_mgr, XAVS2_LOG_ERROR, "create rate control fail\n");
         goto fail;
 
     }
@@ -396,7 +396,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
         ALIGN_POINTER(mem_ptr);
 
         if (tdrdo_init(h_mgr->td_rdo, param) != 0) {
-            xavs2_log(NULL, XAVS2_LOG_ERROR, "init td-rdo fail\n");
+            xavs2_log(h_mgr, XAVS2_LOG_ERROR, "init td-rdo fail\n");
             goto fail;
         }
     }
@@ -448,7 +448,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
 
     /* create wrapper thread */
     if (xavs2_create_thread(&h_mgr->thread_wrapper, proc_wrapper_thread, h_mgr)) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "create encoding thread\n");
+        xavs2_log(h_mgr, XAVS2_LOG_ERROR, "create encoding thread\n");
         goto fail;
     }
 
@@ -491,7 +491,7 @@ void xavs2_encoder_destroy(void *coder)
     /* close the encoder */
     encoder_close(h_mgr);
 
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, "Encoded %d frames, %.3f secs\n",
+    xavs2_log(h_mgr, XAVS2_LOG_DEBUG, "Encoded %d frames, %.3f secs\n",
               h_mgr->num_input, 0.000001 * (xavs2_mdate() - h_mgr->create_time));
 
     if (h_mgr->fp_trace) {
