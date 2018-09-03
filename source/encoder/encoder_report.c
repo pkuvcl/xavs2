@@ -253,19 +253,19 @@ void encoder_report_stat_info(xavs2_t *h)
               p_stat->stat_p_frame.i_frame_size * 8);
 
     // TOTAL TIME
-    xavs2_log(h, XAVS2_LOG_INFO, "      TOTAL TIME: %8.3f sec, total %d frames, speed: %5.2f fps \n",
+    xavs2_log(h, XAVS2_LOG_DEBUG, "      TOTAL TIME: %8.3f sec, total %d frames, speed: %5.2f fps \n",
               (double)(p_stat->i_end_time - p_stat->i_start_time) / 1000000.0,
               num_total_frames,
               (double)num_total_frames / ((p_stat->i_end_time - p_stat->i_start_time) / 1000000.0));
     // Time Distribution
+    xavs2_log(h, XAVS2_LOG_DEBUG, "      Frame Time:   I: %6.2f%%;   B: %6.2f%%;   P/F: %6.2f%%\n",
+              (double)(p_stat->stat_i_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
+              (double)(p_stat->stat_b_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
+              (double)(p_stat->stat_p_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration);
     xavs2_log(h, XAVS2_LOG_INFO, "      Frame Num :   I: %6.2f%%;   B: %6.2f%%;   P/F: %6.2f%%\n",
               p_stat->stat_i_frame.num_frames * 100.0 / num_total_frames,
               p_stat->stat_b_frame.num_frames * 100.0 / num_total_frames,
               p_stat->stat_p_frame.num_frames * 100.0 / num_total_frames);
-    xavs2_log(h, XAVS2_LOG_INFO, "      Frame Time:   I: %6.2f%%;   B: %6.2f%%;   P/F: %6.2f%%\n",
-              (double)(p_stat->stat_i_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
-              (double)(p_stat->stat_b_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration,
-              (double)(p_stat->stat_p_frame.i_time_duration * 100.0) / p_stat->stat_total.i_time_duration);
     xavs2_log(h, XAVS2_LOG_INFO, "---------------------------------------------------------------------\n");
 }
 
