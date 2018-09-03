@@ -285,6 +285,10 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     mem_ptr  += sizeof(xavs2_handler_t);
     ALIGN_POINTER(mem_ptr);
 
+    /* init log module */
+    h_mgr->module_log.i_log_level = param->i_log_level;
+    sprintf(h_mgr->module_log.module_name, "Manager %06llx", (intptr_t)(h_mgr));
+
     /* counter: number of frames */
     h_mgr->num_input  = 0;
     h_mgr->num_encode = 0;

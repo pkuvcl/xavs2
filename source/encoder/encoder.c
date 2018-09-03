@@ -1133,7 +1133,8 @@ static void build_coding_tree(xavs2_t *h, cu_t *p_cu, int idx_zorder, int i_leve
 
 /* ---------------------------------------------------------------------------
  */
-static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
+static
+xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_encoder)
 {
     const int num_slices = param->slice_num;
     xavs2_t *h = NULL;
@@ -1208,6 +1209,10 @@ static xavs2_t *encoder_create_frame_context(const xavs2_param_t *param)
     memset(h, 0, sizeof(xavs2_t));
     mem_base += sizeof(xavs2_t);
     ALIGN_POINTER(mem_base);          /* align pointer */
+
+    /* init log module */
+    h->module_log.i_log_level = param->i_log_level;
+    sprintf(h->module_log.module_name, "Enc[%2d] %06llx", idx_frm_encoder, h);
 
     /* copy the input parameters */
     h->param = param;
@@ -1553,7 +1558,7 @@ int encoder_contexts_init(xavs2_t *h, xavs2_handler_t *h_mgr)
      * build frame encoding contexts */
     h_mgr->frm_contexts[0] = h; /* context 0 is the main encoder handle */
     for (i = 1; i < h_mgr->i_frm_threads; i++) {
-        if ((h_mgr->frm_contexts[i] = encoder_create_frame_context(h->param)) == 0) {
+        if ((h_mgr->frm_contexts[i] = encoder_create_frame_context(h->param, i)) == 0) {
             goto fail;
         }
 
@@ -1758,7 +1763,7 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
     decide_ultimate_paramters(param);
     
     /* init frame context */
-    if ((h = encoder_create_frame_context(param)) == NULL) {
+    if ((h = encoder_create_frame_context(param, 0)) == NULL) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "create frame context fail\n");
         goto fail;
     }

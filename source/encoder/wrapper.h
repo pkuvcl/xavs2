@@ -105,6 +105,7 @@ struct xavs2_frame_buffer_t {
  * xavs2_handler_t
  */
 struct xavs2_handler_t {
+    ALIGN32(xavs2_log_t   module_log);              /* used for logging */
     /* encoder engines */
     xavs2_t    *p_coder;                            /* point to the xavs2 video encoder */
     xavs2_t    *frm_contexts[MAX_PARALLEL_FRAMES];  /* frame task contexts */

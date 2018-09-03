@@ -67,6 +67,7 @@ typedef double      rdcost_t;   /* type for RDcost calculation, can also be int6
  * ===========================================================================
  */
 typedef struct xavs2_handler_t  xavs2_handler_t;   /* top handler of the encoder */
+typedef struct xavs2_log_t      xavs2_log_t;       /* log module */
 typedef struct xavs2_t          xavs2_t;           /* main encoder context for one thread */
 typedef struct xavs2_frame_t    xavs2_frame_t;
 typedef struct xavs2_frame_buffer_t xavs2_frame_buffer_t;

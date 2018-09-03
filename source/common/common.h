@@ -1394,10 +1394,19 @@ typedef struct cu_parallel_t {
     aec_t  cs_pu_init;              /* coding state before encoding one CU partition */
 } cu_parallel_t;
 
+
+/* ---------------------------------------------------------------------------
+ */
+struct xavs2_log_t {
+    int         i_log_level;          /* log level */
+    char        module_name[60];      /* module name */
+};
+
 /* ---------------------------------------------------------------------------
  * xavs2_t
  */
 struct xavs2_t {
+    ALIGN32(xavs2_log_t    module_log);      /* log module */
     /* === BEGIN ===================================================
      * communal variables
      * 序列级（编码的所有帧）共享变量区域开始
