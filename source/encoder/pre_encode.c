@@ -66,13 +66,14 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 
     /* slice type decision */
     if (lookahead->start) {
+        int p_frm_type = param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
         if (param->intra_period == 1) {
             // for AI (All Intra)
             frm->i_frm_type = XAVS2_TYPE_I;
             frm->b_keyframe = 1;
         } else if (param->intra_period == 0 || param->successive_Bframe == 0) {
             // for LDP (with no intra period)
-            frm->i_frm_type = param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+            frm->i_frm_type = p_frm_type;
             frm->b_keyframe = 0;
             lookahead->pframes++;
             // when intra period is non-zero, set key frames
@@ -102,12 +103,12 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 
                         lookahead->pframes = 0;
                     } else {
-                        frm->i_frm_type = param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+                        frm->i_frm_type = p_frm_type;
                         lookahead->pframes++;
                     }
                 } else {
                     lookahead->pframes++;
-                    frm->i_frm_type = param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+                    frm->i_frm_type = p_frm_type;
 
                     if (lookahead->pframes == param->intra_period - 1) {
                         lookahead->start = 0;
