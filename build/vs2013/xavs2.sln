@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xavs2", "xavs2.vcxproj", "{01B07A15-D428-468F-ADE3-35982416A66A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F202E04C-47EC-42CD-8AC0-73B0D77E4DD4} = {F202E04C-47EC-42CD-8AC0-73B0D77E4DD4}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libxavs2asm", "libxavs2asm.vcxproj", "{A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libxavs2", "libxavs2.vcxproj", "{F202E04C-47EC-42CD-8AC0-73B0D77E4DD4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1} = {A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xavs2", "xavs2.vcxproj", "{01B07A15-D428-468F-ADE3-35982416A66A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F202E04C-47EC-42CD-8AC0-73B0D77E4DD4} = {F202E04C-47EC-42CD-8AC0-73B0D77E4DD4}
 	EndProjectSection
 EndProject
 Global
