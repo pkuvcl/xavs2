@@ -49,6 +49,7 @@ extern binary_t gf_aec_rdo;
 extern binary_t gf_aec_fastrdo;
 extern binary_t gf_aec_vrdo;
 
+#define tab_intra_mode_scan_type FPFX(tab_intra_mode_scan_type)
 extern const int tab_intra_mode_scan_type[NUM_INTRA_MODE];
 
 #if CTRL_OPT_AEC

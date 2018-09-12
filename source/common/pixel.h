@@ -173,6 +173,7 @@ typedef struct {
  */
 
 /* get partition index for the given size */
+#define g_partition_map_tab FPFX(g_partition_map_tab)
 extern const uint8_t g_partition_map_tab[];
 #define PART_INDEX(w, h)    (g_partition_map_tab[((((w) >> 2) - 1) << 4) + ((h) >> 2) - 1])
 
