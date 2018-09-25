@@ -370,13 +370,17 @@ static const int i_org = FENC_STRIDE;
         int yy1 = my     >> 2;\
         int xx2 = mx_sym >> 2;\
         int yy2 = my_sym >> 2;\
-        pel_t *p_src1 = p_filtered1[((my     & 3) << 2) + (mx     & 3)] + i_offset + yy1 * i_fref + xx1;\
-        pel_t *p_src2 = p_filtered2[((my_sym & 3) << 2) + (mx_sym & 3)] + i_offset + yy2 * i_fref + xx2;\
+        pel_t *p_src1 = p_filtered1[((my     & 3) << 2) + (mx     & 3)]; \
+        pel_t *p_src2 = p_filtered2[((my_sym & 3) << 2) + (mx_sym & 3)]; \
         pel_t *p_pred = buf_pixel_temp;\
         \
-        g_funcs.pixf.avg[i_pixel](p_pred, 64, p_src1, i_fref, p_src2, i_fref, 32); \
-        cost = g_funcs.pixf.fpel_cmp[i_pixel](p_org, i_org, p_pred, MAX_CU_SIZE)\
-             + MV_COST_FPEL(mx, my);\
+        if (p_src1 != NULL && p_src2 != NULL) { \
+            p_src1 += i_offset + yy1 * i_fref + xx1;\
+            p_src2 += i_offset + yy2 * i_fref + xx2;\
+            g_funcs.pixf.avg[i_pixel](p_pred, 64, p_src1, i_fref, p_src2, i_fref, 32); \
+            cost = g_funcs.pixf.fpel_cmp[i_pixel](p_org, i_org, p_pred, MAX_CU_SIZE)\
+                 + MV_COST_FPEL(mx, my);\
+        } \
     }\
 }
 

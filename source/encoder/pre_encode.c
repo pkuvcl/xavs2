@@ -222,23 +222,45 @@ void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
             assert(blocked_frm_set[i] == NULL);
         }
 #endif
-    } else {
-        int i_lowdelay_frame = h_mgr->p_coder->param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
-        int i;
-        int num_out = 0;
+    } else  if (num_frames > 0) {
+        static const int tab_poc_order[][8] = {
+            { 1, 0, 0, 0, 0, 0, 0, 0 },  // 1
+            { 2, 1, 0, 0, 0, 0, 0, 0 },  // 2: 1 B frame
+            { 3, 1, 2, 0, 0, 0, 0, 0 },  // 3: 2 B frames
+            { 4, 2, 1, 3, 0, 0, 0, 0 },  // 4: 3 B frames
+            { 5, 2, 1, 3, 4, 0, 0, 0 },  // 5: 4 B frames
+            { 6, 3, 1, 2, 4, 5, 0, 0 },  // 6: 5 B frames
+            { 7, 3, 1, 2, 5, 4, 6, 0 },  // 7: 6 B frames
+            { 8, 4, 2, 1, 3, 6, 5, 7 },  // 8: 7 B frames
+        };
+        const int *p_tab_poc = tab_poc_order[num_frames - 1];
 
-        for (i = 1; i <= num_frames; i++) {
-            xavs2_frame_t *rest_frm = blocked_frm_set[i];
-            if (rest_frm != NULL) {
+        for (i = 0; i < num_frames; i++) {
+            int k = p_tab_poc[i];
+
+            if (k > 0) {
+                /* get a frame to encode */
+                xavs2_frame_t *frm = blocked_frm_set[k];
+                if (frm == NULL) {
+                    break;
+                }
+
                 /* clear */
-                blocked_frm_set[i] = NULL;
-                /* change frame type to none B-picture and set DTS */
-                rest_frm->i_frm_type = i_lowdelay_frame;
-                rest_frm->i_reordered_pts = rest_frm->i_pts; /* DTS is same as PTS */
+                blocked_frm_set[k] = NULL;
+
+                /* set frame type */
+                if (i == 0) {
+                    frm->i_frm_type = h_mgr->p_coder->param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+                }
+
+                /* set DTS */
+                frm->i_reordered_pts = blocked_pts_set[i + 1];
 
                 /* append to output list to be encoded */
-                lookahead_append_frame(h_mgr, list_out, rest_frm, h_mgr->p_coder->param->successive_Bframe, i);
+                lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, i + 1);
                 h_mgr->num_encode++;
+            } else {
+                break;
             }
         }
     }
