@@ -977,7 +977,7 @@ int encoder_check_parameters(xavs2_param_t *param)
         if (param->successive_Bframe != 0) {
             param->intra_period_max = param->intra_period_to_abolish * param->i_gop_size;
             if (!param->b_open_gop) {
-                param->intra_period_max++;
+                param->intra_period_max -= param->successive_Bframe;
             }
         } else {
             param->intra_period_max = param->intra_period_to_abolish;
