@@ -321,7 +321,7 @@ static int rc_calculate_frame_qp(xavs2_t *h, int frm_idx, int frm_type, int forc
     xavs2_emms();
 
     /* the initial frame QP */
-    if (h->param->enable_refine_qp && h->param->intra_period > 1) {
+    if (h->param->enable_refine_qp && h->param->intra_period_to_abolish > 1) {
         qp = 5.661 * log(h->f_lambda_mode) + 13.131;
     } else {
         qp = h->i_qp;
@@ -508,7 +508,7 @@ int xavs2_rc_init(ratectrl_t *rc, xavs2_param_t *param)
     /* clear memory for rate control handle */
     memset(rc, 0, sizeof(ratectrl_t));
 
-    if (param->i_rc_method == XAVS2_RC_CBR_SCU && param->intra_period > 1) {
+    if (param->i_rc_method == XAVS2_RC_CBR_SCU && param->intra_period_to_abolish > 1) {
         param->i_rc_method = XAVS2_RC_CBR_FRM;
         xavs2_log(NULL, XAVS2_LOG_WARNING, "LCU Rate Control does not support RA. Using Frame RC. \n");
     }
@@ -517,7 +517,7 @@ int xavs2_rc_init(ratectrl_t *rc, xavs2_param_t *param)
     rc->i_total_frames = param->num_frames == 0 ? RC_MAX_INT : param->num_frames;
     rc->i_total_frames = XAVS2_MIN(RC_MAX_INT, param->num_frames);
     rc->i_coded_frames = 0;
-    rc->i_intra_period = param->intra_period;
+    rc->i_intra_period = param->intra_period_to_abolish;
     rc->i_frame_size = param->org_width * param->org_height;
     rc->b_open_gop = param->b_open_gop;
 

@@ -416,7 +416,7 @@ void encoder_show_head_info(xavs2_param_t *param)
 
     xavs2_log(NULL, XAVS2_LOG_INFO, " Preset Level         : %d,  %s \n", param->preset_level, xavs2_preset_names[param->preset_level]);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Reference Structure  : BFrames: %d; %s GOP; IntraPeriod: %d\n", 
-        param->successive_Bframe, s_gop_param, param->intra_period);
+        param->successive_Bframe, s_gop_param, param->intra_period_to_abolish);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Rate Control         : %d; QP: %d, [%2d, %2d]; %.3f Mbps\n",
         param->i_rc_method, param->i_initial_qp, param->i_min_qp, param->i_max_qp, 0.000001f * param->i_target_bitrate);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Row/Frame)  : %s / %s, cpu cores %d \n", s_threads_row, s_threads_frame, xavs2_cpu_num_processors());

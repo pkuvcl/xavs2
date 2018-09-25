@@ -538,7 +538,7 @@ typedef struct xavs2_param_t {
     // int     view_reverse;             /* view reverse */
 
     /* --- stream structure ------------------------------------- */
-    int     intra_period;
+    int     intra_period_to_abolish;  /* Intra Period Configuration to be abolished (only for comparison with reference software) */
     int     b_open_gop;               /* open GOP? 1: open, 0: close */
     int     enable_f_frame;           /* enable F-frame */
     int     successive_Bframe;        /* number of B frames that will be used */

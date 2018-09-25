@@ -173,7 +173,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("ProfileID",                    &p->profile_id,                 MAP_NUM, "Profile ID (18: MAIN PICTURE profile, 32: MAIN profile, 34: MAIN10 profile)");
     MAP("LevelID",                      &p->level_id,                   MAP_NUM, "Level ID   (16: 2.0;  32: 4.0;  34: 4.2;  64: 6.0;  66: 6.2)");
     MAP("SampleBitDepth",               &p->sample_bit_depth,           MAP_NUM, "Encoding bit-depth");
-    MAP("IntraPeriod",                  &p->intra_period,               MAP_NUM, "Period of I-Frames (0=only first)");
+    MAP("IntraPeriod",                  &p->intra_period_to_abolish,    MAP_NUM, "Period of I-Frames (0=only first) TOBE abolished");
     MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP");
     MAP("FramesToBeEncoded",            &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
     MAP("frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
@@ -754,9 +754,9 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
     } else if (!strcmp(name, "intraperiod")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         if (param->i_cfg_type == XAVS2_RPS_CFG_RA || param->i_cfg_type == XAVS2_RPS_CFG_RAP) {  // RA configuration
-            param->intra_period = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
+            param->intra_period_to_abolish = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
         } else {
-            param->intra_period = value_i;  // default: LDP, AI
+            param->intra_period_to_abolish = value_i;  // default: LDP, AI
         }
     } else if (!strcmp(name, "fps")) {
         float fps = xavs2e_atof(value_string, &b_error);
