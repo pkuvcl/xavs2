@@ -89,31 +89,25 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
             b_delayed = 1;     // the frame is delayed to be encoded
             frm->b_keyframe = 0;
 
-            if (--lookahead->bpframes > 0) {
+            --lookahead->bpframes;
+
+            if (param->b_open_gop && lookahead->gopframes - 1 == param->intra_period_max) {
+                // new sequence start
+                // note: this i-frame's POI does NOT equal to its COI
+                frm->i_frm_type = XAVS2_TYPE_I;
+                frm->b_keyframe = 1;
+
+                lookahead->gopframes = 1;
+                lookahead->bpframes = param->i_gop_size;
+            } else if (!param->b_open_gop && lookahead->gopframes == param->intra_period_max) {
+                frm->i_frm_type = p_frm_type;
+                lookahead->start = 0;
+                lookahead->bpframes = param->i_gop_size;
+            } else if (lookahead->bpframes > 0) {
                 // the first 'bpframes - 1' frames is of type B
                 frm->i_frm_type = XAVS2_TYPE_B;
             } else {
-                // lookahead->bpframes == 0
-                if (param->b_open_gop) {
-                    // the last frame is of type I/P/F
-                    if (lookahead->gopframes - 1 == param->intra_period_max) {
-                        // new sequence start
-                        // note: this i-frame's POI does NOT equal to its COI
-                        frm->i_frm_type = XAVS2_TYPE_I;
-                        frm->b_keyframe = 1;
-
-                        lookahead->gopframes = 1;
-                    } else {
-                        frm->i_frm_type = p_frm_type;
-                    }
-                } else {
-                    frm->i_frm_type = p_frm_type;
-
-                    if (lookahead->gopframes == param->intra_period_max) {
-                        lookahead->start = 0;
-                    }
-                }
-
+                frm->i_frm_type = p_frm_type;
                 lookahead->bpframes = param->i_gop_size;
             }
         }
