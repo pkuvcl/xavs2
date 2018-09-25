@@ -75,12 +75,12 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
             // for LDP (with no intra period)
             frm->i_frm_type = p_frm_type;
             frm->b_keyframe = 0;
-            lookahead->pframes++;
+            lookahead->gopframes++;
             // when intra period is non-zero, set key frames
-            if (lookahead->pframes == param->intra_period_max) {
+            if (lookahead->gopframes - 1 == param->intra_period_max) {
                 frm->i_frm_type    = XAVS2_TYPE_I;
                 frm->b_keyframe    = 1;
-                lookahead->pframes = 0;
+                lookahead->gopframes = 1;
             }
         } else {
             // for RA (with any intra period) or LDP (with an intra period > 1),

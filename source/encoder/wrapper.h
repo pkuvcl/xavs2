@@ -57,6 +57,7 @@ typedef struct lookahead_t {
     int         start;
     int         pframes;
     int         bpframes;
+    int         gopframes;
 } lookahead_t;
 
 
