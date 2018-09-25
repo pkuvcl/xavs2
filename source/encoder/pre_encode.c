@@ -181,31 +181,73 @@ void lookahead_append_frame(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_fra
     }
 }
 
-/* append all rest frames to the output list */
+
+/* append a group of frames to the output list */
 static INLINE
-int lookahead_append_rest_frames(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_frame_t **frm_set, int index_in_gop)
+void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
+                                    xavs2_frame_t **blocked_frm_set, int64_t *blocked_pts_set,
+                                    int num_frames)
 {
-    int i_lowdelay_frame = h_mgr->p_coder->param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+    xavs2_t         *h               = h_mgr->p_coder;
+    const xavs2_param_t *param       = h->param;
     int i;
-    int num_out = 0;
 
-    for (i = 1; i <= index_in_gop; i++) {
-        xavs2_frame_t *rest_frm;
-        if ((rest_frm = frm_set[i]) != NULL) {
-            /* clear */
-            frm_set[i] = NULL;
-            /* change frame type to none B-picture and set DTS */
-            rest_frm->i_frm_type = i_lowdelay_frame;
-            rest_frm->i_reordered_pts = rest_frm->i_pts; /* DTS is same as PTS */
+    /* append all frames one by one to output list */
+    if (param->i_gop_size == num_frames) {
+        for (i = 0; i < num_frames; i++) {
+            int k = param->cfg_ref_all[i].poc;
 
-            /* append to output list to be encoded */
-            lookahead_append_frame(h_mgr, list_out, rest_frm, h_mgr->p_coder->param->successive_Bframe, i);
-            num_out++;
+            if (k > 0) {
+                /* get a frame to encode */
+                xavs2_frame_t *frm = blocked_frm_set[k];
+                if (frm == NULL) {
+                    break;
+                }
+
+                /* clear */
+                blocked_frm_set[k] = NULL;
+
+                /* set DTS */
+                frm->i_reordered_pts = blocked_pts_set[i + 1];
+
+                /* append to output list to be encoded */
+                lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, i + 1);
+                h_mgr->num_encode++;
+            } else {
+                break;
+            }
+        }
+#if !RELEASE_BUILD
+        /* check the buffer */
+        for (i = 1; i <= num_frames; i++) {
+            assert(blocked_frm_set[i] == NULL);
+        }
+#endif
+    } else {
+        int i_lowdelay_frame = h_mgr->p_coder->param->enable_f_frame ? XAVS2_TYPE_F : XAVS2_TYPE_P;
+        int i;
+        int num_out = 0;
+
+        for (i = 1; i <= num_frames; i++) {
+            xavs2_frame_t *rest_frm = blocked_frm_set[i];
+            if (rest_frm != NULL) {
+                /* clear */
+                blocked_frm_set[i] = NULL;
+                /* change frame type to none B-picture and set DTS */
+                rest_frm->i_frm_type = i_lowdelay_frame;
+                rest_frm->i_reordered_pts = rest_frm->i_pts; /* DTS is same as PTS */
+
+                /* append to output list to be encoded */
+                lookahead_append_frame(h_mgr, list_out, rest_frm, h_mgr->p_coder->param->successive_Bframe, i);
+                h_mgr->num_encode++;
+            }
         }
     }
 
-    return num_out;
+    /* reset the index */
+    h_mgr->index_in_gop = 0; /* the buffer is empty now */
 }
+
 
 /**
  * ===========================================================================
@@ -231,13 +273,11 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
     int64_t         *blocked_pts_set = h_mgr->blocked_pts_set;
     xlist_t         *list_out        = &h_mgr->list_frames_ready;
     const int        gop_size        = param->i_gop_size;
-    int i, k;
 
     /* check state */
     if (frm->i_state == XAVS2_EXIT_THREAD) {
         /* 1, estimate frame complexity and append rest frames */
-        int num_frames = lookahead_append_rest_frames(h_mgr, list_out, blocked_frm_set, h_mgr->index_in_gop);
-        h_mgr->num_encode += num_frames;
+        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->index_in_gop);
 
         /* 2, append current frame */
         lookahead_append_frame(h_mgr, list_out, frm, 0, 0);
@@ -264,36 +304,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 
             /* is the last frame(I/P/F) of current GOP? */
             if (frm->i_frm_type != XAVS2_TYPE_B) {
-                /* append all frames one by one to output list */
-                for (i = 0; i < gop_size; i++) {
-                    k = param->cfg_ref_all[i].poc;
-                    if (k > 0) {
-                        /* get a frame to encode */
-                        if ((frm = blocked_frm_set[k]) == NULL) {
-                            break;
-                        }
-
-                        /* clear */
-                        blocked_frm_set[k] = NULL;
-
-                        /* set DTS */
-                        frm->i_reordered_pts = blocked_pts_set[i + 1];
-
-                        /* append to output list to be encoded */
-                        lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, i + 1);
-                        h_mgr->num_encode++;
-                    } else {
-                        break;
-                    }
-                }
-
-                /* reset the index */
-                h_mgr->index_in_gop = 0; /* the buffer is empty now */
-
-                /* check the buffer */
-                for (i = 1; i <= gop_size; i++) {
-                    assert(blocked_frm_set[i] == NULL);
-                }
+                lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, gop_size);
             }
         } else {
             assert(h_mgr->index_in_gop == 0);
@@ -304,8 +315,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
         }
     } else {
         /* flushing... */
-        int num_frames = lookahead_append_rest_frames(h_mgr, list_out, blocked_frm_set, h_mgr->index_in_gop);
-        h_mgr->num_encode += num_frames;
+        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->index_in_gop);
         h_mgr->index_in_gop = 0;
 
         /* append current frame to label flushing */
