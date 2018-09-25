@@ -55,7 +55,6 @@ typedef void(*vpp_ipred_t)(pel_t *p_pred, pel_t *p_top, pel_t *p_left);
  */
 typedef struct lookahead_t {
     int         start;
-    int         pframes;
     int         bpframes;
     int         gopframes;
 } lookahead_t;

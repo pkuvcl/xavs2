@@ -441,7 +441,6 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     /* init lookahead in the encoder wrapper */
     h_mgr->lookahead.bpframes = param->i_gop_size;
     h_mgr->lookahead.start    = 0;
-    h_mgr->lookahead.pframes  = 0;
     memset(h_mgr->blocked_frm_set, 0, sizeof(h_mgr->blocked_frm_set));
     memset(h_mgr->blocked_pts_set, 0, sizeof(h_mgr->blocked_pts_set));
     h_mgr->num_blocked_frames = 0;

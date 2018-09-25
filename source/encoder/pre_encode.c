@@ -105,10 +105,8 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
                         lookahead->gopframes = 1;
                     } else {
                         frm->i_frm_type = p_frm_type;
-                        lookahead->pframes++;
                     }
                 } else {
-                    lookahead->pframes++;
                     frm->i_frm_type = p_frm_type;
 
                     if (lookahead->gopframes == param->intra_period_max) {
@@ -124,7 +122,6 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
         frm->i_frm_type     = XAVS2_TYPE_I;
         frm->b_keyframe     = 1;
         lookahead->start    = 1;   // set flag
-        lookahead->pframes  = 0;
         lookahead->bpframes = param->i_gop_size;
         lookahead->gopframes= 1;
     }
