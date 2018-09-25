@@ -247,7 +247,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
     qp = i_qp - SHIFT_QP;
 #endif
 
-    if (h->param->intra_period_to_abolish == 1) {
+    if (h->param->intra_period_max == 1) {
         lambda = 0.85 * pow(2, qp / 4.0) *  LAM_2Level_TU;
     } else {
 #if ENABLE_WQUANT
@@ -421,7 +421,7 @@ static xavs2_t *encoder_alloc_frame_task(xavs2_handler_t *h_mgr, xavs2_frame_t *
                 h->frameinfo->frame_stat.stat_frm.f_lambda_frm = h->f_lambda_mode;
 
                 /* refine qp */
-                if (h->param->enable_refine_qp && h->param->intra_period_to_abolish > 1) {
+                if (h->param->enable_refine_qp && h->param->intra_period_min > 1) {
                     h->i_qp = (int)(5.661 * log((double)(h->f_lambda_mode)) + 13.131 + 0.5);
                 }
                 /* udpdate some properties */
@@ -526,7 +526,7 @@ void encoder_encode_frame_header(xavs2_t *h)
     /* create sequence header if need ------------------------------
      */
     if (h->fenc->b_keyframe) {
-        if (h->fenc->i_frm_coi == 0 || h->param->intra_period_to_abolish > 1) {
+        if (h->fenc->i_frm_coi == 0 || h->param->intra_period_min > 1) {
             /* generate sequence parameters */
             nal_start(h, NAL_SPS, NAL_PRIORITY_HIGHEST);
             xavs2_sequence_write(h, p_bs);
@@ -934,21 +934,27 @@ int encoder_check_parameters(xavs2_param_t *param)
               param->intra_period_max,
               param->successive_Bframe,
               param->b_open_gop);
-    if (param->profile_id == MAIN_PICTURE_PROFILE && param->intra_period_to_abolish != 1) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
-        return -1;
-    }
     if (param->intra_period_max == 0 && param->intra_period_to_abolish != 0) {
         if (param->successive_Bframe != 0) {
             param->intra_period_max = param->intra_period_to_abolish * param->i_gop_size;
+            if (!param->b_open_gop) {
+                param->intra_period_max++;
+            }
         } else {
             param->intra_period_max = param->intra_period_to_abolish;
         }
         param->intra_period_min = param->intra_period_max;
     }
-    if (param->i_cfg_type == XAVS2_RPS_CFG_AI && param->intra_period_to_abolish != 1) {
+    if (param->profile_id == MAIN_PICTURE_PROFILE &&
+        (param->intra_period_max != 1 || param->intra_period_min != 1)) {
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
+        return -1;
+    }
+    if (param->i_cfg_type == XAVS2_RPS_CFG_AI &&
+        (param->intra_period_max != 1 || param->intra_period_min != 1)) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "In AI type, the IntraPeriod must be 1.\n");
-        param->intra_period_to_abolish = 1;
+        param->intra_period_max = 1;
+        param->intra_period_min = 1;
     }
 
     /* update profile id */
@@ -1091,7 +1097,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* enable TDRDO? TDRDO is only just for low delay */
-    if (param->successive_Bframe != 0 || param->intra_period_to_abolish > 0) {
+    if (param->successive_Bframe != 0 || param->intra_period_min > 0) {
         param->enable_tdrdo = 0;
     }
 
@@ -1849,7 +1855,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
     /* prepare to encode -------------------------------------------
      */
 #if ENABLE_WQUANT
-    if (h->param->intra_period_to_abolish != 0 && h->i_type == SLICE_TYPE_I) {
+    if (h->param->intra_period_min != 0 && h->i_type == SLICE_TYPE_I) {
         // adaptive frequency weighting quantization
         if (h->param->enable_wquant) {
             xavs2_wq_init_seq_quant_param(h);
