@@ -928,9 +928,22 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check intra period */
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod: %d, Min %d Max %d, BFrames %d\n", 
+              param->intra_period_to_abolish, 
+              param->intra_period_min,
+              param->intra_period_max,
+              param->successive_Bframe);
     if (param->profile_id == MAIN_PICTURE_PROFILE && param->intra_period_to_abolish != 1) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
         return -1;
+    }
+    if (param->intra_period_max == 0 && param->intra_period_to_abolish != 0) {
+        if (param->successive_Bframe != 0) {
+            param->intra_period_max = param->intra_period_to_abolish * param->i_gop_size;
+        } else {
+            param->intra_period_max = param->intra_period_to_abolish;
+        }
+        param->intra_period_min = param->intra_period_max;
     }
     if (param->i_cfg_type == XAVS2_RPS_CFG_AI && param->intra_period_to_abolish != 1) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "In AI type, the IntraPeriod must be 1.\n");
