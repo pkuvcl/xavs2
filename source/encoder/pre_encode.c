@@ -319,7 +319,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
 
             /* is the last frame(I/P/F) of current GOP? */
             if (frm->i_frm_type != XAVS2_TYPE_B) {
-                lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, gop_size);
+                lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->num_blocked_frames);
             }
         } else {
             assert(h_mgr->num_blocked_frames == 0);
