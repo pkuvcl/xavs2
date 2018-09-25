@@ -124,6 +124,8 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->i_gop_size                 = -8;
     param->successive_Bframe          = 0;
     param->intra_period_to_abolish    = 6;
+    param->intra_period_max           = 48;
+    param->intra_period_min           = 48;
 
     /* --- picture ---------------------------------------------- */
     param->progressive_frame          = 1;

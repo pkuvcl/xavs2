@@ -539,6 +539,8 @@ typedef struct xavs2_param_t {
 
     /* --- stream structure ------------------------------------- */
     int     intra_period_to_abolish;  /* Intra Period Configuration to be abolished (only for comparison with reference software) */
+    int     intra_period_max;         /* maximum intra-period, one I-frame mush appear in any NumMax of frames */
+    int     intra_period_min;         /* minimum intra-period, only one I-frame can appear in at most NumMin of frames */
     int     b_open_gop;               /* open GOP? 1: open, 0: close */
     int     enable_f_frame;           /* enable F-frame */
     int     successive_Bframe;        /* number of B frames that will be used */
