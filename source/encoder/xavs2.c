@@ -444,7 +444,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     h_mgr->lookahead.pframes  = 0;
     memset(h_mgr->blocked_frm_set, 0, sizeof(h_mgr->blocked_frm_set));
     memset(h_mgr->blocked_pts_set, 0, sizeof(h_mgr->blocked_pts_set));
-    h_mgr->index_in_gop = 0; 
+    h_mgr->num_blocked_frames = 0;
 
     h_mgr->fp_trace = NULL;
 

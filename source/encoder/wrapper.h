@@ -159,7 +159,7 @@ struct xavs2_handler_t {
     int64_t         prev_reordered_pts_set[XAVS2_MAX_GOP_SIZE + 4];
     int             num_encoded_frames_for_dts;
     lookahead_t     lookahead;                /* lookahead */
-    int             index_in_gop;
+    int             num_blocked_frames;       /* number of blocked frames for Slice Type decision */
 
     /* rate-control */
     ratectrl_t     *rate_control;            /* rate control */

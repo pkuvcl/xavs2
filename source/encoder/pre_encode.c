@@ -245,7 +245,7 @@ void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
     }
 
     /* reset the index */
-    h_mgr->index_in_gop = 0; /* the buffer is empty now */
+    h_mgr->num_blocked_frames = 0; /* the buffer is empty now */
 }
 
 
@@ -277,7 +277,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
     /* check state */
     if (frm->i_state == XAVS2_EXIT_THREAD) {
         /* 1, estimate frame complexity and append rest frames */
-        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->index_in_gop);
+        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->num_blocked_frames);
 
         /* 2, append current frame */
         lookahead_append_frame(h_mgr, list_out, frm, 0, 0);
@@ -295,28 +295,28 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
             /* block a whole GOP until the last frame(I/P/F) of current GOP
              * a GOP should look somewhat like(POC order): B...BP */
 
-            h_mgr->index_in_gop++;
-            assert(h_mgr->index_in_gop <= gop_size);
+            h_mgr->num_blocked_frames++;
+            assert(h_mgr->num_blocked_frames <= gop_size);
 
             /* store the frame in blocked buffers */
-            blocked_frm_set[h_mgr->index_in_gop] = frm;
-            blocked_pts_set[h_mgr->index_in_gop] = frm->i_pts;
+            blocked_frm_set[h_mgr->num_blocked_frames] = frm;
+            blocked_pts_set[h_mgr->num_blocked_frames] = frm->i_pts;
 
             /* is the last frame(I/P/F) of current GOP? */
             if (frm->i_frm_type != XAVS2_TYPE_B) {
                 lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, gop_size);
             }
         } else {
-            assert(h_mgr->index_in_gop == 0);
+            assert(h_mgr->num_blocked_frames == 0);
             frm->i_reordered_pts = frm->i_pts;     /* DTS is same as PTS */
 
-            lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, h_mgr->index_in_gop);
+            lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, h_mgr->num_blocked_frames);
             h_mgr->num_encode++;
         }
     } else {
         /* flushing... */
-        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->index_in_gop);
-        h_mgr->index_in_gop = 0;
+        lookahead_append_subgop_frames(h_mgr, list_out, blocked_frm_set, blocked_pts_set, h_mgr->num_blocked_frames);
+        h_mgr->num_blocked_frames = 0;
 
         /* append current frame to label flushing */
         lookahead_append_frame(h_mgr, list_out, frm, 0, 0);
