@@ -233,47 +233,86 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
 {
     double lambda;
     int i_type = tab_frm_type_to_slice_type[cur_frm->i_frm_type];
-    int rps_idx;
-    int qp;
-
+    int qp = i_qp - SHIFT_QP;
+    int rps_idx = cur_frm->rps_index_in_gop;
+#if ENABLE_WQUANT
     // adaptive frequency weighting quantization
+    if (h->WeightQuantEnable) {
+        qp += tab_LambdaQ[i_type];
+    }
+#endif
+    lambda = pow(2, qp / 4.0);
 #if ENABLE_WQUANT
     if (h->WeightQuantEnable) {
-        qp = i_qp - SHIFT_QP + tab_LambdaQ[i_type];
+        lambda *= tab_LambdaF[i_type];
     } else {
-        qp = i_qp - SHIFT_QP;
+        lambda *= 0.85 *  LAM_2Level_TU;
     }
 #else
-    qp = i_qp - SHIFT_QP;
+    lambda *= 0.85 *  LAM_2Level_TU;
 #endif
 
-    if (h->param->intra_period_max == 1) {
-        lambda = 0.85 * pow(2, qp / 4.0) *  LAM_2Level_TU;
-    } else {
-#if ENABLE_WQUANT
-        if (h->WeightQuantEnable) {
-            lambda = pow(2, qp / 4.0) * (i_type == SLICE_TYPE_B ? 1.2 : 0.8) * tab_LambdaF[i_type];
-        } else {
-            lambda = pow(2, qp / 4.0) * (i_type == SLICE_TYPE_B ? 1.2 : 0.8) * 0.68;
-        }
-#else
-        lambda = pow(2, qp / 4.0) * (i_type == SLICE_TYPE_B ? 1.2 : 0.8) * 0.68;
-#endif
-
-        rps_idx = cur_frm->rps_index_in_gop;
-
+    if (h->param->intra_period_max != 1) {
         if (h->param->successive_Bframe > 0) {
             if (i_type != SLICE_TYPE_I && rps_idx != 0) {
+                if (i_type == SLICE_TYPE_B) {
+                    lambda *= 1.2;
+                }
                 lambda *= XAVS2_CLIP3F(2.00, 4.00, qp / 8.0);
-            } else if (i_type == SLICE_TYPE_P || i_type == SLICE_TYPE_F) {
-                lambda *= 1.25;
+            } else if (i_type == SLICE_TYPE_I) {
+                lambda *= 0.8;
             }
-        } else {
+        } else if (i_type != SLICE_TYPE_I) {
+            lambda *= 0.8;
             if ((rps_idx + 1) % h->i_gop_size != 0) {
                 lambda *= XAVS2_CLIP3F(2.00, 4.00, qp / 8.0) * 0.8;
             }
         }
     }
+
+    /* only use for RA configure */
+#if AQPO
+    if (h->param->is_enable_AQPO && h->param->intra_period_to_abolish != 1 && h->param->i_cfg_type == 2) {
+        int gop_size;
+        int num_poc;
+        int index;
+        int intra_period_num;
+        int temp_a, temp_b, temp_c, temp_d;
+        float temp_e, temp_f, temp_g;
+        gop_size = h->param->i_gop_size;
+        num_poc = (h->curr_coi >> 8) << 8;
+        if (cur_frm->i_frame + num_poc == 0) {
+            h->param->GopQpOffset_old = 0;
+        }
+
+        if (cur_frm->i_frame + num_poc != 0) {
+            if ((cur_frm->i_frame + num_poc) % gop_size == 0) {
+                intra_period_num = h->param->intra_period_to_abolish;
+                index = ((cur_frm->i_frame + num_poc + gop_size - 1) / gop_size) % intra_period_num;
+
+                temp_a = (intra_period_num - index) >> 1;
+                temp_b = intra_period_num >> 1;
+                temp_c = (intra_period_num - 1) >> 1;
+                temp_d = (intra_period_num - index - 1) >> 1;
+                temp_e = 7.5 * (1 / (float)pow(2, temp_b)) + 5 * (1 / (float)pow(2, temp_c));
+                temp_f = 7.5 * (1 / (float)pow(2, temp_a)) + 5 * (1 / (float)pow(2, temp_d));
+                temp_g = (temp_f - temp_e) / (14 - temp_e);
+                temp_g = (temp_g + 1.0)*intra_period_num / (intra_period_num + 2.0);
+                if (temp_g < 0.8001) {
+                    h->param->GopQpOffset = 0;
+                } else if (temp_g < 1.0) {
+                    h->param->GopQpOffset = 1;
+                } else {
+                    h->param->GopQpOffset = 2;
+                }
+                h->param->GopQpOffset = XAVS2_CLIP3(0, h->param->GopQpOffset_old + 1, h->param->GopQpOffset);
+                h->param->GopQpOffset_old = h->param->GopQpOffset;
+            }
+            lambda *= exp(h->param->GopQpOffset / 5.661);
+        }
+
+    }
+#endif
 
     cur_frm->f_frm_lambda_ssd = lambda;
     cur_frm->i_frm_lambda_sad = LAMBDA_FACTOR(sqrt(lambda));
