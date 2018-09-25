@@ -984,6 +984,16 @@ int encoder_check_parameters(xavs2_param_t *param)
         }
         param->intra_period_min = param->intra_period_max;
     }
+    /* Only support GOP size divisible by 8 while using RA with openGOP */
+    if (param->b_open_gop) {
+        int new_intra_period = param->intra_period_to_abolish * param->i_gop_size;
+        if (param->intra_period_to_abolish != 0 &&
+            new_intra_period != param->intra_period_max) {
+            xavs2_log(NULL, XAVS2_LOG_WARNING, "IntraPeriodMax Fixed for OpenGOP, %d => %d\n",
+                      param->intra_period_max, new_intra_period);
+            param->intra_period_max = new_intra_period;
+        }
+    }
     if (param->profile_id == MAIN_PICTURE_PROFILE &&
         (param->intra_period_max != 1 || param->intra_period_min != 1)) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
