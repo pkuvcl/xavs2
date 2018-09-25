@@ -928,11 +928,12 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check intra period */
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod: %d, Min %d Max %d, BFrames %d\n", 
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod: %d, Min %d Max %d, BFrames %d, OpenGOP %d\n",
               param->intra_period_to_abolish, 
               param->intra_period_min,
               param->intra_period_max,
-              param->successive_Bframe);
+              param->successive_Bframe,
+              param->b_open_gop);
     if (param->profile_id == MAIN_PICTURE_PROFILE && param->intra_period_to_abolish != 1) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
         return -1;
