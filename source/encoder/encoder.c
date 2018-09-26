@@ -973,7 +973,7 @@ int encoder_check_parameters(xavs2_param_t *param)
               param->intra_period_max,
               param->successive_Bframe,
               param->b_open_gop);
-    if (param->intra_period_max == 0 && param->intra_period_to_abolish != 0) {
+    if (param->intra_period_max == -1 && param->intra_period_to_abolish != 0) {
         if (param->successive_Bframe != 0) {
             param->intra_period_max = param->intra_period_to_abolish * param->i_gop_size;
             if (!param->b_open_gop) {
@@ -983,6 +983,8 @@ int encoder_check_parameters(xavs2_param_t *param)
             param->intra_period_max = param->intra_period_to_abolish;
         }
         param->intra_period_min = param->intra_period_max;
+    } else if (param->intra_period_min == -1) {
+        param->intra_period_min = 0;
     }
     /* Only support GOP size divisible by 8 while using RA with openGOP */
     if (param->b_open_gop) {
