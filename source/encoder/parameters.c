@@ -416,7 +416,7 @@ int ParameterNameToMapIndex(xavs2_param_map_t *p_map_tab, const char *param_name
     int i = 0;
 
     while (map_tab[i].name[0] != '\0') {  // ÖÕÖ¹Î»ÖÃÊÇ¿Õ×Ö·û´®
-        if (0 == strcmp(map_tab[i].name, param_name)) {
+        if (0 == strcasecmp(map_tab[i].name, param_name)) {
             return i;
         } else {
             i++;
