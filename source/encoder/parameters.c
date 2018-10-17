@@ -204,7 +204,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("LoopFilterBetaOffset",         &p->beta_offset,                MAP_NUM, "Beta offset in loop filter");
     MAP("SAOEnable",                    &p->enable_sao,                 MAP_NUM, "Enable SAO (1=SAO on, 0=SAO OFF)");
     MAP("ALFEnable",                    &p->enable_alf,                 MAP_NUM, "Enable ALF (1=ALF on, 0=ALF OFF)");
-    MAP("ALF_LowLatencyEncodingEnable", &p->alf_LowLatencyEncoding,     MAP_NUM, "Enable Low Latency ALF (1=Low Latency ALF, 0=High Efficiency ALF)");
+    MAP("ALFLowLatencyEncodingEnable",  &p->alf_LowLatencyEncoding,     MAP_NUM, "Enable Low Latency ALF (1=Low Latency ALF, 0=High Efficiency ALF)");
     MAP("CrossSliceLoopFilter",         &p->b_cross_slice_loop_filter,  MAP_NUM, "Enable Cross Slice Boundary Filter (0=Disable, 1=Enable)");
 
     /* ³¡±àÂë²ÎÊý */
@@ -430,6 +430,22 @@ int ParameterNameToMapIndex(xavs2_param_map_t *p_map_tab, const char *param_name
 /* ---------------------------------------------------------------------------
  */
 static INLINE
+void get_param_name(char *name, const char *param_item)
+{
+    char *str;
+    name[0] = '\0';
+
+    str = strtok(param_item, "_");
+
+    while (str) {
+        strcat(name, (const char *)str);
+        str = strtok(NULL, "_");
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ */
+static INLINE
 int xavs2e_atoi(const char *str, int *b_error)
 {
     char *end;
@@ -581,6 +597,7 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
     char *contents;
     char *p;
     char *bufend;
+    char  name[64];
     int   map_index;
     int   item = 0;
     int   in_string = 0;
@@ -647,11 +664,14 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
     }
 
     for (i = 0; i < item; i += 3) {
-        if (0 == strcmp(items[i], "Frame1:")) {
+
+        get_param_name(name, items[i]);
+
+        if (0 == strcmp(name, "Frame1:")) {
             i += (int)ParseRefContent(param, &items[i]);
         }
 
-        if ((map_index = ParameterNameToMapIndex(&g_param_map, items[i])) < 0) {
+        if ((map_index = ParameterNameToMapIndex(&g_param_map, name)) < 0) {
             xavs2_log(NULL, XAVS2_LOG_WARNING, "Parameter Name not recognized: '%s'.\n", items[i]);
             continue;   // do not exit, continue to parse
         }
@@ -666,7 +686,7 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
             return -1;
         }
 
-        if (xavs2_encoder_opt_set2(param, items[i], items[i + 2]) < 0) {
+        if (xavs2_encoder_opt_set2(param, name, items[i + 2]) < 0) {
             return -1;
         }
     }
