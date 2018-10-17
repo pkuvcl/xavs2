@@ -151,11 +151,11 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     
     /* input */
     MAP("SourceWidth",                  &p->org_width,                  MAP_NUM, "Image width  in pixels");
-    MAP("width",                        &p->org_width,                  MAP_NUM, "Image width  in pixels");
+    MAP("Width",                        &p->org_width,                  MAP_NUM, "Image width  in pixels");
     MAP("SourceHeight",                 &p->org_height,                 MAP_NUM, "Image height in pixels");
-    MAP("height",                       &p->org_height,                 MAP_NUM, "Image height in pixels");
+    MAP("Height",                       &p->org_height,                 MAP_NUM, "Image height in pixels");
     MAP("InputFile",                    &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
-    MAP("input",                        &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
+    MAP("Input",                        &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
     MAP("InputHeaderLength",            &p->infile_header,              MAP_NUM, "If the inputfile has a header, state it's length in byte here ");    
     MAP("FrameRate",                    &p->frame_rate_code,            MAP_NUM, "Framerate (1: 24000/1001,2: 24,3: 25,4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60)");
     MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format (0=4:0:0, 1=4:2:0, 2=4:2:2)");
@@ -165,7 +165,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("OutputFile",                   &p->psz_bs_file,                MAP_STR, "Output bistream file path");
     MAP("output",                       &p->psz_bs_file,                MAP_STR, "Output bistream file path");
     MAP("ReconFile",                    &p->psz_dump_yuv,               MAP_STR, "Output reconstruction YUV file path");
-    MAP("recon",                        &p->psz_dump_yuv,               MAP_STR, "Output reconstruction YUV file path");
+    MAP("Recon",                        &p->psz_dump_yuv,               MAP_STR, "Output reconstruction YUV file path");
 
     /* encoder configurations */
     MAP("MaxSizeInBit",                 &p->lcu_bit_level,              MAP_NUM, "Maximum Coding Unit (CU) Size (4, 5,6)");
@@ -178,7 +178,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("IntraPeriodMin",               &p->intra_period_min,           MAP_NUM, "minimum intra-period, only one I-frame can appear in at most NumMin of frames");
     MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP");
     MAP("FramesToBeEncoded",            &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
-    MAP("frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
+    MAP("Frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
     MAP("UseHadamard",                  &p->enable_hadamard,            MAP_NUM, "Hadamard transform (0=not used, 1=used)");
     MAP("FME",                          &p->me_method,                  MAP_NUM, "Fast Motion Estimation method (0: Full Search, 1: DIA, 2: HEX 3: UMH, 4: TZ)");
     MAP("SearchRange",                  &p->search_range,               MAP_NUM, "Max search range");
@@ -187,15 +187,15 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 #if XAVS2_TRACE
     MAP("TraceFile",                    &p->psz_trace_file,             MAP_STR, "Tracing file path");
 #endif
-    MAP("temporal_id_exist_flag",       &p->temporal_id_exist_flag,     MAP_NUM, "temporal ID");
+    MAP("TemporalIdExistFlag",          &p->temporal_id_exist_flag,     MAP_NUM, "temporal ID");
     MAP("FFRAMEEnable",                 &p->enable_f_frame,             MAP_NUM, "Use F Frame or not (0: Don't use F frames  1:Use F frames instead of P frames)");
     MAP("DHPEnable",                    &p->enable_dhp,                 MAP_NUM, "(0: Don't use DHP,      1:Use DHP)");
     MAP("MHPSKIPEnable",                &p->enable_mhp_skip,            MAP_NUM, "(0: Don't use MH_PSKIP, 1:Use MH_PSKIP)");
     MAP("WSMEnable",                    &p->enable_wsm,                 MAP_NUM, "(0: Don't use WSM,      1:Use WSM)");
     MAP("NumberBFrames",                &p->successive_Bframe,          MAP_NUM, "Number of B frames inserted between I/P/F frames (0=not used)");
-    MAP("inter_2PU" ,                   &p->inter_2pu,                  MAP_NUM, "inter partition mode 2NxN or Nx2N or AMP");
-    MAP("inter_AMP",                    &p->enable_amp,                 MAP_NUM, "inter partition mode AMP");
-    MAP("intra_in_inter",               &p->enable_intra,               MAP_NUM, "intra partition in inter frame");
+    MAP("Inter2PU" ,                    &p->inter_2pu,                  MAP_NUM, "inter partition mode 2NxN or Nx2N or AMP");
+    MAP("InterAMP",                     &p->enable_amp,                 MAP_NUM, "inter partition mode AMP");
+    MAP("IntraInInter",                 &p->enable_intra,               MAP_NUM, "intra partition in inter frame");
     MAP("RdoLevel",                     &p->i_rd_level,                 MAP_NUM, "RD-optimized mode decision (0:off, 1: only for best partition mode of one CU, 2: only for best 2 partition modes; 3: All partition modes)");
     MAP("LoopFilterDisable",            &p->loop_filter_disable,        MAP_NUM, "Disable loop filter in picture header (0=Filter, 1=No Filter)");
     MAP("LoopFilterParameter",          &p->loop_filter_parameter_flag, MAP_NUM, "Send loop filter parameter (0= No parameter, 1= Send Parameter)");
@@ -208,8 +208,8 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 
     /* ³¡±àÂë²ÎÊý */
     // MAP("InterlaceCodingOption",        &p->InterlaceCodingOption,      MAP_NUM);
-    // MAP("repeat_first_field",           &p->repeat_first_field,         MAP_NUM);
-    // MAP("top_field_first",              &p->top_field_first,            MAP_NUM);
+    // MAP("RepeatFirstField",             &p->repeat_first_field,         MAP_NUM);
+    // MAP("TopFieldFirst",                &p->top_field_first,            MAP_NUM);
     // MAP("OutputMergedPicture",          &p->output_merged_picture,      MAP_NUM);
     // MAP("Progressive_sequence",         &p->progressive_sequence,       MAP_NUM);
     // MAP("Progressive_frame",            &p->progressive_frame,          MAP_NUM);
@@ -249,26 +249,26 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 
     MAP("RateControl",                  &p->i_rc_method,                MAP_NUM, "0: CQP, 1: CBR (frame level), 2: CBR (SCU level), 3: VBR");
     MAP("TargetBitRate",                &p->i_target_bitrate,           MAP_NUM, "target bitrate, in bps");
-    MAP("initial_qp",                   &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
-    MAP("qp",                           &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
+    MAP("InitialQP",                    &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
+    MAP("QP",                           &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
     MAP("QPIFrame",                     &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
-    MAP("min_qp",                       &p->i_min_qp,                   MAP_NUM, "min qp for rate control    (0-63)");
-    MAP("max_qp",                       &p->i_max_qp,                   MAP_NUM, "max qp for rate control    (0-63)");
+    MAP("MinQP",                        &p->i_min_qp,                   MAP_NUM, "min qp for rate control    (0-63)");
+    MAP("MaxQP",                        &p->i_max_qp,                   MAP_NUM, "max qp for rate control    (0-63)");
 
-    MAP("cfg_type",                     &p->i_cfg_type,                 MAP_NUM, "coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI)");
-    MAP("gop_size",                     &p->i_gop_size,                 MAP_NUM, "sub GOP size (negative numbers indicating an employ of default settings, which will invliadate the following settings.)");
-    MAP("preset_level",                 &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
-    MAP("preset",                       &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
+    MAP("CfgType",                      &p->i_cfg_type,                 MAP_NUM, "coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI)");
+    MAP("GopSize",                      &p->i_gop_size,                 MAP_NUM, "sub GOP size (negative numbers indicating an employ of default settings, which will invliadate the following settings.)");
+    MAP("PresetLevel",                  &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
+    MAP("Preset",                       &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
 
-    MAP("slice_num",                    &p->slice_num,                  MAP_NUM, "Number of slices for each frame");
+    MAP("SliceNum",                     &p->slice_num,                  MAP_NUM, "Number of slices for each frame");
 
-    MAP("num_parallel_gop",             &p->num_parallel_gop,           MAP_NUM, "number of parallel GOPs (0,1: no GOP parallelization)");
-    MAP("thread_frames",                &p->i_frame_threads,            MAP_NUM, "number of parallel threads for frames ( 0: auto )");
-    MAP("thread_rows",                  &p->i_lcurow_threads,           MAP_NUM, "number of parallel threads for rows   ( 0: auto )");
+    MAP("NumParallelGop",               &p->num_parallel_gop,           MAP_NUM, "number of parallel GOPs (0,1: no GOP parallelization)");
+    MAP("ThreadFrames",                 &p->i_frame_threads,            MAP_NUM, "number of parallel threads for frames ( 0: auto )");
+    MAP("ThreadRows",                   &p->i_lcurow_threads,           MAP_NUM, "number of parallel threads for rows   ( 0: auto )");
     MAP("EnableAecThread",              &p->enable_aec_thread,          MAP_NUM, "Enable AEC thread or not (default: enabled)");
 
-    MAP("log_level",                    &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
-    MAP("log",                          &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
+    MAP("LogLevel",                     &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
+    MAP("Log",                          &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
     MAP("EnablePSNR",                   &p->enable_psnr,                MAP_NUM, "Enable PSNR or not (default: Enable)");
     MAP("EnableSSIM",                   &p->enable_ssim,                MAP_NUM, "Enable SSIM or not (default: Enable)");
 
@@ -713,7 +713,7 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
                 return -1;
             }
             *(int *)(g_param_map.map_tab[map_index].addr) = item_value;
-            if (0 == strcmp(name, "preset_level") || 0 == strcmp(name, "preset")) {
+            if (0 == strcmp(name, "preset_level") || 0 == strcmp(name, "presetlevel") || 0 == strcmp(name, "preset")) {
                 parse_preset_level(param, param->preset_level);
             }
             // fprintf(stdout, ".");
