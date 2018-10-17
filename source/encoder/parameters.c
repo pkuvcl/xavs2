@@ -80,7 +80,7 @@
 #define RESTORE_WARNING
 #endif
 
-#define xavs2_param_match strcasecmp
+#define xavs2_param_match(x,y) (!strcasecmp(x,y))
 
 /* ---------------------------------------------------------------------------
  * map type
@@ -417,7 +417,7 @@ int ParameterNameToMapIndex(xavs2_param_map_t *p_map_tab, const char *param_name
     int i = 0;
 
     while (map_tab[i].name[0] != '\0') {  // ÖÕÖ¹Î»ÖÃÊÇ¿Õ×Ö·û´®
-        if (0 == xavs2_param_match(map_tab[i].name, param_name)) {
+        if (xavs2_param_match(map_tab[i].name, param_name)) {
             return i;
         } else {
             i++;
@@ -714,7 +714,7 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
                 return -1;
             }
             *(int *)(g_param_map.map_tab[map_index].addr) = item_value;
-            if (0 == xavs2_param_match(name, "preset_level") || 0 == xavs2_param_match(name, "presetlevel") || 0 == xavs2_param_match(name, "preset")) {
+            if (xavs2_param_match(name, "preset_level") || xavs2_param_match(name, "presetlevel") || xavs2_param_match(name, "preset")) {
                 parse_preset_level(param, param->preset_level);
             }
             // fprintf(stdout, ".");
@@ -738,10 +738,10 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             return -1;
             break;
         }
-    } else if (!xavs2_param_match(name, "threads")) {
+    } else if (xavs2_param_match(name, "threads")) {
         param->i_lcurow_threads = xavs2e_atoi(value_string, &b_error);
         param->i_frame_threads  = 0;
-    } else if (!xavs2_param_match(name, "bframes")) {
+    } else if (xavs2_param_match(name, "bframes")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         if (value_i > 0) {
             param->i_cfg_type = XAVS2_RPS_CFG_RA;
@@ -754,14 +754,14 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             param->i_gop_size = -4;
             param->b_open_gop = 0;
         }
-    } else if (!xavs2_param_match(name, "intraperiod")) {
+    } else if (xavs2_param_match(name, "intraperiod")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         if (param->i_cfg_type == XAVS2_RPS_CFG_RA || param->i_cfg_type == XAVS2_RPS_CFG_RAP) {  // RA configuration
             param->intra_period_to_abolish = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
         } else {
             param->intra_period_to_abolish = value_i;  // default: LDP, AI
         }
-    } else if (!xavs2_param_match(name, "fps")) {
+    } else if (xavs2_param_match(name, "fps")) {
         float fps = xavs2e_atof(value_string, &b_error);
         float min_error = 1000;
         int min_idx = 0;
@@ -775,7 +775,7 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
         }
         param->frame_rate_code = min_idx;
         param->frame_rate = fps;
-    } else if (!xavs2_param_match(name, "bitdepth")) {
+    } else if (xavs2_param_match(name, "bitdepth")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         param->input_sample_bit_depth = value_i;
         param->sample_bit_depth       = value_i;
@@ -799,23 +799,23 @@ xavs2_encoder_opt_get(xavs2_param_t *param, const char *name)
 {
     static char buf[64];
 
-    if (!xavs2_param_match(name, "input")) {
+    if (xavs2_param_match(name, "input")) {
         return param->psz_in_file;
-    } else if (!xavs2_param_match(name, "output")) {
+    } else if (xavs2_param_match(name, "output")) {
         return param->psz_bs_file;
-    } else if (!xavs2_param_match(name, "width")) {
+    } else if (xavs2_param_match(name, "width")) {
         sprintf(buf, "%d", param->org_width);
         return buf;
-    } else if (!xavs2_param_match(name, "height")) {
+    } else if (xavs2_param_match(name, "height")) {
         sprintf(buf, "%d", param->org_height);
         return buf;
-    } else if (!xavs2_param_match(name, "frames")) {
+    } else if (xavs2_param_match(name, "frames")) {
         sprintf(buf, "%d", param->num_frames);
         return buf;
-    } else if (!xavs2_param_match(name, "BitDepth")) {
+    } else if (xavs2_param_match(name, "BitDepth")) {
         sprintf(buf, "%d", param->sample_bit_depth);
         return buf;
-    } else if (!xavs2_param_match(name, "SampleShift")) {
+    } else if (xavs2_param_match(name, "SampleShift")) {
         sprintf(buf, "%d", param->sample_bit_depth - param->input_sample_bit_depth);
         return buf;
     }
