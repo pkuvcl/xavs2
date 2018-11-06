@@ -57,6 +57,12 @@ $ make
   --recon=. --initial_qp=32 --OutputFile=test.avs
 ```
 
+## Issue and Pull Request
+
+[Issues should be reported here][6]。
+
+If you have some bugs or features fixed, and would like to share with the public, please [make a Pull Request][7].
+
 ## Homepages
 
 [PKU-VCL][1]
@@ -70,3 +76,5 @@ $ make
   [3]: https://gitee.com/pkuvcl/xavs2 "xavs2 gitee repository"
   [4]: https://github.com/pkuvcl/davs2 "davs2 decoder@github"
   [5]: https://gitee.com/pkuvcl/davs2 "davs2 decoder@gitee"
+  [6]: https://github.com/pkuvcl/xavs2/issues "report issues"
+  [7]: https://github.com/pkuvcl/xavs2/pulls "pull request"

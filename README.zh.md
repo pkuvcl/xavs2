@@ -60,6 +60,15 @@ $ make
   --recon=. --initial_qp=32 --OutputFile=test.avs
 ```
 
+## Issue & Pull Request
+
+欢迎提交 issue，请写清楚遇到问题的环境与运行参数，包括操作系统环境、编译器环境等，重现的流程，
+如果可能提供原始输入YUV/码流文件，请尽量提供以方便更快地重现结果。
+
+[反馈问题的 issue 请按照模板格式填写][6]。
+
+如果有开发能力，建议在本地调试出错的代码，并[提供相应修正的 Pull Request][7]。
+
 ## 主页链接
 
 [北京大学-视频编码算法研究室(PKU-VCL)][1]
@@ -73,3 +82,5 @@ $ make
   [3]: https://gitee.com/pkuvcl/xavs2 "xavs2 gitee repository"
   [4]: https://github.com/pkuvcl/davs2 "davs2 decoder@github"
   [5]: https://gitee.com/pkuvcl/davs2 "davs2 decoder@gitee"
+  [6]: https://github.com/pkuvcl/xavs2/issues "report issues"
+  [7]: https://github.com/pkuvcl/xavs2/pulls "pull request"
