@@ -975,7 +975,7 @@ int encoder_check_parameters(xavs2_param_t *param)
               param->b_open_gop);
     if (param->intra_period_max == -1 && param->intra_period_to_abolish != 0) {
         if (param->successive_Bframe != 0) {
-            param->intra_period_max = param->intra_period_to_abolish * param->i_gop_size;
+            param->intra_period_max = param->intra_period_to_abolish * XAVS2_ABS(param->i_gop_size);
             if (!param->b_open_gop) {
                 param->intra_period_max -= param->successive_Bframe;
             }
@@ -987,13 +987,14 @@ int encoder_check_parameters(xavs2_param_t *param)
         param->intra_period_min = 0;
     }
     /* Only support GOP size divisible by 8 while using RA with openGOP */
-    if (param->b_open_gop) {
-        int new_intra_period = param->intra_period_to_abolish * param->i_gop_size;
+    if (param->b_open_gop  && param->i_cfg_type == XAVS2_RPS_CFG_RA) {
+        int new_intra_period = param->intra_period_to_abolish * XAVS2_ABS(param->i_gop_size);
         if (param->intra_period_to_abolish != 0 &&
             new_intra_period != param->intra_period_max) {
             xavs2_log(NULL, XAVS2_LOG_WARNING, "IntraPeriodMax Fixed for OpenGOP, %d => %d\n",
                       param->intra_period_max, new_intra_period);
             param->intra_period_max = new_intra_period;
+            param->intra_period_min = new_intra_period;
         }
     }
     if (param->profile_id == MAIN_PICTURE_PROFILE &&
