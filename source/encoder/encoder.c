@@ -1947,6 +1947,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
     }
 
     /* confirm the encoding QP in the right range */
+    h->i_qp = XAVS2_CLIP3(h->param->i_min_qp, h->param->i_max_qp, h->i_qp);
     h->i_qp = clip_qp(h, h->i_qp);
 
     /* encoding begin ----------------------------------------------
