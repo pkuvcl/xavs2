@@ -664,11 +664,11 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
     }
 
     for (i = 0; i < item; i += 3) {
-
         get_param_name(name, items[i]);
 
         if (0 == strcmp(name, "Frame1:")) {
             i += (int)ParseRefContent(param, &items[i]);
+            get_param_name(name, items[i]);
         }
 
         if ((map_index = ParameterNameToMapIndex(&g_param_map, name)) < 0) {
