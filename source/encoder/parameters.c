@@ -515,7 +515,7 @@ static char *xavs2_get_configs(int argc, const char * const *argv)
     int  i;
 
     /* config file is the first parameter */
-    if (cfg_content == NULL) {
+    if (cfg_content == NULL || file_content == NULL) {
         return NULL;
     }
     cfg_content[0] = '\0';
@@ -531,7 +531,7 @@ static char *xavs2_get_configs(int argc, const char * const *argv)
             /* add \n for each item */
             *dst++ = '\n';
             *dst = '\0';
-            xavs2_log(NULL, XAVS2_LOG_DEBUG, "Adding cmd-line string 1:\t %s", item);
+            xavs2_log(NULL, XAVS2_LOG_DEBUG, "Adding cmd-line string 1: %s", item);
             /* append this item to the cfg_content */
             strcat(cfg_content, item);
             i++;
@@ -563,13 +563,13 @@ static char *xavs2_get_configs(int argc, const char * const *argv)
             *dst++ = '\n';
             *dst = '\0';
 
-            xavs2_log(NULL, XAVS2_LOG_DEBUG, "Adding cmd-line string 0:\t %s", item);
+            xavs2_log(NULL, XAVS2_LOG_DEBUG, "Adding cmd-line string 0: %s", item);
 
             /* append this item to the cfg_content */
             strcat(cfg_content, item);
         } else {
-            xavs2_log(NULL, XAVS2_LOG_DEBUG, "Error in cmd-line, argc %d, around string '%s', missing -p parameters?", i, argv[i]);
-            free(cfg_content);
+            xavs2_log(NULL, XAVS2_LOG_WARNING, "Invalid parameter style, argc %d, around string '%s'\n", i, argv[i]);
+            xavs2_free(cfg_content);
             cfg_content = NULL;
             break;
         }
