@@ -151,25 +151,27 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     int item_idx = 0;
     
     /* input */
-    MAP("SourceWidth",                  &p->org_width,                  MAP_NUM, "Image width  in pixels");
     MAP("Width",                        &p->org_width,                  MAP_NUM, "Image width  in pixels");
-    MAP("SourceHeight",                 &p->org_height,                 MAP_NUM, "Image height in pixels");
+    MAP("SourceWidth",                  &p->org_width,                  MAP_NUM, "  - Same as `Width`");
     MAP("Height",                       &p->org_height,                 MAP_NUM, "Image height in pixels");
-    MAP("InputFile",                    &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
+    MAP("SourceHeight",                 &p->org_height,                 MAP_NUM, "  - Same as `Height`");
     MAP("Input",                        &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
+    MAP("InputFile",                    &p->psz_in_file,                MAP_STR, "  - Same as `Input`");
     MAP("InputHeaderLength",            &p->infile_header,              MAP_NUM, "If the inputfile has a header, state it's length in byte here ");    
-    MAP("FrameRate",                    &p->frame_rate_code,            MAP_NUM, "Framerate (1: 24000/1001,2: 24,3: 25,4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60)");
-    MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format (0=4:0:0, 1=4:2:0, 2=4:2:2)");
+    MAP("FrameRate",                    &p->frame_rate_code,            MAP_NUM, "FramerateCode, 1: 24000/1001,2: 24,3: 25(default), 4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60");
+    MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format, 0=4:0:0, 1=4:2:0(default), 2=4:2:2");
     MAP("InputSampleBitDepth",          &p->input_sample_bit_depth,     MAP_NUM, "Sample Bitdepth of input file");
+    MAP("Frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
+    MAP("FramesToBeEncoded",            &p->num_frames,                 MAP_NUM, "  - Same as `Frames`");
 
     /* output */
-    MAP("OutputFile",                   &p->psz_bs_file,                MAP_STR, "Output bistream file path");
     MAP("output",                       &p->psz_bs_file,                MAP_STR, "Output bistream file path");
-    MAP("ReconFile",                    &p->psz_dump_yuv,               MAP_STR, "Output reconstruction YUV file path");
+    MAP("OutputFile",                   &p->psz_bs_file,                MAP_STR, "  - Same as `output`");
     MAP("Recon",                        &p->psz_dump_yuv,               MAP_STR, "Output reconstruction YUV file path");
+    MAP("ReconFile",                    &p->psz_dump_yuv,               MAP_STR, "  - Same as `Recon`");
 
     /* encoder configurations */
-    MAP("MaxSizeInBit",                 &p->lcu_bit_level,              MAP_NUM, "Maximum Coding Unit (CU) Size (4, 5,6)");
+    MAP("MaxSizeInBit",                 &p->lcu_bit_level,              MAP_NUM, "Maximum Coding Unit (CU) Size (4, 5, 6)");
     MAP("MinSizeInBit",                 &p->scu_bit_level,              MAP_NUM, "Minimum Coding Unit (CU) Size (3, 4, 5, 6)");
     MAP("ProfileID",                    &p->profile_id,                 MAP_NUM, "Profile ID (18: MAIN PICTURE profile, 32: MAIN profile, 34: MAIN10 profile)");
     MAP("LevelID",                      &p->level_id,                   MAP_NUM, "Level ID   (16: 2.0;  32: 4.0;  34: 4.2;  64: 6.0;  66: 6.2)");
@@ -178,10 +180,8 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("IntraPeriodMax",               &p->intra_period_max,           MAP_NUM, "maximum intra-period, one I-frame mush appear in any NumMax of frames");
     MAP("IntraPeriodMin",               &p->intra_period_min,           MAP_NUM, "minimum intra-period, only one I-frame can appear in at most NumMin of frames");
     MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP");
-    MAP("FramesToBeEncoded",            &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
-    MAP("Frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
     MAP("UseHadamard",                  &p->enable_hadamard,            MAP_NUM, "Hadamard transform (0=not used, 1=used)");
-    MAP("FME",                          &p->me_method,                  MAP_NUM, "Fast Motion Estimation method (0: Full Search, 1: DIA, 2: HEX 3: UMH, 4: TZ)");
+    MAP("FME",                          &p->me_method,                  MAP_NUM, "Motion Estimation method (0: Full Search, 1: DIA, 2: HEX 3: UMH, 4: TZ)");
     MAP("SearchRange",                  &p->search_range,               MAP_NUM, "Max search range");
     MAP("NumberReferenceFrames",        &p->num_max_ref,                MAP_NUM, "Number of previous frames used for inter motion search (1-5)");
 
