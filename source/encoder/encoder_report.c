@@ -426,29 +426,30 @@ void encoder_show_head_info(xavs2_param_t *param)
  */
 void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
 {
+    const xavs2_param_t *param = h->param;
     size_t space_alloc = xavs2_get_total_malloc_space();
     space_alloc = (space_alloc + (1 << 20) - 1) >> 20;
 
     xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Allocated)  : %d / %d, threadpool %d, RowContexts %d \n",
               mgr->i_row_threads, mgr->i_frm_threads, mgr->num_pool_threads, mgr->num_row_contexts);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Memory  (Allocated)  : %d MB \n", (int)(space_alloc));
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Enabled Tools        : 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
-                                        "                        DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Enabled Tools        : LCU %d, 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
+                                        "                        FFrame %d, DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
                                         "                        NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\
                                         "                        ME:%d, SearchRange:%d,\n"\
                                         "                        RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
                                         "                        RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
-        h->param->inter_2pu, h->param->enable_amp, h->param->enable_intra, h->param->enable_sdip, 
-        h->param->enable_dhp, h->param->enable_dmh, h->param->enable_mhp_skip, h->param->enable_wsm,
-        h->param->enable_nsqt, h->param->b_fast_2lelvel_tu, h->param->enable_secT,
-        h->param->me_method, h->param->search_range,
-        h->param->enable_refine_qp, h->param->enable_tdrdo, h->i_fast_algs,
-        h->param->i_rd_level, h->param->i_rdoq_level, h->param->enable_sao, h->param->enable_alf);
+        1 << param->lcu_bit_level, param->inter_2pu, param->enable_amp, param->enable_intra, param->enable_sdip, 
+        param->enable_f_frame, param->enable_dhp, param->enable_dmh, param->enable_mhp_skip, param->enable_wsm,
+        param->enable_nsqt, param->b_fast_2lelvel_tu, param->enable_secT,
+        param->me_method, param->search_range,
+        param->enable_refine_qp, param->enable_tdrdo, h->i_fast_algs,
+        param->i_rd_level, param->i_rdoq_level, param->enable_sao, param->enable_alf);
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_INFO, "--------------------------------------------------------------------------------\n");
-    if (h->param->enable_psnr && h->param->enable_ssim){
+    if (param->enable_psnr && param->enable_ssim){
         xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   SsimY   SsimU   SsimV   Time  [ RefList ]\n");
-    } else if (h->param->enable_psnr) {
+    } else if (param->enable_psnr) {
         xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");
     } else {
         xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits     Time  [ RefList ]\n");
