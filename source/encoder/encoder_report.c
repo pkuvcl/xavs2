@@ -397,29 +397,29 @@ void encoder_show_head_info(xavs2_param_t *param)
         xavs2_log(NULL, XAVS2_LOG_DEBUG, " RefinedQp is on, the input QP might be changed;\n");
     }
     /* input/output properties */
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, " xavs2enc version     : %s  %s\n",
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " xavs2enc version : %s  %s\n",
               XVERSION_STR, XBUILD_TIME);
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Input YUV file       : %s \n", param->psz_in_file);
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Output bitstream     : %s \n", param->psz_bs_file);
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Recon YUV file       : %s \n", param->psz_dump_yuv);
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Total Frames         : %d \n", param->num_frames);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Input YUV file   : %s \n", param->psz_in_file);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Output bitstream : %s \n", param->psz_bs_file);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Recon YUV file   : %s \n", param->psz_dump_yuv);
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, " Total Frames     : %d \n", param->num_frames);
     /* basic parameters */
     xavs2_log(NULL, XAVS2_LOG_INFO, "--------------------------------------------------------------------------------\n");
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Profile & Level      : 0x%02X-0x%02X, BitDepth: %d/%d, size(pel): %d \n",
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Profile & Level  : 0x%02X-0x%02X, BitDepth: %d/%d, size(pel): %d \n",
               param->profile_id, param->level_id, param->input_sample_bit_depth, param->sample_bit_depth, sizeof(pel_t));
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Video Property       : %dx%d, %.3f Hz (FrameRateCode: %d)\n",
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Video Property   : %dx%d, %.3f Hz (FrameRateCode: %d)\n",
               param->org_width, param->org_height, param->frame_rate, param->frame_rate_code);
 
     /* CPU capacities */
     xavs2_get_simd_capabilities(buf_cpu, g_funcs.cpuid);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " CPU Capabilities     : %s\n", buf_cpu);
+    xavs2_log(NULL, XAVS2_LOG_INFO, " CPU Capabilities : %s\n", buf_cpu);
 
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Preset Level         : %d,  %s \n", param->preset_level, xavs2_preset_names[param->preset_level]);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Reference Structure : BFrames: %d; %s GOP; IntraPeriod: %d~%d\n", 
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Preset Level     : %d,  %s \n", param->preset_level, xavs2_preset_names[param->preset_level]);
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Ref Structure    : BFrames: %d; %s GOP; IntraPeriod: %d~%d\n", 
         param->successive_Bframe, s_gop_param, param->intra_period_min, param->intra_period_max);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Rate Control         : %d; QP: %d, [%2d, %2d]; %.3f Mbps\n",
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Rate Control     : %d; QP: %d, [%2d, %2d]; %.3f Mbps\n",
         param->i_rc_method, param->i_initial_qp, param->i_min_qp, param->i_max_qp, 0.000001f * param->i_target_bitrate);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Row/Frame)  : %s / %s, cpu cores %d \n", s_threads_row, s_threads_frame, xavs2_cpu_num_processors());
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Row/Frm): %s / %s, cpu cores %d \n", s_threads_row, s_threads_frame, xavs2_cpu_num_processors());
 }
 
 /* ---------------------------------------------------------------------------
@@ -430,15 +430,15 @@ void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
     size_t space_alloc = xavs2_get_total_malloc_space();
     space_alloc = (space_alloc + (1 << 20) - 1) >> 20;
 
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Allocated)  : %d / %d, threadpool %d, RowContexts %d \n",
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Alloc)  : %d / %d, threadpool %d, RowContexts %d \n",
               mgr->i_row_threads, mgr->i_frm_threads, mgr->num_pool_threads, mgr->num_row_contexts);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Memory  (Allocated)  : %d MB \n", (int)(space_alloc));
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Enabled Tools        : LCU %d, 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
-                                        "                        FFrame %d, DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
-                                        "                        NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\
-                                        "                        ME:%d, SearchRange:%d,\n"\
-                                        "                        RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
-                                        "                        RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Memory  (Alloc)  : %d MB \n", (int)(space_alloc));
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Enabled Tools    : LCU %d, 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
+                                        "                    FFrame %d, DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
+                                        "                    NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\
+                                        "                    ME:%d, SearchRange:%d,\n"\
+                                        "                    RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
+                                        "                    RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
         1 << param->lcu_bit_level, param->inter_2pu, param->enable_amp, param->enable_intra, param->enable_sdip, 
         param->enable_f_frame, param->enable_dhp, param->enable_dmh, param->enable_mhp_skip, param->enable_wsm,
         param->enable_nsqt, param->b_fast_2lelvel_tu, param->enable_secT,
