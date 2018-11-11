@@ -258,8 +258,8 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 
     MAP("CfgType",                      &p->i_cfg_type,                 MAP_NUM, "coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI)");
     MAP("GopSize",                      &p->i_gop_size,                 MAP_NUM, "sub GOP size (negative numbers indicating an employ of default settings, which will invliadate the following settings.)");
-    MAP("PresetLevel",                  &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
-    MAP("Preset",                       &p->preset_level,               MAP_NUM, "preset level for the tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9)");
+    MAP("PresetLevel",                  &p->preset_level,               MAP_NUM, "preset level for tradeoff between speed and performance, ordered from fastest to slowest (0, ..., 9), default: 5");
+    MAP("Preset",                       &p->preset_level,               MAP_NUM, "  - Same as `PresetLevel`");
 
     MAP("SliceNum",                     &p->slice_num,                  MAP_NUM, "Number of slices for each frame");
 

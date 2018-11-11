@@ -147,7 +147,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->enable_amp                 = TRUE;
     param->enable_intra               = TRUE;
     param->i_rd_level                 = RDO_ALL;
-    param->preset_level               = 0;
+    param->preset_level               = 5;
     param->is_preset_configured       = FALSE;
     param->rdo_bit_est_method         = 0;
 
