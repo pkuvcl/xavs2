@@ -591,7 +591,7 @@ int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet)
 int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *packet)
 {
     xavs2_handler_t *h_mgr = (xavs2_handler_t *)coder;
-    xavs2_frame_t *frame;
+    xavs2_frame_t *frame = NULL;
 
     assert(h_mgr != NULL);
 
@@ -606,35 +606,35 @@ int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *p
 
         frame = (xavs2_frame_t *)pic->priv;
 
-        if (pic->i_state == XAVS2_STATE_NO_DATA) {
+        if (pic->i_state != XAVS2_STATE_NO_DATA) {
+            /* copy frame properties */
+            frame->i_frm_type = pic->i_type;
+            frame->i_qpplus1  = pic->i_qpplus1;
+            frame->i_pts      = pic->i_pts;
+            frame->b_keyframe = pic->b_keyframe;
+
+            /* set encoder handle */
+            h = h_mgr->p_coder;
+
+            /* expand border if need */
+            if (h->param->org_width != h->i_width || h->param->org_height != h->i_height) {
+                xavs2_frame_expand_border_mod8(h, frame);
+            }
+
+            /* set frame number here */
+            frame->i_frame = h_mgr->i_input;
+            h_mgr->i_input = get_next_frame_id(h_mgr->i_input);
+
+            /* set flag */
+            frame->i_state = 0;
+
+            /* counter number of input frames */
+            h_mgr->num_input++;
+        } else {
             /* recycle space for the pic handler */
             xl_append(&h_mgr->list_frames_free, frame);
-            return 0;
+            frame = NULL;
         }
-
-        /* copy frame properties */
-        frame->i_frm_type = pic->i_type;
-        frame->i_qpplus1  = pic->i_qpplus1;
-        frame->i_pts      = pic->i_pts;
-        frame->b_keyframe = pic->b_keyframe;
-
-        /* set encoder handle */
-        h = h_mgr->p_coder;
-
-        /* expand border if need */
-        if (h->param->org_width != h->i_width || h->param->org_height != h->i_height) {
-            xavs2_frame_expand_border_mod8(h, frame);
-        }
-
-        /* set frame number here */
-        frame->i_frame = h_mgr->i_input;
-        h_mgr->i_input = get_next_frame_id(h_mgr->i_input);
-
-        /* set flag */
-        frame->i_state = 0;
-
-        /* counter number of input frames */
-        h_mgr->num_input++;
     } else {
         /* fetch an empty node from unused list */
         frame = frame_buffer_get_free_frame_ipb(h_mgr);
@@ -644,7 +644,9 @@ int xavs2_encoder_encode(void *coder, xavs2_picture_t *pic, xavs2_outpacket_t *p
     }
 
     /* decide slice type and send frames into encoding queue */
-    send_frame_to_enc_queue(h_mgr, frame);
+    if (frame != NULL) {
+        send_frame_to_enc_queue(h_mgr, frame);
+    }
 
     /* fetch a frame */
     encoder_fetch_one_encoded_frame(h_mgr, packet, pic == NULL);
