@@ -5,86 +5,11 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="vec">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\source\common\vec\intrinsic.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_deblock.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_inter_pred.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-pred.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_pixel.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_idct.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_dct.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_sao.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_mad.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_inter_pred_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-pred_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_dct_avx.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_deblock_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\common\vec\intrinsic_idct_avx2.c">
       <Filter>vec</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_idct_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_sao_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_pixel_avx.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_cg_scan.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-filledge.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_quant.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_quant_avx2.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_alf.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\common\vec\intrinsic_cg_scan_avx.c">
-      <Filter>vec</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\source\common\vec\intrinsic.h">
-      <Filter>vec</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <YASM Include="..\..\source\common\x86\const-a.asm">

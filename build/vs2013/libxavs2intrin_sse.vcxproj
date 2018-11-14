@@ -19,25 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\..\source\common\x86\blockcopy8.asm" />
-    <YASM Include="..\..\source\common\x86\const-a.asm" />
-    <YASM Include="..\..\source\common\x86\cpu-a.asm" />
-    <YASM Include="..\..\source\common\x86\dct8.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a2.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-32.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-a.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-util8.asm" />
-    <YASM Include="..\..\source\common\x86\pixeladd8.asm" />
-    <YASM Include="..\..\source\common\x86\quant8.asm" />
-    <YASM Include="..\..\source\common\x86\sad-a.asm" />
-    <YASM Include="..\..\source\common\x86\satd-a.asm" />
-    <YASM Include="..\..\source\common\x86\ssd-a.asm" />
-    <YASM Include="..\..\source\common\x86\x86inc.asm" />
-    <YASM Include="..\..\source\common\x86\x86util.asm" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_alf.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_cg_scan.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_dct.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_deblock.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_idct.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_inter_pred.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-filledge.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-pred.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_mad.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_pixel.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_quant.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_sao.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\common\vec\intrinsic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1}</ProjectGuid>
+    <ProjectGuid>{90F0D7B6-BBB4-4076-8543-A2C1D7176946}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>asmopt</RootNamespace>
   </PropertyGroup>

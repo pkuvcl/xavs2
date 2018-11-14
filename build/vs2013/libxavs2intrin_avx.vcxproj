@@ -19,25 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\..\source\common\x86\blockcopy8.asm" />
-    <YASM Include="..\..\source\common\x86\const-a.asm" />
-    <YASM Include="..\..\source\common\x86\cpu-a.asm" />
-    <YASM Include="..\..\source\common\x86\dct8.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a2.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-32.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-a.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-util8.asm" />
-    <YASM Include="..\..\source\common\x86\pixeladd8.asm" />
-    <YASM Include="..\..\source\common\x86\quant8.asm" />
-    <YASM Include="..\..\source\common\x86\sad-a.asm" />
-    <YASM Include="..\..\source\common\x86\satd-a.asm" />
-    <YASM Include="..\..\source\common\x86\ssd-a.asm" />
-    <YASM Include="..\..\source\common\x86\x86inc.asm" />
-    <YASM Include="..\..\source\common\x86\x86util.asm" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_cg_scan_avx.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_dct_avx.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_deblock_avx2.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_idct_avx2.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_inter_pred_avx2.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-pred_avx2.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_pixel_avx.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_quant_avx2.c" />
+    <ClCompile Include="..\..\source\common\vec\intrinsic_sao_avx2.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\common\vec\intrinsic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1}</ProjectGuid>
+    <ProjectGuid>{28F41748-29FF-4423-8B3A-320455EC0B1D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>asmopt</RootNamespace>
   </PropertyGroup>
@@ -112,6 +108,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableSpecificWarnings>4752;</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,7 +128,7 @@
       <AdditionalIncludeDirectories>..\..\source;..\..\source\common;..\..\source\pthread</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableSpecificWarnings>4752;</DisableSpecificWarnings>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,6 +151,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4752;</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,7 +176,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4752;</DisableSpecificWarnings>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

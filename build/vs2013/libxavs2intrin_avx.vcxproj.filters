@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="vec">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_inter_pred_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_intra-pred_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_dct_avx.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_deblock_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_idct_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_idct_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_sao_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_pixel_avx.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_quant_avx2.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\vec\intrinsic_cg_scan_avx.c">
+      <Filter>vec</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\common\vec\intrinsic.h">
+      <Filter>vec</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
