@@ -176,7 +176,6 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("ProfileID",                    &p->profile_id,                 MAP_NUM, "Profile ID (18: MAIN PICTURE profile, 32: MAIN profile, 34: MAIN10 profile)");
     MAP("LevelID",                      &p->level_id,                   MAP_NUM, "Level ID   (16: 2.0;  32: 4.0;  34: 4.2;  64: 6.0;  66: 6.2)");
     MAP("SampleBitDepth",               &p->sample_bit_depth,           MAP_NUM, "Encoding bit-depth");
-    MAP("IntraPeriod",                  &p->intra_period_to_abolish,    MAP_NUM, "Period of I-Frames (0=only first) TOBE abolished");
     MAP("IntraPeriodMax",               &p->intra_period_max,           MAP_NUM, "maximum intra-period, one I-frame mush appear in any NumMax of frames");
     MAP("IntraPeriodMin",               &p->intra_period_min,           MAP_NUM, "minimum intra-period, only one I-frame can appear in at most NumMin of frames");
     MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP");
@@ -774,12 +773,19 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             param->i_gop_size = -4;
             param->b_open_gop = 0;
         }
-    } else if (xavs2_param_match(name, "intraperiod")) {
+    } else if (xavs2_param_match(name, "intraperiodmax")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         if (param->i_cfg_type == XAVS2_RPS_CFG_RA || param->i_cfg_type == XAVS2_RPS_CFG_RAP) {  // RA configuration
-            param->intra_period_to_abolish = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
+            param->intra_period_max = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
         } else {
-            param->intra_period_to_abolish = value_i;  // default: LDP, AI
+            param->intra_period_max = value_i;  // default: LDP, AI
+        }
+    } else if (xavs2_param_match(name, "intraperiodmin")) {
+        int value_i = xavs2e_atoi(value_string, &b_error);
+        if (param->i_cfg_type == XAVS2_RPS_CFG_RA || param->i_cfg_type == XAVS2_RPS_CFG_RAP) {  // RA configuration
+            param->intra_period_min = (value_i + 3) / XAVS2_ABS(param->i_gop_size);
+        } else {
+            param->intra_period_min = value_i;  // default: LDP, AI
         }
     } else if (xavs2_param_match(name, "fps")) {
         float fps = xavs2e_atof(value_string, &b_error);

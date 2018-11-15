@@ -205,7 +205,7 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     int j;
 
     if (cur_frm->i_frm_type == XAVS2_TYPE_I) {
-        if (h->param->intra_period_to_abolish == 1) {
+        if (h->param->intra_period_max == 1) {
             memcpy(p_rps, &p_seq_rps[0], sizeof(xavs2_rps_t));
             p_rps->num_of_ref       = 0;  // clear reference frames for I frame
             p_rps->referd_by_others = 0;

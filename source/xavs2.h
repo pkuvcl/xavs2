@@ -43,7 +43,7 @@
 extern "C" {    // only need to export C interface if used by C++ source code
 #endif
 
-#define XAVS2_BUILD         12        /* xavs2 build version */
+#define XAVS2_BUILD         13        /* xavs2 build version */
 
 /**
  * ===========================================================================

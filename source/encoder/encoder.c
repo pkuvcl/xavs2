@@ -272,7 +272,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
 
     /* only use for RA configure */
 #if AQPO
-    if (h->param->is_enable_AQPO && h->param->intra_period_to_abolish != 1 && h->param->i_cfg_type == 2) {
+    if (h->param->is_enable_AQPO && h->param->intra_period_max != 1 && h->param->i_cfg_type == 2) {
         int gop_size;
         int num_poc;
         int index;
@@ -287,7 +287,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
 
         if (cur_frm->i_frame + num_poc != 0) {
             if ((cur_frm->i_frame + num_poc) % gop_size == 0) {
-                intra_period_num = h->param->intra_period_to_abolish;
+                intra_period_num = h->param->intra_period_max;
                 index = ((cur_frm->i_frame + num_poc + gop_size - 1) / gop_size) % intra_period_num;
 
                 temp_a = (intra_period_num - index) >> 1;
@@ -967,34 +967,21 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check intra period */
-    xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod: %d, Min %d Max %d, BFrames %d, OpenGOP %d\n",
-              param->intra_period_to_abolish, 
+    xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod { Min %d Max %d }, BFrames %d, OpenGOP %d\n",
               param->intra_period_min,
               param->intra_period_max,
               param->successive_Bframe,
               param->b_open_gop);
-    if (param->intra_period_max == -1 && param->intra_period_to_abolish != 0) {
-        if (param->successive_Bframe != 0) {
-            param->intra_period_max = param->intra_period_to_abolish * XAVS2_ABS(param->i_gop_size);
-            if (!param->b_open_gop) {
-                param->intra_period_max -= param->successive_Bframe;
-            }
-        } else {
-            param->intra_period_max = param->intra_period_to_abolish;
-        }
+    if (param->intra_period_min == -1) {
         param->intra_period_min = param->intra_period_max;
-    } else if (param->intra_period_min == -1) {
-        param->intra_period_min = 0;
     }
     /* Only support GOP size divisible by 8 while using RA with openGOP */
     if (param->b_open_gop  && param->i_cfg_type == XAVS2_RPS_CFG_RA) {
-        int new_intra_period = param->intra_period_to_abolish * XAVS2_ABS(param->i_gop_size);
-        if (param->intra_period_to_abolish != 0 &&
-            new_intra_period != param->intra_period_max) {
-            xavs2_log(NULL, XAVS2_LOG_WARNING, "IntraPeriodMax Fixed for OpenGOP, %d => %d\n",
-                      param->intra_period_max, new_intra_period);
-            param->intra_period_max = new_intra_period;
-            param->intra_period_min = new_intra_period;
+        int period = param->intra_period_max / XAVS2_ABS(param->i_gop_size);
+        if (param->intra_period_max % XAVS2_ABS(param->i_gop_size)) {
+            param->intra_period_max = (period + 1) * XAVS2_ABS(param->i_gop_size);
+            xavs2_log(NULL, XAVS2_LOG_WARNING, "IntraPeriodMax Fixed for OpenGOP => %d\n",
+                      param->intra_period_max);
         }
     }
     if (param->profile_id == MAIN_PICTURE_PROFILE &&
@@ -1119,7 +1106,8 @@ int encoder_check_parameters(xavs2_param_t *param)
     /* set for field coding */
     if (param->InterlaceCodingOption == FIELD_CODING) {
         param->org_height   = param->org_height   >> 1;
-        param->intra_period_to_abolish = param->intra_period_to_abolish << 1;
+        param->intra_period_max = param->intra_period_max << 1;
+        param->intra_period_min = param->intra_period_min << 1;
     }
 
     /* low delay? */
