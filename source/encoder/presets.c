@@ -237,9 +237,9 @@ void xavs2_reconfigure_encoder(xavs2_t *h)
     UNUSED_PARAMETER(h);
 }
 
-/* ----------------
-
-/* fast algorithms for different presets */
+/* ---------------------------------------------------------------------------
+ * fast algorithms for different presets
+ */
 static INLINE
 uint64_t get_fast_algorithms(xavs2_t *h, int i_preset_level)
 {
