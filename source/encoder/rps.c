@@ -527,15 +527,14 @@ int rps_fix_reference_list_pf(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
 }
 
 /* ---------------------------------------------------------------------------
- * check whether a frame is writable
+ * check whether a frame is writable:
+ *    no one is referencing this frame
  */
 static ALWAYS_INLINE
 int frame_is_writable(const xavs2_handler_t *h_mgr, xavs2_frame_t *frame)
 {
-    /*     (1) no one is referencing this frame or writing to it;
-     * and (2) this frame has already been outputted(wrote to the rec file)
-     */
-    return frame->cnt_refered == 0 && frame->i_frame <= h_mgr->i_output;
+    UNUSED_PARAMETER(h_mgr);
+    return frame->cnt_refered == 0;
 }
 
 /* ---------------------------------------------------------------------------
@@ -545,10 +544,9 @@ static ALWAYS_INLINE
 int frame_is_free(const xavs2_handler_t *h_mgr, int cur_poc, xavs2_frame_t *frame)
 {
     if (frame_is_writable(h_mgr, frame)) {
-        return frame->rps.referd_by_others == 0 || /* this frame will never be used as a reference frame */
-               (XAVS2_ABS(cur_poc - frame->i_frame) >= 128) /* obsolete frame */;
+        return 1;  /* this frame will never be used */
     } else {
-        return 0;
+        return (XAVS2_ABS(cur_poc - frame->i_frame) >= 128) /* is too long-ago frame ? */;
     }
 }
 
