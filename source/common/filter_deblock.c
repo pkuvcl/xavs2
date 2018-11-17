@@ -455,29 +455,6 @@ void lf_scu_deblock(xavs2_t *h, pel_t *p_rec[3], int i_stride, int i_stride_c, i
     }
 }
 
-static void lf_scu_deblock_flag_fix_qp(xavs2_t *h, int scu_x, int scu_y, int dir, uint8_t *b_filter_flag)
-{
-    const int scu_xy = scu_y * h->i_width_in_mincu + scu_x;
-
-    cu_info_t *scuQ = &h->cu_info[scu_xy];  /* current SCU */
-    int edge_condition = h->p_deblock_flag[dir][(scu_y - h->lcu.i_scu_y) * h->i_width_in_mincu + scu_x];
-
-    /* deblock edges */
-    if (edge_condition != EDGE_TYPE_NOFILTER) {
-        cu_info_t *scuP = dir ? (scuQ - h->i_width_in_mincu) : (scuQ - 1); /* MbP = Mb of the remote 4x4 block */
-        //luma
-        b_filter_flag[0] = lf_skip_filter(h, scuP, scuQ, dir, (scu_x << 1), (scu_y << 1));
-        b_filter_flag[1] = lf_skip_filter(h, scuP, scuQ, dir, (scu_x << 1) + dir, (scu_y << 1) + !dir);
-
-        if (edge_condition == EDGE_TYPE_BOTH && (((scu_y & 1) == 0 && dir) || (((scu_x & 1) == 0) && (!dir)))) {
-            //chroma
-            b_filter_flag[4] = b_filter_flag[0];
-            b_filter_flag[5] = b_filter_flag[1];
-        }
-    }
-}
-
-
 /**
  * ===========================================================================
  * interface function defines

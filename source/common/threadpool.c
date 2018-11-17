@@ -229,39 +229,8 @@ static threadpool_job_t *xavs2_sync_job_list_pop(xavs2_sync_job_list_t *slist)
 /* ---------------------------------------------------------------------------
  */
 static
-void set_thread_running_cpu(xavs2_threadpool_t *pool)
+void *proc_xavs2_threadpool_thread(xavs2_threadpool_t *pool)
 {
-    int num_cores = xavs2_cpu_num_processors();
-    int cpu_idx = 0;
-    int i;
-
-    xavs2_thread_mutex_lock(&pool->run.mutex);   /* lock */
-    for (i = num_cores; i != 0; i--) {
-        int cpu_used = 0;
-        cpu_idx = rand() % num_cores;
-        cpu_used = pool->cpu_core_used[cpu_idx >> 8];
-        cpu_used = (cpu_used >> (cpu_idx & 7)) & 1;
-        if (!cpu_used) {
-            break;
-        }
-    }
-
-    /* 仅在总线程数超过4个时，才进行CPU核的绑定 */
-    if (i != 0 && pool->i_threads > 4) {
-        xavs2_thread_set_cpu(cpu_idx);
-        pool->cpu_core_used[cpu_idx >> 8] |= (1 << (cpu_idx & 7));
-    } else {
-        xavs2_thread_set_cpu(num_cores);
-    }
-    xavs2_thread_mutex_unlock(&pool->run.mutex); /* unlock */
-}
-
-/* ---------------------------------------------------------------------------
- */
-static void *proc_xavs2_threadpool_thread(xavs2_threadpool_t *pool)
-{
-    // set_thread_running_cpu(pool);
-
     /* init */
     if (pool->init_func) {
         pool->init_func(pool->init_arg);
