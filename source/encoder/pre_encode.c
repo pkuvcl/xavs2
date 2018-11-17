@@ -156,7 +156,6 @@ void lookahead_append_frame(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_fra
 {
     if (fenc->i_state != XAVS2_EXIT_THREAD && fenc->i_state != XAVS2_FLUSH) {
         fenc->i_frm_coi = h_mgr->ipb.COI;
-        fenc->b_frm_removed = 0;
         h_mgr->ipb.COI++;
 
         frame_buffer_update(h_mgr->p_coder, &h_mgr->ipb, fenc);

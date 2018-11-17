@@ -1072,7 +1072,6 @@ struct xavs2_frame_t {
     int         num_lcu_sao_off[NUM_SAO_COMPONENTS];
 
     /* */
-    int         b_frm_removed;        /* none zero : can not be used as reference frame */
     uint32_t    cnt_refered;          /* reference count for FT_DEC */
 
     int        *num_lcu_coded_in_row; /* 0, not ready, 1, ready */
