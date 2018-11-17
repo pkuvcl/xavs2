@@ -139,7 +139,7 @@ char *xavs2_get_simd_capabilities(char *buf, int cpuid)
     }
 
     if (p == buf)
-        sprintf(p, " none! (%08llx)", cpuid);
+        sprintf(p, " none! (%08x)", cpuid);
     return buf;
 }
 
