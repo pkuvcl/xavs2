@@ -975,8 +975,12 @@ int encoder_check_parameters(xavs2_param_t *param)
     if (param->intra_period_min == -1) {
         param->intra_period_min = param->intra_period_max;
     }
+    if (param->intra_period_min > param->intra_period_max) {
+        xavs2_log(NULL, XAVS2_LOG_WARNING, "IntraPeriod: swapped Min/Max\n");
+        XAVS2_SWAP(param->intra_period_max, param->intra_period_min);
+    }
     /* Only support GOP size divisible by 8 while using RA with openGOP */
-    if (param->b_open_gop  && param->i_cfg_type == XAVS2_RPS_CFG_RA) {
+    if (param->b_open_gop && param->i_cfg_type == XAVS2_RPS_CFG_RA) {
         int period = param->intra_period_max / XAVS2_ABS(param->i_gop_size);
         if (param->intra_period_max % XAVS2_ABS(param->i_gop_size)) {
             param->intra_period_max = (period + 1) * XAVS2_ABS(param->i_gop_size);
