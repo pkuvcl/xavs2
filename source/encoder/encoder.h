@@ -60,7 +60,7 @@ int      encoder_encode(xavs2_handler_t *h_mgr, xavs2_frame_t *frame);
 void     encoder_close (xavs2_handler_t *h_mgr);
 
 int      encoder_contexts_init(xavs2_t *h, xavs2_handler_t *h_mgr);
-void     encoder_write_rec_frame(xavs2_handler_t *h_mgr);
+void     dump_yuv_out(xavs2_t *h, FILE *fp, xavs2_frame_t *frame, int img_w, int img_h);
 void     encoder_fetch_one_encoded_frame(xavs2_handler_t *h_mgr, xavs2_outpacket_t *packet, int is_flush);
 
 void     xavs2_reconfigure_encoder(xavs2_t *h);

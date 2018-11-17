@@ -520,6 +520,65 @@ static void encoder_set_task_status(xavs2_t *h, task_status_e status)
 }
 
 /* ---------------------------------------------------------------------------
+ */
+static
+void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
+{
+    xavs2_t        *h     = h_mgr->p_coder;
+    xavs2_frame_t **DPB   = h_mgr->dpb.frames;
+    int size_dpb = h_mgr->dpb.num_frames;
+    int i = 0;
+    int j;
+
+    xavs2_thread_mutex_lock(&h_mgr->mutex);   /* lock */
+
+    while (i < size_dpb) {
+        int next_output_frame_idx;
+        xavs2_frame_t  *frame = DPB[i];
+        if (frame == NULL) {
+            i++;
+            continue;
+        }
+
+        xavs2_thread_mutex_lock(&frame->mutex);  /* lock */
+
+        next_output_frame_idx = get_next_frame_id(h_mgr->i_output);
+        if (frame->i_frame == next_output_frame_idx) {
+            /* has the frame already been reconstructed ? */
+            for (j = 0; j < h->i_height_in_lcu; j++) {
+                if (frame->num_lcu_coded_in_row[j] < h->i_width_in_lcu) {
+                    break;
+                }
+            }
+
+            if (j < h->i_height_in_lcu) {
+                /* frame doesn't finish reconstruction */
+                xavs2_thread_mutex_unlock(&frame->mutex);   /* unlock */
+                break;
+            }
+
+            /* update output frame index */
+            h_mgr->i_output = next_output_frame_idx;
+
+#if XAVS2_DUMP_REC
+            dump_yuv_out(h, h_mgr->h_rec_file, frame, h->param->org_width, h->param->org_height);
+#endif //if XAVS2_DUMP_REC
+            xavs2_thread_mutex_unlock(&frame->mutex);   /* unlock */
+
+            /* start over for the next reconstruction frame */
+            i = 0;
+            continue;
+        }
+
+        xavs2_thread_mutex_unlock(&frame->mutex);    /* unlock */
+        i++;
+    }
+
+    xavs2_thread_mutex_unlock(&h_mgr->mutex);     /* unlock */
+}
+
+
+/* ---------------------------------------------------------------------------
  * the aec encoding
  */
 static INLINE
