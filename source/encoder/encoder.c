@@ -520,37 +520,6 @@ static void encoder_set_task_status(xavs2_t *h, task_status_e status)
 }
 
 /* ---------------------------------------------------------------------------
- * encoder has finished RDO : release all reference frames
- */
-static void encoder_release_frames(xavs2_t *h)
-{
-    int i;
-
-    /* release all reference frames */
-    for (i = 0; i < h->i_ref; i++) {
-        release_one_frame(h, h->fref[i]);
-    }
-
-    /* make sure all row context to release */
-    if (h->param->i_lcurow_threads > 1) {
-        int *num_lcu_coded = h->fdec->num_lcu_coded_in_row;
-
-        for (i = 0; i < h->i_height_in_lcu; i++) {
-            if (num_lcu_coded[i] <= h->i_width_in_lcu) {
-                xavs2_sleep_ms(1);
-            }
-        }
-    }
-    h->b_all_row_ctx_released = 1;
-
-    /* release the reconstructed frame */
-    release_one_frame(h, h->fdec);
-
-    /* set task status */
-    encoder_set_task_status(h, XAVS2_TASK_RDO_DONE);
-}
-
-/* ---------------------------------------------------------------------------
  * the aec encoding
  */
 static INLINE
@@ -2116,9 +2085,29 @@ void *xavs2e_encode_one_frame(void *arg)
 
     /* update encoding information */
     xavs2_reconfigure_encoder(h);
+    
+    /* release all reference frames */
+    for (i = 0; i < h->i_ref; i++) {
+        release_one_frame(h, h->fref[i]);
+    }
 
-    /* recycle frame */
-    encoder_release_frames(h);
+    /* make sure all row context to release */
+    if (h->param->i_lcurow_threads > 1) {
+        int *num_lcu_coded = h->fdec->num_lcu_coded_in_row;
+
+        for (i = 0; i < h->i_height_in_lcu; i++) {
+            if (num_lcu_coded[i] <= h->i_width_in_lcu) {
+                xavs2_sleep_ms(1);
+            }
+        }
+    }
+    h->b_all_row_ctx_released = 1;
+
+    /* release the reconstructed frame */
+    release_one_frame(h, h->fdec);
+
+    /* set task status */
+    encoder_set_task_status(h, XAVS2_TASK_RDO_DONE);
 
     if (h->h_top->threadpool_aec == NULL) {
         encoder_aec_encode_one_frame(h);
