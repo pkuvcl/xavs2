@@ -565,6 +565,9 @@ void encoder_write_rec_frame(xavs2_handler_t *h_mgr)
 #endif //if XAVS2_DUMP_REC
             xavs2_thread_mutex_unlock(&frame->mutex);   /* unlock */
 
+            /* release one frame */
+            release_one_frame(h, frame);   // write reconstruction file
+
             /* start over for the next reconstruction frame */
             i = 0;
             continue;
