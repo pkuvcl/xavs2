@@ -63,7 +63,7 @@
  */
 static FILE *g_infile  = NULL;
 static FILE *g_outfile = NULL;
-const xavs2_api_t *api = NULL;
+const xavs2_api_t *g_api = NULL;
 
 /* ---------------------------------------------------------------------------
  */
@@ -75,7 +75,7 @@ static void dump_encoded_data(void *coder, xavs2_outpacket_t *packet)
         } else if (packet->state == XAVS2_STATE_FLUSH_END) {
             fwrite(packet->stream, packet->len, 1, g_outfile);
         }
-        api->encoder_packet_unref(coder, packet);
+        g_api->encoder_packet_unref(coder, packet);
     }
 }
 
@@ -122,7 +122,7 @@ static int read_one_frame(xavs2_image_t *img, int shift_in)
     return 0;
 }
 
-int test_encoder(xavs2_param_t *param)
+int test_encoder(const xavs2_api_t *api, xavs2_param_t *param)
 {
     const char *in_file = api->opt_get(param, "input");
     const char *bs_file = api->opt_get(param, "output");
@@ -261,19 +261,19 @@ int main(int argc, char **argv)
     int ret;
 
     /* get API handler */
-    api = load_xavs2_library(argc, argv, &param);
+    g_api = load_xavs2_library(argc, argv, &param);
 
-    if (api == NULL) {
+    if (g_api == NULL) {
         fprintf(stdout, "CAVS2Enc lib load error\n");
         return -1;
     }
     fflush(NULL);    // flush all output streams
 
     /* test encoding */
-    ret = test_encoder(param);
+    ret = test_encoder(g_api, param);
 
     /* free spaces */
-    api->opt_destroy(param);
+    g_api->opt_destroy(param);
 
     return ret;
 }
