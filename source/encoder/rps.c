@@ -403,7 +403,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     }
 
     assert(max_fwd_idx >= 0);
-    assert(DPB[max_fwd_idx]->b_frm_removed == 0);
+    assert(DPB[max_fwd_idx]->cnt_refered > 0);
 
     xavs2_thread_mutex_lock(&frefs[1]->mutex);     /* lock */
     frefs[1]->cnt_refered--;
@@ -436,7 +436,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     }
 
     assert(min_bwd_idx >= 0);
-    assert(DPB[min_bwd_idx]->b_frm_removed == 0);
+    assert(DPB[min_bwd_idx]->cnt_refered > 0);
 
     xavs2_thread_mutex_lock(&frefs[0]->mutex);     /* lock */
     frefs[0]->cnt_refered--;
@@ -514,7 +514,7 @@ int rps_fix_reference_list_pf(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             break;
         }
 
-        assert(DPB[max_fwd_idx]->b_frm_removed == 0);
+        assert(DPB[max_fwd_idx]->cnt_refered > 0);
 
         frefs[i] = DPB[max_fwd_idx];
         p_rps->ref_pic[i] = cur_frm->i_frm_coi - frefs[i]->i_frm_coi;
