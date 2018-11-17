@@ -74,8 +74,10 @@ static ALWAYS_INLINE int aec_get_shift(uint32_t v)
 static INLINE
 void biari_encode_symbol_rdo(aec_t *p_aec, uint8_t symbol, context_t *p_ctx)
 {
+#if !CTRL_OPT_AEC
     static const uint16_t thres_mps_update = (256 << LG_PMPS_SHIFTNO);
     static const uint16_t sum_mps_lps      = (512 << LG_PMPS_SHIFTNO) - 1;
+#endif
     uint32_t lg_pmps = p_ctx->LG_PMPS;
     const uint32_t lg_pmps_shifted = lg_pmps >> LG_PMPS_SHIFTNO;
     const uint32_t t1 = p_aec->i_t1;

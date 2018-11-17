@@ -610,7 +610,7 @@ int aec_write_intra_cutype(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_tu
 
     if (is_sdip_enabled) {
         if ((i_cu_level == B32X32_IN_BIT || i_cu_level == B16X16_IN_BIT) && i_tu_split) {
-            context_t *p_ctx = p_aec->p_ctx_set->intra_pu_type_contexts;
+            p_ctx = p_aec->p_ctx_set->intra_pu_type_contexts;
 
             biari_encode_symbol_aec(p_aec, i_cu_type == PRED_I_2Nxn, p_ctx);
 #if XAVS2_TRACE

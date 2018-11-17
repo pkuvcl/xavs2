@@ -115,7 +115,7 @@ void biari_encode_symbol_final_vrdo(aec_t *p_aec, uint8_t symbol)
 static INLINE
 int aec_write_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_cu_cbp, int is_amp_enabled)
 {
-    context_t *p_ctx = p_aec->p_ctx_set->cu_type_contexts;
+    DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->cu_type_contexts);
     int org_bits = arienco_bits_written(p_aec);
     int act_sym = MAP_CU_TYPE[i_cu_type];
 
@@ -142,7 +142,7 @@ int aec_write_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_cu_
         biari_encode_symbol_vrdo(p_aec, 0, p_ctx + 2);
         biari_encode_symbol_vrdo(p_aec, 1, p_ctx + 3);
         if (is_amp_enabled && i_cu_level >= B16X16_IN_BIT) {
-            p_ctx = p_aec->p_ctx_set->shape_of_partition_index;
+            DECLARE_CONTEXT(p_ctx = p_aec->p_ctx_set->shape_of_partition_index);
             if (i_cu_type == PRED_2NxN) {
                 biari_encode_symbol_vrdo(p_aec, 1, p_ctx);   // SMP - AMP signal bit
             } else {
@@ -158,7 +158,7 @@ int aec_write_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_cu_
         biari_encode_symbol_vrdo(p_aec, 0, p_ctx + 3);
         biari_encode_symbol_vrdo(p_aec, 1, p_ctx + 4);
         if (is_amp_enabled && i_cu_level >= B16X16_IN_BIT) {
-            p_ctx = p_aec->p_ctx_set->shape_of_partition_index;
+            DECLARE_CONTEXT(p_ctx = p_aec->p_ctx_set->shape_of_partition_index);
             if (i_cu_type == PRED_Nx2N) {
                 biari_encode_symbol_vrdo(p_aec, 1, p_ctx);   // SMP - AMP signal bit
             } else {
