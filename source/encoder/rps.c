@@ -221,7 +221,7 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
                     if ((frame = frm_buf->frames[j]) != NULL && cur_frm->i_frame != frame->i_frame) {
                         xavs2_thread_mutex_lock(&frame->mutex);      /* lock */
                         assert(p_rps->num_to_rm < sizeof(p_rps->rm_pic) / sizeof(p_rps->rm_pic[0]));
-                        if (frame->rps.referd_by_others == 1 && frame->removed == 0) {
+                        if (frame->rps.referd_by_others == 1 && frame->b_frm_removed == 0) {
                             if (cur_frm->i_frm_coi - frame->i_frm_coi < 64) {
                                 /* only 6 bits for delta coi */
                                 p_rps->rm_pic[p_rps->num_to_rm++] = cur_frm->i_frm_coi - frame->i_frm_coi;
@@ -259,7 +259,7 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
                 if ((frame = frm_buf->frames[j]) != NULL) {
                     xavs2_thread_mutex_lock(&frame->mutex);      /* lock */
                     assert(p_rps->num_to_rm < sizeof(p_rps->rm_pic) / sizeof(p_rps->rm_pic[0]));
-                    if (frame->rps.referd_by_others == 1 && frame->removed == 0) {
+                    if (frame->rps.referd_by_others == 1 && frame->b_frm_removed == 0) {
                         /* only 6 bits for delta coi */
                         if (frame->i_frame < frm_buf->POC_IDR && cur_frm->i_frm_coi - frame->i_frm_coi < 64) {
                             p_rps->rm_pic[p_rps->num_to_rm++] = cur_frm->i_frm_coi - frame->i_frm_coi;
@@ -325,11 +325,11 @@ int rps_init_reference_list(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
 
                 if (k == num_ref &&
                     frame->i_frm_coi == coi &&
-                    frame->removed == 0 &&
+                    frame->b_frm_removed == 0 &&
                     b_could_be_referenced) {
 
                     // put in the reference list
-                    assert(frame->removed == 0);
+                    assert(frame->b_frm_removed == 0);
                     assert(frame->rps.referd_by_others != 0);
 
                     // hold reference to this frame
@@ -383,7 +383,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
         if ((frame = DPB[i]) != NULL) {
             xavs2_thread_mutex_lock(&frame->mutex);      /* lock */
 
-            if (frame->rps.referd_by_others != 0 && frame->removed == 0 &&
+            if (frame->rps.referd_by_others != 0 && frame->b_frm_removed == 0 &&
                 frame->i_frame < cur_frm->i_frame && frame->i_frame > max_fwd_poi) {
                 if (max_fwd_idx != -1) {
                     xavs2_thread_mutex_lock(&DPB[max_fwd_idx]->mutex);   /* lock */
@@ -403,7 +403,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     }
 
     assert(max_fwd_idx >= 0);
-    assert(DPB[max_fwd_idx]->removed == 0);
+    assert(DPB[max_fwd_idx]->b_frm_removed == 0);
 
     xavs2_thread_mutex_lock(&frefs[1]->mutex);     /* lock */
     frefs[1]->cnt_refered--;
@@ -416,7 +416,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
         if ((frame = DPB[i]) != NULL) {
             xavs2_thread_mutex_lock(&frame->mutex);  /* lock */
 
-            if (frame->rps.referd_by_others != 0 && frame->removed == 0 &&
+            if (frame->rps.referd_by_others != 0 && frame->b_frm_removed == 0 &&
                 frame->i_frame > cur_frm->i_frame && frame->i_frame < min_bwd_poi) {
                 if (min_bwd_idx != -1) {
                     xavs2_thread_mutex_lock(&DPB[min_bwd_idx]->mutex);   /* lock */
@@ -436,7 +436,7 @@ int rps_fix_reference_list_b(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
     }
 
     assert(min_bwd_idx >= 0);
-    assert(DPB[min_bwd_idx]->removed == 0);
+    assert(DPB[min_bwd_idx]->b_frm_removed == 0);
 
     xavs2_thread_mutex_lock(&frefs[0]->mutex);     /* lock */
     frefs[0]->cnt_refered--;
@@ -488,7 +488,7 @@ int rps_fix_reference_list_pf(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
                 }
 
                 if (poi < cur_frm->i_frame && poi > max_fwd_poi &&
-                    XAVS2_ABS(poi - cur_frm->i_frame) < 128 && frame->removed == 0 &&
+                    XAVS2_ABS(poi - cur_frm->i_frame) < 128 && frame->b_frm_removed == 0 &&
                     (h->param->temporal_id_exist_flag == 0 || h->i_layer >= frame->rps.temporal_id)) {
                     if (max_fwd_idx != -1) {
                         xavs2_thread_mutex_lock(&DPB[max_fwd_idx]->mutex);   /* lock */
@@ -514,7 +514,7 @@ int rps_fix_reference_list_pf(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             break;
         }
 
-        assert(DPB[max_fwd_idx]->removed == 0);
+        assert(DPB[max_fwd_idx]->b_frm_removed == 0);
 
         frefs[i] = DPB[max_fwd_idx];
         p_rps->ref_pic[i] = cur_frm->i_frm_coi - frefs[i]->i_frm_coi;
@@ -546,7 +546,7 @@ int frame_is_free(const xavs2_handler_t *h_mgr, int cur_poc, xavs2_frame_t *fram
 {
     if (frame_is_writable(h_mgr, frame)) {
         return frame->rps.referd_by_others == 0 || /* this frame will never be used as a reference frame */
-               frame->removed == 1 || /* it is a reference frame but has just been removed */
+               frame->b_frm_removed == 1 || /* it is a reference frame but has just been removed */
                (XAVS2_ABS(cur_poc - frame->i_frame) >= 128) /* obsolete frame */;
     } else {
         return 0;
@@ -619,7 +619,7 @@ xavs2_frame_t *frame_buffer_find_free_frame_dpb(xavs2_handler_t *h_mgr, xavs2_t 
         memcpy(&fdec_frm->rps, p_rps, sizeof(xavs2_rps_t));
         fdec_frm->i_frame = -1;
         fdec_frm->i_frm_coi = -1;
-        fdec_frm->removed = 0;
+        fdec_frm->b_frm_removed = 0;
 
         memset(fdec_frm->num_lcu_coded_in_row, 0, h->i_height_in_lcu * sizeof(fdec_frm->num_lcu_coded_in_row[0]));
     }
@@ -649,7 +649,7 @@ void rps_determine_remove_frames(xavs2_frame_buffer_t *frm_buf, xavs2_frame_t *c
 
         if (frame != NULL) {
             xavs2_thread_mutex_lock(&frame->mutex);              /* lock */
-            if (frame->i_frm_coi == coi && frame->removed == 0) {
+            if (frame->i_frm_coi == coi && frame->b_frm_removed == 0) {
                 // can not remove frames with lower layers
                 assert(cur_frm->rps.temporal_id <= frame->rps.temporal_id);
 
@@ -700,8 +700,8 @@ void frame_buffer_remove_frames(xavs2_frame_buffer_t *frm_buf)
         if (frame != NULL) {
             xavs2_thread_mutex_lock(&frame->mutex);          /* lock */
 
-            if (frame->i_frm_coi == coi_frame_to_remove && frame->removed == 0) {
-                frame->removed = 1;
+            if (frame->i_frm_coi == coi_frame_to_remove && frame->b_frm_removed == 0) {
+                frame->b_frm_removed = 1;
                 // xavs2_log(NULL, XAVS2_LOG_DEBUG, "remove frame COI: %3d, POC %3d\n",
                 //           frame->i_frm_coi, frame->i_frame);
                 xavs2_thread_mutex_unlock(&frame->mutex);    /* unlock */

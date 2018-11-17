@@ -409,9 +409,9 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
     }
 
     /* initialize default value */
-    frame->i_qpplus1   = 0;
-    frame->removed     = 1;
-    frame->cnt_refered = 0;
+    frame->i_qpplus1     = 0;
+    frame->b_frm_removed = 1;
+    frame->cnt_refered   = 0;
 
     /* initialize signals */
     if (xavs2_thread_mutex_init(&frame->mutex, NULL)) {

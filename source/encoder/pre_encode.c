@@ -156,7 +156,7 @@ void lookahead_append_frame(xavs2_handler_t *h_mgr, xlist_t *list_out, xavs2_fra
 {
     if (fenc->i_state != XAVS2_EXIT_THREAD && fenc->i_state != XAVS2_FLUSH) {
         fenc->i_frm_coi = h_mgr->ipb.COI;
-        fenc->removed = 0;
+        fenc->b_frm_removed = 0;
         h_mgr->ipb.COI++;
 
         frame_buffer_update(h_mgr->p_coder, &h_mgr->ipb, fenc);
@@ -287,7 +287,6 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
     xavs2_frame_t  **blocked_frm_set = h_mgr->blocked_frm_set;
     int64_t         *blocked_pts_set = h_mgr->blocked_pts_set;
     xlist_t         *list_out        = &h_mgr->list_frames_ready;
-    const int        gop_size        = param->i_gop_size;
 
     /* check state */
     if (frm->i_state == XAVS2_EXIT_THREAD) {
@@ -311,7 +310,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
              * a GOP should look somewhat like(POC order): B...BP */
 
             h_mgr->num_blocked_frames++;
-            assert(h_mgr->num_blocked_frames <= gop_size);
+            assert(h_mgr->num_blocked_frames <= param->i_gop_size);
 
             /* store the frame in blocked buffers */
             blocked_frm_set[h_mgr->num_blocked_frames] = frm;
