@@ -178,7 +178,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("SampleBitDepth",               &p->sample_bit_depth,           MAP_NUM, "Encoding bit-depth");
     MAP("IntraPeriodMax",               &p->intra_period_max,           MAP_NUM, "maximum intra-period, one I-frame mush appear in any NumMax of frames");
     MAP("IntraPeriodMin",               &p->intra_period_min,           MAP_NUM, "minimum intra-period, only one I-frame can appear in at most NumMin of frames");
-    MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP");
+    MAP("OpenGOP",                      &p->b_open_gop,                 MAP_NUM, "Open GOP or Closed GOP, 1: Open(default), 0: Closed");
     MAP("UseHadamard",                  &p->enable_hadamard,            MAP_NUM, "Hadamard transform (0=not used, 1=used)");
     MAP("FME",                          &p->me_method,                  MAP_NUM, "Motion Estimation method (0: Full Search, 1: DIA, 2: HEX 3: UMH, 4: TZ)");
     MAP("SearchRange",                  &p->search_range,               MAP_NUM, "Max search range");
