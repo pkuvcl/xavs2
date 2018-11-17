@@ -201,9 +201,9 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("LoopFilterParameter",          &p->loop_filter_parameter_flag, MAP_NUM, "Send loop filter parameter (0= No parameter, 1= Send Parameter)");
     MAP("LoopFilterAlphaOffset",        &p->alpha_c_offset,             MAP_NUM, "Aplha offset in loop filter");
     MAP("LoopFilterBetaOffset",         &p->beta_offset,                MAP_NUM, "Beta offset in loop filter");
-    MAP("SAOEnable",                    &p->enable_sao,                 MAP_NUM, "Enable SAO (1=SAO on, 0=SAO OFF)");
-    MAP("ALFEnable",                    &p->enable_alf,                 MAP_NUM, "Enable ALF (1=ALF on, 0=ALF OFF)");
-    MAP("ALFLowLatencyEncodingEnable",  &p->alf_LowLatencyEncoding,     MAP_NUM, "Enable Low Latency ALF (1=Low Latency ALF, 0=High Efficiency ALF)");
+    MAP("SAOEnable",                    &p->enable_sao,                 MAP_NUM, "Enable SAO or not (1: on, 0: off)");
+    MAP("ALFEnable",                    &p->enable_alf,                 MAP_NUM, "Enable ALF or not (1: on, 0: off)");
+    MAP("ALFLowLatencyEncodingEnable",  &p->alf_LowLatencyEncoding,     MAP_NUM, "Enable Low Latency ALF (1=Low Latency mode, 0=High Efficiency mode)");
     MAP("CrossSliceLoopFilter",         &p->b_cross_slice_loop_filter,  MAP_NUM, "Enable Cross Slice Boundary Filter (0=Disable, 1=Enable)");
 
     /* ³¡±àÂë²ÎÊý */
@@ -237,8 +237,8 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 
     MAP("RdoqLevel",                    &p->i_rdoq_level,               MAP_NUM, "Rdoq Level (0: off, 1: cu level, only for best partition mode, 2: all mode)");
     MAP("LambdaFactor",                 &p->lambda_factor_rdoq,         MAP_NUM, "default: 75,  Rdoq Lambda factor");
-    MAP("LambdaFactorP",                &p->lambda_factor_rdoq_p,       MAP_NUM, "default: 120, Rdoq Lambda factor P/F");
-    MAP("LambdaFactorB",                &p->lambda_factor_rdoq_b,       MAP_NUM, "default: 100, Rdoq Lambda factor B");
+    MAP("LambdaFactorP",                &p->lambda_factor_rdoq_p,       MAP_NUM, "default: 120, Rdoq Lambda factor P/F frame");
+    MAP("LambdaFactorB",                &p->lambda_factor_rdoq_b,       MAP_NUM, "default: 100, Rdoq Lambda factor B frame");
 
     MAP("PMVREnable",                   &p->enable_pmvr,                MAP_NUM, "PMVR");
     MAP("NSQT",                         &p->enable_nsqt,                MAP_NUM, "NSQT");
@@ -249,11 +249,11 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
 
     MAP("RateControl",                  &p->i_rc_method,                MAP_NUM, "0: CQP, 1: CBR (frame level), 2: CBR (SCU level), 3: VBR");
     MAP("TargetBitRate",                &p->i_target_bitrate,           MAP_NUM, "target bitrate, in bps");
-    MAP("InitialQP",                    &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
-    MAP("QP",                           &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
-    MAP("QPIFrame",                     &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (0-63)");
-    MAP("MinQP",                        &p->i_min_qp,                   MAP_NUM, "min qp for rate control    (0-63)");
-    MAP("MaxQP",                        &p->i_max_qp,                   MAP_NUM, "max qp for rate control    (0-63)");
+    MAP("QP",                           &p->i_initial_qp,               MAP_NUM, "initial qp for first frame (8bit: 0~63; 10bit: 0~79)");
+    MAP("InitialQP",                    &p->i_initial_qp,               MAP_NUM, "  - Same as `QP`");
+    MAP("QPIFrame",                     &p->i_initial_qp,               MAP_NUM, "  - Same as `QP`");
+    MAP("MinQP",                        &p->i_min_qp,                   MAP_NUM, "min qp (8bit: 0~63; 10bit: 0~79)");
+    MAP("MaxQP",                        &p->i_max_qp,                   MAP_NUM, "max qp (8bit: 0~63; 10bit: 0~79)");
 
     MAP("CfgType",                      &p->i_cfg_type,                 MAP_NUM, "coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI)");
     MAP("GopSize",                      &p->i_gop_size,                 MAP_NUM, "sub GOP size (negative numbers indicating an employ of default settings, which will invliadate the following settings.)");
@@ -268,7 +268,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("EnableAecThread",              &p->enable_aec_thread,          MAP_NUM, "Enable AEC thread or not (default: enabled)");
 
     MAP("LogLevel",                     &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
-    MAP("Log",                          &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
+    MAP("Log",                          &p->i_log_level,                MAP_NUM, "  - Same as `LogLevel`");
     MAP("EnablePSNR",                   &p->enable_psnr,                MAP_NUM, "Enable PSNR or not (default: Enable)");
     MAP("EnableSSIM",                   &p->enable_ssim,                MAP_NUM, "Enable SSIM or not (default: Enable)");
 
