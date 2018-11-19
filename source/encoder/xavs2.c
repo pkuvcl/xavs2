@@ -139,7 +139,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
 
     /* --- analysis options ------------------------------------- */
     param->enable_hadamard            = TRUE;
-    param->me_method                  = XAVS2_ME_HEX;
+    param->me_method                  = XAVS2_ME_UMH;
     param->search_range               = 64;
     param->num_max_ref                = XAVS2_MAX_REFS;
     param->inter_2pu                  = TRUE;
