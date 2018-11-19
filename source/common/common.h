@@ -542,7 +542,7 @@ typedef struct xavs2_param_t {
     int     intra_period_min;         /* minimum intra-period, only one I-frame can appear in at most NumMin of frames */
     int     b_open_gop;               /* open GOP? 1: open, 0: close */
     int     enable_f_frame;           /* enable F-frame */
-    int     successive_Bframe;        /* number of B frames that will be used */
+    int     num_bframes;              /* number of B frames that will be used */
     int     InterlaceCodingOption;    /* coding type: frame coding? field coding? */
 
     /* --- picture ---------------------------------------------- */

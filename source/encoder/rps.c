@@ -215,7 +215,7 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             p_rps->num_to_rm        = 0;
             p_rps->referd_by_others = 1;
 
-            if (!h->param->b_open_gop || !h->param->successive_Bframe) {
+            if (!h->param->b_open_gop || !h->param->num_bframes) {
                 // IDR refresh
                 for (j = 0; j < frm_buf->num_frames; j++) {
                     if ((frame = frm_buf->frames[j]) != NULL && cur_frm->i_frame != frame->i_frame) {
@@ -250,10 +250,10 @@ int xavs2e_get_frame_rps(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
             p_rps->qp_offset        = 0;
         }
     } else {
-        rps_idx = (cur_frm->i_frm_coi - 1 - ((!h->param->b_open_gop && h->param->successive_Bframe > 0) ? frm_buf->COI_IDR : 0)) % h->i_gop_size;
+        rps_idx = (cur_frm->i_frm_coi - 1 - ((!h->param->b_open_gop && h->param->num_bframes > 0) ? frm_buf->COI_IDR : 0)) % h->i_gop_size;
         memcpy(p_rps, &p_seq_rps[rps_idx], sizeof(xavs2_rps_t));
 
-        if (cur_frm->i_frame > frm_buf->POC_IDR && (!h->param->b_open_gop || !h->param->successive_Bframe)) {
+        if (cur_frm->i_frame > frm_buf->POC_IDR && (!h->param->b_open_gop || !h->param->num_bframes)) {
             /* clear frames before IDR frame */
             for (j = 0; j < frm_buf->num_frames; j++) {
                 if ((frame = frm_buf->frames[j]) != NULL) {
@@ -848,10 +848,10 @@ int update_rps_config(xavs2_param_t *param)
             /* RA */
             if (param->i_gop_size == 4) {
                 default_reference_management_ra_gop4(&p_seq_rps[0]);
-                param->successive_Bframe = 3;
+                param->num_bframes = 3;
             } else if (param->i_gop_size == 8) {
                 default_reference_management_ra_gop8(&p_seq_rps[0]);
-                param->successive_Bframe = 7;
+                param->num_bframes = 7;
             } else {
                 /* GOP size error */
                 return -1;

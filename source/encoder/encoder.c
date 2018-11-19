@@ -253,7 +253,7 @@ void xavs2e_get_frame_lambda(xavs2_t *h, xavs2_frame_t *cur_frm, int i_qp)
 #endif
 
     if (h->param->intra_period_max != 1) {
-        if (h->param->successive_Bframe > 0) {
+        if (h->param->num_bframes > 0) {
             if (i_type != SLICE_TYPE_I && rps_idx != 0) {
                 if (i_type == SLICE_TYPE_B) {
                     lambda *= 1.2;
@@ -1001,7 +1001,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     xavs2_log(NULL, XAVS2_LOG_DEBUG, "IntraPeriod { Min %d Max %d }, BFrames %d, OpenGOP %d\n",
               param->intra_period_min,
               param->intra_period_max,
-              param->successive_Bframe,
+              param->num_bframes,
               param->b_open_gop);
     if (param->intra_period_min == -1) {
         param->intra_period_min = param->intra_period_max;
@@ -1062,11 +1062,11 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check reference configuration */
-    if (param->successive_Bframe >= XAVS2_MAX_GOP_SIZE) {
+    if (param->num_bframes >= XAVS2_MAX_GOP_SIZE) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "The number of successive B-frame is too big!\n");
         return -1;
     }
-    if (param->successive_Bframe > 0 && param->successive_Bframe + 1 != XAVS2_ABS(param->i_gop_size)) {
+    if (param->num_bframes > 0 && param->num_bframes + 1 != XAVS2_ABS(param->i_gop_size)) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "The number of successive B-frame is wrong!\n");
         return -1;
     }
@@ -1146,7 +1146,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* low delay? */
-    if (param->successive_Bframe == 0) {
+    if (param->num_bframes == 0) {
         param->low_delay = TRUE;
     } else {
         param->low_delay = FALSE;
@@ -1172,7 +1172,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* enable TDRDO? TDRDO is only just for low delay */
-    if (param->successive_Bframe != 0 || param->intra_period_min > 0) {
+    if (param->num_bframes != 0 || param->intra_period_min > 0) {
         param->enable_tdrdo = 0;
     }
 

@@ -122,7 +122,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->b_open_gop                 = 1;
     param->i_cfg_type                 = XAVS2_RPS_CFG_RA;
     param->i_gop_size                 = -8;
-    param->successive_Bframe          = 0;
+    param->num_bframes                = 7;
     param->intra_period_max           = -1;
     param->intra_period_min           = -1;
 

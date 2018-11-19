@@ -192,7 +192,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("DHPEnable",                    &p->enable_dhp,                 MAP_NUM, "(0: Don't use DHP,      1:Use DHP)");
     MAP("MHPSKIPEnable",                &p->enable_mhp_skip,            MAP_NUM, "(0: Don't use MH_PSKIP, 1:Use MH_PSKIP)");
     MAP("WSMEnable",                    &p->enable_wsm,                 MAP_NUM, "(0: Don't use WSM,      1:Use WSM)");
-    MAP("NumberBFrames",                &p->successive_Bframe,          MAP_NUM, "Number of B frames inserted between I/P/F frames (0=not used)");
+    MAP("NumberBFrames",                &p->num_bframes,          MAP_NUM, "Number of B frames inserted between I/P/F frames (0=not used)");
     MAP("Inter2PU" ,                    &p->inter_2pu,                  MAP_NUM, "inter partition mode 2NxN or Nx2N or AMP");
     MAP("InterAMP",                     &p->enable_amp,                 MAP_NUM, "inter partition mode AMP");
     MAP("IntraInInter",                 &p->enable_intra,               MAP_NUM, "intra partition in inter frame");
@@ -765,11 +765,11 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
         if (value_i > 0) {
             param->i_cfg_type = XAVS2_RPS_CFG_RA;
             param->i_gop_size = value_i < 4 ? -4 : -8;
-            param->successive_Bframe = XAVS2_ABS(param->i_gop_size) - 1;
+            param->num_bframes = XAVS2_ABS(param->i_gop_size) - 1;
             param->b_open_gop = 0;
         } else {
             param->i_cfg_type = XAVS2_RPS_CFG_LDP;
-            param->successive_Bframe = 0;
+            param->num_bframes = 0;
             param->i_gop_size = -4;
             param->b_open_gop = 0;
         }

@@ -71,7 +71,7 @@ int slice_type_analyse(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
             // for AI (All Intra)
             frm->i_frm_type = XAVS2_TYPE_I;
             frm->b_keyframe = 1;
-        } else if (param->intra_period_max == 0 || param->successive_Bframe == 0) {
+        } else if (param->intra_period_max == 0 || param->num_bframes == 0) {
             // for LDP (with no intra period)
             frm->i_frm_type = p_frm_type;
             frm->b_keyframe = 0;
@@ -203,7 +203,7 @@ void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
                 frm->i_reordered_pts = blocked_pts_set[i + 1];
 
                 /* append to output list to be encoded */
-                lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, i + 1);
+                lookahead_append_frame(h_mgr, list_out, frm, param->num_bframes, i + 1);
                 h_mgr->num_encode++;
             } else {
                 break;
@@ -250,7 +250,7 @@ void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
                 frm->i_reordered_pts = blocked_pts_set[i + 1];
 
                 /* append to output list to be encoded */
-                lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, i + 1);
+                lookahead_append_frame(h_mgr, list_out, frm, param->num_bframes, i + 1);
                 h_mgr->num_encode++;
             } else {
                 break;
@@ -323,7 +323,7 @@ int send_frame_to_enc_queue(xavs2_handler_t *h_mgr, xavs2_frame_t *frm)
             assert(h_mgr->num_blocked_frames == 0);
             frm->i_reordered_pts = frm->i_pts;     /* DTS is same as PTS */
 
-            lookahead_append_frame(h_mgr, list_out, frm, param->successive_Bframe, h_mgr->num_blocked_frames);
+            lookahead_append_frame(h_mgr, list_out, frm, param->num_bframes, h_mgr->num_blocked_frames);
             h_mgr->num_encode++;
         }
     } else {

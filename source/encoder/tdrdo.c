@@ -513,12 +513,12 @@ static FD *SearchFrameDistortionArray(DL *omcplist, int i_frame_index, int StepL
  */
 int tdrdo_get_buffer_size(xavs2_param_t *param)
 {
-    int StepLength = param->successive_Bframe == 0 ? 1 : param->i_gop_size;
+    int StepLength = param->num_bframes == 0 ? 1 : param->i_gop_size;
     int num_frames = 0;
     int size_blocks;
 
     if (param->enable_tdrdo) {
-        if (!param->successive_Bframe) {
+        if (!param->num_bframes) {
             num_frames += (param->num_frames / StepLength + 1);
             num_frames += (param->num_frames / StepLength + 1);
         } else {
@@ -542,7 +542,7 @@ int tdrdo_init(td_rdo_t *td_rdo, xavs2_param_t *param)
     int num_blocks = (int)ceil(1.0 * param->org_width / WORKBLOCKSIZE) * (int)ceil(1.0 * param->org_height / WORKBLOCKSIZE);
     int i;
 
-    if (param->successive_Bframe != 0) {
+    if (param->num_bframes != 0) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "TDRDO cannot be used in RA configuration.\n");
         return -1;
     }
@@ -553,9 +553,9 @@ int tdrdo_init(td_rdo_t *td_rdo, xavs2_param_t *param)
 
     td_rdo->KappaTable = (double *)mem_ptr;
     mem_ptr += sizeof(double) * num_blocks;
-    td_rdo->StepLength = param->successive_Bframe == 0 ? 1 : param->i_gop_size;
+    td_rdo->StepLength = param->num_bframes == 0 ? 1 : param->i_gop_size;
 
-    if (!param->successive_Bframe) {
+    if (!param->num_bframes) {
         td_rdo->OMCPDList.FrameDistortionArray = (FD *)mem_ptr;
         mem_ptr += (param->num_frames / td_rdo->StepLength + 1) * sizeof(FD);
         CreatDistortionList(&td_rdo->OMCPDList, param->num_frames / td_rdo->StepLength + 1, param->org_width, param->org_height, WORKBLOCKSIZE, 1 << param->lcu_bit_level);
@@ -614,7 +614,7 @@ void tdrdo_frame_start(xavs2_t *h)
     assert(td_rdo != NULL);
 
     td_rdo->GlobeFrameNumber = h->ip_pic_idx;
-    if (h->param->successive_Bframe) {
+    if (h->param->num_bframes) {
         td_rdo->pRealFD = &td_rdo->RealDList.FrameDistortionArray[td_rdo->GlobeFrameNumber];
     } else {
         td_rdo->pRealFD = &td_rdo->RealDList.FrameDistortionArray[td_rdo->globenumber];
@@ -652,7 +652,7 @@ void tdrdo_frame_done(xavs2_t *h)
     td_rdo_t *td_rdo = h->td_rdo;
     assert(td_rdo != NULL);
 
-    if ((h->fenc->i_frame % td_rdo->StepLength == 0 && !h->param->successive_Bframe) || h->param->successive_Bframe) {
+    if ((h->fenc->i_frame % td_rdo->StepLength == 0 && !h->param->num_bframes) || h->param->num_bframes) {
         td_rdo->precF.Y_base = h->fdec->planes[IMG_Y];
         //td_rdo->precF.nStrideY = h->fdec->i_stride[IMG_Y];// fdec->stride[0] , bitrate rise ?
         td_rdo->precF.nStrideY = h->img_luma_pre->i_stride[IMG_Y];   //to check: fdec->stride[0] ? by lutao
@@ -694,9 +694,9 @@ void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda)
 
     td_rdo->CurMBQP = h->i_qp;
     if (td_rdo->GlobeFrameNumber < h->param->num_frames && h->i_type != SLICE_TYPE_I) {
-        if (h->param->successive_Bframe && h->param->num_frames > 1 && td_rdo->GlobeFrameNumber <= ((int)((h->param->num_frames - 1) / td_rdo->StepLength))*td_rdo->StepLength) {
+        if (h->param->num_bframes && h->param->num_frames > 1 && td_rdo->GlobeFrameNumber <= ((int)((h->param->num_frames - 1) / td_rdo->StepLength))*td_rdo->StepLength) {
             td_rdo->pOMCPFD = SearchFrameDistortionArray(&td_rdo->OMCPDList, td_rdo->GlobeFrameNumber, td_rdo->StepLength, h->i_type);
-        } else if (!h->param->successive_Bframe && h->param->num_frames > td_rdo->StepLength && td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0) {
+        } else if (!h->param->num_bframes && h->param->num_frames > td_rdo->StepLength && td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0) {
             td_rdo->pOMCPFD = &td_rdo->OMCPDList.FrameDistortionArray[(td_rdo->GlobeFrameNumber - 1) / td_rdo->StepLength];
         } else {
             td_rdo->pOMCPFD = NULL;
@@ -704,7 +704,7 @@ void tdrdo_lcu_adjust_lambda(xavs2_t *h, rdcost_t *new_lambda)
     }
 
     // Just for LDP
-    if (h->i_type != SLICE_TYPE_I && h->param->successive_Bframe == 0) {
+    if (h->i_type != SLICE_TYPE_I && h->param->num_bframes == 0) {
         AdjustLcuQPLambdaLDP(h, td_rdo->pOMCPFD, h->lcu.i_scu_xy, h->i_width_in_mincu, new_lambda);
         td_rdo->CurMBQP = XAVS2_CLIP3F(MIN_QP, MAX_QP, td_rdo->CurMBQP);
     }
@@ -717,7 +717,7 @@ void tdrdo_lcu_update(xavs2_t *h)
     td_rdo_t *td_rdo = h->td_rdo;
     assert(td_rdo != NULL);
 
-    if ((td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && !h->param->successive_Bframe) || h->param->successive_Bframe) {
+    if ((td_rdo->GlobeFrameNumber % td_rdo->StepLength == 0 && !h->param->num_bframes) || h->param->num_bframes) {
         // stores for key frame
         StoreLCUInf(td_rdo->pRealFD, h->lcu.i_scu_xy, h->param->org_width / MIN_CU_SIZE, td_rdo->CurMBQP, h->f_lambda_mode, h->i_type);
     }
