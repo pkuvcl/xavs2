@@ -91,9 +91,7 @@ void frame_buffer_update(xavs2_t *h, xavs2_frame_buffer_t *frm_buf, xavs2_frame_
     /* update the task manager */
     if (h->param->intra_period_max != 0 && frm->i_frm_type == XAVS2_TYPE_I) {
         frm_buf->COI_IDR = frm->i_frm_coi;
-        if (h->param->i_cfg_type != XAVS2_RPS_CFG_RAP) {
-            frm_buf->POC_IDR = frm->i_frame;
-        }
+        frm_buf->POC_IDR = frm->i_frame;
     }
 
     if (frm->i_frm_type == XAVS2_TYPE_B) {

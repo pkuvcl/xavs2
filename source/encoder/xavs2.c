@@ -120,7 +120,6 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->enable_f_frame             = TRUE;
     param->InterlaceCodingOption      = 0;
     param->b_open_gop                 = 1;
-    param->i_cfg_type                 = XAVS2_RPS_CFG_RA;
     param->i_gop_size                 = -8;
     param->num_bframes                = 7;
     param->intra_period_max           = -1;

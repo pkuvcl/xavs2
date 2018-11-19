@@ -649,7 +649,6 @@ typedef struct xavs2_param_t {
     int     enable_ssim;              /* enable SSIM calculation or not */
 
     /* --- reference management --------------------------------- */
-    int     i_cfg_type;               /* coding configuration type (1 - LDP, 2 - RA, 3 - RAP, 4 - AI) */
     int     i_gop_size;               /* sub GOP size */
     xavs2_rps_t cfg_ref_all[XAVS2_MAX_GOPS];  /* ref_man array */
 

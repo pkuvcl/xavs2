@@ -1011,7 +1011,7 @@ int encoder_check_parameters(xavs2_param_t *param)
         XAVS2_SWAP(param->intra_period_max, param->intra_period_min);
     }
     /* Only support GOP size divisible by 8 while using RA with openGOP */
-    if (param->b_open_gop && param->i_cfg_type == XAVS2_RPS_CFG_RA) {
+    if (param->b_open_gop && param->num_bframes) {
         int period = param->intra_period_max / XAVS2_ABS(param->i_gop_size);
         if (param->intra_period_max % XAVS2_ABS(param->i_gop_size)) {
             param->intra_period_max = (period + 1) * XAVS2_ABS(param->i_gop_size);
@@ -1023,12 +1023,6 @@ int encoder_check_parameters(xavs2_param_t *param)
         (param->intra_period_max != 1 || param->intra_period_min != 1)) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "MAIN picture file only supports intra picture coding!\n");
         return -1;
-    }
-    if (param->i_cfg_type == XAVS2_RPS_CFG_AI &&
-        (param->intra_period_max != 1 || param->intra_period_min != 1)) {
-        xavs2_log(NULL, XAVS2_LOG_WARNING, "In AI type, the IntraPeriod must be 1.\n");
-        param->intra_period_max = 1;
-        param->intra_period_min = 1;
     }
 
     /* update profile id */

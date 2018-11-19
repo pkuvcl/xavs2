@@ -841,10 +841,10 @@ int update_rps_config(xavs2_param_t *param)
         /* set default configuration for reference_management */
         memset(p_seq_rps, -1, XAVS2_MAX_GOPS * sizeof(xavs2_rps_t));
 
-        if (param->i_cfg_type == XAVS2_RPS_CFG_LDP) {
+        if (param->num_bframes == 0) {
             /* LDP */
             default_reference_management_ldp(&p_seq_rps[0]);
-        } else if (param->i_cfg_type == XAVS2_RPS_CFG_RA || param->i_cfg_type == XAVS2_RPS_CFG_RAP) {
+        } else {
             /* RA */
             if (param->i_gop_size == 4) {
                 default_reference_management_ra_gop4(&p_seq_rps[0]);
@@ -856,9 +856,6 @@ int update_rps_config(xavs2_param_t *param)
                 /* GOP size error */
                 return -1;
             }
-        } else {
-            /* coding configuration type error */
-            return -1;
         }
     }
 
