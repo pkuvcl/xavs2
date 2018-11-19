@@ -57,11 +57,35 @@ $ make
   --recon=. --initial_qp=32 --OutputFile=test.avs
 ```
 
-## Issue and Pull Request
+## How to Report Bugs and Provide Feedback
 
-[Issues should be reported here][6]。
+Use the ["Issues" tab on Github][6].
+
+## How to Contribute
+
+We welcome community contributions to this project. Thank you for your time! By contributing to the project, you agree to the license and copyright terms therein and to the release of your contribution under these terms.
 
 If you have some bugs or features fixed, and would like to share with the public, please [make a Pull Request][7].
+
+### Contribution process
+
+-  Validate that your changes do not break a build
+
+-  Perform smoke tests and ensure they pass
+
+-  Submit a pull request for review to the maintainer
+
+### Known workitems or bugs
+
+- high bit-depth (i.e. 10-bit) support and SIMD optimization.
+
+- Rate-control in CBR, VBR.
+
+- Adaptive scene change detection and frame type decision.
+
+- NEON support for ARM platform.
+
+- and so on.
 
 ## Homepages
 
