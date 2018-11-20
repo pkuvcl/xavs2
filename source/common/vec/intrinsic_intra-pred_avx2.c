@@ -34,16 +34,15 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#include "../basic_types.h"
-#include "avs2_defs.h"
-#include "intrinsic.h"
-
 #include <mmintrin.h>
 #include <emmintrin.h>
 #include <tmmintrin.h>
 #include <smmintrin.h>
 #include <immintrin.h>
 
+#include "../basic_types.h"
+#include "avs2_defs.h"
+#include "intrinsic.h"
 
 #ifndef _MSC_VER
 #define __int64 int64_t

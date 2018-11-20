@@ -36,14 +36,14 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-#include "../basic_types.h"
-#include "intrinsic.h"
-#include "../avs2_defs.h"
-
 #include <xmmintrin.h>  // SSE
 #include <pmmintrin.h>  // SSE3
 #include <tmmintrin.h>  // SSSE3
 #include <immintrin.h>  // AVX and AVX2
+
+#include "../basic_types.h"
+#include "intrinsic.h"
+#include "../avs2_defs.h"
 
 /* disable warnings */
 #ifdef _MSC_VER

@@ -34,15 +34,14 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
-
-#include "../basic_types.h"
-#include "intrinsic.h"
-
 #include <mmintrin.h>
 #include <emmintrin.h>
 #include <tmmintrin.h>
 #include <smmintrin.h>
 #include <immintrin.h>
+
+#include "../basic_types.h"
+#include "intrinsic.h"
 
 void deblock_edge_ver_avx2(pel_t *SrcPtr, int stride, int Alpha, int Beta, uint8_t *flt_flag)
 {
