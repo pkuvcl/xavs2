@@ -80,7 +80,7 @@ void intra_pred_ver_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int 
             }
             break;
         case 8:
-            for (y = 0; y < bsy; y++) {
+            for (y = 0; y < bsy; y += 2) {
                 CP64(dst, rpSrc);
                 CP64(dst + i_dst, rpSrc);
                 dst += i_dst << 1;
