@@ -1003,6 +1003,9 @@ int encoder_check_parameters(xavs2_param_t *param)
               param->intra_period_max,
               param->num_bframes,
               param->b_open_gop);
+    if (param->intra_period_max == -1) {
+        param->intra_period_max = param->frame_rate;
+    }
     if (param->intra_period_min == -1) {
         param->intra_period_min = param->intra_period_max;
     }
