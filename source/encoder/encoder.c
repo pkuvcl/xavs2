@@ -1549,11 +1549,9 @@ xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_en
     } else {
         h->img_alf = NULL;
     }
-
     
-    assert(mem_size - (mem_base - (uint8_t*)h) >= 0);
-    if (mem_size < (mem_base - (uint8_t*)h)) {
-        /* not enough reserved space */
+    if ((uintptr_t)(h) + mem_size < (uintptr_t)(mem_base)) {
+        /* malloc size allocation error: no enough memory */
         goto fail;
     }
     /* -------------------------------------------------------------
