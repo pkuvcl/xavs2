@@ -184,7 +184,7 @@ void parse_preset_level(xavs2_param_t *p_param, int i_preset_level)
     p_param->enable_amp = i_preset_level > 4;  // NSQT
 
     /* --------------------------- ±ä»» --------------------------- */
-    p_param->enable_sdip = i_preset_level > 3;
+    p_param->enable_sdip = i_preset_level > 4;
     p_param->enable_nsqt = i_preset_level > 4;
     p_param->enable_secT = i_preset_level > -1;
     p_param->b_fast_2lelvel_tu = i_preset_level < 4;
