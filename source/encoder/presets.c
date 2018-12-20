@@ -118,7 +118,8 @@ void algorithm_init_thresholds(xavs2_param_t *p_param)
 
     /* QSFD threasholds */
     for (i = 0; i < MAX_QP; i++) {
-        double th_base = 350 * pow(i, 0.9);
+        double qstep = 32768.0 / tab_Q_TAB[i];
+        double th_base = 350 * pow(qstep, 0.9);
         double th__8 = th_base * tab_qsfd_cu_size_weight[0];
         double th_16 = th_base * tab_qsfd_cu_size_weight[1];
         double th_32 = th_base * tab_qsfd_cu_size_weight[2];
