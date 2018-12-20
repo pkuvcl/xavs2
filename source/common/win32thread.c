@@ -262,6 +262,8 @@ int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
 
     /* non-native condition variables */
     win32_cond = cond->ptr;
+
+    xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     have_waiter = win32_cond->waiter_count;
     xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
@@ -270,7 +272,7 @@ int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
         ReleaseSemaphore(win32_cond->semaphore, 1, NULL);
     }
 
-    return 0;
+    return xavs2_thread_mutex_unlock(&win32_cond->mtx_broadcast);
 }
 
 int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mutex)
@@ -286,11 +288,10 @@ int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mute
     win32_cond = cond->ptr;
 
     xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
-    xavs2_thread_mutex_unlock(&win32_cond->mtx_broadcast);
-
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     win32_cond->waiter_count++;
     xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
+    xavs2_thread_mutex_unlock(&win32_cond->mtx_broadcast);
 
     // unlock the external mutex
     xavs2_thread_mutex_unlock(mutex);
@@ -298,7 +299,7 @@ int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mute
 
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     win32_cond->waiter_count--;
-    last_waiter = !win32_cond->waiter_count && win32_cond->is_broadcast;
+    last_waiter = !win32_cond->waiter_count || !win32_cond->is_broadcast;
     xavs2_thread_mutex_unlock(&win32_cond->mtx_waiter_count);
 
     if (last_waiter) {
