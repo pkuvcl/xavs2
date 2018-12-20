@@ -375,9 +375,9 @@ typedef struct bitstream {
  */
 typedef union context_t {
     struct {
-        unsigned    cycno   : 2;      // 2  bits
         unsigned    MPS     : 1;      // 1  bit
         unsigned    LG_PMPS : 11;     // 11 bits
+        unsigned    cycno   : 2;      // 2  bits
     };
     uint16_t        v;
 } context_t;

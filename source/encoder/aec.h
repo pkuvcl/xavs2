@@ -53,8 +53,8 @@ extern binary_t gf_aec_vrdo;
 extern const int tab_intra_mode_scan_type[NUM_INTRA_MODE];
 
 #if CTRL_OPT_AEC
-extern context_t g_tab_ctx_mps[1025 * 4 * 2];    /* [8 * lg_pmps + 4 * mps + cycno] */
-extern context_t g_tab_ctx_lps[1025 * 4 * 2];    /* [8 * lg_pmps + 4 * mps + cycno] */
+extern context_t g_tab_ctx_mps[4096 * 5];    /* [2 * lg_pmps + mps + cycno * 4096] */
+extern context_t g_tab_ctx_lps[4096 * 5];    /* [2 * lg_pmps + mps + cycno * 4096] */
 #endif
 
 /* ---------------------------------------------------------------------------
@@ -86,7 +86,7 @@ static const int MAP_CU_TYPE[MAX_PRED_MODES] = {
         return cur_bits;\
     }
 
-#define MAKE_CONTEXT(lg_pmps, mps, cycno)  (((uint16_t)(cycno) << 0) | ((uint16_t)(mps) << 2) | (uint16_t)(lg_pmps << 3))
+#define MAKE_CONTEXT(lg_pmps, mps, cycno)  (((uint16_t)(cycno) << 12) | ((uint16_t)(mps) << 0) | (uint16_t)(lg_pmps << 1))
 
 /* ---------------------------------------------------------------------------
  * AC ENGINE PARAMETERS

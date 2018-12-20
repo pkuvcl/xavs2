@@ -58,8 +58,8 @@ const int8_t tab_intra_mode_luma2chroma[NUM_INTRA_MODE] = {
 };
 
 #if CTRL_OPT_AEC
-context_t g_tab_ctx_mps[1025 * 4 * 2];    /* [8 * lg_pmps + 4 * mps + cycno] */
-context_t g_tab_ctx_lps[1025 * 4 * 2];    /* [8 * lg_pmps + 4 * mps + cycno] */
+context_t g_tab_ctx_mps[4096 * 5];    /* [2 * lg_pmps + mps + cycno * 4096] */
+context_t g_tab_ctx_lps[4096 * 5];    /* [2 * lg_pmps + mps + cycno * 4096] */
 
 static const uint8_t tab_cwr_shift[] = {
     3, 3, 4, 5, 5, 5, 5 /* 5, 5, 5, 5 */
