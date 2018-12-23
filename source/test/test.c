@@ -216,7 +216,7 @@ const xavs2_api_t *load_xavs2_library(int argc, char **argv, xavs2_param_t **p_p
             continue;
         }
 
-        fprintf(stdout, "CAVS2Enc lib loaded: version %s %d-bit\n",
+        fprintf(stdout, "xavs2 lib loaded: version %s %d-bit\n",
                 api->s_version_source, api->internal_bit_depth);
         fflush(stdout);
 
@@ -234,7 +234,7 @@ const xavs2_api_t *load_xavs2_library(int argc, char **argv, xavs2_param_t **p_p
 
         enc_bit_depth = atoi(api->opt_get(param, "BitDepth"));
         if (enc_bit_depth == api->internal_bit_depth) {
-            fprintf(stdout, "using CAVS2Enc lib: version %s %d-bit success\n",
+            fprintf(stdout, "using xavs2 lib: version %s %d-bit success\n",
                     api->s_version_source, api->internal_bit_depth);
             break;
         }
@@ -264,7 +264,7 @@ int main(int argc, char **argv)
     g_api = load_xavs2_library(argc, argv, &param);
 
     if (g_api == NULL) {
-        fprintf(stdout, "CAVS2Enc lib load error\n");
+        fprintf(stdout, "xavs2 lib load error\n");
         return -1;
     }
     fflush(NULL);    // flush all output streams
