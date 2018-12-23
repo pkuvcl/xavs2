@@ -55,11 +55,18 @@ typedef CRITICAL_SECTION xavs2_thread_mutex_t;
 #define XAVS2_PTHREAD_MUTEX_INITIALIZER {0}
 #define xavs2_thread_mutexattr_t int
 #define pthread_exit(a)
+
 /* This is the CONDITIONAL_VARIABLE typedef for using Window's native conditional variables on kernels 6.0+.
  * MinGW does not currently have this typedef. */
 typedef struct {
-    void *ptr;
-} xavs2_thread_cond_t;
+    xavs2_thread_mutex_t mtx_broadcast;
+    xavs2_thread_mutex_t mtx_waiter_count;
+    int waiter_count;
+    HANDLE semaphore;
+    HANDLE waiters_done;
+    int is_broadcast;
+} xavs2_win32_cond_t, xavs2_thread_cond_t;
+
 #define xavs2_thread_condattr_t int
 
 #define xavs2_thread_create FPFX(thread_create)

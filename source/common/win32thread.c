@@ -151,19 +151,9 @@ int xavs2_thread_mutex_unlock(xavs2_thread_mutex_t *mutex)
     return 0;
 }
 
-/* for pre-Windows 6.0 platforms we need to define and use our own condition variable and api */
-typedef struct {
-    xavs2_thread_mutex_t mtx_broadcast;
-    xavs2_thread_mutex_t mtx_waiter_count;
-    int waiter_count;
-    HANDLE semaphore;
-    HANDLE waiters_done;
-    int is_broadcast;
-} xavs2_win32_cond_t;
-
 int xavs2_thread_cond_init(xavs2_thread_cond_t *cond, const xavs2_thread_condattr_t *attr)
 {
-    xavs2_win32_cond_t *win32_cond;
+    xavs2_win32_cond_t *win32_cond = cond;
 
     UNUSED_PARAMETER(attr);
 
@@ -173,11 +163,7 @@ int xavs2_thread_cond_init(xavs2_thread_cond_t *cond, const xavs2_thread_condatt
     }
 
     /* non native condition variables */
-    win32_cond = xavs2_calloc(1, sizeof(xavs2_win32_cond_t));
-    if (!win32_cond) {
-        return -1;
-    }
-    cond->ptr = win32_cond;
+    memset(win32_cond, 0, sizeof(xavs2_win32_cond_t));
     win32_cond->semaphore = CreateSemaphore(NULL, 0, 0x7fffffff, NULL);
     if (!win32_cond->semaphore) {
         return -1;
@@ -200,7 +186,7 @@ int xavs2_thread_cond_init(xavs2_thread_cond_t *cond, const xavs2_thread_condatt
 
 int xavs2_thread_cond_destroy(xavs2_thread_cond_t *cond)
 {
-    xavs2_win32_cond_t *win32_cond;
+    xavs2_win32_cond_t *win32_cond = cond;
 
     /* native condition variables do not destroy */
     if (thread_control.cond_init) {
@@ -208,19 +194,17 @@ int xavs2_thread_cond_destroy(xavs2_thread_cond_t *cond)
     }
 
     /* non native condition variables */
-    win32_cond = cond->ptr;
     CloseHandle(win32_cond->semaphore);
     CloseHandle(win32_cond->waiters_done);
     xavs2_thread_mutex_destroy(&win32_cond->mtx_broadcast);
     xavs2_thread_mutex_destroy(&win32_cond->mtx_waiter_count);
-    xavs2_free(win32_cond);
 
     return 0;
 }
 
 int xavs2_thread_cond_broadcast(xavs2_thread_cond_t *cond)
 {
-    xavs2_win32_cond_t *win32_cond;
+    xavs2_win32_cond_t *win32_cond = cond;
     int have_waiter = 0;
 
     if (thread_control.cond_broadcast) {
@@ -229,7 +213,6 @@ int xavs2_thread_cond_broadcast(xavs2_thread_cond_t *cond)
     }
 
     /* non native condition variables */
-    win32_cond = cond->ptr;
     xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
 
@@ -252,7 +235,7 @@ int xavs2_thread_cond_broadcast(xavs2_thread_cond_t *cond)
 
 int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
 {
-    xavs2_win32_cond_t *win32_cond;
+    xavs2_win32_cond_t *win32_cond = cond;
     int have_waiter;
 
     if (thread_control.cond_signal) {
@@ -261,8 +244,6 @@ int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
     }
 
     /* non-native condition variables */
-    win32_cond = cond->ptr;
-
     xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     have_waiter = win32_cond->waiter_count;
@@ -277,7 +258,7 @@ int xavs2_thread_cond_signal(xavs2_thread_cond_t *cond)
 
 int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mutex)
 {
-    xavs2_win32_cond_t *win32_cond;
+    xavs2_win32_cond_t *win32_cond = cond;
     int last_waiter;
 
     if (thread_control.cond_wait) {
@@ -285,8 +266,6 @@ int xavs2_thread_cond_wait(xavs2_thread_cond_t *cond, xavs2_thread_mutex_t *mute
     }
 
     /* non native condition variables */
-    win32_cond = cond->ptr;
-
     xavs2_thread_mutex_lock(&win32_cond->mtx_broadcast);
     xavs2_thread_mutex_lock(&win32_cond->mtx_waiter_count);
     win32_cond->waiter_count++;
