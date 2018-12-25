@@ -175,23 +175,23 @@ void parse_preset_level(xavs2_param_t *p_param, int i_preset_level)
     /* --------------------------- 预测 ---------------------------
     */
     p_param->inter_2pu       = i_preset_level > 1;
+    p_param->enable_amp      = i_preset_level > 5;  // NSQT
     p_param->enable_intra    = i_preset_level > 0;
     p_param->enable_f_frame  = i_preset_level > -1;
     p_param->enable_mhp_skip = i_preset_level > -1 && p_param->enable_f_frame;
-    p_param->enable_wsm = i_preset_level > 7 && p_param->enable_f_frame;
-    p_param->enable_dhp = i_preset_level > 7 && p_param->enable_f_frame;
-    p_param->enable_dmh = i_preset_level > 4 && p_param->enable_f_frame;
-    p_param->enable_amp = i_preset_level > 4;  // NSQT
+    p_param->enable_wsm      = i_preset_level > 7 && p_param->enable_f_frame;
+    p_param->enable_dhp      = i_preset_level > 7 && p_param->enable_f_frame;
+    p_param->enable_dmh      = i_preset_level > 6 && p_param->enable_f_frame;
 
     /* --------------------------- 变换 --------------------------- */
-    p_param->enable_sdip = i_preset_level > 4;
-    p_param->enable_nsqt = i_preset_level > 4;
-    p_param->enable_secT = i_preset_level > -1;
+    p_param->enable_sdip       = i_preset_level > 5;
+    p_param->enable_nsqt       = i_preset_level > 5;
+    p_param->enable_secT       = i_preset_level > -1;
     p_param->b_fast_2lelvel_tu = i_preset_level < 4;
 
     /* --------------------------- 量化 ---------------------------
-    * Level: All for preset 9, Off for preset 0~2 */
-    p_param->i_rdoq_level = i_preset_level > 6 ? RDOQ_ALL : i_preset_level > 2 ? RDOQ_CU_LEVEL : RDOQ_OFF;
+     * Level: All for preset 9, Off for preset 0~2 */
+    p_param->i_rdoq_level = i_preset_level > 8 ? RDOQ_ALL : i_preset_level > 5 ? RDOQ_CU_LEVEL : RDOQ_OFF;
 
     /* --------------------------- RDO档次 ---------------------------
     */
@@ -207,9 +207,9 @@ void parse_preset_level(xavs2_param_t *p_param, int i_preset_level)
 
     /* --------------------------- 熵编码 ---------------------------
      */
-    if (i_preset_level <= 1) {
+    if (i_preset_level <= 3) {
         p_param->rdo_bit_est_method = 2;
-    } else if (i_preset_level < 4) {
+    } else if (i_preset_level < 5) {
         p_param->rdo_bit_est_method = 1;
     } else {
         p_param->rdo_bit_est_method = 0;
@@ -218,13 +218,13 @@ void parse_preset_level(xavs2_param_t *p_param, int i_preset_level)
     /* --------------------------- 滤波 ---------------------------
     */
     p_param->enable_alf = p_param->enable_alf && i_preset_level > 4;
-    p_param->enable_sao = p_param->enable_sao && i_preset_level > 0;
+    p_param->enable_sao = p_param->enable_sao && i_preset_level > 1;
     p_param->b_fast_sao = i_preset_level < 5;  // 档次4以下开启快速SAO编码决策
 
     /* --------------------------- 其他 ---------------------------
     */
     p_param->enable_hadamard = i_preset_level > 0;
-    p_param->enable_tdrdo = i_preset_level > 4 && p_param->enable_tdrdo;
+    p_param->enable_tdrdo    = i_preset_level > 4 && p_param->enable_tdrdo;
 
     /* tell the encoder preset configuration is utilized */
     p_param->is_preset_configured = TRUE;
