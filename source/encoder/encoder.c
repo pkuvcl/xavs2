@@ -1053,9 +1053,10 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check chroma format */
-    if (param->chroma_format != CHROMA_420 && param->chroma_format != CHROMA_400) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "invalid chroma format %d\n", param->chroma_format);
-        exit(-1);
+    if (param->chroma_format != CHROMA_420) {
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "invalid chroma format %d; Only YUV420 is supported for %s\n",
+                  param->chroma_format, xavs2_avs2_standard_version);
+        return -1;
     }
 
     /* check reference configuration */

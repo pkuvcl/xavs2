@@ -75,4 +75,6 @@ extern const float      FRAME_RATE[8];
 
 extern const char *     xavs2_preset_names[];
 
+extern const char *     xavs2_avs2_standard_version;  // standard version
+
 #endif  // XAVS2_AVS2_TABLE_H

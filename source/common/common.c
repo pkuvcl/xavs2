@@ -66,6 +66,8 @@ const char *xavs2_preset_names[] = {
     "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo", NULL
 };
 
+const char *     xavs2_avs2_standard_version = "AVS2-P2 (GB/T 33475.2-2016)";
+
 xavs2_log_t    g_xavs2_default_log = {
     XAVS2_LOG_DEBUG,
     "default"

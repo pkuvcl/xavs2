@@ -159,7 +159,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("InputFile",                    &p->psz_in_file,                MAP_STR, "  - Same as `Input`");
     MAP("InputHeaderLength",            &p->infile_header,              MAP_NUM, "If the inputfile has a header, state it's length in byte here ");    
     MAP("FrameRate",                    &p->frame_rate_code,            MAP_NUM, "FramerateCode, 1: 24000/1001,2: 24,3: 25(default), 4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60");
-    MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format, 0=4:0:0, 1=4:2:0(default), 2=4:2:2");
+    MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format, 1=4:2:0 (default, the only supported format for the standard), 0=4:0:0, 2=4:2:2");
     MAP("InputSampleBitDepth",          &p->input_sample_bit_depth,     MAP_NUM, "Sample Bitdepth of input file");
     MAP("Frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
     MAP("FramesToBeEncoded",            &p->num_frames,                 MAP_NUM, "  - Same as `Frames`");
