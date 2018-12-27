@@ -17,19 +17,10 @@ then set the `xavs2` as the start project and build it.
 #### Notes
 1. A `shell executor`, i.e. the bash in git for windows, is needed and should be found in `PATH` variable.
  For example, the path `C:\Program Files\Git\bin` can be added if git-for-windows is installed.
-2. `vsyasm` is needed and `1.2.0` is suggested for windows platform.
- It can be downloaded through: http://yasm.tortall.net/Download.html .
- A later version `1.3.0` (unofficial revision, please read the instructions of `yasm` to build it for your work), can be found in https://github.com/luofalei/yasm/tree/vs2013 .
-   The installation of `vsyasm` is as follows (if you were using `VS2013`):
-```
-(1) Copy `vsyasm.exe` to the following directory, 
-    "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\"
-(2)	Copy the other 3 files in `vsyasm` to the `MSBuild template` directorty, as follows, 
-    "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\BuildCustomizations\"
-(3) Re-open the solution. 
-```
+2. `nasm` is needed and `2.13.03` is suggested.
+ For windows platform, it can be installed using the script:
+https://github.com/ShiftMediaProject/VSNASM.git
 
- 
 
 ### Linux
 ```
