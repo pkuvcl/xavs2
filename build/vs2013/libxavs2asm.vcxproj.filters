@@ -12,53 +12,53 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\..\source\common\x86\const-a.asm">
+    <NASM Include="..\..\source\common\x86\const-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\cpu-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\cpu-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\dct8.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\dct8.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\pixel-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\pixel-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\sad-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\sad-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\ssd-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\ssd-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\mc-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\mc-a.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\pixeladd8.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\pixeladd8.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\mc-a2.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\mc-a2.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\blockcopy8.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\blockcopy8.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\pixel-util8.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\pixel-util8.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\pixel-32.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\pixel-32.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\quant8.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\quant8.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\x86inc.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\x86inc.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\x86util.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\x86util.asm">
       <Filter>asm</Filter>
-    </YASM>
-    <YASM Include="..\..\source\common\x86\satd-a.asm">
+    </NASM>
+    <NASM Include="..\..\source\common\x86\satd-a.asm">
       <Filter>asm</Filter>
-    </YASM>
+    </NASM>
   </ItemGroup>
 </Project>

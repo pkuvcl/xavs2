@@ -19,22 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\..\source\common\x86\blockcopy8.asm" />
-    <YASM Include="..\..\source\common\x86\const-a.asm" />
-    <YASM Include="..\..\source\common\x86\cpu-a.asm" />
-    <YASM Include="..\..\source\common\x86\dct8.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a.asm" />
-    <YASM Include="..\..\source\common\x86\mc-a2.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-32.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-a.asm" />
-    <YASM Include="..\..\source\common\x86\pixel-util8.asm" />
-    <YASM Include="..\..\source\common\x86\pixeladd8.asm" />
-    <YASM Include="..\..\source\common\x86\quant8.asm" />
-    <YASM Include="..\..\source\common\x86\sad-a.asm" />
-    <YASM Include="..\..\source\common\x86\satd-a.asm" />
-    <YASM Include="..\..\source\common\x86\ssd-a.asm" />
-    <YASM Include="..\..\source\common\x86\x86inc.asm" />
-    <YASM Include="..\..\source\common\x86\x86util.asm" />
+    <NASM Include="..\..\source\common\x86\blockcopy8.asm" />
+    <NASM Include="..\..\source\common\x86\const-a.asm" />
+    <NASM Include="..\..\source\common\x86\cpu-a.asm" />
+    <NASM Include="..\..\source\common\x86\dct8.asm" />
+    <NASM Include="..\..\source\common\x86\mc-a.asm" />
+    <NASM Include="..\..\source\common\x86\mc-a2.asm" />
+    <NASM Include="..\..\source\common\x86\pixel-32.asm" />
+    <NASM Include="..\..\source\common\x86\pixel-a.asm" />
+    <NASM Include="..\..\source\common\x86\pixel-util8.asm" />
+    <NASM Include="..\..\source\common\x86\pixeladd8.asm" />
+    <NASM Include="..\..\source\common\x86\quant8.asm" />
+    <NASM Include="..\..\source\common\x86\sad-a.asm" />
+    <NASM Include="..\..\source\common\x86\satd-a.asm" />
+    <NASM Include="..\..\source\common\x86\ssd-a.asm" />
+    <NASM Include="..\..\source\common\x86\x86inc.asm" />
+    <NASM Include="..\..\source\common\x86\x86util.asm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9B37E3C-A8C7-4E24-BC2D-AB4D0804DAC1}</ProjectGuid>
@@ -70,7 +70,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -117,9 +117,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <YASM>
-      <Defines>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=0;PREFIX</Defines>
-    </YASM>
+    <NASM>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=0;PREFIX</PreprocessorDefinitions>
+      <IncludePaths>..\..\source\common\x86;</IncludePaths>
+    </NASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -137,9 +138,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <YASM>
-      <Defines>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=1;</Defines>
-    </YASM>
+    <NASM>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=1;</PreprocessorDefinitions>
+      <IncludePaths>..\..\source\common\x86;</IncludePaths>
+    </NASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -161,9 +163,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <YASM>
-      <Defines>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=0;PREFIX</Defines>
-    </YASM>
+    <NASM>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=0;PREFIX</PreprocessorDefinitions>
+      <IncludePaths>..\..\source\common\x86;</IncludePaths>
+    </NASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -186,12 +189,13 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <YASM>
-      <Defines>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=1;</Defines>
-    </YASM>
+    <NASM>
+      <PreprocessorDefinitions>HIGH_BIT_DEPTH=0;BIT_DEPTH=8;ARCH_X86_64=1;</PreprocessorDefinitions>
+      <IncludePaths>..\..\source\common\x86;</IncludePaths>
+    </NASM>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.targets" />
   </ImportGroup>
 </Project>
