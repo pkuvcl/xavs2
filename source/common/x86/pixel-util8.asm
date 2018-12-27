@@ -28,7 +28,7 @@
 %include "x86inc.asm"
 %include "x86util.asm"
 
-SECTION_RODATA 32
+SECTION_RODATA 64
 
 %if BIT_DEPTH == 12
 ssim_c1:   times 4 dd 107321.76    ; .01*.01*4095*4095*64
@@ -1604,7 +1604,7 @@ cglobal weight_sp, 6,7,8
 
 .widthLess8:
     movu        m6, [r1]
-    pblendvb    m6, m6, m7, m0
+    pblendvb    m6, m7, m0
     movu        [r1], m6
 
 .nextH:
@@ -1792,7 +1792,7 @@ cglobal weight_sp, 6,7,9
     movu                      [r1], xm7
     je                        .nextH
 
-.width6
+.width6:
     cmp                       r6d, 6
     jl                        .width4
     movq                      [r1], xm7
@@ -4957,7 +4957,7 @@ cglobal pixel_sub_ps_16x%2, 6, 10, 4, dest, deststride, src0, src1, srcstride0, 
     lea         r9,     [r4 * 3]
     lea         r8,     [r5 * 3]
 
-.loop
+.loop:
     pmovzxbw    m0,     [r2]
     pmovzxbw    m1,     [r3]
     pmovzxbw    m2,     [r2 + r4]
@@ -5173,7 +5173,7 @@ cglobal pixel_sub_ps_32x%1, 6, 10, 4, dest, deststride, src0, src1, srcstride0, 
     lea         r7,     [r4 * 3]
     lea         r8,     [r5 * 3]
 
-.loop
+.loop:
     movu        m0,     [r2]
     movu        m1,     [r2 + 32]
     movu        m2,     [r3]
