@@ -48,9 +48,9 @@ cextern pd_n32768
 INIT_XMM sse4
 cglobal quant, 2,3,8
 ;{
-    movd        m4, r2mp              ; m4[0] = scale
-    movd        m5, r3mp              ; m5[0] = shift
-    movd        m6, r4mp              ; m6[0] = add
+    movq        m4, r2mp              ; m4[0] = scale
+    movq        m5, r3mp              ; m5[0] = shift
+    movq        m6, r4mp              ; m6[0] = add
     mov         r2, r1                ; r2    = i_coef
     shr         r1, 3                 ; r1    = i_coef/8
     pxor        m7, m7                ; m7 <-- num_non_zero = 0
@@ -87,7 +87,7 @@ cglobal quant, 2,3,8
     packuswb    m7, m7                ;
     psadbw      m7, m0                ;
     movifnidn  rax, r2                ; eax <-- i_coef
-    movd        r1, m7                ;
+    movq        r1, m7                ;
     sub        rax, r1                ; return value: num_non_zero
     RET                               ; return
 ;}
@@ -103,13 +103,13 @@ INIT_XMM sse4
 cglobal dequant, 2,4,7
 ;{
     mov         r3, r3mp              ; r3  <-- shift
-    movd        m4, r2mp              ; m4[0] = scale
-    movd        m6, r3                ; m6[0] = shift
+    movq        m4, r2mp              ; m4[0] = scale
+    movq        m6, r3                ; m6[0] = shift
     dec         r3                    ; r3d <-- shift - 1
     xor         r2, r2                ; r2 <-- 0
     shr         r1, 4                 ; r1    = i_coef/16
     bts         r2, r3                ; r2 <-- add = 1 < (shift - 1)
-    movd        m5, r2                ; m5[0] = add
+    movq        m5, r2                ; m5[0] = add
     pshufd      m4, m4, 0             ; m4[3210] = scale
     pshufd      m5, m5, 0             ; m5[3210] = add
                                       ;

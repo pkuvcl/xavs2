@@ -1208,7 +1208,6 @@ void xavs2_pixel_init(uint32_t cpuid, pixel_funcs_t* pixf)
         //pixf->sa8d  [LUMA_8x4  ] = xavs2_pixel_satd_8x4_mmx2;
         //pixf->sa8d  [LUMA_4x8  ] = xavs2_pixel_satd_4x8_mmx2;
         pixf->sa8d  [LUMA_4x4  ] = xavs2_pixel_satd_4x4_mmx2;
-
     }
 
     if (cpuid & XAVS2_CPU_SSE2) {
