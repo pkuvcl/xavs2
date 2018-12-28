@@ -145,6 +145,15 @@ int aec_get_written_bits(aec_t *p_aec)
     return (int)(((p_aec->p - p_aec->p_start) << 3) + p_aec->i_bits_to_follow + NUM_FLUSH_BITS - p_aec->num_left_flush_bits);
 }
 
+/* ---------------------------------------------------------------------------
+ * returns the number of currently written bits
+ */
+static ALWAYS_INLINE
+int rdo_get_written_bits(aec_t *p_aec)
+{
+    return (int)p_aec->i_bits_to_follow;
+}
+
 
 /* ---------------------------------------------------------------------------
  * 向码流文件中输出flush bits

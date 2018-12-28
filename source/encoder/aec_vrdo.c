@@ -116,7 +116,7 @@ static INLINE
 int aec_write_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_cu_cbp, int is_amp_enabled)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->cu_type_contexts);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int act_sym = MAP_CU_TYPE[i_cu_type];
 
     if (i_cu_type == PRED_SKIP && i_cu_cbp == 0) {
@@ -190,7 +190,7 @@ int aec_write_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_cu_
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -200,7 +200,7 @@ static
 int aec_write_intra_pred_mode_vrdo(aec_t *p_aec, int ipmode)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->intra_luma_pred_mode);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
 
     if (ipmode >= 0) {
         biari_encode_symbol_vrdo(p_aec, 0,                               p_ctx    );
@@ -215,7 +215,7 @@ int aec_write_intra_pred_mode_vrdo(aec_t *p_aec, int ipmode)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -225,7 +225,7 @@ static INLINE
 int aec_write_ref_vrdo(xavs2_t *h, aec_t *p_aec, int ref_idx)
 {
     context_t *p_ctx = p_aec->p_ctx_set->pu_reference_index;
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int act_sym  = ref_idx;
 
     /* 第0位用0号上下文，第1位用1号上下文，其他用2号上下文 */
@@ -248,7 +248,7 @@ int aec_write_ref_vrdo(xavs2_t *h, aec_t *p_aec, int ref_idx)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -257,7 +257,7 @@ int aec_write_ref_vrdo(xavs2_t *h, aec_t *p_aec, int ref_idx)
 static INLINE
 int aec_write_mvd_vrdo(aec_t *p_aec, int mvd, int xy)
 {
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     uint32_t act_sym = XAVS2_ABS(mvd);
 
     UNUSED_PARAMETER(xy);
@@ -282,7 +282,7 @@ int aec_write_mvd_vrdo(aec_t *p_aec, int mvd, int xy)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -292,7 +292,7 @@ int aec_write_dmh_mode_vrdo(aec_t *p_aec, int i_cu_level, int dmh_mode)
 {
     static const int iEncMapTab[9] = { 0, 5, 6, 1, 2, 7, 8, 3, 4 };
     context_t *p_ctx = p_aec->p_ctx_set->pu_type_index + 3;
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int symbol   = dmh_mode != 0;
 
     p_ctx += (i_cu_level - MIN_CU_SIZE_IN_BIT) * 3;
@@ -321,7 +321,7 @@ int aec_write_dmh_mode_vrdo(aec_t *p_aec, int i_cu_level, int dmh_mode)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -330,7 +330,7 @@ int aec_write_dmh_mode_vrdo(aec_t *p_aec, int i_cu_level, int dmh_mode)
 static INLINE
 int aec_write_intra_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int i_tu_split, int is_sdip_enabled)
 {
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
 
     UNUSED_PARAMETER(i_cu_type);
     if (i_cu_level == B8X8_IN_BIT) {
@@ -342,7 +342,7 @@ int aec_write_intra_cutype_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -352,7 +352,7 @@ int aec_write_pdir_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int pdir0, 
 {
     int new_pdir[4] = { 2, 1, 3, 0 };
     context_t *p_ctx = p_aec->p_ctx_set->pu_type_index;
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int act_ctx  = 0;
     int act_sym;
     int symbol;
@@ -439,7 +439,7 @@ int aec_write_pdir_vrdo(aec_t *p_aec, int i_cu_type, int i_cu_level, int pdir0, 
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -448,7 +448,7 @@ static INLINE
 int aec_write_pdir_dhp_vrdo(aec_t *p_aec, int i_cu_type, int pdir0, int pdir1)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->pu_type_index);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
 
     pdir0 = (pdir0 != 0);
     pdir1 = (pdir1 != 0);
@@ -461,7 +461,7 @@ int aec_write_pdir_dhp_vrdo(aec_t *p_aec, int i_cu_type, int pdir0, int pdir1)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -470,7 +470,7 @@ static INLINE
 int aec_write_wpm_vrdo(aec_t *p_aec, int ref_idx, int num_ref)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->weighted_skip_mode);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int i, idx_bin = 0;
 
     for (i = 0; i < ref_idx; i++) {
@@ -483,7 +483,7 @@ int aec_write_wpm_vrdo(aec_t *p_aec, int ref_idx, int num_ref)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -492,7 +492,7 @@ static INLINE
 int aec_write_spatial_skip_mode_vrdo(aec_t *p_aec, int mode)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->cu_subtype_index);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int offset;
 
     for (offset = 0; offset < mode; offset++) {
@@ -504,7 +504,7 @@ int aec_write_spatial_skip_mode_vrdo(aec_t *p_aec, int mode)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -514,7 +514,7 @@ static INLINE
 int aec_write_intra_pred_cmode_vrdo(aec_t *p_aec, cu_info_t *p_cu_info, int i_left_cmode)
 {
     int i_chroma_mode = p_cu_info->i_intra_mode_c;
-    int org_bits      = arienco_bits_written(p_aec);
+    int org_bits      = rdo_get_written_bits(p_aec);
     UNUSED_PARAMETER(i_left_cmode);
 
     if (i_chroma_mode == DM_PRED_C) {
@@ -533,7 +533,7 @@ int aec_write_intra_pred_cmode_vrdo(aec_t *p_aec, cu_info_t *p_cu_info, int i_le
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -548,7 +548,7 @@ static INLINE
 int aec_write_cu_cbp_vrdo(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cur_cu, xavs2_t *h)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->cbp_contexts + 4);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int i_cu_cbp = p_cu_info->i_cbp;
     int i_cu_type = p_cu_info->i_mode;
     int transform_split_flag = p_cu_info->i_tu_split != TU_SPLIT_NON;
@@ -640,7 +640,7 @@ int aec_write_cu_cbp_vrdo(aec_t *p_aec, cu_info_t *p_cu_info, int slice_index_cu
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 #if ENABLE_RATE_CONTROL_CU
@@ -650,7 +650,7 @@ static INLINE
 int aec_write_dqp_vrdo(aec_t *p_aec, int delta_qp, int last_dqp)
 {
     context_t *p_ctx = p_aec->p_ctx_set->delta_qp_contexts;
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int act_ctx  = (last_dqp) ? 1 : 0;
     int act_sym  = (delta_qp > 0) ? (2 * delta_qp - 1) : (-2 * delta_qp);
 
@@ -673,7 +673,7 @@ int aec_write_dqp_vrdo(aec_t *p_aec, int delta_qp, int last_dqp)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 #endif
 
@@ -734,7 +734,7 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
     runlevel_pair_t *p_runlevel = runlevel->runlevels_cg;
     int rank          = 0;
     int num_cg        = runlevel->num_cg;
-    int org_bits      = arienco_bits_written(p_aec);
+    int org_bits      = rdo_get_written_bits(p_aec);
     int i_cg;
     int cur_bits;
     UNUSED_PARAMETER(h);
@@ -846,7 +846,7 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
     }   // for (; i_cg >= 0; i_cg--) 
 
     /* get the number of written bits */
-    org_bits = arienco_bits_written(p_aec) - org_bits;
+    org_bits = rdo_get_written_bits(p_aec) - org_bits;
 
 #ifdef DEBUG
     if (rank == 0) {
@@ -871,7 +871,7 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
     runlevel_pair_t *p_runlevel = runlevel->runlevels_cg;
     int rank          = 0;
     int num_cg        = runlevel->num_cg;
-    int org_bits      = arienco_bits_written(p_aec);
+    int org_bits      = rdo_get_written_bits(p_aec);
     int i_cg;
     int cur_bits;
     UNUSED_PARAMETER(h);
@@ -983,7 +983,7 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
     }   // for (; i_cg >= 0; i_cg--) 
 
     /* get the number of written bits */
-    org_bits = arienco_bits_written(p_aec) - org_bits;
+    org_bits = rdo_get_written_bits(p_aec) - org_bits;
 
 #ifdef DEBUG
     if (rank == 0) {
@@ -1002,14 +1002,14 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
  */
 int aec_write_split_flag_vrdo(aec_t *p_aec, int i_cu_split, int i_cu_level)
 {
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
 
     UNUSED_PARAMETER(i_cu_level);
     UNUSED_PARAMETER(i_cu_split);
     p_aec->i_bits_to_follow++;
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 
@@ -1021,7 +1021,7 @@ int write_sao_mergeflag_vrdo(aec_t *p_aec, int avail_left, int avail_up, SAOBlkP
     int b_merge_up;
     int val = 0;
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->sao_merge_type_index);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int ctx_offset = avail_left + avail_up;
 
     if (avail_left) {
@@ -1046,7 +1046,7 @@ int write_sao_mergeflag_vrdo(aec_t *p_aec, int avail_left, int avail_up, SAOBlkP
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1054,7 +1054,7 @@ int write_sao_mergeflag_vrdo(aec_t *p_aec, int avail_left, int avail_up, SAOBlkP
 int write_sao_mode_vrdo(aec_t *p_aec, SAOBlkParam *saoBlkParam)
 {
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->sao_mode);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int sao_type = saoBlkParam->typeIdc;
 
     if (sao_type == SAO_TYPE_OFF) {
@@ -1068,7 +1068,7 @@ int write_sao_mode_vrdo(aec_t *p_aec, SAOBlkParam *saoBlkParam)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1082,7 +1082,7 @@ static int aec_write_sao_offset_vrdo(aec_t *p_aec, int val, int offset_type)
     };
 
     DECLARE_CONTEXT(context_t *p_ctx = p_aec->p_ctx_set->sao_interval_offset_abs);
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     int act_sym;
 
     assert(offset_type != SAO_CLASS_EO_PLAIN);
@@ -1123,7 +1123,7 @@ static int aec_write_sao_offset_vrdo(aec_t *p_aec, int val, int offset_type)
     }
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1209,14 +1209,14 @@ int write_sao_type_vrdo(aec_t *p_aec, SAOBlkParam *saoBlkParam)
  */
 int aec_write_alf_lcu_ctrl_vrdo(aec_t *p_aec, uint8_t iflag)
 {
-    int org_bits = arienco_bits_written(p_aec);
+    int org_bits = rdo_get_written_bits(p_aec);
     DECLARE_CONTEXT(context_t *p_ctx =  &(p_aec->p_ctx_set->alf_cu_enable_scmodel[0][0]));
     UNUSED_PARAMETER(iflag);
 
     biari_encode_symbol_vrdo(p_aec, iflag, p_ctx);
 
     /* return the number of written bits */
-    return arienco_bits_written(p_aec) - org_bits;
+    return rdo_get_written_bits(p_aec) - org_bits;
 }
 
 
