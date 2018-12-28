@@ -82,7 +82,7 @@ static const int MAP_CU_TYPE[MAX_PRED_MODES] = {
 #define NUM_OF_COEFFS_IN_CG     16
 
 #define CHECK_EARLY_RETURN_RUNLEVEL(aec) \
-    if ((cur_bits = aec_get_written_bits(aec) - org_bits) > maxvalue) {\
+    if ((cur_bits = rdo_get_written_bits(aec) - org_bits) > maxvalue) {\
         return cur_bits;\
     }
 
