@@ -1164,7 +1164,7 @@ void aec_write_last_coeff_pos(aec_t *p_aec, context_t *p_ctx, int isLastCG,
  */
 static
 int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
-                             runlevel_t *runlevel, xavs2_t *h, int maxvalue)
+                             runlevel_t *runlevel, xavs2_t *h)
 {
     static const int8_t tab_rank[6] = { 0, 1, 2, 3, 3, 4/*, 4 ...*/ };
     const int16_t(*p_tab_cg_scan)[2] = runlevel->tab_cg_scan;
@@ -1176,7 +1176,6 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
     int num_cg        = runlevel->num_cg;
     int org_bits      = aec_get_written_bits(p_aec);
     int i_cg;
-    int cur_bits;
 
     UNUSED_PARAMETER(h);
 
@@ -1222,9 +1221,6 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
         } else {
             continue;
         }
-
-        /* early terminate? */
-        CHECK_EARLY_RETURN_RUNLEVEL(p_aec);
 
         /* 3, (Run, Level) */
 
@@ -1320,9 +1316,6 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_aec(p_aec, Level_sign >> 1, num_pairs);
-
-        /* early terminate? */
-        CHECK_EARLY_RETURN_RUNLEVEL(p_aec);
     }   // for (; i_cg >= 0; i_cg--) 
 
     /* get the number of written bits */
@@ -1345,7 +1338,7 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
 /* ---------------------------------------------------------------------------
  */
 static
-int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h, int maxvalue)
+int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h)
 {
     static const int8_t tab_rank[6] = { 0, 1, 2, 3, 3, 4/*, 4 ...*/ };
     const int16_t(*p_tab_cg_scan)[2]    = runlevel->tab_cg_scan;
@@ -1357,7 +1350,6 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h, i
     int num_cg        = runlevel->num_cg;
     int org_bits      = aec_get_written_bits(p_aec);
     int i_cg;
-    int cur_bits;
     UNUSED_PARAMETER(h);
 
     /* write coefficients in CG */
@@ -1402,9 +1394,6 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h, i
         } else {
             continue;  // 未找到第一个包含非零系数的CG
         }
-
-        /* early terminate? */
-        CHECK_EARLY_RETURN_RUNLEVEL(p_aec);
 
         /* 3, (Run, Level) */
 
@@ -1499,9 +1488,6 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h, i
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_aec(p_aec, Level_sign >> 1, num_pairs);
-
-        /* early terminate? */
-        CHECK_EARLY_RETURN_RUNLEVEL(p_aec);
     }   // for (; i_cg >= 0; i_cg--) 
 
     /* get the number of written bits */
@@ -2021,7 +2007,6 @@ int write_luma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff
     int b_ver = p_cu_info->i_tu_split == TU_SPLIT_VER;
     int b_hor = p_cu_info->i_tu_split == TU_SPLIT_HOR;
     int num_cg;
-    int maxvalue = INT32_MAX;
     int intra_pred_class = INTRA_PRED_DC_DIAG;
 
     if (b_hor) {
@@ -2051,8 +2036,8 @@ int write_luma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff
         assert(intra_mode < NUM_INTRA_MODE);
         intra_pred_class = tab_intra_mode_scan_type[intra_mode];
     }
-    return aec_write_run_level_luma(p_aec, intra_pred_class == INTRA_PRED_DC_DIAG, 
-        runlevel, h, maxvalue);
+    return aec_write_run_level_luma(p_aec, intra_pred_class == INTRA_PRED_DC_DIAG,
+                                    runlevel, h);
 }
 
 /* ---------------------------------------------------------------------------
@@ -2062,7 +2047,6 @@ int write_chroma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coe
                              int i_level)
 {
     const int num_cg = 1 << (i_level + i_level - 4);
-    int maxvalue = INT32_MAX;
 
     /* 初始化RunLevel结构体 */
     UNUSED_PARAMETER(p_cu_info);
@@ -2074,7 +2058,7 @@ int write_chroma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coe
     runlevel->p_cu_info      = p_cu_info;
 
     // return rate
-    return aec_write_run_level_chroma(p_aec, runlevel, h, maxvalue);
+    return aec_write_run_level_chroma(p_aec, runlevel, h);
 }
 
 /* ---------------------------------------------------------------------------
