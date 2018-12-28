@@ -82,7 +82,7 @@ static const int MAP_CU_TYPE[MAX_PRED_MODES] = {
 #define NUM_OF_COEFFS_IN_CG     16
 
 #define CHECK_EARLY_RETURN_RUNLEVEL(aec) \
-    if ((cur_bits = arienco_bits_written(aec) - org_bits) > maxvalue) {\
+    if ((cur_bits = aec_get_written_bits(aec) - org_bits) > maxvalue) {\
         return cur_bits;\
     }
 
@@ -140,7 +140,7 @@ void aec_copy_coding_state_sao(aec_t *p_dst, aec_t *p_src)
  * returns the number of currently written bits
  */
 static ALWAYS_INLINE
-int arienco_bits_written(aec_t *p_aec)
+int aec_get_written_bits(aec_t *p_aec)
 {
     return (int)(((p_aec->p - p_aec->p_start) << 3) + p_aec->i_bits_to_follow + NUM_FLUSH_BITS - p_aec->num_left_flush_bits);
 }
