@@ -104,7 +104,7 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     param->sample_bit_depth           = 8;
     param->sample_precision           = 1;
     param->aspect_ratio_information   = 1;
-    param->frame_rate_code            = 3;
+    param->frame_rate                 = 25.0f;
     param->lcu_bit_level              = MAX_CU_SIZE_IN_BIT;
     param->scu_bit_level              = MIN_CU_SIZE_IN_BIT;
     param->org_width                  = 1920;
