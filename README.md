@@ -42,7 +42,7 @@ $ make
 
 ### Enocde without configuraton files
 ```
-./xavs2 -p InputFile=input.yuv --FramesToBeEncoded=500 --FrameRate=6 \
+./xavs2 -p InputFile=input.yuv --FramesToBeEncoded=500 --fps=50 \
   --SourceWidth=3840 --SourceHeight=2160 --InputSampleBitDepth=8 --SampleBitDepth=8 \
   --thread_frames=1 --thread_rows=1 --preset=0 \
   --recon=. --initial_qp=32 --OutputFile=test.avs
