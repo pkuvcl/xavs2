@@ -270,7 +270,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("LogLevel",                     &p->i_log_level,                MAP_NUM, "log level: -1: none, 0: error, 1: warning, 2: info, 3: debug");
     MAP("Log",                          &p->i_log_level,                MAP_NUM, "  - Same as `LogLevel`");
     MAP("EnablePSNR",                   &p->enable_psnr,                MAP_NUM, "Enable PSNR or not (default: Enable)");
-    MAP("EnableSSIM",                   &p->enable_ssim,                MAP_NUM, "Enable SSIM or not (default: Enable)");
+    MAP("EnableSSIM",                   &p->enable_ssim,                MAP_NUM, "Enable SSIM or not (default: Disabled)");
 
     /* end mapping */
     MAP("", NULL, MAP_END, "")
