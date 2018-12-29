@@ -89,9 +89,7 @@ X86SRC = common/x86/blockcopy8.asm \
 		common/x86/sad-a.asm \
 		common/x86/sad-vpp.asm \
 		common/x86/satd-a.asm \
-		common/x86/ssd-a.asm \
-		common/x86/x86inc.asm \
-		common/x86/x86util.asm 
+		common/x86/ssd-a.asm
 
 ifeq ($(SYS_ARCH),X86)
 ARCH_X86 = yes
