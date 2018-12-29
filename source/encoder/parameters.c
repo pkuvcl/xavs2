@@ -157,8 +157,9 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("SourceHeight",                 &p->org_height,                 MAP_NUM, "  - Same as `Height`");
     MAP("Input",                        &p->psz_in_file,                MAP_STR, "Input sequence, YUV 4:2:0");
     MAP("InputFile",                    &p->psz_in_file,                MAP_STR, "  - Same as `Input`");
-    MAP("InputHeaderLength",            &p->infile_header,              MAP_NUM, "If the inputfile has a header, state it's length in byte here ");    
+    MAP("InputHeaderLength",            &p->infile_header,              MAP_NUM, "If the inputfile has a header, state it's length in byte here ");
     MAP("FrameRate",                    &p->frame_rate_code,            MAP_NUM, "FramerateCode, 1: 24000/1001,2: 24,3: 25(default), 4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60");
+    MAP("fps",                          &p->frame_rate,                 MAP_FLOAT, "Framerate, AVS2 supported value: 23.976(24000/1001), 24.0, 25.0(default), 29.97(30000/1001), 30.0, 50.0, 59.94(60000/1001), 60.0");
     MAP("ChromaFormat",                 &p->chroma_format,              MAP_NUM, "YUV format, 1=4:2:0 (default, the only supported format for the standard), 0=4:0:0, 2=4:2:2");
     MAP("InputSampleBitDepth",          &p->input_sample_bit_depth,     MAP_NUM, "Sample Bitdepth of input file");
     MAP("Frames",                       &p->num_frames,                 MAP_NUM, "Number of frames to be coded");
@@ -723,6 +724,8 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
 
     if ((map_index = ParameterNameToMapIndex(&g_param_map, name)) >= 0) {
         int item_value;
+        float val_float;
+
         switch (g_param_map.map_tab[map_index].type) {
         case MAP_NUM:   // numerical
             item_value = xavs2e_atoi(value_string, &b_error);
@@ -735,7 +738,25 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             if (xavs2_param_match(name, "preset_level") || xavs2_param_match(name, "presetlevel") || xavs2_param_match(name, "preset")) {
                 parse_preset_level(param, param->preset_level);
             }
+            if (xavs2_param_match(name, "FrameRate")) {
+                xavs2_log(NULL, XAVS2_LOG_ERROR, " deprecated parameter: %s = %s\n",
+                          name, value_string);
+                if (item_value > 8 || item_value < 1) {
+                    xavs2_log(NULL, XAVS2_LOG_ERROR, "FrameRate should be in 1..8 (1: 24000/1001,2: 24,3: 25,4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60)\n");
+                    return -1;
+                }
+                param->frame_rate = FRAME_RATE[param->frame_rate_code - 1];
+            }
             // fprintf(stdout, ".");
+            break;
+        case MAP_FLOAT:  // float
+            val_float = xavs2e_atof(value_string, &b_error);
+            if (b_error) {
+                xavs2_log(NULL, XAVS2_LOG_ERROR, " Parsing error: Expected float value for Parameter of %s, found '%s'.\n",
+                          name, value_string);
+                return -1;
+            }
+            *(float *)(g_param_map.map_tab[map_index].addr) = val_float;
             break;
         case MAP_FLAG:
             item_value = xavs2e_atoi(value_string, &b_error);
@@ -770,20 +791,6 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             param->i_gop_size = -4;
             param->b_open_gop = 0;
         }
-    } else if (xavs2_param_match(name, "fps")) {
-        float fps = xavs2e_atof(value_string, &b_error);
-        float min_error = 1000;
-        int min_idx = 0;
-        int i;
-        for (i = 0; i < 8; i++) {
-            float f_err = (float)fabs(FRAME_RATE[i] - fps);
-            if (f_err < min_error) {
-                min_error = f_err;
-                min_idx = i;
-            }
-        }
-        param->frame_rate_code = min_idx;
-        param->frame_rate = fps;
     } else if (xavs2_param_match(name, "bitdepth")) {
         int value_i = xavs2e_atoi(value_string, &b_error);
         param->input_sample_bit_depth = value_i;

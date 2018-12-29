@@ -958,6 +958,30 @@ static void encoder_decide_level_id(xavs2_param_t *param)
 
 /* ---------------------------------------------------------------------------
  */
+static INLINE
+void encoder_check_fps_param(xavs2_param_t *param)
+{
+    float cur_fps = param->frame_rate;
+    float min_error = 1000;
+    int min_idx = 0;
+    int i;
+    for (i = 0; i < 8; i++) {
+        float f_err = (float)fabs(FRAME_RATE[i] - cur_fps);
+        if (f_err < min_error) {
+            min_error = f_err;
+            min_idx = i;
+        }
+    }
+    param->frame_rate_code = min_idx + 1;
+    param->frame_rate      = FRAME_RATE[min_idx];
+    if (min_error >= 0.1) {
+        xavs2_log(NULL, XAVS2_LOG_WARNING, "Framerate has been fixed: %.3f => %.3f\n",
+                  cur_fps, param->frame_rate);
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ */
 int encoder_check_parameters(xavs2_param_t *param)
 {
     int num_max_slice = ((param->org_height + (1 << param->lcu_bit_level) - 1) >> param->lcu_bit_level) >> 1;
@@ -985,11 +1009,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     }
 
     /* check frame rate */
-    if (param->frame_rate_code > 8 || param->frame_rate_code < 1) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "FrameRate should be in 1..8 (1: 24000/1001,2: 24,3: 25,4: 30000/1001,5: 30,6: 50,7: 60000/1001,8: 60)\n");
-        return -1;
-    }
-    param->frame_rate = FRAME_RATE[param->frame_rate_code - 1];
+    encoder_check_fps_param(param);
 
     /* check LCU size */
     if (param->lcu_bit_level < B16X16_IN_BIT || param->lcu_bit_level > B64X64_IN_BIT){
