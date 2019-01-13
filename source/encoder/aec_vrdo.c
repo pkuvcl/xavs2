@@ -744,7 +744,7 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
         DECLARE_CONTEXT(context_t *p_ctx = NULL);
         int CGx = 0;
         int CGy = 0;
-        uint32_t Level_sign = 0;
+        DECLARE_CONTEXT(uint32_t Level_sign = 0);
         int pos;
         int num_pairs;
         int pairs;
@@ -800,7 +800,7 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
             int absLevel = XAVS2_ABS(Level);
             int symbol = absLevel - 1;
 
-            Level_sign |= (Level < 0) << i;      // record Sign
+            DECLARE_CONTEXT(Level_sign |= (Level < 0) << i);      // record Sign
 
             /* 3.2, level, "coeff_level_minus1_band[i]", "coeff_level_minus1_pos_in_band[i]" */
             if (symbol > 31) {
@@ -881,7 +881,7 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
         DECLARE_CONTEXT(context_t *p_ctx);
         int CGx = 0;
         int CGy = 0;
-        uint32_t Level_sign = 0;
+        DECLARE_CONTEXT(uint32_t Level_sign = 0);
         int pos;
         int num_pairs;
         int pairs;
@@ -937,7 +937,7 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
             int absLevel = XAVS2_ABS(Level);
             int symbol = absLevel - 1;
 
-            Level_sign |= (Level < 0) << i;      // record Sign
+            DECLARE_CONTEXT(Level_sign |= (Level < 0) << i);      // record Sign
 
             /* 3.2, level, "coeff_level_minus1_band[i]", "coeff_level_minus1_pos_in_band[i]" */
             if (symbol > 31) {
