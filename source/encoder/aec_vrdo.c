@@ -827,13 +827,9 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
             p_aec->i_bits_to_follow += Run;
 
             pos += (Run + 1);   // update position
-            if (pos < NUM_OF_COEFFS_IN_CG) {
-                biari_encode_symbol_vrdo(p_aec, 1, p_ctx + offset);
-            } else {
-                pairs--;
-                break;
-            }
         }   // run-level loop
+
+        p_aec->i_bits_to_follow += (num_pairs - 1);
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_vrdo(p_aec, Level_sign >> 1, num_pairs);
@@ -961,13 +957,9 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
             p_aec->i_bits_to_follow += Run;
 
             pos += (Run + 1);   // update position
-            if (pos < NUM_OF_COEFFS_IN_CG) {
-                biari_encode_symbol_vrdo(p_aec, 1, p_ctx + offset);
-            } else {
-                pairs--;
-                break;
-            }
         }   // run-level loop
+
+        p_aec->i_bits_to_follow += (num_pairs - 1);
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_vrdo(p_aec, Level_sign >> 1, num_pairs);
