@@ -748,24 +748,23 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
         int pos;
         int num_pairs;
         int pairs;
-        int i;
 
         /* 1. 检查当前CG是否包含有非零系数 */
         coeff_t *quant_coeff = runlevel->quant_coeff;
         const int b_hor = runlevel->b_hor;
         quant_coeff += ((p_tab_cg_scan[i_cg][!b_hor] << runlevel->i_stride_shift) + p_tab_cg_scan[i_cg][b_hor]) << 2;
+        // number of pairs in CG
         num_pairs = tu_get_cg_run_level_info(runlevel, quant_coeff, runlevel->i_stride_shift, runlevel->b_hor);
 
-        i = num_pairs;   // number of pairs in CG
         /* 2, Sig CG Flag, "nonzero_cg_flag" */
         if (rank > 0) {
-            biari_encode_symbol_vrdo(p_aec, !!i, p_ctx);
-            if (!i) {
+            biari_encode_symbol_vrdo(p_aec, !!num_pairs, p_ctx);
+            if (!num_pairs) {
                 continue;       // 无非零系数，结束当前CG编码
             }
             CGx = p_tab_cg_scan[i_cg][0];
             CGy = p_tab_cg_scan[i_cg][1];
-        } else if (i > 0) {
+        } else if (num_pairs > 0) {
             if (num_cg > 1) {   // for TB > 4x4, need to write
                 int num_cg_x = p_tab_cg_scan[num_cg - 1][0];
                 int num_cg_y = p_tab_cg_scan[num_cg - 1][1];
@@ -792,14 +791,14 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
                                      pos, b_dc_diag);
         }
 
-        for (; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--) {
+        for (; pairs >= 0 && pos < NUM_OF_COEFFS_IN_CG; pairs--) {
             DECLARE_CONTEXT(int offset = 0);
             int Level = p_runlevel[pairs].level;
             int Run   = p_runlevel[pairs].run;
             int absLevel = XAVS2_ABS(Level);
             int symbol = absLevel - 1;
 
-            DECLARE_CONTEXT(Level_sign |= (Level < 0) << i);      // record Sign
+            DECLARE_CONTEXT(Level_sign |= (Level < 0) << (pairs + 1));      // record Sign
 
             /* 3.2, level, "coeff_level_minus1_band[i]", "coeff_level_minus1_pos_in_band[i]" */
             if (symbol > 31) {
@@ -883,24 +882,23 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
         int pos;
         int num_pairs;
         int pairs;
-        int i;
 
         /* 1. 检查当前CG是否包含有非零系数 */
         coeff_t *quant_coeff = runlevel->quant_coeff;
         const int b_hor = 0; // runlevel->b_hor;
         quant_coeff += ((p_tab_cg_scan[i_cg][!b_hor] << runlevel->i_stride_shift) + p_tab_cg_scan[i_cg][b_hor]) << 2;
+        // number of pairs in CG
         num_pairs = tu_get_cg_run_level_info(runlevel, quant_coeff, runlevel->i_stride_shift, b_hor);
 
-        i = num_pairs;   // number of pairs in CG
         /* 2, Sig CG Flag, "nonzero_cg_flag" */
         if (rank > 0) {
-            biari_encode_symbol_vrdo(p_aec, !!i, p_ctx);
-            if (!i) {
+            biari_encode_symbol_vrdo(p_aec, !!num_pairs, p_ctx);
+            if (!num_pairs) {
                 continue;       // 无非零系数，结束当前CG编码
             }
             CGx = p_tab_cg_scan[i_cg][0];
             CGy = p_tab_cg_scan[i_cg][1];
-        } else if (i > 0) {
+        } else if (num_pairs > 0) {
             if (num_cg > 1) {
                 int num_cg_x = p_tab_cg_scan[num_cg - 1][0];
                 int num_cg_y = p_tab_cg_scan[num_cg - 1][1];
@@ -927,14 +925,14 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
                                      pos, 1);
         }
 
-        for (; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--) {
+        for (; pairs >= 0 && pos < NUM_OF_COEFFS_IN_CG; pairs--) {
             DECLARE_CONTEXT(int offset = 0);
             int Level = p_runlevel[pairs].level;
             int Run   = p_runlevel[pairs].run;
             int absLevel = XAVS2_ABS(Level);
             int symbol = absLevel - 1;
 
-            DECLARE_CONTEXT(Level_sign |= (Level < 0) << i);      // record Sign
+            DECLARE_CONTEXT(Level_sign |= (Level < 0) << (pairs + 1));      // record Sign
 
             /* 3.2, level, "coeff_level_minus1_band[i]", "coeff_level_minus1_pos_in_band[i]" */
             if (symbol > 31) {
