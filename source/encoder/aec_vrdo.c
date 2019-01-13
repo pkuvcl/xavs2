@@ -748,7 +748,6 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
         int pos;
         int num_pairs;
         int pairs;
-        int pairsInCG;
         int i;
 
         /* 1. 检查当前CG是否包含有非零系数 */
@@ -793,7 +792,7 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
                                      pos, b_dc_diag);
         }
 
-        for (pairsInCG = 0; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--, pairsInCG++) {
+        for (; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--) {
             DECLARE_CONTEXT(int offset = 0);
             int Level = p_runlevel[pairs].level;
             int Run   = p_runlevel[pairs].run;
@@ -833,7 +832,6 @@ int aec_write_run_level_luma_vrdo(aec_t *p_aec, int b_dc_diag,
                 biari_encode_symbol_vrdo(p_aec, 1, p_ctx + offset);
             } else {
                 pairs--;
-                pairsInCG++;
                 break;
             }
         }   // run-level loop
@@ -885,7 +883,6 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
         int pos;
         int num_pairs;
         int pairs;
-        int pairsInCG;
         int i;
 
         /* 1. 检查当前CG是否包含有非零系数 */
@@ -930,7 +927,7 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
                                      pos, 1);
         }
 
-        for (pairsInCG = 0; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--, pairsInCG++) {
+        for (; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--) {
             DECLARE_CONTEXT(int offset = 0);
             int Level = p_runlevel[pairs].level;
             int Run   = p_runlevel[pairs].run;
@@ -970,7 +967,6 @@ int aec_write_run_level_chroma_vrdo(aec_t *p_aec, runlevel_t *runlevel, xavs2_t 
                 biari_encode_symbol_vrdo(p_aec, 1, p_ctx + offset);
             } else {
                 pairs--;
-                pairsInCG++;
                 break;
             }
         }   // run-level loop
