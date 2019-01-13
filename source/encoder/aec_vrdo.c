@@ -92,14 +92,8 @@ static ALWAYS_INLINE int aec_get_shift(uint32_t v)
 static INLINE
 void biari_encode_symbol_final_vrdo(aec_t *p_aec, uint8_t symbol)
 {
-    const uint32_t t1 = p_aec->i_t1;
-
     if (symbol) {
-        p_aec->i_bits_to_follow += (!t1) + 8;
-        p_aec->i_t1              = 0;
-    } else { // MPS
-        p_aec->i_bits_to_follow += (!t1);
-        p_aec->i_t1              = (t1 - 1) & 0xff;
+        p_aec->i_bits_to_follow += 8;  // (!p_aec->i_t1) + 8;
     }
 }
 
