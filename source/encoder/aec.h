@@ -204,15 +204,26 @@ void bitstr_put_one_bit(aec_t *p_aec, uint32_t b)
  * 判断CG是否为全零块。
  * 是则返回1，否则返回0
  */
+static const int MAP_STRIDE[9][3] = {
+    {1, 2, 3},
+    {2, 4, 6},
+    {4, 8, 12},
+    {8, 16, 24},
+    {16, 32, 48},
+    {32, 64, 96},
+    {64, 128, 192},
+    {128, 256, 384},
+    {256, 512, 768},
+};
 static ALWAYS_INLINE
 int aec_is_cg_allzero(const coeff_t *src_coeff, int i_stride_shift)
 {
     assert(sizeof(coeff_t) * 4 == sizeof(uint64_t));
     /* 64 bit */
     return (*(uint64_t *)(src_coeff) == 0 &&
-            *(uint64_t *)(src_coeff + (uint64_t)(1 << i_stride_shift)) == 0 &&
-            *(uint64_t *)(src_coeff + (uint64_t)(2 << i_stride_shift)) == 0 &&
-            *(uint64_t *)(src_coeff + (uint64_t)(3 << i_stride_shift)) == 0);
+            *(uint64_t *)(src_coeff + (uint64_t)(MAP_STRIDE[i_stride_shift][0])) == 0 &&
+            *(uint64_t *)(src_coeff + (uint64_t)(MAP_STRIDE[i_stride_shift][1])) == 0 &&
+            *(uint64_t *)(src_coeff + (uint64_t)(MAP_STRIDE[i_stride_shift][2])) == 0);
 }
 
 /* ---------------------------------------------------------------------------
@@ -223,9 +234,9 @@ int tu_get_cg_run_level_info(runlevel_t *runlevel,
                              const int b_hor)
 {
     uint64_t c1 = *(uint64_t *)(quant_coeff);
-    uint64_t c2 = *(uint64_t *)(quant_coeff + (intptr_t)(1 << i_stride_shift));
-    uint64_t c3 = *(uint64_t *)(quant_coeff + (intptr_t)(2 << i_stride_shift));
-    uint64_t c4 = *(uint64_t *)(quant_coeff + (intptr_t)(3 << i_stride_shift));
+    uint64_t c2 = *(uint64_t *)(quant_coeff + (intptr_t)(MAP_STRIDE[i_stride_shift][0]));
+    uint64_t c3 = *(uint64_t *)(quant_coeff + (intptr_t)(MAP_STRIDE[i_stride_shift][1]));
+    uint64_t c4 = *(uint64_t *)(quant_coeff + (intptr_t)(MAP_STRIDE[i_stride_shift][2]));
     if (c1 == 0 && c2 == 0 && c3 == 0 && c4 == 0) {
         return 0;
     } else {
