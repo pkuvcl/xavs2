@@ -1424,14 +1424,14 @@ void intpl_luma_ext_x3_sse128(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_
         }
 
         if (col < width) {
-            __m128i T00 = _mm_loadu_si128((__m128i*)(p));
-            __m128i T10 = _mm_loadu_si128((__m128i*)(p + i_tmp));
-            __m128i T20 = _mm_loadu_si128((__m128i*)(p + 2 * i_tmp));
-            __m128i T30 = _mm_loadu_si128((__m128i*)(p + 3 * i_tmp));
-            __m128i T40 = _mm_loadu_si128((__m128i*)(p + 4 * i_tmp));
-            __m128i T50 = _mm_loadu_si128((__m128i*)(p + 5 * i_tmp));
-            __m128i T60 = _mm_loadu_si128((__m128i*)(p + 6 * i_tmp));
-            __m128i T70 = _mm_loadu_si128((__m128i*)(p + 7 * i_tmp));
+            T00 = _mm_loadu_si128((__m128i*)(p));
+            T10 = _mm_loadu_si128((__m128i*)(p + i_tmp));
+            T20 = _mm_loadu_si128((__m128i*)(p + 2 * i_tmp));
+            T30 = _mm_loadu_si128((__m128i*)(p + 3 * i_tmp));
+            T40 = _mm_loadu_si128((__m128i*)(p + 4 * i_tmp));
+            T50 = _mm_loadu_si128((__m128i*)(p + 5 * i_tmp));
+            T60 = _mm_loadu_si128((__m128i*)(p + 6 * i_tmp));
+            T70 = _mm_loadu_si128((__m128i*)(p + 7 * i_tmp));
 
             //First
             if (bsymyFirst) {
