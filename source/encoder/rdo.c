@@ -1041,7 +1041,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         rdcost_t best_rdcost = MAX_COST;
         int i;
         int num_for_rdo;
-        intra_candidate_t *p_candidates = p_layer->intra_candidates;   // candidate list, reserving the cost
+        p_candidates = p_layer->intra_candidates;   // candidate list, reserving the cost
 
         /* init */
         xavs2_get_mpms(h, p_cu, blockidx, pos_y, b4x4_x, mpm);
@@ -1060,7 +1060,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
 
         /* RDO */
         for (i = 0; i < num_for_rdo; i++) {
-            rdcost_t rdcost;
+            //rdcost_t rdcost;
             dist_t dist_curr;     // 当前亮度帧内块的失真
             int rate_curr = 0; // 当前亮度帧内块的码率（比特数）
             int mode = p_candidates[i].mode;

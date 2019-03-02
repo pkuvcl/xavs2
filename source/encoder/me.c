@@ -1055,7 +1055,7 @@ dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc
         }
 
         /* 当前最优MV不是 MVP，搜索其周围一个小窗口 */
-        if (pmv != MAKEDWORD(bmx, bmy)) {
+        if (pmv != (uint32_t)MAKEDWORD(bmx, bmy)) {
             DIA_ITER(bmx, bmy);
         }
 

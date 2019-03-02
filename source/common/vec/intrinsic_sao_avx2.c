@@ -576,7 +576,7 @@ void SAO_on_block_sse256(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src, int i
             __m256i t0, t1, t2, t3, t4, src0, src1;
             __m128i mask = _mm_setzero_si128();
             __m256i shift_mask = _mm256_set1_epi8(31);
-            int end_x = i_block_w;
+            end_x = i_block_w;
             int end_x_32 = end_x - ((end_x - 0) & 0x1f);
 
             r0 = _mm256_set1_epi8((int8_t)(sao_param->startBand));

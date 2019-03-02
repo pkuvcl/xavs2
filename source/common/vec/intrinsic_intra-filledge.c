@@ -38,6 +38,7 @@
 #include "../basic_types.h"
 #include "intrinsic.h"
 
+#include <string.h>
 #include <mmintrin.h>
 #include <emmintrin.h>
 #include <tmmintrin.h>

@@ -37,7 +37,7 @@
 #include "../avs2_defs.h"
 #include "../basic_types.h"
 #include "intrinsic.h"
-
+#include <string.h>
 #include <mmintrin.h>
 #include <emmintrin.h>
 #include <tmmintrin.h>
@@ -7557,15 +7557,15 @@ void intra_pred_ang_xy_23_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode
         for (; i < line_size; i += 16, src += 16) {
             coeff2 = _mm_set1_epi16(2);
 
-            __m128i p00, p10;
+           
             __m128i p01, p11;
             __m128i S0 = _mm_loadu_si128((__m128i*)(src));
             __m128i S1 = _mm_loadu_si128((__m128i*)(src + 1));
             __m128i S2 = _mm_loadu_si128((__m128i*)(src - 1));
 
-            __m128i L0 = _mm_unpacklo_epi8(S0, zero);
-            __m128i L1 = _mm_unpacklo_epi8(S1, zero);
-            __m128i L2 = _mm_unpacklo_epi8(S2, zero);
+            L0 = _mm_unpacklo_epi8(S0, zero);
+            L1 = _mm_unpacklo_epi8(S1, zero);
+            L2 = _mm_unpacklo_epi8(S2, zero);
 
             __m128i H0 = _mm_unpackhi_epi8(S0, zero);
             __m128i H1 = _mm_unpackhi_epi8(S1, zero);
