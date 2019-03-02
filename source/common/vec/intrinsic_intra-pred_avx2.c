@@ -71,17 +71,17 @@ void intra_pred_ver_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx
             dst += i_dst;
         }
     } else {
-        int i, j;
-        __m128i S1;
+        int j;
+        __m128i S_1;
         if (bsx & 15) {//4/8
             __m128i mask = _mm_load_si128((const __m128i*)intrinsic_mask[(bsx & 15) - 1]);
             for (i = 0; i < bsy; i++) {
                 for (j = 0; j < bsx - 15; j += 16) {
-                    S1 = _mm_loadu_si128((const __m128i*)(rsrc + j));
-                    _mm_storeu_si128((__m128i*)(dst + j), S1);
+                    S_1 = _mm_loadu_si128((const __m128i*)(rsrc + j));
+                    _mm_storeu_si128((__m128i*)(dst + j), S_1);
                 }
-                S1 = _mm_loadu_si128((const __m128i*)(rsrc + j));
-                _mm_maskmoveu_si128(S1, mask, (char *)&dst[j]);
+                S_1 = _mm_loadu_si128((const __m128i*)(rsrc + j));
+                _mm_maskmoveu_si128(S_1, mask, (char *)&dst[j]);
                 dst += i_dst;
             }
         }
@@ -96,8 +96,8 @@ void intra_pred_ver_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx
         }*/
         else {
             for (i = 0; i < bsy; i++) {//16
-                S1 = _mm_loadu_si128((const __m128i*)rsrc);
-                _mm_storeu_si128((__m128i*)dst, S1);
+                S_1 = _mm_loadu_si128((const __m128i*)rsrc);
+                _mm_storeu_si128((__m128i*)dst, S_1);
                 dst += i_dst;
             }
         }
@@ -127,23 +127,23 @@ void intra_pred_hor_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx
             dst += i_dst;
         }
     } else {
-        int i, j;
-        __m128i S1;
+        int j;
+        __m128i S_1;
         if (bsx & 15) {//4/8
             __m128i mask = _mm_load_si128((const __m128i*)intrinsic_mask[(bsx & 15) - 1]);
             for (i = 0; i < bsy; i++) {
                 for (j = 0; j < bsx - 15; j += 16) {
-                    S1 = _mm_set1_epi8((char)rsrc[-i]);
-                    _mm_storeu_si128((__m128i*)(dst + j), S1);
+                    S_1 = _mm_set1_epi8((char)rsrc[-i]);
+                    _mm_storeu_si128((__m128i*)(dst + j), S_1);
                 }
-                S1 = _mm_set1_epi8((char)rsrc[-i]);
-                _mm_maskmoveu_si128(S1, mask, (char*)&dst[j]);
+                S_1 = _mm_set1_epi8((char)rsrc[-i]);
+                _mm_maskmoveu_si128(S_1, mask, (char*)&dst[j]);
                 dst += i_dst;
             }
         } else {
             for (i = 0; i < bsy; i++) {//16
-                S1 = _mm_set1_epi8((char)rsrc[-i]);
-                _mm_storeu_si128((__m128i*)dst, S1);
+                S_1 = _mm_set1_epi8((char)rsrc[-i]);
+                _mm_storeu_si128((__m128i*)dst, S_1);
                 dst += i_dst;
             }
         }
@@ -213,21 +213,21 @@ void intra_pred_dc_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx,
             dst += i_dst;
         }
     } else {
-        __m128i S1;
+        __m128i S_1;
         int j;
-        S1 = _mm_set1_epi8((char)iDCValue);
+        S_1 = _mm_set1_epi8((char)iDCValue);
         if (bsx & 15) {//4/8
             __m128i mask = _mm_load_si128((const __m128i*)intrinsic_mask[(bsx & 15) - 1]);
             for (i = 0; i < bsy; i++) {
                 for (j = 0; j < bsx - 15; j += 16) {
-                    _mm_storeu_si128((__m128i*)(dst + j), S1);
+                    _mm_storeu_si128((__m128i*)(dst + j), S_1);
                 }
-                _mm_maskmoveu_si128(S1, mask, (char*)&dst[j]);
+                _mm_maskmoveu_si128(S_1, mask, (char*)&dst[j]);
                 dst += i_dst;
             }
         } else {
             for (i = 0; i < bsy; i++) {//16
-                _mm_storeu_si128((__m128i*)dst, S1);
+                _mm_storeu_si128((__m128i*)dst, S_1);
                 dst += i_dst;
             }
         }
@@ -4167,7 +4167,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else if (bsx == 16){
-        __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
+        mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
         for (i = 0; i < bsy; i += 4){
 
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
@@ -4188,7 +4188,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
         }
     } else if (bsx == 8){
-        __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
+        mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
         for (i = 0; i < bsy; i += 4){
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -4207,7 +4207,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else {
-        __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
+        mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
         for (i = 0; i < bsy; i += 4){
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_maskstore_epi32((int*)dst, mask, M);
@@ -4589,7 +4589,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else if (bsx == 16){
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -4620,7 +4620,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else if (bsx == 8){
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -4651,7 +4651,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else{
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
             _mm256_maskstore_epi32((int*)dst, mask, M);
@@ -5214,7 +5214,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
             }
         } else if (bsx == 16) {
-            __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
+            mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
             for (i = 0; i < bsy; i++){
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -5249,7 +5249,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
             }
         } else if (bsx == 8) {
-            __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
+            mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
             for (i = 0; i < bsy; i++){
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -5284,7 +5284,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
             }
         } else {
-            __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
+            mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
             for (i = 0; i < bsy; i++){
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi32((int*)dst, mask, M);
@@ -5426,33 +5426,33 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         if (i < left_size) { //sse版本比avx快，处理的数据较少
             __m128i shuffle1 = _mm_setr_epi8(0, 4, 1, 5, 2, 6, 3, 7, 0, 4, 1, 5, 2, 6, 3, 7);
-            __m128i coeff2 = _mm_set1_epi16(2);
+            __m128i coeff_2 = _mm_set1_epi16(2);
             __m128i zero = _mm_setzero_si128();
 
-            __m128i S0 = _mm_loadu_si128((__m128i*)(src - 1));
-            __m128i S2 = _mm_loadu_si128((__m128i*)(src + 1));
-            __m128i S1 = _mm_loadu_si128((__m128i*)(src));
+            __m128i S_0 = _mm_loadu_si128((__m128i*)(src - 1));
+            __m128i S_2 = _mm_loadu_si128((__m128i*)(src + 1));
+            __m128i S_1 = _mm_loadu_si128((__m128i*)(src));
 
-            __m128i L0 = _mm_unpacklo_epi8(S0, zero);//0 1 2 3 4 5 6 7
-            __m128i L1 = _mm_unpacklo_epi8(S1, zero);
-            __m128i L2 = _mm_unpacklo_epi8(S2, zero);
+            __m128i L_0 = _mm_unpacklo_epi8(S_0, zero);//0 1 2 3 4 5 6 7
+            __m128i L_1 = _mm_unpacklo_epi8(S_1, zero);
+            __m128i L_2 = _mm_unpacklo_epi8(S_2, zero);
 
-            __m128i p00 = _mm_add_epi16(L0, L1);
-            __m128i p01 = _mm_add_epi16(L1, L2);
+            __m128i p_00 = _mm_add_epi16(L_0, L_1);
+            __m128i p_01 = _mm_add_epi16(L_1, L_2);
 
-            p00 = _mm_add_epi16(p00, coeff2);
-            p00 = _mm_add_epi16(p00, p01);
+            p_00 = _mm_add_epi16(p_00, coeff_2);
+            p_00 = _mm_add_epi16(p_00, p_01);
 
-            p00 = _mm_srli_epi16(p00, 2);
+            p_00 = _mm_srli_epi16(p_00, 2);
 
-            p00 = _mm_packus_epi16(p00, p00);//0 1 2 3 4 5 6 7
+            p_00 = _mm_packus_epi16(p_00, p_00);//0 1 2 3 4 5 6 7
 
-            p00 = _mm_shuffle_epi8(p00, shuffle1);//0 4 1 5 2 6 3 7
+            p_00 = _mm_shuffle_epi8(p_00, shuffle1);//0 4 1 5 2 6 3 7
 
-            ((int*)&pfirst[0][i])[0] = _mm_extract_epi16(p00, 3);
-            ((int*)&pfirst[1][i])[0] = _mm_extract_epi16(p00, 2);
-            ((int*)&pfirst[2][i])[0] = _mm_extract_epi16(p00, 1);
-            ((int*)&pfirst[3][i])[0] = _mm_extract_epi16(p00, 0);
+            ((int*)&pfirst[0][i])[0] = _mm_extract_epi16(p_00, 3);
+            ((int*)&pfirst[1][i])[0] = _mm_extract_epi16(p_00, 2);
+            ((int*)&pfirst[2][i])[0] = _mm_extract_epi16(p_00, 1);
+            ((int*)&pfirst[3][i])[0] = _mm_extract_epi16(p_00, 0);
         }
 
         src = pSrc1;
@@ -5808,12 +5808,12 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             pel_t *dst3 = dst2 + i_dst;
             pel_t *dst4 = dst3 + i_dst;
             __m128i p00, p10, p20, p30;
-            __m128i coeff2 = _mm_set1_epi16(2);
-            __m128i coeff3 = _mm_set1_epi16(3);
-            __m128i coeff4 = _mm_set1_epi16(4);
-            __m128i coeff5 = _mm_set1_epi16(5);
-            __m128i coeff7 = _mm_set1_epi16(7);
-            __m128i coeff8 = _mm_set1_epi16(8);
+            __m128i coeff_2 = _mm_set1_epi16(2);
+            __m128i coeff_3 = _mm_set1_epi16(3);
+            __m128i coeff_4 = _mm_set1_epi16(4);
+            __m128i coeff_5 = _mm_set1_epi16(5);
+            __m128i coeff_7 = _mm_set1_epi16(7);
+            __m128i coeff_8 = _mm_set1_epi16(8);
             __m128i zero = _mm_setzero_si128();
 
             __m128i S0 = _mm_loadu_si128((__m128i*)(src - 1));
@@ -5826,10 +5826,10 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             __m128i L2 = _mm_unpacklo_epi8(S2, zero);
             __m128i L3 = _mm_unpacklo_epi8(S3, zero);
 
-            p00 = _mm_mullo_epi16(L0, coeff3);
-            p10 = _mm_mullo_epi16(L1, coeff7);
-            p20 = _mm_mullo_epi16(L2, coeff5);
-            p30 = _mm_add_epi16(L3, coeff8);
+            p00 = _mm_mullo_epi16(L0, coeff_3);
+            p10 = _mm_mullo_epi16(L1, coeff_7);
+            p20 = _mm_mullo_epi16(L2, coeff_5);
+            p30 = _mm_add_epi16(L3, coeff_8);
             p00 = _mm_add_epi16(p00, p30);
             p00 = _mm_add_epi16(p00, p10);
             p00 = _mm_add_epi16(p00, p20);
@@ -5839,19 +5839,19 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             ((int*)dst3)[0] = _mm_cvtsi128_si32(p00);
 
             p00 = _mm_add_epi16(L1, L2);
-            p00 = _mm_mullo_epi16(p00, coeff3);
+            p00 = _mm_mullo_epi16(p00, coeff_3);
             p10 = _mm_add_epi16(L0, L3);
-            p10 = _mm_add_epi16(p10, coeff4);
+            p10 = _mm_add_epi16(p10, coeff_4);
             p00 = _mm_add_epi16(p10, p00);
             p00 = _mm_srli_epi16(p00, 3);
 
             p00 = _mm_packus_epi16(p00, p00);
             ((int*)dst2)[0] = _mm_cvtsi128_si32(p00);
 
-            p10 = _mm_mullo_epi16(L1, coeff5);
-            p20 = _mm_mullo_epi16(L2, coeff7);
-            p30 = _mm_mullo_epi16(L3, coeff3);
-            p00 = _mm_add_epi16(L0, coeff8);
+            p10 = _mm_mullo_epi16(L1, coeff_5);
+            p20 = _mm_mullo_epi16(L2, coeff_7);
+            p30 = _mm_mullo_epi16(L3, coeff_3);
+            p00 = _mm_add_epi16(L0, coeff_8);
             p00 = _mm_add_epi16(p00, p10);
             p00 = _mm_add_epi16(p00, p20);
             p00 = _mm_add_epi16(p00, p30);
@@ -5863,7 +5863,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             p00 = _mm_add_epi16(L0, L1);
             p10 = _mm_add_epi16(L1, L2);
             p00 = _mm_add_epi16(p00, p10);
-            p00 = _mm_add_epi16(p00, coeff2);
+            p00 = _mm_add_epi16(p00, coeff_2);
             p00 = _mm_srli_epi16(p00, 2);
 
             p00 = _mm_packus_epi16(p00, p00);
@@ -6754,7 +6754,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         }
     } else if (bsx == 16){
 
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -6776,7 +6776,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         }
     } else if (bsx == 8){
 
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -6813,7 +6813,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         }
     } else{
 
-        __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
+        mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_maskstore_epi32((int*)dst, mask, M);
@@ -7423,9 +7423,9 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             S1 = _mm256_loadu_si256((__m256i*)(src + 1));
             S2 = _mm256_loadu_si256((__m256i*)(src - 1));
 
-            __m256i L0 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S0, 0));
-            __m256i L1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S1, 0));
-            __m256i L2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S2, 0));
+            L0 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S0, 0));
+            L1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S1, 0));
+            L2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S2, 0));
 
             H0 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S0, 1));
             H1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(S1, 1));
