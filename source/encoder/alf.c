@@ -894,13 +894,13 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
 
     for (compIdx = 0; compIdx < IMG_CMPNTS; compIdx++) {
         if (alfPictureParam[compIdx].alf_flag == 1) {
-            double lamb_da = (compIdx == 0 ? lambda_luma : lambda_chroma);
+            double lambda_ = (compIdx == 0 ? lambda_luma : lambda_chroma);
             rate = ALFParamBitrateEstimate(&alfPictureParam[compIdx]);
             if (compIdx == IMG_Y) {
                 noFilters = alfPictureParam[0].filters_per_group - 1;
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
-            costAlfOn = (double)distBestPic[compIdx] + lamb_da *
+            costAlfOn = (double)distBestPic[compIdx] + lambda_ *
                 (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;
@@ -1045,13 +1045,13 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
 
     for (compIdx = 0; compIdx < IMG_CMPNTS; compIdx++) {
         if (alfPictureParam[compIdx].alf_flag == 1) {
-            double lamb_da = (compIdx == 0 ? lambda_luma : lambda_chroma);
+            double lambda_ = (compIdx == 0 ? lambda_luma : lambda_chroma);
             rate = ALFParamBitrateEstimate(&alfPictureParam[compIdx]);
             if (compIdx == IMG_Y) {
                 noFilters = alfPictureParam[0].filters_per_group - 1;
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
-            costAlfOn = (double)distBestPic[compIdx] + lamb_da *
+            costAlfOn = (double)distBestPic[compIdx] + lambda_ *
                 (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;

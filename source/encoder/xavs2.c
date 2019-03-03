@@ -431,7 +431,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
                       XAVS2_MIN(FREF_BUF_SIZE, MAX_REFS + h_mgr->i_frm_threads * 4), FT_DEC);
 
     /* memory check */
-    if (mem_ptr - (uint8_t *)h_mgr > mem_size) {
+    if (mem_ptr - (uint8_t *)h_mgr > (int)mem_size) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "Failed to create input frame buffer.\n");
         goto fail;
     }

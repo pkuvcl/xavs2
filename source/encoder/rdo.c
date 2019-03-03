@@ -1063,16 +1063,16 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
             //rdcost_t rdcost;
             dist_t dist_curr;     // 当前亮度帧内块的失真
             int rate_curr = 0; // 当前亮度帧内块的码率（比特数）
-            int mode = p_candidates[i].mode;
-            pel_t *p_pred = p_enc->intra_pred[mode];
+            int Mode = p_candidates[i].mode;
+            pel_t *p_pred = p_enc->intra_pred[Mode];
 
             // get and check rate_chroma-distortion cost
-            int mode_idx_aec = (mpm[0] == mode) ? -2 : ((mpm[1] == mode) ? -1 : (mpm[0] > mode ? mode : (mpm[1] > mode ? mode - 1 : mode - 2)));
+            int mode_idx_aec = (mpm[0] == Mode) ? -2 : ((mpm[1] == Mode) ? -1 : (mpm[0] > Mode ? Mode : (mpm[1] > Mode ? Mode - 1 : Mode - 2)));
             int num_nonzero;
 
             num_nonzero = cu_recon_intra_luma(h, p_aec, p_cu, p_pred,
                                               block_w, block_h, block_x, block_y,
-                                              blockidx, mode, &dist_curr);
+                                              blockidx, Mode, &dist_curr);
             num_nonzero = !!num_nonzero;
             {
                 int used_wavelet = (p_cu->cu_info.i_level == B64X64_IN_BIT && p_cu->cu_info.i_tu_split != TU_SPLIT_CROSS);
@@ -1088,7 +1088,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 if (num_nonzero) {
                     int bits_left = rdo_get_left_bits(h, best_rdcost, dist_curr) - rate_luma_mode;
                     rate_curr = p_aec->binary.est_luma_block_coeff(h, p_aec, p_cu, p_coeff_y, &p_enc->runlevel, i_tu_level, xavs2_log2u(w_tr),
-                                                                   1, mode, bits_left);
+                                                                   1, Mode, bits_left);
                     rate_luma_mode += rate_curr;
                 }
 
@@ -1105,7 +1105,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 best_dist = dist_curr;
                 best_rate = rate_curr;
                 best_rdcost = rdcost;
-                best_mode = mode;
+                best_mode = Mode;
                 best_pmode = mode_idx_aec;
                 best_cbp = num_nonzero;   // flag if dct-coefficients must be coded
                 h->copy_aec_state_rdo(&p_enc->cs_tu, p_aec);
