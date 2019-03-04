@@ -105,7 +105,7 @@ const uint8_t tab_IQ_SHIFT[80] = {
 /* ---------------------------------------------------------------------------
  * i_coef - number of coeffs, 16 <= i_coef <= 1024
  */
-static 
+static
 int quant_c(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
 {
     int num_non_zero = 0;
@@ -123,7 +123,7 @@ int quant_c(coeff_t *coef, const int i_coef, const int scale, const int shift, c
 /* ---------------------------------------------------------------------------
  * i_coef - number of coeffs, 16 <= i_coef <= 1024
  */
-static 
+static
 void abs_coeff_c(coeff_t *dst, const coeff_t *src, const int i_coef)
 {
     int i;
@@ -137,7 +137,7 @@ void abs_coeff_c(coeff_t *dst, const coeff_t *src, const int i_coef)
 /* ---------------------------------------------------------------------------
  * i_coef - number of coeffs, 16 <= i_coef <= 1024
  */
-static 
+static
 int add_sign_c(coeff_t *dst, const coeff_t *abs_val, const int i_coef)
 {
     int nz = 0;

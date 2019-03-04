@@ -59,22 +59,22 @@
 #define INVALID LUMA_INVALID
 const uint8_t g_partition_map_tab[] = {
     //  4         8             12          16         20         24         28           32        36       40      44         48        52       56       60       64
-     LUMA_4x4,   LUMA_4x8,     INVALID,  LUMA_4x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 4
-     LUMA_8x4,   LUMA_8x8,     INVALID,  LUMA_8x16,   INVALID,    INVALID,   INVALID,  LUMA_8x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 8
-      INVALID,    INVALID,     INVALID, LUMA_12x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 12
+    LUMA_4x4,   LUMA_4x8,     INVALID,  LUMA_4x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 4
+    LUMA_8x4,   LUMA_8x8,     INVALID,  LUMA_8x16,   INVALID,    INVALID,   INVALID,  LUMA_8x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 8
+    INVALID,    INVALID,     INVALID, LUMA_12x16,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 12
     LUMA_16x4,  LUMA_16x8,  LUMA_16x12, LUMA_16x16,   INVALID,    INVALID,   INVALID, LUMA_16x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_16x64,   // 16
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 20
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID, LUMA_24x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 24
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 28
-      INVALID,  LUMA_32x8,     INVALID, LUMA_32x16,   INVALID, LUMA_32x24,   INVALID, LUMA_32x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_32x64,   // 32
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 36
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 40
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 44
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_48x64,   // 48
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 52
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 56
-      INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 60
-      INVALID,    INVALID,     INVALID, LUMA_64x16,   INVALID,    INVALID,   INVALID, LUMA_64x32,  INVALID, INVALID, INVALID, LUMA_64x48, INVALID, INVALID, INVALID, LUMA_64x64    // 64
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 20
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID, LUMA_24x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 24
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 28
+    INVALID,  LUMA_32x8,     INVALID, LUMA_32x16,   INVALID, LUMA_32x24,   INVALID, LUMA_32x32,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_32x64,   // 32
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 36
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 40
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 44
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID, LUMA_48x64,   // 48
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 52
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 56
+    INVALID,    INVALID,     INVALID,    INVALID,   INVALID,    INVALID,   INVALID,    INVALID,  INVALID, INVALID, INVALID,    INVALID, INVALID, INVALID, INVALID,    INVALID,      // 60
+    INVALID,    INVALID,     INVALID, LUMA_64x16,   INVALID,    INVALID,   INVALID, LUMA_64x32,  INVALID, INVALID, INVALID, LUMA_64x48, INVALID, INVALID, INVALID, LUMA_64x64    // 64
 };
 #undef INVALID
 
@@ -462,9 +462,9 @@ static
 cmp_dist_t xavs2_pixel_sa8d_16x16(const pel_t* pix1, intptr_t i_pix1, const pel_t* pix2, intptr_t i_pix2)
 {
     cmp_dist_t sum = _sa8d_8x8(pix1, i_pix1, pix2, i_pix2)
-        + _sa8d_8x8(pix1 + 8, i_pix1, pix2 + 8, i_pix2)
-        + _sa8d_8x8(pix1 + 8 * i_pix1, i_pix1, pix2 + 8 * i_pix2, i_pix2)
-        + _sa8d_8x8(pix1 + 8 + 8 * i_pix1, i_pix1, pix2 + 8 + 8 * i_pix2, i_pix2);
+                     + _sa8d_8x8(pix1 + 8, i_pix1, pix2 + 8, i_pix2)
+                     + _sa8d_8x8(pix1 + 8 * i_pix1, i_pix1, pix2 + 8 * i_pix2, i_pix2)
+                     + _sa8d_8x8(pix1 + 8 + 8 * i_pix1, i_pix1, pix2 + 8 + 8 * i_pix2, i_pix2);
 
     // This matches x264 sa8d_16x16, but is slightly different from HM's behavior because
     // this version only rounds once at the end
@@ -596,10 +596,10 @@ PIXEL_SSD_C( 4,  4)  /* 4x4 */
  */
 #if XAVS2_STAT
 uint64_t xavs2_pixel_ssd_wxh(pixel_funcs_t *pf,
-    pel_t *p_pix1, intptr_t i_pix1,
-    pel_t *p_pix2, intptr_t i_pix2,
-    int i_width, int i_height,
-    int inout_shift)
+                             pel_t *p_pix1, intptr_t i_pix1,
+                             pel_t *p_pix2, intptr_t i_pix2,
+                             int i_width, int i_height,
+                             int inout_shift)
 {
     uint64_t i_ssd = 0;
     int align = !(((intptr_t)p_pix1 | (intptr_t)p_pix2 | i_pix1 | i_pix2) & 15);
@@ -776,7 +776,7 @@ static void xavs2_blockcopy_ps_##w##x##h(coeff_t *a, intptr_t stridea, const pel
         b += strideb;\
     }\
 }\
-
+ 
 #define PIXEL_SUB_PS_C(w, h) \
 static void xavs2_pixel_sub_ps_##w##x##h(coeff_t *a, intptr_t dstride, const pel_t *b0, const pel_t *b1, intptr_t sstride0, intptr_t sstride1)\
 {\
@@ -930,15 +930,15 @@ static void init_block_opreation_funcs(uint32_t cpuid, pixel_funcs_t* pixf)
         pixf->add_ps [LUMA_16x16] = xavs2_pixel_add_ps_16x16_sse4;
         pixf->add_ps [LUMA_16x64] = xavs2_pixel_add_ps_16x64_sse4;
         pixf->add_ps [LUMA_32x8 ] = xavs2_pixel_add_ps_32x8_sse4;
-    //  pixf->add_ps [LUMA_32x16] = xavs2_pixel_add_ps_32x16_sse4;
-    //  pixf->add_ps [LUMA_32x24] = xavs2_pixel_add_ps_32x24_sse4;
+        //  pixf->add_ps [LUMA_32x16] = xavs2_pixel_add_ps_32x16_sse4;
+        //  pixf->add_ps [LUMA_32x24] = xavs2_pixel_add_ps_32x24_sse4;
         pixf->add_ps [LUMA_32x32] = xavs2_pixel_add_ps_32x32_sse4;
         pixf->add_ps [LUMA_32x64] = xavs2_pixel_add_ps_32x64_sse4;
         pixf->add_ps [LUMA_64x16] = xavs2_pixel_add_ps_64x16_sse4;
-    //  pixf->add_ps [LUMA_64x32] = xavs2_pixel_add_ps_64x32_sse4;
-    //  pixf->add_ps [LUMA_64x48] = xavs2_pixel_add_ps_64x48_sse4;
+        //  pixf->add_ps [LUMA_64x32] = xavs2_pixel_add_ps_64x32_sse4;
+        //  pixf->add_ps [LUMA_64x48] = xavs2_pixel_add_ps_64x48_sse4;
         pixf->add_ps [LUMA_64x64] = xavs2_pixel_add_ps_64x64_sse4;
-        
+
         pixf->sub_ps [LUMA_4x4  ] = xavs2_pixel_sub_ps_4x4_sse4;
         pixf->sub_ps [LUMA_4x8  ] = xavs2_pixel_sub_ps_4x8_sse4;
         pixf->sub_ps [LUMA_4x16 ] = xavs2_pixel_sub_ps_4x16_sse4;
@@ -946,18 +946,18 @@ static void init_block_opreation_funcs(uint32_t cpuid, pixel_funcs_t* pixf)
         pixf->sub_ps [LUMA_8x16 ] = xavs2_pixel_sub_ps_8x16_sse4;
         pixf->sub_ps [LUMA_8x32 ] = xavs2_pixel_sub_ps_8x32_sse4;
         pixf->sub_ps [LUMA_16x4 ] = xavs2_pixel_sub_ps_16x4_sse4;
-    //  pixf->sub_ps [LUMA_16x8 ] = xavs2_pixel_sub_ps_16x8_sse4;
-    //  pixf->sub_ps [LUMA_16x12] = xavs2_pixel_sub_ps_16x12_sse4;
+        //  pixf->sub_ps [LUMA_16x8 ] = xavs2_pixel_sub_ps_16x8_sse4;
+        //  pixf->sub_ps [LUMA_16x12] = xavs2_pixel_sub_ps_16x12_sse4;
         pixf->sub_ps [LUMA_16x16] = xavs2_pixel_sub_ps_16x16_sse4;
         pixf->sub_ps [LUMA_16x64] = xavs2_pixel_sub_ps_16x64_sse4;
         pixf->sub_ps [LUMA_32x8 ] = xavs2_pixel_sub_ps_32x8_sse4;
-    //  pixf->sub_ps [LUMA_32x16] = xavs2_pixel_sub_ps_32x16_sse4;
-    //  pixf->sub_ps [LUMA_32x24] = xavs2_pixel_sub_ps_32x24_sse4;
+        //  pixf->sub_ps [LUMA_32x16] = xavs2_pixel_sub_ps_32x16_sse4;
+        //  pixf->sub_ps [LUMA_32x24] = xavs2_pixel_sub_ps_32x24_sse4;
         pixf->sub_ps [LUMA_32x32] = xavs2_pixel_sub_ps_32x32_sse4;
         pixf->sub_ps [LUMA_32x64] = xavs2_pixel_sub_ps_32x64_sse4;
         pixf->sub_ps [LUMA_64x16] = xavs2_pixel_sub_ps_64x16_sse4;
-    //  pixf->sub_ps [LUMA_64x32] = xavs2_pixel_sub_ps_64x32_sse4;
-    //  pixf->sub_ps [LUMA_64x48] = xavs2_pixel_sub_ps_64x48_sse4;
+        //  pixf->sub_ps [LUMA_64x32] = xavs2_pixel_sub_ps_64x32_sse4;
+        //  pixf->sub_ps [LUMA_64x48] = xavs2_pixel_sub_ps_64x48_sse4;
         pixf->sub_ps [LUMA_64x64] = xavs2_pixel_sub_ps_64x64_sse4;
 
         ALL_LUMA_PU(copy_ps, blockcopy_ps, _sse4);
@@ -1544,7 +1544,7 @@ void xavs2_pixel_init(uint32_t cpuid, pixel_funcs_t* pixf)
         INIT_PIXEL_AVG( 4,  4, mmx2);
     }
 
-    if (cpuid & XAVS2_CPU_SSE2){
+    if (cpuid & XAVS2_CPU_SSE2) {
         INIT_PIXEL_AVG(64, 64, sse2);
         INIT_PIXEL_AVG(64, 32, sse2);
         INIT_PIXEL_AVG(32, 64, sse2);

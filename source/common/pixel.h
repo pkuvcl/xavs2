@@ -189,10 +189,10 @@ void xavs2_pixel_init(uint32_t cpu, pixel_funcs_t* pixf);
 
 #define xavs2_pixel_ssd_wxh FPFX(xpixel_ssd_wxh)
 uint64_t xavs2_pixel_ssd_wxh(pixel_funcs_t *pf,
-    pel_t *p_pix1, intptr_t i_pix1,
-    pel_t *p_pix2, intptr_t i_pix2,
-    int i_width, int i_height,
-    int inout_shift);
+                             pel_t *p_pix1, intptr_t i_pix1,
+                             pel_t *p_pix2, intptr_t i_pix2,
+                             int i_width, int i_height,
+                             int inout_shift);
 
 
 #define xavs2_mad_init FPFX(mad_init)

@@ -61,7 +61,7 @@ static const int REF_BITS[32] = {
 
 /* ---------------------------------------------------------------------------
 * determine the mv value (1/4 pixel) is legal or not
-* Return: 0: out of the legal mv range; 
+* Return: 0: out of the legal mv range;
 *         1: in the legal mv range
 */
 static ALWAYS_INLINE

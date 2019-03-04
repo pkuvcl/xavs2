@@ -121,8 +121,8 @@ typedef struct {
 
 /* SAO filter function */
 typedef void(*sao_flt_t)(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
-    int i_block_w, int i_block_h,
-    int *lcu_avail, SAOBlkParam *sao_param);
+                         int i_block_w, int i_block_h,
+                         int *lcu_avail, SAOBlkParam *sao_param);
 
 
 
@@ -209,15 +209,15 @@ typedef struct intrinsic_func_t {
 
     /* function handles */
     void(*alf_flt[2])(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
-        int lcu_pix_x, int lcu_pix_y, int lcu_width, int lcu_height,
-        int *alf_coeff, int b_top_avail, int b_down_avail);
+                      int lcu_pix_x, int lcu_pix_y, int lcu_width, int lcu_height,
+                      int *alf_coeff, int b_top_avail, int b_down_avail);
 
     /* -----------------------------------------------------------------------
-     * RDO procedure 
+     * RDO procedure
      */
     int (*get_skip_mv_predictors[SLICE_TYPE_NUM])(xavs2_t *h, cu_t *p_cu);  /* get MVs for skip/direct mode */
-    rdcost_t (*compress_ctu[SLICE_TYPE_NUM])(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, 
-                                             int i_min_level, int i_max_level, rdcost_t cost_limit);
+    rdcost_t (*compress_ctu[SLICE_TYPE_NUM])(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level,
+            int i_min_level, int i_max_level, rdcost_t cost_limit);
 } intrinsic_func_t;
 
 extern intrinsic_func_t g_funcs;

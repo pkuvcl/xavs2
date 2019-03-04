@@ -283,8 +283,8 @@ int xavs2_threadpool_init(xavs2_threadpool_t **p_pool, int threads, xavs2_tfunc_
 
     threads = XAVS2_MIN(threads, XAVS2_THREAD_MAX);
     size_mem = sizeof(xavs2_threadpool_t)  +
-        threads * sizeof(threadpool_job_t) +
-        CACHE_LINE_SIZE * XAVS2_THREAD_MAX * 2;
+               threads * sizeof(threadpool_job_t) +
+               CACHE_LINE_SIZE * XAVS2_THREAD_MAX * 2;
 
     CHECKED_MALLOCZERO(mem_ptr, uint8_t *, size_mem);
     pool          = (xavs2_threadpool_t *)mem_ptr;

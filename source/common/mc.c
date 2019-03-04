@@ -363,7 +363,7 @@ static void
 intpl_luma_block_ext_c(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coeff_h, const int8_t *coeff_v)
 {
 #define TMP_STRIDE      64
-    
+
     const int shift1 = g_bit_depth - 8;
     const int add1   = (1 << shift1) >> 1;
     const int shift2 = 20 - g_bit_depth;
@@ -556,7 +556,7 @@ intpl_luma_ext_x3_c(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_tmp, int w
  * predict one component of a luma block
  *   ref_idx - reference frame (0.. / -1:backward)
  */
-void mc_luma(pel_t *p_pred, int i_pred, int pix_quad_x, int pix_quad_y, 
+void mc_luma(pel_t *p_pred, int i_pred, int pix_quad_x, int pix_quad_y,
              int width, int height, const xavs2_frame_t *p_ref_frm)
 {
     int x = (pix_quad_x >> 2);
@@ -630,7 +630,7 @@ void interpolate_sample_rows(xavs2_t *h, xavs2_frame_t* frm, int start_y, int he
     /*      3 |  n   p   q   r      */
     /*        |                     */
     /*                              */
-    
+
     /* -------------------------------------------------------------
      * interpolate horizontal positions: a.b,c */
     {
@@ -674,7 +674,7 @@ void interpolate_sample_rows(xavs2_t *h, xavs2_frame_t* frm, int start_y, int he
         p_coeffs[2] = INTPL_FILTERS[INTPL_POS_N >> 2];    // n
 
         g_funcs.intpl_luma_ver_x3(p_dst, stride, src, stride, width, height, p_coeffs);
-    } else{
+    } else {
         p_dst[1] = frm->filtered[INTPL_POS_H] + off_dst;  // h
         g_funcs.intpl_luma_ver(p_dst[1], stride, src, stride, width, height, INTPL_FILTERS[INTPL_POS_H >> 2]);
     }
@@ -802,7 +802,7 @@ void mc_chroma(pel_t *p_pred_u, pel_t *p_pred_v, int i_pred,
     int posy = pix_quad_y & 7;
     int i_src = p_ref_frm->i_stride[IMG_U];
     pel_t *p_src_u = p_ref_frm->planes[IMG_U];
-    pel_t *p_src_v = p_ref_frm->planes[IMG_V];    
+    pel_t *p_src_v = p_ref_frm->planes[IMG_V];
     int src_offset = (pix_quad_y >> 3) * i_src + (pix_quad_x >> 3);
 
     p_src_u += src_offset;
@@ -875,7 +875,7 @@ void xavs2_mem_oper_init(uint32_t cpuid, intrinsic_func_t *pf)
     pf->mem_repeat_i    = mem_repeat_i_c;
     pf->mem_repeat_p    = memset;
     pf->lowres_filter   = lowres_filter_core_c;
-    
+
 #if ARCH_X86_64
     pf->mem_repeat_i    = mem_repeat_8i_c;  // x64架构下，减少循环次数同时使用64位打包赋值
 #endif
@@ -903,7 +903,7 @@ void xavs2_mem_oper_init(uint32_t cpuid, intrinsic_func_t *pf)
         pf->lowres_filter  = xavs2_lowres_filter_core_sse2;
         // pf->mem_repeat_i  = xavs2_mem_repeat_i_c_sse2;  // TODO: 比C版本慢，禁用
     }
- 
+
     if (cpuid & XAVS2_CPU_SSSE3) {
         pf->lowres_filter = xavs2_lowres_filter_core_ssse3;
     }
