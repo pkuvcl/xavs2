@@ -96,8 +96,8 @@ enum xavs2_fast_algorithms_e {
     OPT_ET_HOMO_MV           ,        /* */
     OPT_CU_CSET              ,        /* CSET of uAVS2, Only for inter frames that are not referenced by others */
     OPT_CU_DEPTH_CTRL        ,        /* 基于时空相关性的Depth估计，依据上、左、左上、右上和时域参考块level调整DEPTH范围，全I帧也适用 */
-    OPT_CU_QSFD              ,        /* CU splitting termination based on RD-Cost: 
-                                         Z. Wang, R. Wang, K. Fan, H. Sun, and W. Gao, 
+    OPT_CU_QSFD              ,        /* CU splitting termination based on RD-Cost:
+                                         Z. Wang, R. Wang, K. Fan, H. Sun, and W. Gao,
                                          “uAVS2—Fast encoder for the 2nd generation IEEE 1857 video coding standard,”
                                          Signal Process. Image Commun., vol. 53, no. October 2016, pp. 13–23, 2017. */
 
@@ -108,7 +108,7 @@ enum xavs2_fast_algorithms_e {
     /* others */
     OPT_FAST_ZBLOCK          ,        /* 快速零块估计 */
     OPT_TR_KEY_FRAME_MD      ,        /* 以更大概率跳过非关键帧的部分模式，能节省5%以上时间 */
-    OPT_CODE_OPTIMZATION     ,        /* OPT_CU_SUBCU_COST: 先编码大CU，再编码小CU时若前几个小CU的RDCost超过大CU的一定比率则跳过后续CU 
+    OPT_CODE_OPTIMZATION     ,        /* OPT_CU_SUBCU_COST: 先编码大CU，再编码小CU时若前几个小CU的RDCost超过大CU的一定比率则跳过后续CU
                                        * OPT_RDOQ_SKIP:     通过在RDOQ之前对变换系数的阈值判断检测全零块，跳过RDOQ过程
                                        */
     OPT_BIT_EST_PSZT         ,        /* 快速TU比特估计：对33x32的亮度TU假定只有低频的16x16部分有非零系数 */

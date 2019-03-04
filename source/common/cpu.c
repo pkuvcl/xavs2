@@ -47,8 +47,7 @@ static volatile sig_atomic_t canjump = 0;
 
 static void sigill_handler(int sig)
 {
-    if (!canjump)
-    {
+    if (!canjump) {
         signal(sig, SIG_DFL);
         raise(sig);
     }
@@ -251,8 +250,7 @@ uint32_t xavs2_cpu_detect(void)
             }
         }
 
-        if (cpuid & XAVS2_CPU_AVX)
-        {
+        if (cpuid & XAVS2_CPU_AVX) {
             if (ecx & 0x00000800) {   /* XOP */
                 cpuid |= XAVS2_CPU_XOP;
             }
@@ -312,7 +310,8 @@ uint32_t xavs2_cpu_detect(void)
             // Cache and TLB Information
             static const char cache32_ids[] = { 0x0a, 0x0c, 0x41, 0x42, 0x43, 0x44, 0x45, 0x82, 0x83, 0x84, 0x85, 0 };
             static const char cache64_ids[] = { 0x22, 0x23, 0x25, 0x29, 0x2c, 0x46, 0x47, 0x49, 0x60, 0x66, 0x67,
-                0x68, 0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7c, 0x7f, 0x86, 0x87, 0 };
+                                                0x68, 0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7c, 0x7f, 0x86, 0x87, 0
+                                              };
             uint32_t buf[4];
             int max, i = 0, j;
             do {

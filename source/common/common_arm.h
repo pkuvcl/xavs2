@@ -34,32 +34,32 @@
  *    For more information, contact us at sswang @ pku.edu.cn.
  */
 
- #ifndef COMMON_ARM_H_
+#ifndef COMMON_ARM_H_
 #define COMMON_ARM_H_
 
 #ifdef __ARM_ARCH_7A__
 
 enum ARM_MC_PART {
-	/*mc_copy idx*/
-	ARM_PART_2x4, ARM_PART_2x8,
-	ARM_PART_4x2, ARM_PART_6x8,
-	ARM_PART_8x2, ARM_PART_8x6
+    /*mc_copy idx*/
+    ARM_PART_2x4, ARM_PART_2x8,
+    ARM_PART_4x2, ARM_PART_6x8,
+    ARM_PART_8x2, ARM_PART_8x6
 };
 
-enum ARM_PLANE_COPY_PART{
-	/*plane_copy idx*/
-	ARM_PLANE_COPY_W88, ARM_PLANE_COPY_W160,
-	ARM_PLANE_COPY_W176, ARM_PLANE_COPY_W320,
-	ARM_PLANE_COPY_W352, ARM_PLANE_COPY_W360,
-	ARM_PLANE_COPY_W512, ARM_PLANE_COPY_W640,
-	ARM_PLANE_COPY_W704, ARM_PLANE_COPY_W720,
-	ARM_PLANE_COPY_W960, ARM_PLANE_COPY_W1024,
-	ARM_PLANE_COPY_W1280, ARM_PLANE_COPY_W1920
+enum ARM_PLANE_COPY_PART {
+    /*plane_copy idx*/
+    ARM_PLANE_COPY_W88, ARM_PLANE_COPY_W160,
+    ARM_PLANE_COPY_W176, ARM_PLANE_COPY_W320,
+    ARM_PLANE_COPY_W352, ARM_PLANE_COPY_W360,
+    ARM_PLANE_COPY_W512, ARM_PLANE_COPY_W640,
+    ARM_PLANE_COPY_W704, ARM_PLANE_COPY_W720,
+    ARM_PLANE_COPY_W960, ARM_PLANE_COPY_W1024,
+    ARM_PLANE_COPY_W1280, ARM_PLANE_COPY_W1920
 };
 extern const unsigned char g_arm_partition_map_tab[];
 //Wxh= 2x4, 2x8, 6x8, 8x6
-#define ARM_MC_PART_INDEX(w, h)		    g_arm_partition_map_tab[(w + 1) * h]
-#define ARM_PLANE_COPY_INDEX(w)			g_arm_partition_map_tab[(((w + 8) >> 4) - 5) >> 1]
+#define ARM_MC_PART_INDEX(w, h)         g_arm_partition_map_tab[(w + 1) * h]
+#define ARM_PLANE_COPY_INDEX(w)         g_arm_partition_map_tab[(((w + 8) >> 4) - 5) >> 1]
 
 extern short dct4x4_const_table[64];
 #endif /* __ARM_ARCH_7A__ */

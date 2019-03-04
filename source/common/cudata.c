@@ -228,8 +228,8 @@ xavs2_copy_col1(pel_t *dst, pel_t *src, const int height, const int stride)
  * cache CTU border
  */
 static INLINE
-void xavs2_cache_lcu_border(pel_t *p_dst, const pel_t *p_top,  
-                            const pel_t *p_left, int i_left, 
+void xavs2_cache_lcu_border(pel_t *p_dst, const pel_t *p_top,
+                            const pel_t *p_left, int i_left,
                             int lcu_width, int lcu_height)
 {
     int i;
@@ -247,7 +247,7 @@ void xavs2_cache_lcu_border(pel_t *p_dst, const pel_t *p_top,
  */
 static INLINE
 void xavs2_cache_lcu_border_uv(pel_t *p_dst_u, const pel_t *p_top_u, const pel_t *p_left_u,
-                               pel_t *p_dst_v, const pel_t *p_top_v, const pel_t *p_left_v, 
+                               pel_t *p_dst_v, const pel_t *p_top_v, const pel_t *p_left_v,
                                int i_left, int lcu_width, int lcu_height)
 {
     int i;
@@ -440,10 +440,10 @@ void lcu_end(xavs2_t *h, int i_lcu_x, int i_lcu_y)
                i_pred_mode_width_in_lcu * sizeof(int8_t));
 
         /* cache top and left samples for intra prediction of next CTU */
-        xavs2_cache_lcu_border(h->lcu.ctu_border[0].rec_top, h->intra_border[0] + img_x + lcu_width - 1, p_src[0] + lcu_width - 1, 
+        xavs2_cache_lcu_border(h->lcu.ctu_border[0].rec_top, h->intra_border[0] + img_x + lcu_width - 1, p_src[0] + lcu_width - 1,
                                FDEC_STRIDE, lcu_width, lcu_height);
-        xavs2_cache_lcu_border_uv(h->lcu.ctu_border[1].rec_top, h->intra_border[1] + img_x_c + lcu_width_c - 1, p_src[1] + lcu_width_c - 1, 
-                                  h->lcu.ctu_border[2].rec_top, h->intra_border[2] + img_x_c + lcu_width_c - 1, p_src[2] + lcu_width_c - 1, 
+        xavs2_cache_lcu_border_uv(h->lcu.ctu_border[1].rec_top, h->intra_border[1] + img_x_c + lcu_width_c - 1, p_src[1] + lcu_width_c - 1,
+                                  h->lcu.ctu_border[2].rec_top, h->intra_border[2] + img_x_c + lcu_width_c - 1, p_src[2] + lcu_width_c - 1,
                                   FDEC_STRIDE, lcu_width_c, lcu_height_c);
 
         /* 2.2, backup bottom row pixels */

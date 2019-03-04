@@ -101,14 +101,14 @@ static ALWAYS_INLINE int cu_get_qp(xavs2_t *h, cu_info_t *p_cu_info)
 
 
 /* ---------------------------------------------------------------------------
- * 
+ *
  */
 static ALWAYS_INLINE
 int cu_get_slice_index(xavs2_t *h, int scu_x, int scu_y)
 {
     int lcu_shift = (h->i_lcu_level - MIN_CU_SIZE_IN_BIT);
     int lcu_xy = (scu_y >> lcu_shift) * h->i_width_in_lcu
-               + (scu_x >> lcu_shift);
+                 + (scu_x >> lcu_shift);
     return h->lcu_slice_idx[lcu_xy];
 }
 
