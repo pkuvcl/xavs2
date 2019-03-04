@@ -103,7 +103,7 @@ int quant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shi
 
             mCmp = _mm256_cmpeq_epi16(T0, mZero);
             mCount = _mm256_sub_epi16(mCount, mCmp);
-            
+
             _mm256_store_si256((__m256i *)(coef + i), T0);
 
             // 16 ~ 31

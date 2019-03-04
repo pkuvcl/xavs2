@@ -96,13 +96,13 @@ void deblock_edge_ver_avx2(pel_t *SrcPtr, int stride, int Alpha, int Beta, uint8
     TLR0 = _mm256_inserti128_si256(_mm256_castsi128_si256(T4), T6, 1);
     TLR1 = _mm256_inserti128_si256(_mm256_castsi128_si256(T5), T7, 1);
 
-    TLR0w = _mm256_unpacklo_epi32(TLR0, TLR1);		//T0 T2
-    TLR1w = _mm256_unpackhi_epi32(TLR0, TLR1);		//T1 T3
+    TLR0w = _mm256_unpacklo_epi32(TLR0, TLR1);      //T0 T2
+    TLR1w = _mm256_unpackhi_epi32(TLR0, TLR1);      //T1 T3
 
-    TLR3 = _mm256_unpacklo_epi8(TLR0w, c_0_256);	//TL3 TR0
-    TLR2 = _mm256_unpackhi_epi8(TLR0w, c_0_256);	//TL2 TR1
-    TLR1 = _mm256_unpacklo_epi8(TLR1w, c_0_256);	//TL1 TR2
-    TLR0 = _mm256_unpackhi_epi8(TLR1w, c_0_256);	//TL0 TR3
+    TLR3 = _mm256_unpacklo_epi8(TLR0w, c_0_256);    //TL3 TR0
+    TLR2 = _mm256_unpackhi_epi8(TLR0w, c_0_256);    //TL2 TR1
+    TLR1 = _mm256_unpacklo_epi8(TLR1w, c_0_256);    //TL1 TR2
+    TLR0 = _mm256_unpackhi_epi8(TLR1w, c_0_256);    //TL0 TR3
 
     TR0 = _mm256_extracti128_si256(TLR3, 0x01);
     TR1 = _mm256_extracti128_si256(TLR2, 0x01);

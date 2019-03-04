@@ -273,7 +273,7 @@ void intra_pred_plane_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int b
 
     __m256i TC, TB, TA, T_Start, T, D, D1;
     __m256i mask ;
-    
+
     TA = _mm256_set1_epi16((int16_t)iTmp);
     TB = _mm256_set1_epi16((int16_t)iB);
     TC = _mm256_set1_epi16((int16_t)iC);
@@ -284,7 +284,7 @@ void intra_pred_plane_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int b
 
     TB = _mm256_mullo_epi16(TB, _mm256_set1_epi16(16));
 
-    if (bsx == 4){
+    if (bsx == 4) {
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[3]);
         for (y = 0; y < bsy; y++) {
             D = _mm256_srai_epi16(T_Start, 5);
@@ -379,7 +379,7 @@ void intra_pred_bilinear_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
     //for (y = 0; y < bsy; y++) {
     //    pLeft[y] = p[-y];
     //}
-    
+
 
     a = pTop[bsx - 1];
     b = pLeft[bsy - 1];
@@ -426,27 +426,27 @@ void intra_pred_bilinear_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i pTT = _mm256_loadu_si256((__m256i*)pT);
         T = _mm256_loadu_si256((__m256i*)pTop);
         __m256i mask = _mm256_loadu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-            for (y = 0; y < bsy; y++) {
-                int add = (pL[y] << ishift_y) + wy[y];
-                ADD = _mm256_set1_epi32(add);
-                ADD = _mm256_mullo_epi32(C1, ADD);
-                val = (pLeft[y] << ishift_y) + offset + (pL[y] << ishift_y);
-                ADD = _mm256_add_epi32(ADD, _mm256_set1_epi32(val));
+        for (y = 0; y < bsy; y++) {
+            int add = (pL[y] << ishift_y) + wy[y];
+            ADD = _mm256_set1_epi32(add);
+            ADD = _mm256_mullo_epi32(C1, ADD);
+            val = (pLeft[y] << ishift_y) + offset + (pL[y] << ishift_y);
+            ADD = _mm256_add_epi32(ADD, _mm256_set1_epi32(val));
 
-                T = _mm256_add_epi16(T, pTT);
-                T1 = _mm256_cvtepi16_epi32(_mm256_extracti128_si256(T, 0));
-                T1 = _mm256_slli_epi32(T1, ishift_x);
+            T = _mm256_add_epi16(T, pTT);
+            T1 = _mm256_cvtepi16_epi32(_mm256_extracti128_si256(T, 0));
+            T1 = _mm256_slli_epi32(T1, ishift_x);
 
-                T1 = _mm256_add_epi32(T1, ADD);
-                T1 = _mm256_srai_epi32(T1, ishift_xy);
+            T1 = _mm256_add_epi32(T1, ADD);
+            T1 = _mm256_srai_epi32(T1, ishift_xy);
 
-                T1 = _mm256_packus_epi32(T1, T1);
-                T1 = _mm256_packus_epi16(T1, T1);
+            T1 = _mm256_packus_epi32(T1, T1);
+            T1 = _mm256_packus_epi16(T1, T1);
 
-                _mm256_maskstore_epi32((int*)dst, mask, T1);
+            _mm256_maskstore_epi32((int*)dst, mask, T1);
 
-                dst += i_dst;
-            }
+            dst += i_dst;
+        }
     } else if (bsx == 8) {
         __m256i pTT = _mm256_load_si256((__m256i*)pT);
         T = _mm256_load_si256((__m256i*)pTop);
@@ -518,12 +518,12 @@ void intra_pred_bilinear_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 ADD = _mm256_add_epi32(ADD, T3);
                 T2 = _mm256_add_epi32(T2, ADD);
                 T2 = _mm256_srai_epi32(T2, ishift_xy);//8 9 10 11 12 13 14 15
-                
+
                 //T1 T2 is the result
                 T1 = _mm256_packus_epi32(T1, T2); //0 1 2 3 8 9 10 11 4 5 6 7 12 13 14 15
                 T1 = _mm256_packus_epi16(T1, T1); //0 1 2 3 8 9 10 11 0 1 2 3 8 9 10 11     4 5 6 7 12 13 14 15 4 5 6 7 12 13 14 15
                 T1 = _mm256_permutevar8x32_epi32(T1, mask1);
-                
+
                 //store 128 bits
                 _mm256_maskstore_epi64((__int64*)(dst + x), mask2, T1);
 
@@ -768,8 +768,8 @@ void intra_pred_ang_x_3_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
         bsy >>= 2;
         __m256i M;
-        if (bsx == 64){
-            for (i = 0; i < bsy; i++){
+        if (bsx == 64) {
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_storeu_si256((__m256i*)dst1, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11 + 32));
@@ -796,7 +796,7 @@ void intra_pred_ang_x_3_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
                 dst4 = dst3 + i_dst;
             }
         } else if (bsx == 32) {
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_storeu_si256((__m256i*)dst1, M);
 
@@ -816,7 +816,7 @@ void intra_pred_ang_x_3_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_maskstore_epi64((__int64*)dst1, mask, M);
 
@@ -940,7 +940,7 @@ void intra_pred_ang_x_3_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
 void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    if (bsx != bsy && bsx < bsy){
+    if (bsx != bsy && bsx < bsy) {
         intra_pred_ang_x_4_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
         return;
     }
@@ -1021,11 +1021,11 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         //store 128 bit
         __m256i mask2 = _mm256_loadu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
         _mm256_maskstore_epi64((__int64*)(first_line + i), mask2, sum1);
-        
+
         //_mm_storel_epi64((__m128i*)&first_line[i], sum1);
     }
 
-    if (bsx == 64){
+    if (bsx == 64) {
 
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
@@ -1049,8 +1049,8 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_storeu_si256((__m256i*)(dst + 32), M);
             dst += i_dst;
         }
-    } else if (bsx == 32){
-        for (i = 0; i < iHeight2; i += 8){
+    } else if (bsx == 32) {
+        for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -1064,7 +1064,7 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_loadu_si256((__m256i*)&first_line[i]);
@@ -1080,7 +1080,7 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_loadu_si256((__m256i*)&first_line[i]);
@@ -1096,7 +1096,7 @@ void intra_pred_ang_x_4_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else{
+    } else {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_loadu_si256((__m256i*)&first_line[i]);
@@ -1527,8 +1527,8 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         bsy >>= 3;
 
         __m256i M;
-        if (bsx == 64){
-            for (i = 0; i < bsy; i++){
+        if (bsx == 64) {
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_storeu_si256((__m256i*)dst1, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11 + 32));
@@ -1579,7 +1579,7 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
                 dst8 = dst7 + i_dst;
             }
         } else if (bsx == 32) {
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_storeu_si256((__m256i*)dst1, M);
 
@@ -1615,7 +1615,7 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i * 11));
                 _mm256_maskstore_epi64((__int64*)dst1, mask, M);
 
@@ -1675,91 +1675,91 @@ void intra_pred_ang_x_5_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         }*/
     } else if (bsx == 16) {
 
-            pel_t *dst1 = dst;
-            pel_t *dst2 = dst1 + i_dst;
-            pel_t *dst3 = dst2 + i_dst;
-            pel_t *dst4 = dst3 + i_dst;
+        pel_t *dst1 = dst;
+        pel_t *dst2 = dst1 + i_dst;
+        pel_t *dst3 = dst2 + i_dst;
+        pel_t *dst4 = dst3 + i_dst;
 
-            __m256i p00, p10, p20, p30;
+        __m256i p00, p10, p20, p30;
 
-            __m256i SS1;
-            __m256i L1, L2, L3, L4, L5, L6, L7, L8;
+        __m256i SS1;
+        __m256i L1, L2, L3, L4, L5, L6, L7, L8;
 
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 1));//1...8 9...16 17..24 25..32
-            L1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//1
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 2));
-            L2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//2
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 3));
-            L3 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//3
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 4));
-            L4 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//4
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 5));
-            L5 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 6));
-            L6 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 7));
-            L7 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
-            SS1 = _mm256_loadu_si256((__m256i*)(src + 8));
-            L8 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 1));//1...8 9...16 17..24 25..32
+        L1 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//1
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 2));
+        L2 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//2
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 3));
+        L3 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//3
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 4));
+        L4 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));//4
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 5));
+        L5 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 6));
+        L6 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 7));
+        L7 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
+        SS1 = _mm256_loadu_si256((__m256i*)(src + 8));
+        L8 = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(SS1, 0));
 
-            p00 = _mm256_mullo_epi16(L1, coeff5);
-            p10 = _mm256_mullo_epi16(L2, coeff13);
-            p20 = _mm256_mullo_epi16(L3, coeff11);
-            p30 = _mm256_mullo_epi16(L4, coeff3);
-            p00 = _mm256_add_epi16(p00, coeff16);
-            p00 = _mm256_add_epi16(p00, p10);
-            p00 = _mm256_add_epi16(p00, p20);
-            p00 = _mm256_add_epi16(p00, p30);
-            p00 = _mm256_srli_epi16(p00, 5);
+        p00 = _mm256_mullo_epi16(L1, coeff5);
+        p10 = _mm256_mullo_epi16(L2, coeff13);
+        p20 = _mm256_mullo_epi16(L3, coeff11);
+        p30 = _mm256_mullo_epi16(L4, coeff3);
+        p00 = _mm256_add_epi16(p00, coeff16);
+        p00 = _mm256_add_epi16(p00, p10);
+        p00 = _mm256_add_epi16(p00, p20);
+        p00 = _mm256_add_epi16(p00, p30);
+        p00 = _mm256_srli_epi16(p00, 5);
 
-            p00 = _mm256_packus_epi16(p00, p00);
-            p00 = _mm256_permute4x64_epi64(p00, 0x0008);
-            __m256i mask = _mm256_loadu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            _mm256_maskstore_epi64((__int64*)dst1, mask, p00);
+        p00 = _mm256_packus_epi16(p00, p00);
+        p00 = _mm256_permute4x64_epi64(p00, 0x0008);
+        __m256i mask = _mm256_loadu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
+        _mm256_maskstore_epi64((__int64*)dst1, mask, p00);
 
-            p10 = _mm256_mullo_epi16(L3, coeff5);
-            p20 = _mm256_mullo_epi16(L4, coeff7);
-            p30 = _mm256_mullo_epi16(L5, coeff3);
-            p00 = _mm256_add_epi16(L2, coeff8);
-            p00 = _mm256_add_epi16(p00, p10);
-            p00 = _mm256_add_epi16(p00, p20);
-            p00 = _mm256_add_epi16(p00, p30);
-            p00 = _mm256_srli_epi16(p00, 4);
+        p10 = _mm256_mullo_epi16(L3, coeff5);
+        p20 = _mm256_mullo_epi16(L4, coeff7);
+        p30 = _mm256_mullo_epi16(L5, coeff3);
+        p00 = _mm256_add_epi16(L2, coeff8);
+        p00 = _mm256_add_epi16(p00, p10);
+        p00 = _mm256_add_epi16(p00, p20);
+        p00 = _mm256_add_epi16(p00, p30);
+        p00 = _mm256_srli_epi16(p00, 4);
 
-            p00 = _mm256_packus_epi16(p00, p00);
-            p00 = _mm256_permute4x64_epi64(p00, 0x0008);
-            _mm256_maskstore_epi64((__int64*)dst2, mask, p00);
+        p00 = _mm256_packus_epi16(p00, p00);
+        p00 = _mm256_permute4x64_epi64(p00, 0x0008);
+        _mm256_maskstore_epi64((__int64*)dst2, mask, p00);
 
-            p00 = _mm256_mullo_epi16(L4, coeff7);
-            p10 = _mm256_mullo_epi16(L5, coeff15);
-            p20 = _mm256_mullo_epi16(L6, coeff9);
-            p30 = _mm256_add_epi16(L7, coeff16);
-            p00 = _mm256_add_epi16(p00, p10);
-            p00 = _mm256_add_epi16(p00, p20);
-            p00 = _mm256_add_epi16(p00, p30);
-            p00 = _mm256_srli_epi16(p00, 5);
+        p00 = _mm256_mullo_epi16(L4, coeff7);
+        p10 = _mm256_mullo_epi16(L5, coeff15);
+        p20 = _mm256_mullo_epi16(L6, coeff9);
+        p30 = _mm256_add_epi16(L7, coeff16);
+        p00 = _mm256_add_epi16(p00, p10);
+        p00 = _mm256_add_epi16(p00, p20);
+        p00 = _mm256_add_epi16(p00, p30);
+        p00 = _mm256_srli_epi16(p00, 5);
 
-            p00 = _mm256_packus_epi16(p00, p00);
-            p00 = _mm256_permute4x64_epi64(p00, 0x0008);
-            _mm256_maskstore_epi64((__int64*)dst3, mask, p00);
+        p00 = _mm256_packus_epi16(p00, p00);
+        p00 = _mm256_permute4x64_epi64(p00, 0x0008);
+        _mm256_maskstore_epi64((__int64*)dst3, mask, p00);
 
-            p00 = _mm256_add_epi16(L5, L8);
-            p10 = _mm256_add_epi16(L6, L7);
-            p10 = _mm256_mullo_epi16(p10, coeff3);
-            p00 = _mm256_add_epi16(p00, coeff4);
-            p00 = _mm256_add_epi16(p00, p10);
-            p00 = _mm256_srli_epi16(p00, 3);
+        p00 = _mm256_add_epi16(L5, L8);
+        p10 = _mm256_add_epi16(L6, L7);
+        p10 = _mm256_mullo_epi16(p10, coeff3);
+        p00 = _mm256_add_epi16(p00, coeff4);
+        p00 = _mm256_add_epi16(p00, p10);
+        p00 = _mm256_srli_epi16(p00, 3);
 
-            p00 = _mm256_packus_epi16(p00, p00);
-            p00 = _mm256_permute4x64_epi64(p00, 0x0008);
-            _mm256_maskstore_epi64((__int64*)dst4, mask, p00);
+        p00 = _mm256_packus_epi16(p00, p00);
+        p00 = _mm256_permute4x64_epi64(p00, 0x0008);
+        _mm256_maskstore_epi64((__int64*)dst4, mask, p00);
 
 
-        } else { //8x8 8x32 4x4 4x16
+    } else { //8x8 8x32 4x4 4x16
 
-            intra_pred_ang_x_5_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
+        intra_pred_ang_x_5_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
 
-        }
+    }
 
 }
 
@@ -1774,7 +1774,7 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
     UNUSED_PARAMETER(dir_mode);
     src += 2;
-    
+
     for (i = 0; i < line_size - 16; i += 32, src += 32) {
         //0 1 2 3 .... 12 13 14 15    16 17 18 19 .... 28 29 30 21
         __m256i S0 = _mm256_loadu_si256((__m256i*)(src - 1));
@@ -1845,8 +1845,8 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         //_mm_storel_epi64((__m128i*)&first_line[i], sum1);
     }
 
-    if (bsx == 64){
-        for (i = 0; i < bsy; i += 4){
+    if (bsx == 64) {
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_storeu_si256((__m256i*)dst, M);
             M = _mm256_lddqu_si256((__m256i*)(&first_line[i] + 32));
@@ -1868,7 +1868,7 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_storeu_si256((__m256i*)(dst + 32), M);
             dst += i_dst;
         }
-    } else if (bsx == 32){
+    } else if (bsx == 32) {
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_storeu_si256((__m256i*)dst, M);
@@ -1883,9 +1883,9 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -1900,9 +1900,9 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             dst += i_dst;
 
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -1919,7 +1919,7 @@ void intra_pred_ang_x_6_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         }
     } else {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi32((int*)dst, mask, M);
             dst += i_dst;
@@ -1976,7 +1976,7 @@ void intra_pred_ang_x_7_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
             intra_pred_ang_x_7_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
 
-        } else if (bsx & 16){//16
+        } else if (bsx & 16) { //16
 
             __m256i S0, S1, S2, S3;
             __m256i t0, t1, t2, t3;
@@ -2083,7 +2083,7 @@ void intra_pred_ang_x_7_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             }
         }
     } else {
-            intra_pred_ang_x_7_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
+        intra_pred_ang_x_7_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
     }
 
 }
@@ -2219,7 +2219,7 @@ void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
     bsy >>= 1;
 
-    if (bsx == 64){
+    if (bsx == 64) {
 
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -2271,8 +2271,8 @@ void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             dst += i_dst;
 
         }
-    } else if (bsx == 32){
-        for (i = 0; i < bsy; i += 4){
+    } else if (bsx == 32) {
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -2305,7 +2305,7 @@ void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -2336,7 +2336,7 @@ void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -2367,7 +2367,7 @@ void intra_pred_ang_x_8_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else{
+    } else {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -2490,7 +2490,7 @@ void intra_pred_ang_x_9_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
         } else if (bsx & 0x0f) {//8
             intra_pred_ang_x_9_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
 
-        } else if (bsx & 16){//16
+        } else if (bsx & 16) { //16
 
             __m256i S0, S1, S2, S3;
             __m256i t0, t1, t2, t3;
@@ -2605,7 +2605,7 @@ void intra_pred_ang_x_9_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int
 
 void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
 {
-    if (bsy == 4){
+    if (bsy == 4) {
         intra_pred_ang_x_10_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
         return;
     }
@@ -2660,12 +2660,12 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             __m256i tmpL1 = _mm256_permute2x128_si256(L1, H1, 0x0020);
             __m256i tmpL2 = _mm256_permute2x128_si256(L2, H2, 0x0020);
             __m256i tmpL3 = _mm256_permute2x128_si256(L3, H3, 0x0020);
-            
+
             __m256i tmpH0 = _mm256_permute2x128_si256(L0, H0, 0x0031);//16 17...24 25...
             __m256i tmpH1 = _mm256_permute2x128_si256(L1, H1, 0x0031);
             __m256i tmpH2 = _mm256_permute2x128_si256(L2, H2, 0x0031);
             __m256i tmpH3 = _mm256_permute2x128_si256(L3, H3, 0x0031);
-            
+
             p00 = _mm256_mullo_epi16(tmpL0, coeff3);//0 1 2 3 4 5 6 7   8 9 10 11 12 13 14 15
             p10 = _mm256_mullo_epi16(tmpL1, coeff7);
             p20 = _mm256_mullo_epi16(tmpL2, coeff5);
@@ -2813,9 +2813,9 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
         bsy >>= 2;
         int i_dstx4 = i_dst << 2;
-        if (bsx == 64){
+        if (bsx == 64) {
 
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
                 _mm256_storeu_si256((__m256i*)dst1, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i + 32));
@@ -2842,9 +2842,9 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 dst4 += i_dstx4;
             }
 
-        } else if (bsx == 32){
+        } else if (bsx == 32) {
 
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
                 _mm256_storeu_si256((__m256i*)dst1, M);
 
@@ -2863,9 +2863,9 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 dst4 += i_dstx4;
             }
 
-        } else if (bsx == 16){
+        } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
                 _mm256_maskstore_epi64((__int64*)dst1, mask, M);
 
@@ -2883,9 +2883,9 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 dst3 += i_dstx4;
                 dst4 += i_dstx4;
             }
-        } else if (bsx == 8){
+        } else if (bsx == 8) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
                 _mm256_maskstore_epi64((__int64*)dst1, mask, M);
 
@@ -2905,7 +2905,7 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
                 _mm256_maskstore_epi32((int*)dst1, mask, M);
 
@@ -2923,7 +2923,7 @@ void intra_pred_ang_x_10_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 dst3 += i_dstx4;
                 dst4 += i_dstx4;
             }
-            
+
         }
 
         /*
@@ -3086,7 +3086,7 @@ void intra_pred_ang_x_11_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         intra_pred_ang_x_11_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
     } else if (bsx & 0x0f) {
         intra_pred_ang_x_11_sse128(src, dst, i_dst, dir_mode, bsx, bsy);
-    } else if (bsx & 16){
+    } else if (bsx & 16) {
 
         __m256i S0, S1, S2, S3;
         __m256i t0, t1, t2, t3;
@@ -3132,7 +3132,7 @@ void intra_pred_ang_x_11_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
             dst += i_dst;
         }
-    
+
     } else {
 
         __m256i S0, S1, S2, S3;
@@ -3219,17 +3219,17 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i p00, p10, p20, p30;
         __m256i p01, p11, p21, p31;
         __m256i res1, res2;
-        __m256i L0 = _mm256_setr_epi16(src[0],  src[0],  src[0],  src[0],  src[0],  src[0],  src[0],  src[0], 
-            src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);
+        __m256i L0 = _mm256_setr_epi16(src[0],  src[0],  src[0],  src[0],  src[0],  src[0],  src[0],  src[0],
+                                       src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);
 
-        __m256i L1 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], 
-            src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);
+        __m256i L1 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
+                                       src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);
 
-        __m256i L2 = _mm256_setr_epi16(src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], 
-            src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);
+        __m256i L2 = _mm256_setr_epi16(src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2],
+                                       src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);
 
-        __m256i L3 = _mm256_setr_epi16(src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], 
-            src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7]);
+        __m256i L3 = _mm256_setr_epi16(src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3],
+                                       src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7]);
 
         src -= 4;
 
@@ -3246,7 +3246,7 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             p00 = _mm256_srli_epi16(p00, 5);
 
             L0 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);//4 8
+                                   src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);//4 8
 
             p01 = _mm256_mullo_epi16(L1, coeff0);//1...5...
             p11 = _mm256_mullo_epi16(L2, coeff1);//2...6...
@@ -3263,7 +3263,7 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
 
             L1 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);//5 9
+                                   src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);//5 9
 
             p00 = _mm256_mullo_epi16(L2, coeff0);//2...6...
             p10 = _mm256_mullo_epi16(L3, coeff1);//3...7...
@@ -3277,7 +3277,7 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             p00 = _mm256_srli_epi16(p00, 5);
 
             L2 = _mm256_setr_epi16(src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2],
-                src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);//6 10
+                                   src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);//6 10
 
             p01 = _mm256_mullo_epi16(L3, coeff0);//3...7...
             p11 = _mm256_mullo_epi16(L0, coeff1);//4...8...
@@ -3297,24 +3297,24 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
             p00 = _mm256_permute2x128_si256(res1, res2, 0x0031);
             _mm256_storeu_si256((__m256i*)pfirst, p00);
-            
+
             pfirst += 32;
 
             src -= 4;
             L0 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);//8 12
+                                   src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4], src[-4]);//8 12
 
             L1 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);//9 13
+                                   src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5], src[-5]);//9 13
 
             L2 = _mm256_setr_epi16(src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2], src[-2],
-                src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);//10 14
+                                   src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6], src[-6]);//10 14
 
             L3 = _mm256_setr_epi16(src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3], src[-3],
-                src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7]);//11 15
+                                   src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7], src[-7]);//11 15
 
         }
-        
+
         //if (bsx == 16) {// 8¸ö
         //    __m256i mask = _mm256_loadu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
         //    p00 = _mm256_mullo_epi16(L0, coeff0);
@@ -3418,7 +3418,7 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i M;
 
         if (bsx == 64) {
-            for (i = 0; i < iHeight8; i += 32){
+            for (i = 0; i < iHeight8; i += 32) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i + 32));
@@ -3443,8 +3443,8 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 _mm256_storeu_si256((__m256i*)(dst + 32), M);
                 dst += i_dst;
             }
-        } else if (bsx == 32){
-            for (i = 0; i < iHeight8; i += 32){
+        } else if (bsx == 32) {
+            for (i = 0; i < iHeight8; i += 32) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -3461,9 +3461,9 @@ void intra_pred_ang_y_25_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
             }
-        } else if (bsx == 16){
+        } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < iHeight8; i += 32){
+            for (i = 0; i < iHeight8; i += 32) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -3507,7 +3507,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m256i coeff7 = _mm256_set1_epi16(7);
         __m256i coeff8 = _mm256_set1_epi16(8);
         __m256i shuffle = _mm256_setr_epi8(7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8,
-            7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8);
+                                           7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8);
 
         ALIGN32(pel_t first_line[64 + 256]);
         int line_size = bsx + (bsy - 1) * 4;
@@ -3694,7 +3694,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
         __m256i M;
         if (bsx == 64) {
-            for (i = 0; i < iHeight4; i += 16){
+            for (i = 0; i < iHeight4; i += 16) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i + 32));
@@ -3720,7 +3720,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 dst += i_dst;
             }
         } else if (bsx == 32) {
-            for (i = 0; i < iHeight4; i += 16){
+            for (i = 0; i < iHeight4; i += 16) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -3737,9 +3737,9 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
             }
-        } else if (bsx == 16){
+        } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < iHeight4; i += 16){
+            for (i = 0; i < iHeight4; i += 16) {
 
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -3760,7 +3760,7 @@ void intra_pred_ang_y_26_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-            for (i = 0; i < iHeight4; i += 16){
+            for (i = 0; i < iHeight4; i += 16) {
                 M = _mm256_lddqu_si256((__m256i*)(first_line + i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -3819,7 +3819,7 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
     __m256i coeff3 = _mm256_set1_epi16(3);
     __m256i coeff4 = _mm256_set1_epi16(4);
     __m256i shuffle = _mm256_setr_epi8(7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8,
-        7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8);
+                                       7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0, 8);
 
     src -= 31;
     __m256i p00, p10;
@@ -3910,7 +3910,7 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         _mm256_storeu_si256((__m256i*)&first_line[i], p00);
     }
 
-    if (bsx == 64){
+    if (bsx == 64) {
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_storeu_si256((__m256i*)dst, M);
@@ -3934,7 +3934,7 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
 
-    } else if (bsx == 32){
+    } else if (bsx == 32) {
         for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_storeu_si256((__m256i*)dst, M);
@@ -3949,9 +3949,9 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-        for (i = 0; i < iHeight2; i += 8){
+        for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -3966,9 +3966,9 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
 
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-        for (i = 0; i < iHeight2; i += 8){
+        for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -3985,7 +3985,7 @@ void intra_pred_ang_y_28_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         }
     } else {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-        for (i = 0; i < iHeight2; i += 8){
+        for (i = 0; i < iHeight2; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)&first_line[i]);
             _mm256_maskstore_epi32((int*)dst, mask, M);
             dst += i_dst;
@@ -4053,7 +4053,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
     __m256i coeff2 = _mm256_set1_epi16(2);
     __m256i shuffle = _mm256_setr_epi8(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
-        15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+                                       15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
 
     __m256i p00, p10;
     __m256i p01, p11;
@@ -4123,7 +4123,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
     __m256i M;
     if (bsx == 64) {
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_storeu_si256((__m256i*)dst, M);
             M = _mm256_lddqu_si256((__m256i*)(first_line + i + 32));
@@ -4149,7 +4149,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
         }
     } else if (bsx == 32) {
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -4166,9 +4166,9 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
 
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
@@ -4187,9 +4187,9 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
 
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -4208,7 +4208,7 @@ void intra_pred_ang_y_30_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         }
     } else {
         mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)(first_line + i));
             _mm256_maskstore_epi32((int*)dst, mask, M);
             dst += i_dst;
@@ -4354,20 +4354,20 @@ void intra_pred_ang_y_31_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
     int i;
     UNUSED_PARAMETER(dir_mode);
 
-    if (bsx >= bsy){
+    if (bsx >= bsy) {
         ALIGN32(pel_t dst_tran[MAX_CU_SIZE * MAX_CU_SIZE]);
         ALIGN32(pel_t src_tran[MAX_CU_SIZE << 3]);
 
-        for (i = 0; i < (bsy + bsx * 11 / 8 + 3); i++){
+        for (i = 0; i < (bsy + bsx * 11 / 8 + 3); i++) {
             src_tran[i] = src[-i];
         }
         intra_pred_ang_x_5_avx(src_tran, dst_tran, bsy, 5, bsy, bsx);
-        for (i = 0; i < bsy; i++){
-            for (int j = 0; j < bsx; j++){
+        for (i = 0; i < bsy; i++) {
+            for (int j = 0; j < bsx; j++) {
                 dst[j + i_dst * i] = dst_tran[i + bsy * j];
             }
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
 
         __m128i coeff0 = _mm_setr_epi16( 5, 1,  7, 1,  1, 3,  3, 1);
         __m128i coeff1 = _mm_setr_epi16(13, 5, 15, 3,  9, 7, 11, 2);
@@ -4379,7 +4379,7 @@ void intra_pred_ang_y_31_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
         __m128i L0, L1, L2, L3;
         __m128i p00, p10, p20, p30;
 
-        for (i = 0; i < bsy; i++,src--){
+        for (i = 0; i < bsy; i++,src--) {
             L0 = _mm_setr_epi16(src[-1], src[-2], src[-4], src[-5], src[-6], src[ -8], src[ -9], src[-11]);
             L1 = _mm_setr_epi16(src[-2], src[-3], src[-5], src[-6], src[-7], src[ -9], src[-10], src[-12]);
             L2 = _mm_setr_epi16(src[-3], src[-4], src[-6], src[-7], src[-8], src[-10], src[-11], src[-13]);
@@ -4420,7 +4420,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
     __m256i coeff2 = _mm256_set1_epi16(2);
     __m256i shuffle = _mm256_setr_epi8(15, 13, 11, 9, 7, 5, 3, 1, 14, 12, 10, 8, 6, 4, 2, 0,
-        15, 13, 11, 9, 7, 5, 3, 1, 14, 12, 10, 8, 6, 4, 2, 0);
+                                       15, 13, 11, 9, 7, 5, 3, 1, 14, 12, 10, 8, 6, 4, 2, 0);
 
     pfirst[0] = first_line;
     pfirst[1] = first_line + aligned_line_size;
@@ -4497,11 +4497,11 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
 
         _mm256_maskstore_epi64((__int64*)&pfirst[0][i], mask, p00);
         _mm256_maskstore_epi64((__int64*)&pfirst[1][i], mask, p10);
-;
+        ;
     }
     bsy >>= 1;
 
-    if (bsx == 64){
+    if (bsx == 64) {
 
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -4553,9 +4553,9 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             dst += i_dst;
 
         }
-    } else if (bsx == 32){
+    } else if (bsx == 32) {
 
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -4588,7 +4588,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -4619,7 +4619,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -4650,7 +4650,7 @@ void intra_pred_ang_y_32_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, in
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else{
+    } else {
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] + i));
@@ -4813,7 +4813,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         __m256i H0, H1, H2, H3;
 
         for (; i < line_size - 16; i += 32, src += 32) {
-            
+
             S0 = _mm256_loadu_si256((__m256i*)(src + 2));
             S1 = _mm256_loadu_si256((__m256i*)(src + 1));
             S2 = _mm256_loadu_si256((__m256i*)(src));
@@ -5005,7 +5005,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         __m256i mask = _mm256_load_si256((__m256i*)intrinsic_mask_256_8bit[bsx - 1]);
 
         if (i < line_size) {
-            
+
             S0 = _mm256_loadu_si256((__m256i*)(src + 2));
             S1 = _mm256_loadu_si256((__m256i*)(src + 1));
             S2 = _mm256_loadu_si256((__m256i*)(src));
@@ -5129,8 +5129,8 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         bsy >>= 3;
         __m256i M;
-        if (bsx == 64){
-            for (i = 0; i < bsy; i++){
+        if (bsx == 64) {
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i + 32));
@@ -5179,8 +5179,8 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 _mm256_storeu_si256((__m256i*)(dst + 32), M);
                 dst += i_dst;
             }
-        } else if (bsx == 32){
-            for (i = 0; i < bsy; i++){
+        } else if (bsx == 32) {
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -5215,7 +5215,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else if (bsx == 16) {
             mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -5250,7 +5250,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else if (bsx == 8) {
             mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -5285,7 +5285,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else {
             mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi32((int*)dst, mask, M);
                 dst += i_dst;
@@ -5319,7 +5319,7 @@ void intra_pred_ang_xy_13_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
             }
         }
-        
+
         /*for (i = 0; i < bsy; i++) {
             memcpy(dst, pfirst[0] - i, bsx * sizeof(pel_t));
             dst += i_dst;
@@ -5364,7 +5364,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         int aligned_line_size = ((line_size + 31) >> 4) << 4;
         pel_t *pfirst[4];
         __m256i shuffle = _mm256_setr_epi8(0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15,
-            0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
+                                           0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
 
         __m256i index = _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7);
 
@@ -5410,11 +5410,11 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             p10 = _mm256_srli_epi16(p10, 2);//16...23 24...31
 
             p00 = _mm256_packus_epi16(p00, p10);//0...7 16...23 8...15 24...31
-            
+
             p00 = _mm256_permute4x64_epi64(p00, 0x00D8);
             //0 4 8 12 1 5 9 13 2 6 10 14 3 7 11 15     16 20 24 28 17 21...
             p10 = _mm256_shuffle_epi8(p00, shuffle);
-            //0 4 8 12 16 20 24 28    1 5 9 13 17 21 25 29    
+            //0 4 8 12 16 20 24 28    1 5 9 13 17 21 25 29
             p10 = _mm256_permutevar8x32_epi32(p10, index);
 
             ((__int64*)&pfirst[0][i])[0] = _mm256_extract_epi64(p10, 3);
@@ -5622,8 +5622,8 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         bsy >>= 2;
 
 
-        if (bsx == 64){
-            for (i = 0; i < bsy; i++){
+        if (bsx == 64) {
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i + 32));
@@ -5649,7 +5649,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
             }
         } else if (bsx == 32) {
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -5669,7 +5669,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -5688,7 +5688,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else if (bsx == 8) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -5707,7 +5707,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-            for (i = 0; i < bsy; i++){
+            for (i = 0; i < bsy; i++) {
                 __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
                 _mm256_maskstore_epi32((int*)dst, mask, M);
                 dst += i_dst;
@@ -5874,7 +5874,7 @@ void intra_pred_ang_xy_14_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 }
 
 void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
-{  
+{
     ALIGN32(pel_t first_line[2 * (64 + 48)]);
     int line_size = bsx + bsy / 2 - 1;
     int left_size = line_size - bsx;
@@ -5885,7 +5885,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
     __m256i coeff3   = _mm256_set1_epi16(3);
     __m256i coeff4   = _mm256_set1_epi16(4);
     __m256i shuffle = _mm256_setr_epi8(0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15,
-        0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15);
+                                       0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15);
 
     int i;
     pel_t *pSrc1;
@@ -5966,9 +5966,9 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         p00 = _mm256_permute4x64_epi64(p00, 0x0008);//0...15 0...15
 
         p01 = _mm256_shuffle_epi8(p00, shuffle);//0 2 4 6 7 8 10 12 14    1 3 5 7 9 11 13 15
-        
+
         p10 = _mm256_permute4x64_epi64(p01, 0x01);
-        
+
         _mm256_maskstore_epi64((__int64*)&pfirst[0][i], mask2, p10);
         _mm256_maskstore_epi64((__int64*)&pfirst[1][i], mask2, p01);
     }
@@ -6027,7 +6027,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         p00 = _mm256_packus_epi16(p00, p10);
         p00 = _mm256_permute4x64_epi64(p00, 0x00D8);
         _mm256_storeu_si256((__m256i*)&pfirst[1][i], p00);
-        
+
     }
 
     if (i < line_size) {
@@ -6070,7 +6070,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
     bsy >>= 1;
 
-    if (bsx == 64){
+    if (bsx == 64) {
 
         for (i = 0; i < bsy; i += 4) {
 
@@ -6123,8 +6123,8 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             dst += i_dst;
 
         }
-    } else if (bsx == 32){
-        for (i = 0; i < bsy; i += 4){
+    } else if (bsx == 32) {
+        for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -6157,7 +6157,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
@@ -6188,7 +6188,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
@@ -6219,7 +6219,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
         }
-    } else{
+    } else {
         __m256i mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst[0] - i));
@@ -6279,7 +6279,7 @@ void intra_pred_ang_xy_16_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 }
 
 void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
-{          
+{
     ALIGN32(pel_t first_line[64 + 64]);
     int line_size = bsx + bsy - 1;
     int i;
@@ -6351,14 +6351,14 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
     __m256i M;
     if (bsx == 64) {
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_storeu_si256((__m256i*)dst, M);
             M = _mm256_lddqu_si256((__m256i*)(pfirst + 32));
             _mm256_storeu_si256((__m256i*)(dst + 32), M);
             dst += i_dst;
             pfirst--;
-        
+
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_storeu_si256((__m256i*)dst, M);
             M = _mm256_lddqu_si256((__m256i*)(pfirst + 32));
@@ -6381,7 +6381,7 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             pfirst--;
         }
     } else if (bsx == 32) {
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_storeu_si256((__m256i*)dst, M);
             dst += i_dst;
@@ -6402,9 +6402,9 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             dst += i_dst;
             pfirst--;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -6427,7 +6427,7 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         }
     } else if (bsx == 8) {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
@@ -6450,7 +6450,7 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         }
     } else {
         __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[3]);
-        for (i = 0; i < bsy; i += 4){
+        for (i = 0; i < bsy; i += 4) {
             M = _mm256_lddqu_si256((__m256i*)pfirst);
             _mm256_maskstore_epi32((int*)dst, mask, M);
             dst += i_dst;
@@ -6499,7 +6499,7 @@ void intra_pred_ang_xy_18_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 }
 
 void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int bsx, int bsy)
-{  
+{
     ALIGN32(pel_t first_line[64 + 128]);
     int left_size = (bsy - 1) * 2 + 1;
     int top_size = bsx - 1;
@@ -6511,7 +6511,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
     __m256i coeff3 = _mm256_set1_epi16(3);
     __m256i coeff4 = _mm256_set1_epi16(4);
     __m256i shuffle = _mm256_setr_epi8(0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15,
-        0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15);
+                                       0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15);
     pel_t *pSrc1 = src;
 
     UNUSED_PARAMETER(dir_mode);
@@ -6610,7 +6610,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
     }
 
     src = pSrc1;
-    
+
     __m256i sum1, sum2, sum3, sum4;
     for (i = left_size; i < line_size - 16; i += 32, src += 32) {
         S2 = _mm256_loadu_si256((__m256i*)(src + 1));
@@ -6665,7 +6665,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         _mm256_maskstore_epi64((__int64*)&first_line[i], mask, sum1);
     }
 
-    if (bsx == 64){
+    if (bsx == 64) {
 
         for (i = 0; i < bsy; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst));
@@ -6717,7 +6717,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             dst += i_dst;
             pfirst -= 2;
         }
-    } else if (bsx == 32){
+    } else if (bsx == 32) {
         for (i = 0; i < bsy; i += 8) {
             __m256i M = _mm256_lddqu_si256((__m256i*)(pfirst));
             _mm256_storeu_si256((__m256i*)dst, M);
@@ -6752,7 +6752,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             dst += i_dst;
             pfirst -= 2;
         }
-    } else if (bsx == 16){
+    } else if (bsx == 16) {
 
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
@@ -6772,9 +6772,9 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             _mm256_maskstore_epi64((__int64*)dst, mask, M);
             dst += i_dst;
             pfirst -= 2;
-            
+
         }
-    } else if (bsx == 8){
+    } else if (bsx == 8) {
 
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 8) {
@@ -6811,7 +6811,7 @@ void intra_pred_ang_xy_20_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             dst += i_dst;
             pfirst -= 2;
         }
-    } else{
+    } else {
 
         mask = _mm256_loadu_si256((const __m256i*)intrinsic_mask_256_8bit[bsx - 1]);
         for (i = 0; i < bsy; i += 4) {
@@ -6865,7 +6865,7 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         __m256i coeff7 = _mm256_set1_epi16(7);
         __m256i coeff8 = _mm256_set1_epi16(8);
         __m256i shuffle = _mm256_setr_epi8(0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15,
-            0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15);
+                                           0, 8, 1, 9, 2, 10, 3, 11, 4, 12, 5, 13, 6, 14, 7, 15);
 
         __m256i p00, p10, p20, p30;
         __m256i p01, p11, p21, p31;
@@ -7104,7 +7104,7 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         __m256i M;
         if (bsx == 64) {
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst + 32));
@@ -7134,7 +7134,7 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 pfirst -= 4;
             }
         } else if (bsx == 32) {
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -7155,9 +7155,9 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
                 pfirst -= 4;
             }
-        } else if (bsx == 16){
+        } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -7180,7 +7180,7 @@ void intra_pred_ang_xy_22_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
             }
         } else {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[7]);
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;
@@ -7270,18 +7270,18 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         __m256i H0, H1, H2;
 
-        if (bsy == 4){
+        if (bsy == 4) {
             L0 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1]);//-1 3
+                                   src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1]);//-1 3
 
             L1 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                src[2], src[2], src[2], src[2], src[2], src[2], src[2], src[2]);//0 4
+                                   src[2], src[2], src[2], src[2], src[2], src[2], src[2], src[2]);//0 4
 
             L2 = _mm256_setr_epi16(src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1],
-                src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//1 5
+                                   src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//1 5
 
             L3 = _mm256_setr_epi16(src[2], src[2], src[2], src[2], src[2], src[2], src[2], src[2],
-                src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//2 6
+                                   src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//2 6
 
             src += 4;
 
@@ -7298,7 +7298,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 p00 = _mm256_srli_epi16(p00, 5);
 
                 L0 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                    src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1]);//-1 3
+                                       src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1]);//-1 3
 
                 p01 = _mm256_mullo_epi16(L1, coeff0);//0
                 p11 = _mm256_mullo_epi16(L2, coeff1);//1
@@ -7319,16 +7319,16 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
         } else {
 
             L0 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//-1 3
+                                   src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//-1 3
 
             L1 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//0 4
+                                   src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//0 4
 
             L2 = _mm256_setr_epi16(src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1],
-                src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);//1 5
+                                   src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);//1 5
 
             L3 = _mm256_setr_epi16(src[2], src[2], src[2], src[2], src[2], src[2], src[2], src[2],
-                src[6], src[6], src[6], src[6], src[6], src[6], src[6], src[6]);//2 6
+                                   src[6], src[6], src[6], src[6], src[6], src[6], src[6], src[6]);//2 6
 
             src += 4;
 
@@ -7345,7 +7345,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 p00 = _mm256_srli_epi16(p00, 5);
 
                 L0 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                    src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//3 7
+                                       src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);//3 7
 
                 p01 = _mm256_mullo_epi16(L1, coeff0);//0 4
                 p11 = _mm256_mullo_epi16(L2, coeff1);//1 5
@@ -7361,7 +7361,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 res1 = _mm256_packus_epi16(p00, p01);
 
                 L1 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                    src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//4 8
+                                       src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);//4 8
 
                 p00 = _mm256_mullo_epi16(L2, coeff0);//1 5
                 p10 = _mm256_mullo_epi16(L3, coeff1);//2 6
@@ -7375,7 +7375,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 p00 = _mm256_srli_epi16(p00, 5);
 
                 L2 = _mm256_setr_epi16(src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1],
-                    src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);//5 9
+                                       src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);//5 9
 
                 p01 = _mm256_mullo_epi16(L3, coeff0);//2 6
                 p11 = _mm256_mullo_epi16(L0, coeff1);//3 7
@@ -7401,16 +7401,16 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 src += 4;
 
                 L0 = _mm256_setr_epi16(src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1], src[-1],
-                    src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);
+                                       src[3], src[3], src[3], src[3], src[3], src[3], src[3], src[3]);
 
                 L1 = _mm256_setr_epi16(src[0], src[0], src[0], src[0], src[0], src[0], src[0], src[0],
-                    src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);
+                                       src[4], src[4], src[4], src[4], src[4], src[4], src[4], src[4]);
 
                 L2 = _mm256_setr_epi16(src[1], src[1], src[1], src[1], src[1], src[1], src[1], src[1],
-                    src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);
+                                       src[5], src[5], src[5], src[5], src[5], src[5], src[5], src[5]);
 
                 L3 = _mm256_setr_epi16(src[2], src[2], src[2], src[2], src[2], src[2], src[2], src[2],
-                    src[6], src[6], src[6], src[6], src[6], src[6], src[6], src[6]);
+                                       src[6], src[6], src[6], src[6], src[6], src[6], src[6], src[6]);
             }
         }
 
@@ -7450,7 +7450,7 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
 
         __m256i M;
         if (bsx == 64) {
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_storeu_si256((__m256i*)dst, M);
                 M = _mm256_lddqu_si256((__m256i*)(pfirst + 32));
@@ -7479,8 +7479,8 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
                 pfirst -= 8;
             }
-        } else if (bsx == 32){
-            for (i = 0; i < bsy; i += 4){
+        } else if (bsx == 32) {
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_storeu_si256((__m256i*)dst, M);
                 dst += i_dst;
@@ -7501,9 +7501,9 @@ void intra_pred_ang_xy_23_avx(pel_t *src, pel_t *dst, int i_dst, int dir_mode, i
                 dst += i_dst;
                 pfirst -= 8;
             }
-        } else if (bsx == 16){
+        } else if (bsx == 16) {
             __m256i mask = _mm256_lddqu_si256((__m256i*)intrinsic_mask_256_8bit[15]);
-            for (i = 0; i < bsy; i += 4){
+            for (i = 0; i < bsy; i += 4) {
                 M = _mm256_lddqu_si256((__m256i*)pfirst);
                 _mm256_maskstore_epi64((__int64*)dst, mask, M);
                 dst += i_dst;

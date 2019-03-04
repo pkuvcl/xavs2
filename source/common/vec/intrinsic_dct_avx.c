@@ -11,7 +11,7 @@
  *
  *    Authors: Falei LUO <falei.luo@gmail.com>
                Jiaqi ZHANG <zhangjiaqi.cs@gmail.com>
-               Tianliang FU <futl@pku.edu.cn> 
+               Tianliang FU <futl@pku.edu.cn>
  *             etc.
  *
  *    Homepage1: http://vcl.idm.pku.edu.cn/xavs2
@@ -445,9 +445,9 @@ void dct_c_4x4_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
     T20 = _mm256_loadu_si256((__m256i*)(src + 0 * i_src));
 
-    T30 = _mm256_shufflehi_epi16(T20, 0x9C);	//0 1 2 3 4 7 5 6   8 11 9 10 12 15 13 14......
-    T31 = _mm256_shufflelo_epi16(T30, 0x9C);	//0 3 1 2 4 7 5 6   8 11 9 10 12 15 13 14......
-    T32 = _mm256_permute4x64_epi64(T31, 0xB4);	//0 3 1 2 4 7 5 6   12 15 13 14 8 11 9 10 ......
+    T30 = _mm256_shufflehi_epi16(T20, 0x9C);    //0 1 2 3 4 7 5 6   8 11 9 10 12 15 13 14......
+    T31 = _mm256_shufflelo_epi16(T30, 0x9C);    //0 3 1 2 4 7 5 6   8 11 9 10 12 15 13 14......
+    T32 = _mm256_permute4x64_epi64(T31, 0xB4);  //0 3 1 2 4 7 5 6   12 15 13 14 8 11 9 10 ......
 
     T40 = _mm256_hadd_epi16(T32, T32);
     T41 = _mm256_hsub_epi16(T32, T32);
@@ -709,14 +709,22 @@ void dct_c_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src)
     shuffle0 = _mm256_load_si256((__m256i *)tab_dct_16_shuffle_avx2[0]);
     shuffle1 = _mm256_load_si256((__m256i *)tab_dct_16_shuffle_avx2[1]);
 #define load_coeff(var, line_no) var = _mm256_load_si256((__m256i *) tab_dct_16_avx2[0][line_no])
-    load_coeff(coeff0, 0); load_coeff(coeff1, 1);
-    load_coeff(coeff2, 2); load_coeff(coeff3, 3);
-    load_coeff(coeff4, 4); load_coeff(coeff5, 5);
-    load_coeff(coeff6, 6); load_coeff(coeff7, 7);
-    load_coeff(coeff8, 8); load_coeff(coeff9, 9);
-    load_coeff(coeffA, 10); load_coeff(coeffB, 11);
-    load_coeff(coeffC, 12); load_coeff(coeffD, 13);
-    load_coeff(coeffE, 14); load_coeff(coeffF, 15);
+    load_coeff(coeff0, 0);
+    load_coeff(coeff1, 1);
+    load_coeff(coeff2, 2);
+    load_coeff(coeff3, 3);
+    load_coeff(coeff4, 4);
+    load_coeff(coeff5, 5);
+    load_coeff(coeff6, 6);
+    load_coeff(coeff7, 7);
+    load_coeff(coeff8, 8);
+    load_coeff(coeff9, 9);
+    load_coeff(coeffA, 10);
+    load_coeff(coeffB, 11);
+    load_coeff(coeffC, 12);
+    load_coeff(coeffD, 13);
+    load_coeff(coeffE, 14);
+    load_coeff(coeffF, 15);
 #undef load_coeff
 
     // load data from src
@@ -845,21 +853,33 @@ void dct_c_16x16_avx2(const coeff_t * src, coeff_t * dst, int i_src)
     shuffle0 = _mm256_load_si256((__m256i *)tab_dct_16_shuffle_avx2[2]);
     shuffle1 = _mm256_load_si256((__m256i *)tab_dct_16_shuffle_avx2[3]);
 #define load_coeff(var, line_no) var = _mm256_load_si256((__m256i *) tab_dct_16_avx2[1][line_no])
-    load_coeff(coeff0, 0); load_coeff(coeff1, 1);
-    load_coeff(coeff2, 2); load_coeff(coeff3, 3);
-    load_coeff(coeff4, 4); load_coeff(coeff5, 5);
-    load_coeff(coeff6, 6); load_coeff(coeff7, 7);
-    load_coeff(coeff8, 8); load_coeff(coeff9, 9);
-    load_coeff(coeffA, 10); load_coeff(coeffB, 11);
-    load_coeff(coeffC, 12); load_coeff(coeffD, 13);
-    load_coeff(coeffE, 14); load_coeff(coeffF, 15);
+    load_coeff(coeff0, 0);
+    load_coeff(coeff1, 1);
+    load_coeff(coeff2, 2);
+    load_coeff(coeff3, 3);
+    load_coeff(coeff4, 4);
+    load_coeff(coeff5, 5);
+    load_coeff(coeff6, 6);
+    load_coeff(coeff7, 7);
+    load_coeff(coeff8, 8);
+    load_coeff(coeff9, 9);
+    load_coeff(coeffA, 10);
+    load_coeff(coeffB, 11);
+    load_coeff(coeffC, 12);
+    load_coeff(coeffD, 13);
+    load_coeff(coeffE, 14);
+    load_coeff(coeffF, 15);
 #undef load_coeff
 
 #define load_coeff(var, line_no) var = _mm256_load_si256((__m256i *) tab_dct_16_avx2[2][line_no])
-    load_coeff(coeff_0, 0); load_coeff(coeff_1, 1);
-    load_coeff(coeff_2, 2); load_coeff(coeff_3, 3);
-    load_coeff(coeff_4, 4); load_coeff(coeff_5, 5);
-    load_coeff(coeff_6, 6); load_coeff(coeff_7, 7);
+    load_coeff(coeff_0, 0);
+    load_coeff(coeff_1, 1);
+    load_coeff(coeff_2, 2);
+    load_coeff(coeff_3, 3);
+    load_coeff(coeff_4, 4);
+    load_coeff(coeff_5, 5);
+    load_coeff(coeff_6, 6);
+    load_coeff(coeff_7, 7);
 #undef load_coeff
     // now data0 ~ dataF store all of the data like [00 01 02 03 04 05...]
     for (i = 0; i < 16; i += 8) {
@@ -1176,10 +1196,10 @@ void dct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
                                                 0x0100, 0x0F0E, 0x0706, 0x0908, 0x0302, 0x0D0C, 0x0504, 0x0B0A);
 
         __m256i tab_shuffle_1 = _mm256_setr_epi16(0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C,
-                                                  0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
+                                0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
 
-        __m256i tab_shuffle_2 = _mm256_setr_epi16(0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C, 
-                                                  0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
+        __m256i tab_shuffle_2 = _mm256_setr_epi16(0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C,
+                                0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
 
         //[13 10 14 09 12 11 15 08 05 02 06 01 04 03 07 00]
         //[29 26 30 25 28 27 31 24 21 18 22 17 20 19 23 16z
@@ -1572,7 +1592,7 @@ void dct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
     __m128i mask = _mm_set1_epi16(0xffff);
     //DCT2
-    for (i = 0; i < 32 / 8; i++){
+    for (i = 0; i < 32 / 8; i++) {
         R0C0 = _mm256_cvtepi16_epi32(_mm_maskload_epi32((int const*)((int16_t*)(im)+((i * 8 + 0) * i_src) +  0), mask));
         R0C1 = _mm256_cvtepi16_epi32(_mm_maskload_epi32((int const*)((int16_t*)(im)+((i * 8 + 0) * i_src) +  8), mask));
         R1C0 = _mm256_cvtepi16_epi32(_mm_maskload_epi32((int const*)((int16_t*)(im)+((i * 8 + 0) * i_src) + 16), mask));
@@ -1882,10 +1902,10 @@ void dct_c_32x32_half_avx2(const coeff_t *src, coeff_t *dst, int i_src)
                                                 0x0100, 0x0F0E, 0x0706, 0x0908, 0x0302, 0x0D0C, 0x0504, 0x0B0A);
 
         __m256i tab_shuffle_1 = _mm256_setr_epi16(0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C,
-                                                  0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
+                                0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
 
-        __m256i tab_shuffle_2 = _mm256_setr_epi16(0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C, 
-                                                  0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
+        __m256i tab_shuffle_2 = _mm256_setr_epi16(0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C,
+                                0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
 
         //[13 10 14 09 12 11 15 08 05 02 06 01 04 03 07 00]
         //[29 26 30 25 28 27 31 24 21 18 22 17 20 19 23 16z
@@ -2558,7 +2578,7 @@ void dct_c_8x32_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     line##x##1 = _mm256_load_si256(&im[x][1]); \
     line##x##2 = _mm256_load_si256(&im[x][2]); \
     line##x##3 = _mm256_load_si256(&im[x][3])  \
-
+ 
     load_one_line(0);
     load_one_line(1);
     load_one_line(2);
@@ -2788,15 +2808,15 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     //notice that different set / setr low dizhi butong
     __m256i tab_shuffle =
         _mm256_setr_epi16(0x0100, 0x0F0E, 0x0706, 0x0908, 0x0302, 0x0D0C, 0x0504, 0x0B0A,
-        0x0100, 0x0F0E, 0x0706, 0x0908, 0x0302, 0x0D0C, 0x0504, 0x0B0A);
+                          0x0100, 0x0F0E, 0x0706, 0x0908, 0x0302, 0x0D0C, 0x0504, 0x0B0A);
 
     __m256i tab_shuffle_1 =
         _mm256_setr_epi16(0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C,
-        0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
+                          0x0100, 0x0B0A, 0x0302, 0x0908, 0x0504, 0x0F0E, 0x0706, 0x0D0C);
 
     __m256i tab_shuffle_2 =
         _mm256_setr_epi16(0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C,
-        0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
+                          0x0302, 0x0100, 0x0706, 0x0504, 0x0B0A, 0x0908, 0x0F0E, 0x0D0C);
 
 
     //[13 10 14 09 12 11 15 08 05 02 06 01 04 03 07 00]
@@ -3040,11 +3060,11 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
 
     __m256i table_shuffle = _mm256_setr_epi16(0x0100, 0x0F0E, 0x0302, 0x0D0C, 0x0504, 0x0B0A, 0x0706, 0x0908,
-        0x0100, 0x0F0E, 0x0302, 0x0D0C, 0x0504, 0x0B0A, 0x0706, 0x0908);
+                            0x0100, 0x0F0E, 0x0302, 0x0D0C, 0x0504, 0x0B0A, 0x0706, 0x0908);
 
     //__m256i im[32]
 
-    for (i = 0; i < 32 / 8; i++){
+    for (i = 0; i < 32 / 8; i++) {
 
         R0C0 = _mm256_load_si256((__m256i const *)im + (i * 8 + 0));//[0 1 2 3 4 5 6 7 / *********]
         R1C0 = _mm256_load_si256((__m256i const *)im + (i * 8 + 1));
@@ -3105,7 +3125,7 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     \
     addr = (dst + (dstPos * 32) + (i * 8)); \
     _mm256_maskstore_epi32((int*)addr, result_mask, COE_RESULT); \
-
+ 
         MAKE_ODD(0, 0);
         MAKE_ODD(2, 2);
         MAKE_ODD(4, 4);
@@ -3142,7 +3162,7 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     \
     addr = (dst + (dstPos * 32) + (i * 8)); \
     _mm256_maskstore_epi32((int*)addr, result_mask, COE_RESULT); \
-
+ 
         MAKE_ODD(1, 1);
         MAKE_ODD(3, 3);
         MAKE_ODD(5, 5);
@@ -3225,7 +3245,7 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     H13 = _mm256_permute2x128_si256(tr0_05, tr0_13, 0x31);\
     H14 = _mm256_permute2x128_si256(tr0_06, tr0_14, 0x31);\
     H15 = _mm256_permute2x128_si256(tr0_07, tr0_15, 0x31);\
-
+ 
 
 
 /* ---------------------------------------------------------------------------
@@ -3272,7 +3292,7 @@ void dct_c_32x8_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     H_13 = _mm256_extracti128_si256(tr0_05, 1);\
     H_14 = _mm256_extracti128_si256(tr0_06, 1);\
     H_15 = _mm256_extracti128_si256(tr0_07, 1);\
-
+ 
 /* ---------------------------------------------------------------------------
  */
 static void wavelet_16x64_avx2(coeff_t *coeff)
@@ -3368,7 +3388,7 @@ static void wavelet_16x64_avx2(coeff_t *coeff)
 
     // pExt[x] -= (pExt[x - 1] + pExt[x + 1]) >> 1;
 
-    for (i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         T01[i] = _mm256_sub_epi16(T01[i], _mm256_srai_epi16(_mm256_add_epi16(T00[i], T02[i]), 1));
         T03[i] = _mm256_sub_epi16(T03[i], _mm256_srai_epi16(_mm256_add_epi16(T02[i], T04[i]), 1));
         T05[i] = _mm256_sub_epi16(T05[i], _mm256_srai_epi16(_mm256_add_epi16(T04[i], T06[i]), 1));
@@ -3380,7 +3400,7 @@ static void wavelet_16x64_avx2(coeff_t *coeff)
         T15[i] = _mm256_sub_epi16(T15[i], _mm256_srai_epi16(_mm256_add_epi16(T14[i], T14[i]), 1));
     }
 
-    for (i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         T00[i] = _mm256_add_epi16(T00[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(T01[i], T01[i]), mAddOffset2), 2));
         T02[i] = _mm256_add_epi16(T02[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(T01[i], T03[i]), mAddOffset2), 2));
         T04[i] = _mm256_add_epi16(T04[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(T03[i], T05[i]), mAddOffset2), 2));
@@ -3633,7 +3653,7 @@ static void wavelet_64x16_avx2(coeff_t *coeff)
     TRANSPOSE_16x16_16BIT(V32, V34, V36, V38, V40, V42, V44, V46, V48, V50, V52, V54, V56, V58, V60, V62, A00[1], A01[1], A02[1], A03[1], A04[1], A05[1], A06[1], A07[1], A08[1], A09[1], A10[1], A11[1], A12[1], A13[1], A14[1], A15[1]);
 
     //pExt[y] -= (pExt[y - 1] + pExt[y + 1]) >> 1;
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         A01[i] = _mm256_sub_epi16(A01[i], _mm256_srai_epi16(_mm256_add_epi16(A00[i], A02[i]), 1));
         A03[i] = _mm256_sub_epi16(A03[i], _mm256_srai_epi16(_mm256_add_epi16(A02[i], A04[i]), 1));
         A05[i] = _mm256_sub_epi16(A05[i], _mm256_srai_epi16(_mm256_add_epi16(A04[i], A06[i]), 1));
@@ -3645,7 +3665,7 @@ static void wavelet_64x16_avx2(coeff_t *coeff)
     }
 
     //pExt[y] = (pExt[y] << 1) + ((pExt[y - 1] + pExt[y + 1] + 1) >> 1);
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         A00[i] = _mm256_add_epi16(_mm256_slli_epi16(A00[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A01[i], A01[i]), mAddOffset1), 1));
         A02[i] = _mm256_add_epi16(_mm256_slli_epi16(A02[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A01[i], A03[i]), mAddOffset1), 1));
         A04[i] = _mm256_add_epi16(_mm256_slli_epi16(A04[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A03[i], A05[i]), mAddOffset1), 1));
@@ -3657,7 +3677,7 @@ static void wavelet_64x16_avx2(coeff_t *coeff)
     }
 
     //Store
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 0], A00[i]);
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 1], A02[i]);
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 2], A04[i]);
@@ -3690,7 +3710,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
     __m256i mAddOffset2 = _mm256_set1_epi16(2);
     //load
 
-    for (i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         T00[i] = _mm256_load_si256((__m256i const *)((__m128i*)&coeff[16 * i + 64 * 0]));
         T01[i] = _mm256_load_si256((__m256i const *)((__m128i*)&coeff[16 * i + 64 * 1]));
         T02[i] = _mm256_load_si256((__m256i const *)((__m128i*)&coeff[16 * i + 64 * 2]));
@@ -3790,7 +3810,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
 
 
     //pExt[x] -= (pExt[x - 1] + pExt[x + 1]) >> 1;
-    for (i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         V01[i] = _mm256_sub_epi16(V01[i], _mm256_srai_epi16(_mm256_add_epi16(V00[i], V02[i]), 1));
         V03[i] = _mm256_sub_epi16(V03[i], _mm256_srai_epi16(_mm256_add_epi16(V02[i], V04[i]), 1));
         V05[i] = _mm256_sub_epi16(V05[i], _mm256_srai_epi16(_mm256_add_epi16(V04[i], V06[i]), 1));
@@ -3829,7 +3849,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
     }
 
     //pExt[x] += (pExt[x - 1] + pExt[x + 1] + 2) >> 2;
-    for (i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         V00[i] = _mm256_add_epi16(V00[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(V01[i], V01[i]), mAddOffset2), 2));
         V02[i] = _mm256_add_epi16(V02[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(V01[i], V03[i]), mAddOffset2), 2));
         V04[i] = _mm256_add_epi16(V04[i], _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(V03[i], V05[i]), mAddOffset2), 2));
@@ -3881,7 +3901,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
     TRANSPOSE_16x16_16BIT(V32[3], V34[3], V36[3], V38[3], V40[3], V42[3], V44[3], V46[3], V48[3], V50[3], V52[3], V54[3], V56[3], V58[3], V60[3], V62[3], A48[1], A49[1], A50[1], A51[1], A52[1], A53[1], A54[1], A55[1], A56[1], A57[1], A58[1], A59[1], A60[1], A61[1], A62[1], A63[1]);
 
     //pExt[y] -= (pExt[y - 1] + pExt[y + 1]) >> 1;
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         A01[i] = _mm256_sub_epi16(A01[i], _mm256_srai_epi16(_mm256_add_epi16(A00[i], A02[i]), 1));
         A03[i] = _mm256_sub_epi16(A03[i], _mm256_srai_epi16(_mm256_add_epi16(A02[i], A04[i]), 1));
         A05[i] = _mm256_sub_epi16(A05[i], _mm256_srai_epi16(_mm256_add_epi16(A04[i], A06[i]), 1));
@@ -3920,7 +3940,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
     }
 
     //pExt[y] = (pExt[y] << 1) + ((pExt[y - 1] + pExt[y + 1] + 1) >> 1);
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         A00[i] = _mm256_add_epi16(_mm256_slli_epi16(A00[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A01[i], A01[i]), mAddOffset1), 1));
         A02[i] = _mm256_add_epi16(_mm256_slli_epi16(A02[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A01[i], A03[i]), mAddOffset1), 1));
         A04[i] = _mm256_add_epi16(_mm256_slli_epi16(A04[i], 1), _mm256_srai_epi16(_mm256_add_epi16(_mm256_add_epi16(A03[i], A05[i]), mAddOffset1), 1));
@@ -3959,7 +3979,7 @@ static void wavelet_64x64_avx2(coeff_t *coeff)
     }
 
     //Store
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 2; i++) {
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 0], A00[i]);
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 1], A02[i]);
         _mm256_store_si256((__m256i*)&coeff[16 * i + 32 * 2], A04[i]);
@@ -4067,9 +4087,9 @@ ALIGN32(static const int16_t tab_dct_16_1_avx[][16]) = {
     { 38, 38, -25, -25, -9, -9, -44, -44, 38, 38, -25, -25, -9, -9, -44, -44 },  // 11
     { 25, 25, 38, 38, -44, -44, 9, 9, 25, 25, 38, 38, -44, -44, 9, 9 },  // 12
     { 9, 9, -44, -44, -25, -25, 38, 38, 9, 9, -44, -44, -25, -25, 38, 38 },  // 13
-    
-/* ---------------------------------------------------------------------------
- */
+
+    /* ---------------------------------------------------------------------------
+     */
 #define MAKE_COEF(a0, a1, a2, a3, a4, a5, a6, a7) \
     { (a0), -(a0), (a3), -(a3), (a1), -(a1), (a2), -(a2), (a0), -(a0), (a3), -(a3), (a1), -(a1), (a2), -(a2) }, \
     { (a7), -(a7), (a4), -(a4), (a6), -(a6), (a5), -(a5), (a7), -(a7), (a4), -(a4), (a6), -(a6), (a5), -(a5) },
@@ -4106,7 +4126,7 @@ void dct_c_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
     __m256i in[16];
     __m256i  tr00, tr01;
     __m256i r0, r1,  r4, r5, t0, t2, u0, u1, u2, u3;
- 
+
     __m256i T00A, T01A,  T00B, T01B;
     __m256i T10, T11, T12, T13;
     __m256i T20, T21, T22, T23, T24, T25, T26, T27;
@@ -4330,7 +4350,7 @@ void dct_c_4x16_avx2(const coeff_t *src, coeff_t *dst, int i_src)
 
     T40 = _mm256_hadd_epi32(T30, T32);
     T40 = _mm256_srai_epi32(_mm256_add_epi32(T40, c_256), shift2);
-    T40 = _mm256_permute4x64_epi64(T40, 0xD8);//8 10 
+    T40 = _mm256_permute4x64_epi64(T40, 0xD8);//8 10
 
     T20 = _mm256_madd_epi16(T10, tab_dct_16_22);
     T21 = _mm256_madd_epi16(T11, tab_dct_16_23);

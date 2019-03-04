@@ -351,12 +351,12 @@ int add_sign_avx2(coeff_t *dst, const coeff_t *abs_val, const int i_coef);
 
 #define SAO_on_block_sse128 FPFX(SAO_on_block_sse128)
 void SAO_on_block_sse128(pel_t *p_dst, int i_dst, pel_t *p_src,
-    int i_src, int i_block_w, int i_block_h,
-    int *lcu_avail, SAOBlkParam *sao_param); 
+                         int i_src, int i_block_w, int i_block_h,
+                         int *lcu_avail, SAOBlkParam *sao_param);
 #define SAO_on_block_sse256 FPFX(SAO_on_block_sse256)
-void SAO_on_block_sse256(pel_t *p_dst, int i_dst, pel_t *p_src, 
-    int i_src,int i_block_w, int i_block_h,
-    int *lcu_avail, SAOBlkParam *sao_param);
+void SAO_on_block_sse256(pel_t *p_dst, int i_dst, pel_t *p_src,
+                         int i_src,int i_block_w, int i_block_h,
+                         int *lcu_avail, SAOBlkParam *sao_param);
 
 #define alf_flt_one_block_sse128 FPFX(alf_flt_one_block_sse128)
 void alf_flt_one_block_sse128(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,

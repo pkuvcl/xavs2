@@ -54,7 +54,7 @@ void coeff_scan4_xy_avx(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uin
     int16_t int1, int2;
 
     order1 = _mm256_setr_epi16(0x0100, 0x0302, 0x0908, 0x0F0E, 0x0B0A, 0x0504, 0x0706, 0x0D0C,
-        0x0302, 0x0908, 0x0B0A, 0x0504, 0x0100, 0x0706, 0x0D0C, 0x0F0E);
+                               0x0302, 0x0908, 0x0B0A, 0x0504, 0x0100, 0x0706, 0x0D0C, 0x0F0E);
 
     m_in = _mm256_setr_epi64x(r1, r2, r3, r4);    // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
 
@@ -80,7 +80,7 @@ void coeff_scan4_yx_avx(coeff_t *dst, uint64_t r1, uint64_t r2, uint64_t r3, uin
     int32_t int1, int2;
 
     order1 = _mm256_setr_epi16(0x0100, 0x0908, 0x0302, 0x0504, 0x0B0A, 0x0D0C, 0x0706, 0x0F0E,
-        0x0100, 0x0908, 0x0302, 0x0504, 0x0B0A, 0x0D0C, 0x0706, 0x0F0E);
+                               0x0100, 0x0908, 0x0302, 0x0504, 0x0B0A, 0x0D0C, 0x0706, 0x0F0E);
 
     m_in = _mm256_setr_epi64x(r1, r2, r3, r4);    // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
 

@@ -804,9 +804,9 @@ void intpl_luma_block_ext_w16_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src,
     int row, col;
     __m256i mSwitch1 = _mm256_setr_epi8(0, 1, 2, 3, 4, 5, 6, 7,       1, 2, 3, 4, 5, 6, 7, 8,  // 前 8 个点
                                         0, 1, 2, 3, 4, 5, 6, 7,       1, 2, 3, 4, 5, 6, 7, 8); // 后 8 个点
-    __m256i mSwitch2 = _mm256_setr_epi8(2, 3, 4, 5, 6, 7, 8, 9,       3, 4, 5, 6, 7, 8, 9, 10, 
+    __m256i mSwitch2 = _mm256_setr_epi8(2, 3, 4, 5, 6, 7, 8, 9,       3, 4, 5, 6, 7, 8, 9, 10,
                                         2, 3, 4, 5, 6, 7, 8, 9,       3, 4, 5, 6, 7, 8, 9, 10);
-    __m256i mSwitch3 = _mm256_setr_epi8(4, 5, 6, 7, 8, 9, 10, 11,     5, 6, 7, 8, 9, 10, 11, 12, 
+    __m256i mSwitch3 = _mm256_setr_epi8(4, 5, 6, 7, 8, 9, 10, 11,     5, 6, 7, 8, 9, 10, 11, 12,
                                         4, 5, 6, 7, 8, 9, 10, 11,     5, 6, 7, 8, 9, 10, 11, 12);
     __m256i mSwitch4 = _mm256_setr_epi8(6, 7, 8, 9, 10, 11, 12, 13,   7, 8, 9, 10, 11, 12, 13, 14,
                                         6, 7, 8, 9, 10, 11, 12, 13,   7, 8, 9, 10, 11, 12, 13, 14);
@@ -1216,7 +1216,7 @@ void intpl_chroma_block_ver_w32_avx2(pel_t *dst, int i_dst, const pel_t *src, in
             __m256i S1 = _mm256_loadu_si256((__m256i*)(src + i_src));
             __m256i S2 = _mm256_loadu_si256((__m256i*)(src + i_src2));
             __m256i S3 = _mm256_loadu_si256((__m256i*)(src + i_src3));
-            
+
             T0 = _mm256_maddubs_epi16(_mm256_unpacklo_epi8(S0, S1), coeff0);
             T1 = _mm256_maddubs_epi16(_mm256_unpacklo_epi8(S2, S3), coeff1);
             T2 = _mm256_maddubs_epi16(_mm256_unpackhi_epi8(S0, S1), coeff0);
@@ -1498,7 +1498,7 @@ void intpl_chroma_block_ext_w24_avx2(pel_t *dst, int i_dst, const pel_t *src, in
     __m256i mCoef = _mm256_set1_epi32(*(int32_t*)coef_x);
     __m256i mSwitch = _mm256_setr_epi8(0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6, 4, 5, 6, 7, 5, 6, 7, 8, 6, 7, 8, 9, 7, 8, 9, 10);
     __m256i mSwitch1 = _mm256_setr_epi8(0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6, 0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6);
-    __m256i mSwitch2 = _mm256_setr_epi8(4, 5, 6, 7, 5, 6, 7, 8, 6, 7, 8, 9, 7, 8, 9, 10, 4, 5, 6, 7, 5, 6, 7, 8, 6, 7, 8, 9, 7, 8, 9, 10);    
+    __m256i mSwitch2 = _mm256_setr_epi8(4, 5, 6, 7, 5, 6, 7, 8, 6, 7, 8, 9, 7, 8, 9, 10, 4, 5, 6, 7, 5, 6, 7, 8, 6, 7, 8, 9, 7, 8, 9, 10);
     __m256i mask24 = _mm256_setr_epi16(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0);
     //HOR
     src = src - i_src - 1;
@@ -1617,17 +1617,17 @@ void intpl_chroma_block_ext_w24_avx2(pel_t *dst, int i_dst, const pel_t *src, in
 void intpl_luma_block_hor_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coeff)
 {
     switch (width / 4 - 1) {
-        case 3:
-        case 7:
-        case 11:
-        case 15:
-            intpl_luma_block_hor_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 5:
-            intpl_luma_block_hor_w24_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        default:
-            intpl_luma_block_hor_sse128(dst, i_dst, src, i_src, width, height, coeff);
+    case 3:
+    case 7:
+    case 11:
+    case 15:
+        intpl_luma_block_hor_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 5:
+        intpl_luma_block_hor_w24_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    default:
+        intpl_luma_block_hor_sse128(dst, i_dst, src, i_src, width, height, coeff);
     }
 }
 
@@ -1636,23 +1636,23 @@ void intpl_luma_block_hor_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int
 void intpl_luma_block_ver_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coeff)
 {
     switch (width / 4 - 1) {
-        case 3:
-            intpl_luma_block_ver_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 5:
-            intpl_luma_block_ver_w24_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 7:
-            intpl_luma_block_ver_w32_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 11:
-            intpl_luma_block_ver_w48_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 15:
-            intpl_luma_block_ver_w64_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        default:
-            intpl_luma_block_ver_sse128(dst, i_dst, src, i_src, width, height, coeff);
+    case 3:
+        intpl_luma_block_ver_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 5:
+        intpl_luma_block_ver_w24_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 7:
+        intpl_luma_block_ver_w32_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 11:
+        intpl_luma_block_ver_w48_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 15:
+        intpl_luma_block_ver_w64_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    default:
+        intpl_luma_block_ver_sse128(dst, i_dst, src, i_src, width, height, coeff);
     }
 }
 
@@ -1661,17 +1661,17 @@ void intpl_luma_block_ver_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int
 void intpl_luma_block_ext_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coef_x, const int8_t *coef_y)
 {
     switch (width / 4 - 1) {
-        case 3:
-        case 7:
-        case 11:
-        case 15:
-            intpl_luma_block_ext_w16_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
-            break;
-        case 5:
-            intpl_luma_block_ext_w24_avx2(dst, i_dst, src, i_src, height, coef_x, coef_y);
-            break;
-        default:
-            intpl_luma_block_ext_sse128(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
+    case 3:
+    case 7:
+    case 11:
+    case 15:
+        intpl_luma_block_ext_w16_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
+        break;
+    case 5:
+        intpl_luma_block_ext_w24_avx2(dst, i_dst, src, i_src, height, coef_x, coef_y);
+        break;
+    default:
+        intpl_luma_block_ext_sse128(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
     }
 }
 
@@ -1680,15 +1680,15 @@ void intpl_luma_block_ext_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int
 void intpl_chroma_block_hor_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coeff)
 {
     switch (width / 2 - 1) {
-        case 7:
-        case 15:
-            intpl_chroma_block_hor_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
-            break;
-        case 11:
-            intpl_chroma_block_hor_w24_avx2(dst, i_dst, src, i_src, height, coeff);
-            break;
-        default:
-            intpl_chroma_block_hor_sse128(dst, i_dst, src, i_src, width, height, coeff);
+    case 7:
+    case 15:
+        intpl_chroma_block_hor_w16_avx2(dst, i_dst, src, i_src, width, height, coeff);
+        break;
+    case 11:
+        intpl_chroma_block_hor_w24_avx2(dst, i_dst, src, i_src, height, coeff);
+        break;
+    default:
+        intpl_chroma_block_hor_sse128(dst, i_dst, src, i_src, width, height, coeff);
     }
 }
 
@@ -1697,17 +1697,17 @@ void intpl_chroma_block_hor_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, i
 void intpl_chroma_block_ver_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coeff)
 {
     switch (width / 2 - 1) {
-        case 7:
-            intpl_chroma_block_ver_w16_avx2(dst, i_dst, src, i_src, height, coeff);
-            break;
-        case 11:
-            intpl_chroma_block_ver_w24_avx2(dst, i_dst, src, i_src, height, coeff);
-            break;
-        case 15:
-            intpl_chroma_block_ver_w32_avx2(dst, i_dst, src, i_src, height, coeff);
-            break;
-        default:
-            intpl_chroma_block_ver_sse128(dst, i_dst, src, i_src, width, height, coeff);
+    case 7:
+        intpl_chroma_block_ver_w16_avx2(dst, i_dst, src, i_src, height, coeff);
+        break;
+    case 11:
+        intpl_chroma_block_ver_w24_avx2(dst, i_dst, src, i_src, height, coeff);
+        break;
+    case 15:
+        intpl_chroma_block_ver_w32_avx2(dst, i_dst, src, i_src, height, coeff);
+        break;
+    default:
+        intpl_chroma_block_ver_sse128(dst, i_dst, src, i_src, width, height, coeff);
     }
 }
 
@@ -1716,15 +1716,15 @@ void intpl_chroma_block_ver_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, i
 void intpl_chroma_block_ext_avx2(pel_t *dst, int i_dst, pel_t *src, int i_src, int width, int height, const int8_t *coef_x, const int8_t *coef_y)
 {
     switch (width / 2 - 1) {
-        case 7:
-        case 15:
-            intpl_chroma_block_ext_w16_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
-            break;
-        case 11:
-            intpl_chroma_block_ext_w24_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
-            break;
-        default:
-            intpl_chroma_block_ext_sse128(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
+    case 7:
+    case 15:
+        intpl_chroma_block_ext_w16_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
+        break;
+    case 11:
+        intpl_chroma_block_ext_w24_avx2(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
+        break;
+    default:
+        intpl_chroma_block_ext_sse128(dst, i_dst, src, i_src, width, height, coef_x, coef_y);
     }
 }
 

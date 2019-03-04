@@ -61,7 +61,7 @@ int quant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int s
     for (i = 0; i < i_coef; i += 16) {
         data0 = _mm_cvtepi16_epi32(_mm_loadl_epi64((__m128i *)(coef + i)));
         data1 = _mm_cvtepi16_epi32(_mm_loadl_epi64((__m128i *)(coef + i + 4)));
-        
+
         T0 = _mm_abs_epi32(data0);
         T1 = _mm_abs_epi32(data1);
 
@@ -76,30 +76,30 @@ int quant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int s
 
         T0 = _mm_sign_epi32(T0, data0);
         T1 = _mm_sign_epi32(T1, data1);
-        
+
         T0 = _mm_packs_epi32(T0, T1);
 
         _mm_store_si128((__m128i *)(coef + i), T0);
         mCount = _mm_sub_epi16(mCount, _mm_cmpeq_epi16(T0, mZero));
-        
+
         data0 = _mm_cvtepi16_epi32(_mm_loadl_epi64((__m128i *)(coef + i + 8)));
         data1 = _mm_cvtepi16_epi32(_mm_loadl_epi64((__m128i *)(coef + i + 12)));
-        
+
         T0 = _mm_abs_epi32(data0);
         T1 = _mm_abs_epi32(data1);
-        
+
         T0 = _mm_mullo_epi32(T0, mScale);
         T1 = _mm_mullo_epi32(T1, mScale);
-        
+
         T0 = _mm_add_epi32(T0, mAdd);
         T1 = _mm_add_epi32(T1, mAdd);
-        
+
         T0 = _mm_srai_epi32(T0, shift);
         T1 = _mm_srai_epi32(T1, shift);
-        
+
         T0 = _mm_sign_epi32(T0, data0);
         T1 = _mm_sign_epi32(T1, data1);
-        
+
         T0 = _mm_packs_epi32(T0, T1);
 
         _mm_store_si128((__m128i *)(coef + i + 8), T0);
@@ -132,7 +132,7 @@ void dequant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const in
 
         data0 = _mm_srai_epi32(data0, shift);
         data1 = _mm_srai_epi32(data1, shift);
-        
+
         _mm_store_si128((__m128i *)(coef + i), _mm_packs_epi32(data0, data1));
 
         data0 = _mm_cvtepi16_epi32(_mm_loadl_epi64((__m128i *)(coef + i + 8)));

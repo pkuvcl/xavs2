@@ -72,52 +72,52 @@ void intra_pred_ver_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int 
     UNUSED_PARAMETER(dir_mode);
 
     switch (bsx) {
-        case 4:
-            for (y = 0; y < bsy; y += 2) {
-                CP32(dst, rpSrc);
-                CP32(dst + i_dst, rpSrc);
-                dst += i_dst << 1;
-            }
-            break;
-        case 8:
-            for (y = 0; y < bsy; y += 2) {
-                CP64(dst, rpSrc);
-                CP64(dst + i_dst, rpSrc);
-                dst += i_dst << 1;
-            }
-            break;
-        case 16:
-            T1 = _mm_loadu_si128((__m128i*)rpSrc);
-            for (y = 0; y < bsy; y++) {
-                _mm_storeu_si128((__m128i*)(dst), T1);
-                dst += i_dst;
-            }
-            break;
-        case 32:
-            T1 = _mm_loadu_si128((__m128i*)(rpSrc + 0));
-            T2 = _mm_loadu_si128((__m128i*)(rpSrc + 16));
-            for (y = 0; y < bsy; y++) {
-                _mm_storeu_si128((__m128i*)(dst + 0), T1);
-                _mm_storeu_si128((__m128i*)(dst + 16), T2);
-                dst += i_dst;
-            }
-            break;
-        case 64:
-            T1 = _mm_loadu_si128((__m128i*)(rpSrc + 0));
-            T2 = _mm_loadu_si128((__m128i*)(rpSrc + 16));
-            T3 = _mm_loadu_si128((__m128i*)(rpSrc + 32));
-            T4 = _mm_loadu_si128((__m128i*)(rpSrc + 48));
-            for (y = 0; y < bsy; y++) {
-                _mm_storeu_si128((__m128i*)(dst + 0), T1);
-                _mm_storeu_si128((__m128i*)(dst + 16), T2);
-                _mm_storeu_si128((__m128i*)(dst + 32), T3);
-                _mm_storeu_si128((__m128i*)(dst + 48), T4);
-                dst += i_dst;
-            }
-            break;
-        default:
-            assert(0);
-            break;
+    case 4:
+        for (y = 0; y < bsy; y += 2) {
+            CP32(dst, rpSrc);
+            CP32(dst + i_dst, rpSrc);
+            dst += i_dst << 1;
+        }
+        break;
+    case 8:
+        for (y = 0; y < bsy; y += 2) {
+            CP64(dst, rpSrc);
+            CP64(dst + i_dst, rpSrc);
+            dst += i_dst << 1;
+        }
+        break;
+    case 16:
+        T1 = _mm_loadu_si128((__m128i*)rpSrc);
+        for (y = 0; y < bsy; y++) {
+            _mm_storeu_si128((__m128i*)(dst), T1);
+            dst += i_dst;
+        }
+        break;
+    case 32:
+        T1 = _mm_loadu_si128((__m128i*)(rpSrc + 0));
+        T2 = _mm_loadu_si128((__m128i*)(rpSrc + 16));
+        for (y = 0; y < bsy; y++) {
+            _mm_storeu_si128((__m128i*)(dst + 0), T1);
+            _mm_storeu_si128((__m128i*)(dst + 16), T2);
+            dst += i_dst;
+        }
+        break;
+    case 64:
+        T1 = _mm_loadu_si128((__m128i*)(rpSrc + 0));
+        T2 = _mm_loadu_si128((__m128i*)(rpSrc + 16));
+        T3 = _mm_loadu_si128((__m128i*)(rpSrc + 32));
+        T4 = _mm_loadu_si128((__m128i*)(rpSrc + 48));
+        for (y = 0; y < bsy; y++) {
+            _mm_storeu_si128((__m128i*)(dst + 0), T1);
+            _mm_storeu_si128((__m128i*)(dst + 16), T2);
+            _mm_storeu_si128((__m128i*)(dst + 32), T3);
+            _mm_storeu_si128((__m128i*)(dst + 48), T4);
+            dst += i_dst;
+        }
+        break;
+    default:
+        assert(0);
+        break;
     }
 }
 
@@ -133,46 +133,46 @@ void intra_pred_hor_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode, int 
     UNUSED_PARAMETER(dir_mode);
 
     switch (bsx) {
-        case 4:
-            for (y = 0; y < bsy; y++) {
-                M32(dst) = 0x01010101 * rpSrc[-y];
-                dst += i_dst;
-            }
-            break;
-        case 8:
-            for (y = 0; y < bsy; y++) {
-                M64(dst) = 0x0101010101010101 * rpSrc[-y];
-                dst += i_dst;
-            }
-            break;
-        case 16:
-            for (y = 0; y < bsy; y++) {
-                T = _mm_set1_epi8((char)rpSrc[-y]);
-                _mm_storeu_si128((__m128i*)(dst), T);
-                dst += i_dst;
-            }
-            break;
-        case 32:
-            for (y = 0; y < bsy; y++) {
-                T = _mm_set1_epi8((char)rpSrc[-y]);
-                _mm_storeu_si128((__m128i*)(dst + 0), T);
-                _mm_storeu_si128((__m128i*)(dst + 16), T);
-                dst += i_dst;
-            }
-            break;
-        case 64:
-            for (y = 0; y < bsy; y++) {
-                T = _mm_set1_epi8((char)rpSrc[-y]);
-                _mm_storeu_si128((__m128i*)(dst + 0), T);
-                _mm_storeu_si128((__m128i*)(dst + 16), T);
-                _mm_storeu_si128((__m128i*)(dst + 32), T);
-                _mm_storeu_si128((__m128i*)(dst + 48), T);
-                dst += i_dst;
-            }
-            break;
-        default:
-            assert(0);
-            break;
+    case 4:
+        for (y = 0; y < bsy; y++) {
+            M32(dst) = 0x01010101 * rpSrc[-y];
+            dst += i_dst;
+        }
+        break;
+    case 8:
+        for (y = 0; y < bsy; y++) {
+            M64(dst) = 0x0101010101010101 * rpSrc[-y];
+            dst += i_dst;
+        }
+        break;
+    case 16:
+        for (y = 0; y < bsy; y++) {
+            T = _mm_set1_epi8((char)rpSrc[-y]);
+            _mm_storeu_si128((__m128i*)(dst), T);
+            dst += i_dst;
+        }
+        break;
+    case 32:
+        for (y = 0; y < bsy; y++) {
+            T = _mm_set1_epi8((char)rpSrc[-y]);
+            _mm_storeu_si128((__m128i*)(dst + 0), T);
+            _mm_storeu_si128((__m128i*)(dst + 16), T);
+            dst += i_dst;
+        }
+        break;
+    case 64:
+        for (y = 0; y < bsy; y++) {
+            T = _mm_set1_epi8((char)rpSrc[-y]);
+            _mm_storeu_si128((__m128i*)(dst + 0), T);
+            _mm_storeu_si128((__m128i*)(dst + 16), T);
+            _mm_storeu_si128((__m128i*)(dst + 32), T);
+            _mm_storeu_si128((__m128i*)(dst + 48), T);
+            dst += i_dst;
+        }
+        break;
+    default:
+        assert(0);
+        break;
     }
 
 }
@@ -3212,41 +3212,57 @@ void intra_pred_ang_x_10_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode,
         if (bsx != 8) {
             int i_dstx4 = i_dst << 2;
             switch (bsx) {
-                case 4:
-                    for (i = 0; i < bsy; i++) {
-                        CP32(dst1, pfirst[0] + i); dst1 += i_dstx4;
-                        CP32(dst2, pfirst[1] + i); dst2 += i_dstx4;
-                        CP32(dst3, pfirst[2] + i); dst3 += i_dstx4;
-                        CP32(dst4, pfirst[3] + i); dst4 += i_dstx4;
-                    }
-                    break;
-                case 16:
-                    for (i = 0; i < bsy; i++) {
-                        memcpy(dst1, pfirst[0] + i, 16 * sizeof(pel_t)); dst1 += i_dstx4;
-                        memcpy(dst2, pfirst[1] + i, 16 * sizeof(pel_t)); dst2 += i_dstx4;
-                        memcpy(dst3, pfirst[2] + i, 16 * sizeof(pel_t)); dst3 += i_dstx4;
-                        memcpy(dst4, pfirst[3] + i, 16 * sizeof(pel_t)); dst4 += i_dstx4;
-                    }
-                    break;
-                case 32:
-                    for (i = 0; i < bsy; i++) {
-                        memcpy(dst1, pfirst[0] + i, 32 * sizeof(pel_t)); dst1 += i_dstx4;
-                        memcpy(dst2, pfirst[1] + i, 32 * sizeof(pel_t)); dst2 += i_dstx4;
-                        memcpy(dst3, pfirst[2] + i, 32 * sizeof(pel_t)); dst3 += i_dstx4;
-                        memcpy(dst4, pfirst[3] + i, 32 * sizeof(pel_t)); dst4 += i_dstx4;
-                    }
-                    break;
-                case 64:
-                    for (i = 0; i < bsy; i++) {
-                        memcpy(dst1, pfirst[0] + i, 64 * sizeof(pel_t)); dst1 += i_dstx4;
-                        memcpy(dst2, pfirst[1] + i, 64 * sizeof(pel_t)); dst2 += i_dstx4;
-                        memcpy(dst3, pfirst[2] + i, 64 * sizeof(pel_t)); dst3 += i_dstx4;
-                        memcpy(dst4, pfirst[3] + i, 64 * sizeof(pel_t)); dst4 += i_dstx4;
-                    }
-                    break;
-                default:
-                    assert(0);
-                    break;
+            case 4:
+                for (i = 0; i < bsy; i++) {
+                    CP32(dst1, pfirst[0] + i);
+                    dst1 += i_dstx4;
+                    CP32(dst2, pfirst[1] + i);
+                    dst2 += i_dstx4;
+                    CP32(dst3, pfirst[2] + i);
+                    dst3 += i_dstx4;
+                    CP32(dst4, pfirst[3] + i);
+                    dst4 += i_dstx4;
+                }
+                break;
+            case 16:
+                for (i = 0; i < bsy; i++) {
+                    memcpy(dst1, pfirst[0] + i, 16 * sizeof(pel_t));
+                    dst1 += i_dstx4;
+                    memcpy(dst2, pfirst[1] + i, 16 * sizeof(pel_t));
+                    dst2 += i_dstx4;
+                    memcpy(dst3, pfirst[2] + i, 16 * sizeof(pel_t));
+                    dst3 += i_dstx4;
+                    memcpy(dst4, pfirst[3] + i, 16 * sizeof(pel_t));
+                    dst4 += i_dstx4;
+                }
+                break;
+            case 32:
+                for (i = 0; i < bsy; i++) {
+                    memcpy(dst1, pfirst[0] + i, 32 * sizeof(pel_t));
+                    dst1 += i_dstx4;
+                    memcpy(dst2, pfirst[1] + i, 32 * sizeof(pel_t));
+                    dst2 += i_dstx4;
+                    memcpy(dst3, pfirst[2] + i, 32 * sizeof(pel_t));
+                    dst3 += i_dstx4;
+                    memcpy(dst4, pfirst[3] + i, 32 * sizeof(pel_t));
+                    dst4 += i_dstx4;
+                }
+                break;
+            case 64:
+                for (i = 0; i < bsy; i++) {
+                    memcpy(dst1, pfirst[0] + i, 64 * sizeof(pel_t));
+                    dst1 += i_dstx4;
+                    memcpy(dst2, pfirst[1] + i, 64 * sizeof(pel_t));
+                    dst2 += i_dstx4;
+                    memcpy(dst3, pfirst[2] + i, 64 * sizeof(pel_t));
+                    dst3 += i_dstx4;
+                    memcpy(dst4, pfirst[3] + i, 64 * sizeof(pel_t));
+                    dst4 += i_dstx4;
+                }
+                break;
+            default:
+                assert(0);
+                break;
             }
 
         } else {
@@ -4319,24 +4335,24 @@ void intra_pred_ang_y_26_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode,
         }
 
         switch (bsx) {
-            case 4:
-                for (i = 0; i < iHeight4; i += 4) {
-                    CP32(dst, first_line + i);
-                    dst += i_dst;
-                }
-                break;
-            case 8:
-                for (i = 0; i < iHeight4; i += 4) {
-                    CP64(dst, first_line + i);
-                    dst += i_dst;
-                }
-                break;
-            default:
-                for (i = 0; i < iHeight4; i += 4) {
-                    memcpy(dst, first_line + i, bsx * sizeof(pel_t));
-                    dst += i_dst;
-                }
-                break;
+        case 4:
+            for (i = 0; i < iHeight4; i += 4) {
+                CP32(dst, first_line + i);
+                dst += i_dst;
+            }
+            break;
+        case 8:
+            for (i = 0; i < iHeight4; i += 4) {
+                CP64(dst, first_line + i);
+                dst += i_dst;
+            }
+            break;
+        default:
+            for (i = 0; i < iHeight4; i += 4) {
+                memcpy(dst, first_line + i, bsx * sizeof(pel_t));
+                dst += i_dst;
+            }
+            break;
         }
     } else {
         __m128i zero = _mm_setzero_si128();
@@ -6883,27 +6899,27 @@ void intra_pred_ang_xy_16_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode
     bsy >>= 1;
 
     switch (bsx) {
-        case 4:
-            for (i = 0; i < bsy; i++) {
-                CP32(dst, pfirst[0] - i);
-                CP32(dst + i_dst, pfirst[1] - i);
-                dst += (i_dst << 1);
-            }
-            break;
-        case 8:
-            for (i = 0; i < bsy; i++) {
-                CP64(dst, pfirst[0] - i);
-                CP64(dst + i_dst, pfirst[1] - i);
-                dst += (i_dst << 1);
-            }
-            break;
-        default:
-            for (i = 0; i < bsy; i++) {
-                memcpy(dst, pfirst[0] - i, bsx * sizeof(pel_t));
-                memcpy(dst + i_dst, pfirst[1] - i, bsx * sizeof(pel_t));
-                dst += (i_dst << 1);
-            }
-            break;
+    case 4:
+        for (i = 0; i < bsy; i++) {
+            CP32(dst, pfirst[0] - i);
+            CP32(dst + i_dst, pfirst[1] - i);
+            dst += (i_dst << 1);
+        }
+        break;
+    case 8:
+        for (i = 0; i < bsy; i++) {
+            CP64(dst, pfirst[0] - i);
+            CP64(dst + i_dst, pfirst[1] - i);
+            dst += (i_dst << 1);
+        }
+        break;
+    default:
+        for (i = 0; i < bsy; i++) {
+            memcpy(dst, pfirst[0] - i, bsx * sizeof(pel_t));
+            memcpy(dst + i_dst, pfirst[1] - i, bsx * sizeof(pel_t));
+            dst += (i_dst << 1);
+        }
+        break;
     }
 }
 
@@ -6975,25 +6991,25 @@ void intra_pred_ang_xy_18_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode
     }
 
     switch (bsx) {
-        case 4:
-            for (i = 0; i < bsy; i++) {
-                CP32(dst, pfirst--);
-                dst += i_dst;
-            }
-            break;
-        case 8:
-            for (i = 0; i < bsy; i++) {
-                CP64(dst, pfirst--);
-                dst += i_dst;
-            }
-            break;
-        default:
-            for (i = 0; i < bsy; i++) {
-                memcpy(dst, pfirst--, bsx * sizeof(pel_t));
-                dst += i_dst;
-            }
-            break;
-            break;
+    case 4:
+        for (i = 0; i < bsy; i++) {
+            CP32(dst, pfirst--);
+            dst += i_dst;
+        }
+        break;
+    case 8:
+        for (i = 0; i < bsy; i++) {
+            CP64(dst, pfirst--);
+            dst += i_dst;
+        }
+        break;
+    default:
+        for (i = 0; i < bsy; i++) {
+            memcpy(dst, pfirst--, bsx * sizeof(pel_t));
+            dst += i_dst;
+        }
+        break;
+        break;
     }
 }
 
@@ -7412,25 +7428,25 @@ void intra_pred_ang_xy_22_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode
         }
 
         switch (bsx) {
-            case 8:
-                while (bsy--) {
-                    CP64(dst, pfirst);
-                    dst += i_dst;
-                    pfirst -= 4;
-                }
-                break;
-            case 16:
-            case 32:
-            case 64:
-                while (bsy--) {
-                    memcpy(dst, pfirst, bsx * sizeof(pel_t));
-                    dst += i_dst;
-                    pfirst -= 4;
-                }
-                break;
-            default:
-                assert(0);
-                break;
+        case 8:
+            while (bsy--) {
+                CP64(dst, pfirst);
+                dst += i_dst;
+                pfirst -= 4;
+            }
+            break;
+        case 16:
+        case 32:
+        case 64:
+            while (bsy--) {
+                memcpy(dst, pfirst, bsx * sizeof(pel_t));
+                dst += i_dst;
+                pfirst -= 4;
+            }
+            break;
+        default:
+            assert(0);
+            break;
         }
     } else {
         dst += (bsy - 1) * i_dst;
@@ -7557,7 +7573,7 @@ void intra_pred_ang_xy_23_sse128(pel_t *src, pel_t *dst, int i_dst, int dir_mode
         for (; i < line_size; i += 16, src += 16) {
             coeff2 = _mm_set1_epi16(2);
 
-           
+
             __m128i p01, p11;
             __m128i S0 = _mm_loadu_si128((__m128i*)(src));
             __m128i S1 = _mm_loadu_si128((__m128i*)(src + 1));

@@ -194,9 +194,9 @@ void alf_flt_one_block_sse128(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
             SS2 = _mm_max_epi16(SS2, mZero);
 
             S = _mm_packus_epi16(SS1, SS2);
-            if (j != xPosEnd16){
+            if (j != xPosEnd16) {
                 _mm_storeu_si128((__m128i*)(p_dst + j), S);
-            } else{
+            } else {
                 _mm_maskmoveu_si128(S, mask, (char *)(p_dst + j));
                 break;
             }

@@ -50,8 +50,7 @@
 #pragma warning(disable:4127)  // warning C4127: 条件表达式是常量
 
 
-ALIGN32(static const coeff_t tab_idct_8x8_256[12][16]) =
-{
+ALIGN32(static const coeff_t tab_idct_8x8_256[12][16]) = {
     { 44, 38, 44, 38, 44, 38, 44, 38, 44, 38, 44, 38, 44, 38, 44, 38 },
     { 25, 9, 25, 9, 25, 9, 25, 9, 25, 9, 25, 9, 25, 9, 25, 9 },
     { 38, -9, 38, -9, 38, -9, 38, -9, 38, -9, 38, -9, 38, -9, 38, -9 },
@@ -72,7 +71,7 @@ void idct_c_8x8_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
     // const int CLIP1 = LIMIT_BIT;
     const int SHIFT2 = 20 - g_bit_depth;
     const int CLIP2 = g_bit_depth + 1;
- 
+
     __m256i mAdd;
     __m256i S1S5, S3S7;
     __m256i T0, T1, T2, T3;
@@ -393,14 +392,14 @@ void idct_c_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
         __m256i EEE0A, EEE1A;
         __m256i EEE0B, EEE1B;
 
-    {
-        __m256i T00, T01;
+        {
+            __m256i T00, T01;
 #define COMPUTE_ROW(row0103, row0507, row0911, row1315, c0103, c0507, c0911, c1315, row) \
     T00 = _mm256_add_epi32(_mm256_madd_epi16(row0103, c0103), _mm256_madd_epi16(row0507, c0507)); \
     T01 = _mm256_add_epi32(_mm256_madd_epi16(row0911, c0911), _mm256_madd_epi16(row1315, c1315)); \
     row = _mm256_add_epi32(T00, T01);
 
-        COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, c16_p43_p45, c16_p35_p40, c16_p21_p29, c16_p04_p13, O0A)
+            COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, c16_p43_p45, c16_p35_p40, c16_p21_p29, c16_p04_p13, O0A)
             COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, c16_p29_p43, c16_n21_p04, c16_n45_n40, c16_n13_n35, O1A)
             COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, c16_p04_p40, c16_n43_n35, c16_p29_n13, c16_p21_p45, O2A)
             COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, c16_n21_p35, c16_p04_n43, c16_p13_p45, c16_n29_n40, O3A)
@@ -418,160 +417,160 @@ void idct_c_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
             COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, c16_n35_p13, c16_n40_p45, c16_p04_p21, c16_p43_n29, O6B)
             COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, c16_n13_p04, c16_n29_p21, c16_n40_p35, c16_n45_p43, O7B)
 #undef COMPUTE_ROW
-    }
+        }
 
-    EO0A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_p38_p44), _mm256_madd_epi16(T_00_05A, c16_p09_p25)); // EO0
-    EO0B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_p38_p44), _mm256_madd_epi16(T_00_05B, c16_p09_p25));
-    EO1A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n09_p38), _mm256_madd_epi16(T_00_05A, c16_n25_n44)); // EO1
-    EO1B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n09_p38), _mm256_madd_epi16(T_00_05B, c16_n25_n44));
-    EO2A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n44_p25), _mm256_madd_epi16(T_00_05A, c16_p38_p09)); // EO2
-    EO2B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n44_p25), _mm256_madd_epi16(T_00_05B, c16_p38_p09));
-    EO3A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n25_p09), _mm256_madd_epi16(T_00_05A, c16_n44_p38)); // EO3
-    EO3B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n25_p09), _mm256_madd_epi16(T_00_05B, c16_n44_p38));
+        EO0A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_p38_p44), _mm256_madd_epi16(T_00_05A, c16_p09_p25)); // EO0
+        EO0B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_p38_p44), _mm256_madd_epi16(T_00_05B, c16_p09_p25));
+        EO1A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n09_p38), _mm256_madd_epi16(T_00_05A, c16_n25_n44)); // EO1
+        EO1B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n09_p38), _mm256_madd_epi16(T_00_05B, c16_n25_n44));
+        EO2A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n44_p25), _mm256_madd_epi16(T_00_05A, c16_p38_p09)); // EO2
+        EO2B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n44_p25), _mm256_madd_epi16(T_00_05B, c16_p38_p09));
+        EO3A = _mm256_add_epi32(_mm256_madd_epi16(T_00_04A, c16_n25_p09), _mm256_madd_epi16(T_00_05A, c16_n44_p38)); // EO3
+        EO3B = _mm256_add_epi32(_mm256_madd_epi16(T_00_04B, c16_n25_p09), _mm256_madd_epi16(T_00_05B, c16_n44_p38));
 
-    EEO0A = _mm256_madd_epi16(T_00_06A, c16_p17_p42);
-    EEO0B = _mm256_madd_epi16(T_00_06B, c16_p17_p42);
-    EEO1A = _mm256_madd_epi16(T_00_06A, c16_n42_p17);
-    EEO1B = _mm256_madd_epi16(T_00_06B, c16_n42_p17);
+        EEO0A = _mm256_madd_epi16(T_00_06A, c16_p17_p42);
+        EEO0B = _mm256_madd_epi16(T_00_06B, c16_p17_p42);
+        EEO1A = _mm256_madd_epi16(T_00_06A, c16_n42_p17);
+        EEO1B = _mm256_madd_epi16(T_00_06B, c16_n42_p17);
 
-    EEE0A = _mm256_madd_epi16(T_00_07A, c16_p32_p32);
-    EEE0B = _mm256_madd_epi16(T_00_07B, c16_p32_p32);
-    EEE1A = _mm256_madd_epi16(T_00_07A, c16_n32_p32);
-    EEE1B = _mm256_madd_epi16(T_00_07B, c16_n32_p32);
-    {
-        const __m256i EE0A = _mm256_add_epi32(EEE0A, EEO0A);          // EE0 = EEE0 + EEO0
-        const __m256i EE0B = _mm256_add_epi32(EEE0B, EEO0B);
-        const __m256i EE1A = _mm256_add_epi32(EEE1A, EEO1A);          // EE1 = EEE1 + EEO1
-        const __m256i EE1B = _mm256_add_epi32(EEE1B, EEO1B);
-        const __m256i EE3A = _mm256_sub_epi32(EEE0A, EEO0A);          // EE2 = EEE0 - EEO0
-        const __m256i EE3B = _mm256_sub_epi32(EEE0B, EEO0B);
-        const __m256i EE2A = _mm256_sub_epi32(EEE1A, EEO1A);          // EE3 = EEE1 - EEO1
-        const __m256i EE2B = _mm256_sub_epi32(EEE1B, EEO1B);
+        EEE0A = _mm256_madd_epi16(T_00_07A, c16_p32_p32);
+        EEE0B = _mm256_madd_epi16(T_00_07B, c16_p32_p32);
+        EEE1A = _mm256_madd_epi16(T_00_07A, c16_n32_p32);
+        EEE1B = _mm256_madd_epi16(T_00_07B, c16_n32_p32);
+        {
+            const __m256i EE0A = _mm256_add_epi32(EEE0A, EEO0A);          // EE0 = EEE0 + EEO0
+            const __m256i EE0B = _mm256_add_epi32(EEE0B, EEO0B);
+            const __m256i EE1A = _mm256_add_epi32(EEE1A, EEO1A);          // EE1 = EEE1 + EEO1
+            const __m256i EE1B = _mm256_add_epi32(EEE1B, EEO1B);
+            const __m256i EE3A = _mm256_sub_epi32(EEE0A, EEO0A);          // EE2 = EEE0 - EEO0
+            const __m256i EE3B = _mm256_sub_epi32(EEE0B, EEO0B);
+            const __m256i EE2A = _mm256_sub_epi32(EEE1A, EEO1A);          // EE3 = EEE1 - EEO1
+            const __m256i EE2B = _mm256_sub_epi32(EEE1B, EEO1B);
 
-        const __m256i E0A = _mm256_add_epi32(EE0A, EO0A);          // E0 = EE0 + EO0
-        const __m256i E0B = _mm256_add_epi32(EE0B, EO0B);
-        const __m256i E1A = _mm256_add_epi32(EE1A, EO1A);          // E1 = EE1 + EO1
-        const __m256i E1B = _mm256_add_epi32(EE1B, EO1B);
-        const __m256i E2A = _mm256_add_epi32(EE2A, EO2A);          // E2 = EE2 + EO2
-        const __m256i E2B = _mm256_add_epi32(EE2B, EO2B);
-        const __m256i E3A = _mm256_add_epi32(EE3A, EO3A);          // E3 = EE3 + EO3
-        const __m256i E3B = _mm256_add_epi32(EE3B, EO3B);
-        const __m256i E7A = _mm256_sub_epi32(EE0A, EO0A);          // E7 = EE0 - EO0
-        const __m256i E7B = _mm256_sub_epi32(EE0B, EO0B);
-        const __m256i E6A = _mm256_sub_epi32(EE1A, EO1A);          // E6 = EE1 - EO1
-        const __m256i E6B = _mm256_sub_epi32(EE1B, EO1B);
-        const __m256i E5A = _mm256_sub_epi32(EE2A, EO2A);          // E5 = EE2 - EO2
-        const __m256i E5B = _mm256_sub_epi32(EE2B, EO2B);
-        const __m256i E4A = _mm256_sub_epi32(EE3A, EO3A);          // E4 = EE3 - EO3
-        const __m256i E4B = _mm256_sub_epi32(EE3B, EO3B);
+            const __m256i E0A = _mm256_add_epi32(EE0A, EO0A);          // E0 = EE0 + EO0
+            const __m256i E0B = _mm256_add_epi32(EE0B, EO0B);
+            const __m256i E1A = _mm256_add_epi32(EE1A, EO1A);          // E1 = EE1 + EO1
+            const __m256i E1B = _mm256_add_epi32(EE1B, EO1B);
+            const __m256i E2A = _mm256_add_epi32(EE2A, EO2A);          // E2 = EE2 + EO2
+            const __m256i E2B = _mm256_add_epi32(EE2B, EO2B);
+            const __m256i E3A = _mm256_add_epi32(EE3A, EO3A);          // E3 = EE3 + EO3
+            const __m256i E3B = _mm256_add_epi32(EE3B, EO3B);
+            const __m256i E7A = _mm256_sub_epi32(EE0A, EO0A);          // E7 = EE0 - EO0
+            const __m256i E7B = _mm256_sub_epi32(EE0B, EO0B);
+            const __m256i E6A = _mm256_sub_epi32(EE1A, EO1A);          // E6 = EE1 - EO1
+            const __m256i E6B = _mm256_sub_epi32(EE1B, EO1B);
+            const __m256i E5A = _mm256_sub_epi32(EE2A, EO2A);          // E5 = EE2 - EO2
+            const __m256i E5B = _mm256_sub_epi32(EE2B, EO2B);
+            const __m256i E4A = _mm256_sub_epi32(EE3A, EO3A);          // E4 = EE3 - EO3
+            const __m256i E4B = _mm256_sub_epi32(EE3B, EO3B);
 
-        const __m256i T10A = _mm256_add_epi32(E0A, c32_rnd);         // E0 + rnd
-        const __m256i T10B = _mm256_add_epi32(E0B, c32_rnd);
-        const __m256i T11A = _mm256_add_epi32(E1A, c32_rnd);         // E1 + rnd
-        const __m256i T11B = _mm256_add_epi32(E1B, c32_rnd);
-        const __m256i T12A = _mm256_add_epi32(E2A, c32_rnd);         // E2 + rnd
-        const __m256i T12B = _mm256_add_epi32(E2B, c32_rnd);
-        const __m256i T13A = _mm256_add_epi32(E3A, c32_rnd);         // E3 + rnd
-        const __m256i T13B = _mm256_add_epi32(E3B, c32_rnd);
-        const __m256i T14A = _mm256_add_epi32(E4A, c32_rnd);         // E4 + rnd
-        const __m256i T14B = _mm256_add_epi32(E4B, c32_rnd);
-        const __m256i T15A = _mm256_add_epi32(E5A, c32_rnd);         // E5 + rnd
-        const __m256i T15B = _mm256_add_epi32(E5B, c32_rnd);
-        const __m256i T16A = _mm256_add_epi32(E6A, c32_rnd);         // E6 + rnd
-        const __m256i T16B = _mm256_add_epi32(E6B, c32_rnd);
-        const __m256i T17A = _mm256_add_epi32(E7A, c32_rnd);         // E7 + rnd
-        const __m256i T17B = _mm256_add_epi32(E7B, c32_rnd);
+            const __m256i T10A = _mm256_add_epi32(E0A, c32_rnd);         // E0 + rnd
+            const __m256i T10B = _mm256_add_epi32(E0B, c32_rnd);
+            const __m256i T11A = _mm256_add_epi32(E1A, c32_rnd);         // E1 + rnd
+            const __m256i T11B = _mm256_add_epi32(E1B, c32_rnd);
+            const __m256i T12A = _mm256_add_epi32(E2A, c32_rnd);         // E2 + rnd
+            const __m256i T12B = _mm256_add_epi32(E2B, c32_rnd);
+            const __m256i T13A = _mm256_add_epi32(E3A, c32_rnd);         // E3 + rnd
+            const __m256i T13B = _mm256_add_epi32(E3B, c32_rnd);
+            const __m256i T14A = _mm256_add_epi32(E4A, c32_rnd);         // E4 + rnd
+            const __m256i T14B = _mm256_add_epi32(E4B, c32_rnd);
+            const __m256i T15A = _mm256_add_epi32(E5A, c32_rnd);         // E5 + rnd
+            const __m256i T15B = _mm256_add_epi32(E5B, c32_rnd);
+            const __m256i T16A = _mm256_add_epi32(E6A, c32_rnd);         // E6 + rnd
+            const __m256i T16B = _mm256_add_epi32(E6B, c32_rnd);
+            const __m256i T17A = _mm256_add_epi32(E7A, c32_rnd);         // E7 + rnd
+            const __m256i T17B = _mm256_add_epi32(E7B, c32_rnd);
 
-        const __m256i T20A = _mm256_add_epi32(T10A, O0A);          // E0 + O0 + rnd
-        const __m256i T20B = _mm256_add_epi32(T10B, O0B);
-        const __m256i T21A = _mm256_add_epi32(T11A, O1A);          // E1 + O1 + rnd
-        const __m256i T21B = _mm256_add_epi32(T11B, O1B);
-        const __m256i T22A = _mm256_add_epi32(T12A, O2A);          // E2 + O2 + rnd
-        const __m256i T22B = _mm256_add_epi32(T12B, O2B);
-        const __m256i T23A = _mm256_add_epi32(T13A, O3A);          // E3 + O3 + rnd
-        const __m256i T23B = _mm256_add_epi32(T13B, O3B);
-        const __m256i T24A = _mm256_add_epi32(T14A, O4A);          // E4
-        const __m256i T24B = _mm256_add_epi32(T14B, O4B);
-        const __m256i T25A = _mm256_add_epi32(T15A, O5A);          // E5
-        const __m256i T25B = _mm256_add_epi32(T15B, O5B);
-        const __m256i T26A = _mm256_add_epi32(T16A, O6A);          // E6
-        const __m256i T26B = _mm256_add_epi32(T16B, O6B);
-        const __m256i T27A = _mm256_add_epi32(T17A, O7A);          // E7
-        const __m256i T27B = _mm256_add_epi32(T17B, O7B);
-        const __m256i T2FA = _mm256_sub_epi32(T10A, O0A);          // E0 - O0 + rnd
-        const __m256i T2FB = _mm256_sub_epi32(T10B, O0B);
-        const __m256i T2EA = _mm256_sub_epi32(T11A, O1A);          // E1 - O1 + rnd
-        const __m256i T2EB = _mm256_sub_epi32(T11B, O1B);
-        const __m256i T2DA = _mm256_sub_epi32(T12A, O2A);          // E2 - O2 + rnd
-        const __m256i T2DB = _mm256_sub_epi32(T12B, O2B);
-        const __m256i T2CA = _mm256_sub_epi32(T13A, O3A);          // E3 - O3 + rnd
-        const __m256i T2CB = _mm256_sub_epi32(T13B, O3B);
-        const __m256i T2BA = _mm256_sub_epi32(T14A, O4A);          // E4
-        const __m256i T2BB = _mm256_sub_epi32(T14B, O4B);
-        const __m256i T2AA = _mm256_sub_epi32(T15A, O5A);          // E5
-        const __m256i T2AB = _mm256_sub_epi32(T15B, O5B);
-        const __m256i T29A = _mm256_sub_epi32(T16A, O6A);          // E6
-        const __m256i T29B = _mm256_sub_epi32(T16B, O6B);
-        const __m256i T28A = _mm256_sub_epi32(T17A, O7A);          // E7
-        const __m256i T28B = _mm256_sub_epi32(T17B, O7B);
+            const __m256i T20A = _mm256_add_epi32(T10A, O0A);          // E0 + O0 + rnd
+            const __m256i T20B = _mm256_add_epi32(T10B, O0B);
+            const __m256i T21A = _mm256_add_epi32(T11A, O1A);          // E1 + O1 + rnd
+            const __m256i T21B = _mm256_add_epi32(T11B, O1B);
+            const __m256i T22A = _mm256_add_epi32(T12A, O2A);          // E2 + O2 + rnd
+            const __m256i T22B = _mm256_add_epi32(T12B, O2B);
+            const __m256i T23A = _mm256_add_epi32(T13A, O3A);          // E3 + O3 + rnd
+            const __m256i T23B = _mm256_add_epi32(T13B, O3B);
+            const __m256i T24A = _mm256_add_epi32(T14A, O4A);          // E4
+            const __m256i T24B = _mm256_add_epi32(T14B, O4B);
+            const __m256i T25A = _mm256_add_epi32(T15A, O5A);          // E5
+            const __m256i T25B = _mm256_add_epi32(T15B, O5B);
+            const __m256i T26A = _mm256_add_epi32(T16A, O6A);          // E6
+            const __m256i T26B = _mm256_add_epi32(T16B, O6B);
+            const __m256i T27A = _mm256_add_epi32(T17A, O7A);          // E7
+            const __m256i T27B = _mm256_add_epi32(T17B, O7B);
+            const __m256i T2FA = _mm256_sub_epi32(T10A, O0A);          // E0 - O0 + rnd
+            const __m256i T2FB = _mm256_sub_epi32(T10B, O0B);
+            const __m256i T2EA = _mm256_sub_epi32(T11A, O1A);          // E1 - O1 + rnd
+            const __m256i T2EB = _mm256_sub_epi32(T11B, O1B);
+            const __m256i T2DA = _mm256_sub_epi32(T12A, O2A);          // E2 - O2 + rnd
+            const __m256i T2DB = _mm256_sub_epi32(T12B, O2B);
+            const __m256i T2CA = _mm256_sub_epi32(T13A, O3A);          // E3 - O3 + rnd
+            const __m256i T2CB = _mm256_sub_epi32(T13B, O3B);
+            const __m256i T2BA = _mm256_sub_epi32(T14A, O4A);          // E4
+            const __m256i T2BB = _mm256_sub_epi32(T14B, O4B);
+            const __m256i T2AA = _mm256_sub_epi32(T15A, O5A);          // E5
+            const __m256i T2AB = _mm256_sub_epi32(T15B, O5B);
+            const __m256i T29A = _mm256_sub_epi32(T16A, O6A);          // E6
+            const __m256i T29B = _mm256_sub_epi32(T16B, O6B);
+            const __m256i T28A = _mm256_sub_epi32(T17A, O7A);          // E7
+            const __m256i T28B = _mm256_sub_epi32(T17B, O7B);
 
-        const __m256i T30A = _mm256_srai_epi32(T20A, nShift);             // [30 20 10 00] // This operation make it much slower than 128
-        const __m256i T30B = _mm256_srai_epi32(T20B, nShift);             // [70 60 50 40] // This operation make it much slower than 128
-        const __m256i T31A = _mm256_srai_epi32(T21A, nShift);             // [31 21 11 01] // This operation make it much slower than 128
-        const __m256i T31B = _mm256_srai_epi32(T21B, nShift);             // [71 61 51 41] // This operation make it much slower than 128
-        const __m256i T32A = _mm256_srai_epi32(T22A, nShift);             // [32 22 12 02] // This operation make it much slower than 128
-        const __m256i T32B = _mm256_srai_epi32(T22B, nShift);             // [72 62 52 42] // This operation make it much slower than 128
-        const __m256i T33A = _mm256_srai_epi32(T23A, nShift);             // [33 23 13 03] // This operation make it much slower than 128
-        const __m256i T33B = _mm256_srai_epi32(T23B, nShift);             // [73 63 53 43] // This operation make it much slower than 128
-        const __m256i T34A = _mm256_srai_epi32(T24A, nShift);             // [33 24 14 04] // This operation make it much slower than 128
-        const __m256i T34B = _mm256_srai_epi32(T24B, nShift);             // [74 64 54 44] // This operation make it much slower than 128
-        const __m256i T35A = _mm256_srai_epi32(T25A, nShift);             // [35 25 15 05] // This operation make it much slower than 128
-        const __m256i T35B = _mm256_srai_epi32(T25B, nShift);             // [75 65 55 45] // This operation make it much slower than 128
-        const __m256i T36A = _mm256_srai_epi32(T26A, nShift);             // [36 26 16 06] // This operation make it much slower than 128
-        const __m256i T36B = _mm256_srai_epi32(T26B, nShift);             // [76 66 56 46] // This operation make it much slower than 128
-        const __m256i T37A = _mm256_srai_epi32(T27A, nShift);             // [37 27 17 07] // This operation make it much slower than 128
-        const __m256i T37B = _mm256_srai_epi32(T27B, nShift);             // [77 67 57 47] // This operation make it much slower than 128
+            const __m256i T30A = _mm256_srai_epi32(T20A, nShift);             // [30 20 10 00] // This operation make it much slower than 128
+            const __m256i T30B = _mm256_srai_epi32(T20B, nShift);             // [70 60 50 40] // This operation make it much slower than 128
+            const __m256i T31A = _mm256_srai_epi32(T21A, nShift);             // [31 21 11 01] // This operation make it much slower than 128
+            const __m256i T31B = _mm256_srai_epi32(T21B, nShift);             // [71 61 51 41] // This operation make it much slower than 128
+            const __m256i T32A = _mm256_srai_epi32(T22A, nShift);             // [32 22 12 02] // This operation make it much slower than 128
+            const __m256i T32B = _mm256_srai_epi32(T22B, nShift);             // [72 62 52 42] // This operation make it much slower than 128
+            const __m256i T33A = _mm256_srai_epi32(T23A, nShift);             // [33 23 13 03] // This operation make it much slower than 128
+            const __m256i T33B = _mm256_srai_epi32(T23B, nShift);             // [73 63 53 43] // This operation make it much slower than 128
+            const __m256i T34A = _mm256_srai_epi32(T24A, nShift);             // [33 24 14 04] // This operation make it much slower than 128
+            const __m256i T34B = _mm256_srai_epi32(T24B, nShift);             // [74 64 54 44] // This operation make it much slower than 128
+            const __m256i T35A = _mm256_srai_epi32(T25A, nShift);             // [35 25 15 05] // This operation make it much slower than 128
+            const __m256i T35B = _mm256_srai_epi32(T25B, nShift);             // [75 65 55 45] // This operation make it much slower than 128
+            const __m256i T36A = _mm256_srai_epi32(T26A, nShift);             // [36 26 16 06] // This operation make it much slower than 128
+            const __m256i T36B = _mm256_srai_epi32(T26B, nShift);             // [76 66 56 46] // This operation make it much slower than 128
+            const __m256i T37A = _mm256_srai_epi32(T27A, nShift);             // [37 27 17 07] // This operation make it much slower than 128
+            const __m256i T37B = _mm256_srai_epi32(T27B, nShift);             // [77 67 57 47] // This operation make it much slower than 128
 
-        const __m256i T38A = _mm256_srai_epi32(T28A, nShift);             // [30 20 10 00] x8 // This operation make it much slower than 128
-        const __m256i T38B = _mm256_srai_epi32(T28B, nShift);             // [70 60 50 40]
-        const __m256i T39A = _mm256_srai_epi32(T29A, nShift);             // [31 21 11 01] x9 // This operation make it much slower than 128
-        const __m256i T39B = _mm256_srai_epi32(T29B, nShift);             // [71 61 51 41]
-        const __m256i T3AA = _mm256_srai_epi32(T2AA, nShift);             // [32 22 12 02] xA // This operation make it much slower than 128
-        const __m256i T3AB = _mm256_srai_epi32(T2AB, nShift);             // [72 62 52 42]
-        const __m256i T3BA = _mm256_srai_epi32(T2BA, nShift);             // [33 23 13 03] xB // This operation make it much slower than 128
-        const __m256i T3BB = _mm256_srai_epi32(T2BB, nShift);             // [73 63 53 43]
-        const __m256i T3CA = _mm256_srai_epi32(T2CA, nShift);             // [33 24 14 04] xC // This operation make it much slower than 128
-        const __m256i T3CB = _mm256_srai_epi32(T2CB, nShift);             // [74 64 54 44]
-        const __m256i T3DA = _mm256_srai_epi32(T2DA, nShift);             // [35 25 15 05] xD // This operation make it much slower than 128
-        const __m256i T3DB = _mm256_srai_epi32(T2DB, nShift);             // [75 65 55 45]
-        const __m256i T3EA = _mm256_srai_epi32(T2EA, nShift);             // [36 26 16 06] xE // This operation make it much slower than 128
-        const __m256i T3EB = _mm256_srai_epi32(T2EB, nShift);             // [76 66 56 46]
-        const __m256i T3FA = _mm256_srai_epi32(T2FA, nShift);             // [37 27 17 07] xF // This operation make it much slower than 128
-        const __m256i T3FB = _mm256_srai_epi32(T2FB, nShift);             // [77 67 57 47]
+            const __m256i T38A = _mm256_srai_epi32(T28A, nShift);             // [30 20 10 00] x8 // This operation make it much slower than 128
+            const __m256i T38B = _mm256_srai_epi32(T28B, nShift);             // [70 60 50 40]
+            const __m256i T39A = _mm256_srai_epi32(T29A, nShift);             // [31 21 11 01] x9 // This operation make it much slower than 128
+            const __m256i T39B = _mm256_srai_epi32(T29B, nShift);             // [71 61 51 41]
+            const __m256i T3AA = _mm256_srai_epi32(T2AA, nShift);             // [32 22 12 02] xA // This operation make it much slower than 128
+            const __m256i T3AB = _mm256_srai_epi32(T2AB, nShift);             // [72 62 52 42]
+            const __m256i T3BA = _mm256_srai_epi32(T2BA, nShift);             // [33 23 13 03] xB // This operation make it much slower than 128
+            const __m256i T3BB = _mm256_srai_epi32(T2BB, nShift);             // [73 63 53 43]
+            const __m256i T3CA = _mm256_srai_epi32(T2CA, nShift);             // [33 24 14 04] xC // This operation make it much slower than 128
+            const __m256i T3CB = _mm256_srai_epi32(T2CB, nShift);             // [74 64 54 44]
+            const __m256i T3DA = _mm256_srai_epi32(T2DA, nShift);             // [35 25 15 05] xD // This operation make it much slower than 128
+            const __m256i T3DB = _mm256_srai_epi32(T2DB, nShift);             // [75 65 55 45]
+            const __m256i T3EA = _mm256_srai_epi32(T2EA, nShift);             // [36 26 16 06] xE // This operation make it much slower than 128
+            const __m256i T3EB = _mm256_srai_epi32(T2EB, nShift);             // [76 66 56 46]
+            const __m256i T3FA = _mm256_srai_epi32(T2FA, nShift);             // [37 27 17 07] xF // This operation make it much slower than 128
+            const __m256i T3FB = _mm256_srai_epi32(T2FB, nShift);             // [77 67 57 47]
 
-        res00 = _mm256_packs_epi32(T30A, T30B);        // [70 60 50 40 30 20 10 00]
-        res01 = _mm256_packs_epi32(T31A, T31B);        // [71 61 51 41 31 21 11 01]
-        res02 = _mm256_packs_epi32(T32A, T32B);        // [72 62 52 42 32 22 12 02]
-        res03 = _mm256_packs_epi32(T33A, T33B);        // [73 63 53 43 33 23 13 03]
-        res04 = _mm256_packs_epi32(T34A, T34B);        // [74 64 54 44 34 24 14 04]
-        res05 = _mm256_packs_epi32(T35A, T35B);        // [75 65 55 45 35 25 15 05]
-        res06 = _mm256_packs_epi32(T36A, T36B);        // [76 66 56 46 36 26 16 06]
-        res07 = _mm256_packs_epi32(T37A, T37B);        // [77 67 57 47 37 27 17 07]
+            res00 = _mm256_packs_epi32(T30A, T30B);        // [70 60 50 40 30 20 10 00]
+            res01 = _mm256_packs_epi32(T31A, T31B);        // [71 61 51 41 31 21 11 01]
+            res02 = _mm256_packs_epi32(T32A, T32B);        // [72 62 52 42 32 22 12 02]
+            res03 = _mm256_packs_epi32(T33A, T33B);        // [73 63 53 43 33 23 13 03]
+            res04 = _mm256_packs_epi32(T34A, T34B);        // [74 64 54 44 34 24 14 04]
+            res05 = _mm256_packs_epi32(T35A, T35B);        // [75 65 55 45 35 25 15 05]
+            res06 = _mm256_packs_epi32(T36A, T36B);        // [76 66 56 46 36 26 16 06]
+            res07 = _mm256_packs_epi32(T37A, T37B);        // [77 67 57 47 37 27 17 07]
 
-        res08 = _mm256_packs_epi32(T38A, T38B);        // [A0 ... 80]
-        res09 = _mm256_packs_epi32(T39A, T39B);        // [A1 ... 81]
-        res10 = _mm256_packs_epi32(T3AA, T3AB);        // [A2 ... 82]
-        res11 = _mm256_packs_epi32(T3BA, T3BB);        // [A3 ... 83]
-        res12 = _mm256_packs_epi32(T3CA, T3CB);        // [A4 ... 84]
-        res13 = _mm256_packs_epi32(T3DA, T3DB);        // [A5 ... 85]
-        res14 = _mm256_packs_epi32(T3EA, T3EB);        // [A6 ... 86]
-        res15 = _mm256_packs_epi32(T3FA, T3FB);        // [A7 ... 87]
-    }
+            res08 = _mm256_packs_epi32(T38A, T38B);        // [A0 ... 80]
+            res09 = _mm256_packs_epi32(T39A, T39B);        // [A1 ... 81]
+            res10 = _mm256_packs_epi32(T3AA, T3AB);        // [A2 ... 82]
+            res11 = _mm256_packs_epi32(T3BA, T3BB);        // [A3 ... 83]
+            res12 = _mm256_packs_epi32(T3CA, T3CB);        // [A4 ... 84]
+            res13 = _mm256_packs_epi32(T3DA, T3DB);        // [A5 ... 85]
+            res14 = _mm256_packs_epi32(T3EA, T3EB);        // [A6 ... 86]
+            res15 = _mm256_packs_epi32(T3FA, T3FB);        // [A7 ... 87]
+        }
 
         //transpose matrix 16x16 16bit.
         {
             __m256i tr0_0, tr0_1, tr0_2, tr0_3, tr0_4, tr0_5, tr0_6, tr0_7, tr0_8, tr0_9, tr0_10, tr0_11, tr0_12, tr0_13, tr0_14, tr0_15;
-    #define TRANSPOSE_16x16_16BIT(I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15) \
+#define TRANSPOSE_16x16_16BIT(I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15) \
         tr0_0 = _mm256_unpacklo_epi16(I0, I1); \
         tr0_1 = _mm256_unpacklo_epi16(I2, I3); \
         tr0_2 = _mm256_unpacklo_epi16(I4, I5); \
@@ -636,9 +635,9 @@ void idct_c_16x16_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
         O13 = _mm256_permute2x128_si256(tr0_10, tr0_11, 0x31); \
         O14 = _mm256_permute2x128_si256(tr0_12, tr0_13, 0x31); \
         O15 = _mm256_permute2x128_si256(tr0_14, tr0_15, 0x31); \
-
+ 
             TRANSPOSE_16x16_16BIT(res00, res01, res02, res03, res04, res05, res06, res07, res08, res09, res10, res11, res12, res13, res14, res15, in00, in01, in02, in03, in04, in05, in06, in07, in08, in09, in10, in11, in12, in13, in14, in15)
-    #undef TRANSPOSE_16x16_16BIT
+#undef TRANSPOSE_16x16_16BIT
         }
 
         nShift = shift;
@@ -981,70 +980,70 @@ void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
             row = _mm256_add_epi32(_mm256_add_epi32(T00, T01), _mm256_add_epi32(T02, T03));
 
                 COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_p45_p45, c16_p43_p44, c16_p39_p41, c16_p34_p36, c16_p27_p30, c16_p19_p23, c16_p11_p15, c16_p02_p07, O00A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_p41_p45, c16_p23_p34, c16_n02_p11, c16_n27_n15, c16_n43_n36, c16_n44_n45, c16_n30_n39, c16_n07_n19, O01A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_p34_p44, c16_n07_p15, c16_n41_n27, c16_n39_n45, c16_n02_n23, c16_p36_p19, c16_p43_p45, c16_p11_p30, O02A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_p23_p43, c16_n34_n07, c16_n36_n45, c16_p19_n11, c16_p44_p41, c16_n02_p27, c16_n45_n30, c16_n15_n39, O03A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_p11_p41, c16_n45_n27, c16_p07_n30, c16_p43_p39, c16_n23_p15, c16_n34_n45, c16_p36_p02, c16_p19_p44, O04A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n02_p39, c16_n36_n41, c16_p43_p07, c16_n11_p34, c16_n30_n44, c16_p45_p15, c16_n19_p27, c16_n23_n45, O05A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n15_p36, c16_n11_n45, c16_p34_p39, c16_n45_n19, c16_p41_n07, c16_n23_p30, c16_n02_n44, c16_p27_p43, O06A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n27_p34, c16_p19_n39, c16_n11_p43, c16_p02_n45, c16_p07_p45, c16_n15_n44, c16_p23_p41, c16_n30_n36, O07A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n36_p30, c16_p41_n23, c16_n44_p15, c16_p45_n07, c16_n45_n02, c16_p43_p11, c16_n39_n19, c16_p34_p27, O08A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n43_p27, c16_p44_n02, c16_n30_n23, c16_p07_p41, c16_p19_n45, c16_n39_p34, c16_p45_n11, c16_n36_n15, O09A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n45_p23, c16_p27_p19, c16_p15_n45, c16_n44_p30, c16_p34_p11, c16_p07_n43, c16_n41_p36, c16_p39_p02, O10A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n44_p19, c16_n02_p36, c16_p45_n34, c16_n15_n23, c16_n39_p43, c16_p30_p07, c16_p27_n45, c16_n41_p11, O11A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n39_p15, c16_n30_p45, c16_p27_p02, c16_p41_n44, c16_n11_n19, c16_n45_p36, c16_n07_p34, c16_p43_n23, O12A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n30_p11, c16_n45_p43, c16_n19_p36, c16_p23_n02, c16_p45_n39, c16_p27_n41, c16_n15_n07, c16_n44_p34, O13A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n19_p07, c16_n39_p30, c16_n45_p44, c16_n36_p43, c16_n15_p27, c16_p11_p02, c16_p34_n23, c16_p45_n41, O14A)
-                    COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
-                    c16_n07_p02, c16_n15_p11, c16_n23_p19, c16_n30_p27, c16_n36_p34, c16_n41_p39, c16_n44_p43, c16_n45_p45, O15A)
+                            c16_p45_p45, c16_p43_p44, c16_p39_p41, c16_p34_p36, c16_p27_p30, c16_p19_p23, c16_p11_p15, c16_p02_p07, O00A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_p41_p45, c16_p23_p34, c16_n02_p11, c16_n27_n15, c16_n43_n36, c16_n44_n45, c16_n30_n39, c16_n07_n19, O01A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_p34_p44, c16_n07_p15, c16_n41_n27, c16_n39_n45, c16_n02_n23, c16_p36_p19, c16_p43_p45, c16_p11_p30, O02A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_p23_p43, c16_n34_n07, c16_n36_n45, c16_p19_n11, c16_p44_p41, c16_n02_p27, c16_n45_n30, c16_n15_n39, O03A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_p11_p41, c16_n45_n27, c16_p07_n30, c16_p43_p39, c16_n23_p15, c16_n34_n45, c16_p36_p02, c16_p19_p44, O04A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n02_p39, c16_n36_n41, c16_p43_p07, c16_n11_p34, c16_n30_n44, c16_p45_p15, c16_n19_p27, c16_n23_n45, O05A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n15_p36, c16_n11_n45, c16_p34_p39, c16_n45_n19, c16_p41_n07, c16_n23_p30, c16_n02_n44, c16_p27_p43, O06A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n27_p34, c16_p19_n39, c16_n11_p43, c16_p02_n45, c16_p07_p45, c16_n15_n44, c16_p23_p41, c16_n30_n36, O07A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n36_p30, c16_p41_n23, c16_n44_p15, c16_p45_n07, c16_n45_n02, c16_p43_p11, c16_n39_n19, c16_p34_p27, O08A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n43_p27, c16_p44_n02, c16_n30_n23, c16_p07_p41, c16_p19_n45, c16_n39_p34, c16_p45_n11, c16_n36_n15, O09A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n45_p23, c16_p27_p19, c16_p15_n45, c16_n44_p30, c16_p34_p11, c16_p07_n43, c16_n41_p36, c16_p39_p02, O10A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n44_p19, c16_n02_p36, c16_p45_n34, c16_n15_n23, c16_n39_p43, c16_p30_p07, c16_p27_n45, c16_n41_p11, O11A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n39_p15, c16_n30_p45, c16_p27_p02, c16_p41_n44, c16_n11_n19, c16_n45_p36, c16_n07_p34, c16_p43_n23, O12A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n30_p11, c16_n45_p43, c16_n19_p36, c16_p23_n02, c16_p45_n39, c16_p27_n41, c16_n15_n07, c16_n44_p34, O13A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n19_p07, c16_n39_p30, c16_n45_p44, c16_n36_p43, c16_n15_p27, c16_p11_p02, c16_p34_n23, c16_p45_n41, O14A)
+                COMPUTE_ROW(T_00_00A, T_00_01A, T_00_02A, T_00_03A, T_00_04A, T_00_05A, T_00_06A, T_00_07A, \
+                            c16_n07_p02, c16_n15_p11, c16_n23_p19, c16_n30_p27, c16_n36_p34, c16_n41_p39, c16_n44_p43, c16_n45_p45, O15A)
 
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_p45_p45, c16_p43_p44, c16_p39_p41, c16_p34_p36, c16_p27_p30, c16_p19_p23, c16_p11_p15, c16_p02_p07, O00B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_p41_p45, c16_p23_p34, c16_n02_p11, c16_n27_n15, c16_n43_n36, c16_n44_n45, c16_n30_n39, c16_n07_n19, O01B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_p34_p44, c16_n07_p15, c16_n41_n27, c16_n39_n45, c16_n02_n23, c16_p36_p19, c16_p43_p45, c16_p11_p30, O02B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_p23_p43, c16_n34_n07, c16_n36_n45, c16_p19_n11, c16_p44_p41, c16_n02_p27, c16_n45_n30, c16_n15_n39, O03B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_p11_p41, c16_n45_n27, c16_p07_n30, c16_p43_p39, c16_n23_p15, c16_n34_n45, c16_p36_p02, c16_p19_p44, O04B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n02_p39, c16_n36_n41, c16_p43_p07, c16_n11_p34, c16_n30_n44, c16_p45_p15, c16_n19_p27, c16_n23_n45, O05B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n15_p36, c16_n11_n45, c16_p34_p39, c16_n45_n19, c16_p41_n07, c16_n23_p30, c16_n02_n44, c16_p27_p43, O06B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n27_p34, c16_p19_n39, c16_n11_p43, c16_p02_n45, c16_p07_p45, c16_n15_n44, c16_p23_p41, c16_n30_n36, O07B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n36_p30, c16_p41_n23, c16_n44_p15, c16_p45_n07, c16_n45_n02, c16_p43_p11, c16_n39_n19, c16_p34_p27, O08B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n43_p27, c16_p44_n02, c16_n30_n23, c16_p07_p41, c16_p19_n45, c16_n39_p34, c16_p45_n11, c16_n36_n15, O09B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n45_p23, c16_p27_p19, c16_p15_n45, c16_n44_p30, c16_p34_p11, c16_p07_n43, c16_n41_p36, c16_p39_p02, O10B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n44_p19, c16_n02_p36, c16_p45_n34, c16_n15_n23, c16_n39_p43, c16_p30_p07, c16_p27_n45, c16_n41_p11, O11B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n39_p15, c16_n30_p45, c16_p27_p02, c16_p41_n44, c16_n11_n19, c16_n45_p36, c16_n07_p34, c16_p43_n23, O12B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n30_p11, c16_n45_p43, c16_n19_p36, c16_p23_n02, c16_p45_n39, c16_p27_n41, c16_n15_n07, c16_n44_p34, O13B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n19_p07, c16_n39_p30, c16_n45_p44, c16_n36_p43, c16_n15_p27, c16_p11_p02, c16_p34_n23, c16_p45_n41, O14B)
-                    COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
-                    c16_n07_p02, c16_n15_p11, c16_n23_p19, c16_n30_p27, c16_n36_p34, c16_n41_p39, c16_n44_p43, c16_n45_p45, O15B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_p45_p45, c16_p43_p44, c16_p39_p41, c16_p34_p36, c16_p27_p30, c16_p19_p23, c16_p11_p15, c16_p02_p07, O00B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_p41_p45, c16_p23_p34, c16_n02_p11, c16_n27_n15, c16_n43_n36, c16_n44_n45, c16_n30_n39, c16_n07_n19, O01B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_p34_p44, c16_n07_p15, c16_n41_n27, c16_n39_n45, c16_n02_n23, c16_p36_p19, c16_p43_p45, c16_p11_p30, O02B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_p23_p43, c16_n34_n07, c16_n36_n45, c16_p19_n11, c16_p44_p41, c16_n02_p27, c16_n45_n30, c16_n15_n39, O03B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_p11_p41, c16_n45_n27, c16_p07_n30, c16_p43_p39, c16_n23_p15, c16_n34_n45, c16_p36_p02, c16_p19_p44, O04B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n02_p39, c16_n36_n41, c16_p43_p07, c16_n11_p34, c16_n30_n44, c16_p45_p15, c16_n19_p27, c16_n23_n45, O05B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n15_p36, c16_n11_n45, c16_p34_p39, c16_n45_n19, c16_p41_n07, c16_n23_p30, c16_n02_n44, c16_p27_p43, O06B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n27_p34, c16_p19_n39, c16_n11_p43, c16_p02_n45, c16_p07_p45, c16_n15_n44, c16_p23_p41, c16_n30_n36, O07B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n36_p30, c16_p41_n23, c16_n44_p15, c16_p45_n07, c16_n45_n02, c16_p43_p11, c16_n39_n19, c16_p34_p27, O08B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n43_p27, c16_p44_n02, c16_n30_n23, c16_p07_p41, c16_p19_n45, c16_n39_p34, c16_p45_n11, c16_n36_n15, O09B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n45_p23, c16_p27_p19, c16_p15_n45, c16_n44_p30, c16_p34_p11, c16_p07_n43, c16_n41_p36, c16_p39_p02, O10B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n44_p19, c16_n02_p36, c16_p45_n34, c16_n15_n23, c16_n39_p43, c16_p30_p07, c16_p27_n45, c16_n41_p11, O11B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n39_p15, c16_n30_p45, c16_p27_p02, c16_p41_n44, c16_n11_n19, c16_n45_p36, c16_n07_p34, c16_p43_n23, O12B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n30_p11, c16_n45_p43, c16_n19_p36, c16_p23_n02, c16_p45_n39, c16_p27_n41, c16_n15_n07, c16_n44_p34, O13B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n19_p07, c16_n39_p30, c16_n45_p44, c16_n36_p43, c16_n15_p27, c16_p11_p02, c16_p34_n23, c16_p45_n41, O14B)
+                COMPUTE_ROW(T_00_00B, T_00_01B, T_00_02B, T_00_03B, T_00_04B, T_00_05B, T_00_06B, T_00_07B, \
+                            c16_n07_p02, c16_n15_p11, c16_n23_p19, c16_n30_p27, c16_n36_p34, c16_n41_p39, c16_n44_p43, c16_n45_p45, O15B)
 
 #undef      COMPUTE_ROW
             }
@@ -1058,22 +1057,22 @@ void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
             row = _mm256_add_epi32(T00, T01);
 
                 COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_p43_p45, c16_p35_p40, c16_p21_p29, c16_p04_p13, EO0A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_p29_p43, c16_n21_p04, c16_n45_n40, c16_n13_n35, EO1A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_p04_p40, c16_n43_n35, c16_p29_n13, c16_p21_p45, EO2A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n21_p35, c16_p04_n43, c16_p13_p45, c16_n29_n40, EO3A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n40_p29, c16_p45_n13, c16_n43_n04, c16_p35_p21, EO4A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n45_p21, c16_p13_p29, c16_p35_n43, c16_n40_p04, EO5A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n35_p13, c16_n40_p45, c16_p04_p21, c16_p43_n29, EO6A)
-                    COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n13_p04, c16_n29_p21, c16_n40_p35, c16_n45_p43, EO7A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_p29_p43, c16_n21_p04, c16_n45_n40, c16_n13_n35, EO1A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_p04_p40, c16_n43_n35, c16_p29_n13, c16_p21_p45, EO2A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n21_p35, c16_p04_n43, c16_p13_p45, c16_n29_n40, EO3A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n40_p29, c16_p45_n13, c16_n43_n04, c16_p35_p21, EO4A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n45_p21, c16_p13_p29, c16_p35_n43, c16_n40_p04, EO5A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n35_p13, c16_n40_p45, c16_p04_p21, c16_p43_n29, EO6A)
+                COMPUTE_ROW(T_00_08A, T_00_09A, T_00_10A, T_00_11A, c16_n13_p04, c16_n29_p21, c16_n40_p35, c16_n45_p43, EO7A)
 
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p43_p45, c16_p35_p40, c16_p21_p29, c16_p04_p13, EO0B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p29_p43, c16_n21_p04, c16_n45_n40, c16_n13_n35, EO1B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p04_p40, c16_n43_n35, c16_p29_n13, c16_p21_p45, EO2B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n21_p35, c16_p04_n43, c16_p13_p45, c16_n29_n40, EO3B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n40_p29, c16_p45_n13, c16_n43_n04, c16_p35_p21, EO4B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n45_p21, c16_p13_p29, c16_p35_n43, c16_n40_p04, EO5B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n35_p13, c16_n40_p45, c16_p04_p21, c16_p43_n29, EO6B)
-                    COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n13_p04, c16_n29_p21, c16_n40_p35, c16_n45_p43, EO7B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p43_p45, c16_p35_p40, c16_p21_p29, c16_p04_p13, EO0B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p29_p43, c16_n21_p04, c16_n45_n40, c16_n13_n35, EO1B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_p04_p40, c16_n43_n35, c16_p29_n13, c16_p21_p45, EO2B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n21_p35, c16_p04_n43, c16_p13_p45, c16_n29_n40, EO3B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n40_p29, c16_p45_n13, c16_n43_n04, c16_p35_p21, EO4B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n45_p21, c16_p13_p29, c16_p35_n43, c16_n40_p04, EO5B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n35_p13, c16_n40_p45, c16_p04_p21, c16_p43_n29, EO6B)
+                COMPUTE_ROW(T_00_08B, T_00_09B, T_00_10B, T_00_11B, c16_n13_p04, c16_n29_p21, c16_n40_p35, c16_n45_p43, EO7B)
 #undef      COMPUTE_ROW
             }
 
@@ -1422,9 +1421,9 @@ void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
         O13 = _mm256_permute2x128_si256(tr0_10, tr0_11, 0x31); \
         O14 = _mm256_permute2x128_si256(tr0_12, tr0_13, 0x31); \
         O15 = _mm256_permute2x128_si256(tr0_14, tr0_15, 0x31); \
-
+ 
             TRANSPOSE_16x16_16BIT(res00[0], res01[0], res02[0], res03[0], res04[0], res05[0], res06[0], res07[0], res08[0], res09[0], res10[0], res11[0], res12[0], res13[0], res14[0], res15[0], in00[0], in01[0], in02[0], in03[0], in04[0], in05[0], in06[0], in07[0], in08[0], in09[0], in10[0], in11[0], in12[0], in13[0], in14[0], in15[0])
-                TRANSPOSE_16x16_16BIT(res16[0], res17[0], res18[0], res19[0], res20[0], res21[0], res22[0], res23[0], res24[0], res25[0], res26[0], res27[0], res28[0], res29[0], res30[0], res31[0], in00[1], in01[1], in02[1], in03[1], in04[1], in05[1], in06[1], in07[1], in08[1], in09[1], in10[1], in11[1], in12[1], in13[1], in14[1], in15[1]);
+            TRANSPOSE_16x16_16BIT(res16[0], res17[0], res18[0], res19[0], res20[0], res21[0], res22[0], res23[0], res24[0], res25[0], res26[0], res27[0], res28[0], res29[0], res30[0], res31[0], in00[1], in01[1], in02[1], in03[1], in04[1], in05[1], in06[1], in07[1], in08[1], in09[1], in10[1], in11[1], in12[1], in13[1], in14[1], in15[1]);
             TRANSPOSE_16x16_16BIT(res00[1], res01[1], res02[1], res03[1], res04[1], res05[1], res06[1], res07[1], res08[1], res09[1], res10[1], res11[1], res12[1], res13[1], res14[1], res15[1], in16[0], in17[0], in18[0], in19[0], in20[0], in21[0], in22[0], in23[0], in24[0], in25[0], in26[0], in27[0], in28[0], in29[0], in30[0], in31[0]);
             TRANSPOSE_16x16_16BIT(res16[1], res17[1], res18[1], res19[1], res20[1], res21[1], res22[1], res23[1], res24[1], res25[1], res26[1], res27[1], res28[1], res29[1], res30[1], res31[1], in16[1], in17[1], in18[1], in19[1], in20[1], in21[1], in22[1], in23[1], in24[1], in25[1], in26[1], in27[1], in28[1], in29[1], in30[1], in31[1]);
 
@@ -1543,7 +1542,7 @@ void idct_c_32x32_avx2(const coeff_t *src, coeff_t *dst, int i_dst)
         O6 = _mm256_unpacklo_epi64(tr1_3, tr1_7); \
         O7 = _mm256_unpackhi_epi64(tr1_3, tr1_7);
 
-#define TRANSPOSE_16x16_16BIT_m256i(I0,	I1,	I2,	I3,	I4,	I5,	I6,	I7,	I8,	I9,	I10, I11, I12, I13, I14, I15, O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11,	O12, O13, O14, O15) \
+#define TRANSPOSE_16x16_16BIT_m256i(I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15) \
         TRANSPOSE_8x8_16BIT_m256i(I0, I1, I2, I3, I4, I5, I6, I7, t0, t1, t2, t3, t4, t5, t6, t7); \
         TRANSPOSE_8x8_16BIT_m256i(I8, I9, I10, I11, I12, I13, I14, I15, t8, t9, t10, t11, t12, t13, t14, t15); \
         O0 = _mm256_permute2x128_si256(t0, t8, 0x20); \
@@ -1570,7 +1569,7 @@ static void inv_wavelet_64x16_avx2(coeff_t *coeff)
 
     __m256i tr0_0, tr0_1, tr0_2, tr0_3, tr0_4, tr0_5, tr0_6, tr0_7;
     __m256i tr1_0, tr1_1, tr1_2, tr1_3, tr1_4, tr1_5, tr1_6, tr1_7;
-    __m256i	t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
+    __m256i t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
 
     //按行 64*16
     __m256i T00[4], T01[4], T02[4], T03[4], T04[4], T05[4], T06[4], T07[4], T08[4], T09[4], T10[4], T11[4], T12[4], T13[4], T14[4], T15[4];
@@ -1692,7 +1691,7 @@ static void inv_wavelet_16x64_avx2(coeff_t *coeff)
 
     __m256i tr0_0, tr0_1, tr0_2, tr0_3, tr0_4, tr0_5, tr0_6, tr0_7;
     __m256i tr1_0, tr1_1, tr1_2, tr1_3, tr1_4, tr1_5, tr1_6, tr1_7;
-    __m256i	t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
+    __m256i t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
 
     __m256i S00, S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28, S29, S30, S31;
     __m256i S32, S33, S34, S35, S36, S37, S38, S39, S40, S41, S42, S43, S44, S45, S46, S47, S48, S49, S50, S51, S52, S53, S54, S55, S56, S57, S58, S59, S60, S61, S62, S63;
@@ -1912,7 +1911,7 @@ static void inv_wavelet_64x64_avx2(coeff_t *coeff)
 
     __m256i tr0_0, tr0_1, tr0_2, tr0_3, tr0_4, tr0_5, tr0_6, tr0_7;
     __m256i tr1_0, tr1_1, tr1_2, tr1_3, tr1_4, tr1_5, tr1_6, tr1_7;
-    __m256i	t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
+    __m256i t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15;
 
     //按行 64*64
     __m256i T00[4], T01[4], T02[4], T03[4], T04[4], T05[4], T06[4], T07[4], T08[4], T09[4], T10[4], T11[4], T12[4], T13[4], T14[4], T15[4], T16[4], T17[4], T18[4], T19[4], T20[4], T21[4], T22[4], T23[4], T24[4], T25[4], T26[4], T27[4], T28[4], T29[4], T30[4], T31[4], T32[4], T33[4], T34[4], T35[4], T36[4], T37[4], T38[4], T39[4], T40[4], T41[4], T42[4], T43[4], T44[4], T45[4], T46[4], T47[4], T48[4], T49[4], T50[4], T51[4], T52[4], T53[4], T54[4], T55[4], T56[4], T57[4], T58[4], T59[4], T60[4], T61[4], T62[4], T63[4];
@@ -2050,7 +2049,7 @@ static void inv_wavelet_64x64_avx2(coeff_t *coeff)
     }
 
     /*--transposition & Store--*/
-    //64x64 
+    //64x64
     TRANSPOSE_16x16_16BIT_m256i(V00[0], V32[0], V01[0], V33[0], V02[0], V34[0], V03[0], V35[0], V04[0], V36[0], V05[0], V37[0], V06[0], V38[0], V07[0], V39[0], T00[0], T01[0], T02[0], T03[0], T04[0], T05[0], T06[0], T07[0], T08[0], T09[0], T10[0], T11[0], T12[0], T13[0], T14[0], T15[0]);
     TRANSPOSE_16x16_16BIT_m256i(V00[1], V32[1], V01[1], V33[1], V02[1], V34[1], V03[1], V35[1], V04[1], V36[1], V05[1], V37[1], V06[1], V38[1], V07[1], V39[1], T16[0], T17[0], T18[0], T19[0], T20[0], T21[0], T22[0], T23[0], T24[0], T25[0], T26[0], T27[0], T28[0], T29[0], T30[0], T31[0]);
     TRANSPOSE_16x16_16BIT_m256i(V00[2], V32[2], V01[2], V33[2], V02[2], V34[2], V03[2], V35[2], V04[2], V36[2], V05[2], V37[2], V06[2], V38[2], V07[2], V39[2], T32[0], T33[0], T34[0], T35[0], T36[0], T37[0], T38[0], T39[0], T40[0], T41[0], T42[0], T43[0], T44[0], T45[0], T46[0], T47[0]);

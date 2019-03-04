@@ -710,7 +710,7 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
     pel_t const *p;
 
     __m128i mask = _mm_loadu_si128((__m128i*)(intrinsic_mask[(width & 7) - 1]));
-    
+
     src -= 3 * i_src;
 
     __m128i coeffFirst0, coeffFirst1, coeffFirst2, coeffFirst3;
@@ -724,34 +724,34 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
     pel_t *dst2 = dst[2];
 
     //load Coefficient
-    if (bsymFirst) { 
+    if (bsymFirst) {
         coeffFirst0 = _mm_set1_epi8(coeff[0][0]);
         coeffFirst1 = _mm_set1_epi8(coeff[0][1]);
         coeffFirst2 = _mm_set1_epi8(coeff[0][2]);
         coeffFirst3 = _mm_set1_epi8(coeff[0][3]);
-    } else { 
+    } else {
         coeffFirst0 = _mm_set1_epi16(*(short*)coeff[0]);
         coeffFirst1 = _mm_set1_epi16(*(short*)(coeff[0] + 2));
         coeffFirst2 = _mm_set1_epi16(*(short*)(coeff[0] + 4));
         coeffFirst3 = _mm_set1_epi16(*(short*)(coeff[0] + 6));
     }
-    if (bsymSecond) { 
+    if (bsymSecond) {
         coeffSecond0 = _mm_set1_epi8(coeff[1][0]);
         coeffSecond1 = _mm_set1_epi8(coeff[1][1]);
         coeffSecond2 = _mm_set1_epi8(coeff[1][2]);
         coeffSecond3 = _mm_set1_epi8(coeff[1][3]);
-    } else { 
+    } else {
         coeffSecond0 = _mm_set1_epi16(*(short*)coeff[1]);
         coeffSecond1 = _mm_set1_epi16(*(short*)(coeff[1] + 2));
         coeffSecond2 = _mm_set1_epi16(*(short*)(coeff[1] + 4));
         coeffSecond3 = _mm_set1_epi16(*(short*)(coeff[1] + 6));
     }
-    if (bsymThird) { 
+    if (bsymThird) {
         coeffThird0 = _mm_set1_epi8(coeff[2][0]);
         coeffThird1 = _mm_set1_epi8(coeff[2][1]);
         coeffThird2 = _mm_set1_epi8(coeff[2][2]);
         coeffThird3 = _mm_set1_epi8(coeff[2][3]);
-    } else { 
+    } else {
         coeffThird0 = _mm_set1_epi16(*(short*)coeff[2]);
         coeffThird1 = _mm_set1_epi16(*(short*)(coeff[2] + 2));
         coeffThird2 = _mm_set1_epi16(*(short*)(coeff[2] + 4));
@@ -772,12 +772,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             __m128i T70 = _mm_loadu_si128((__m128i*)(p + 7 * i_src));
 
             //First
-            if (bsymFirst) { 
+            if (bsymFirst) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -799,12 +799,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             _mm_storel_epi64((__m128i*)&dst0[col], mVal);
 
             //Second
-            if (bsymSecond) { 
+            if (bsymSecond) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -826,12 +826,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             _mm_storel_epi64((__m128i*)&dst1[col], mVal);
 
             //Third
-            if (bsymThird) { 
+            if (bsymThird) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -866,12 +866,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             __m128i T70 = _mm_loadu_si128((__m128i*)(p + 7 * i_src));
 
             //First
-            if (bsymFirst) { 
+            if (bsymFirst) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -893,12 +893,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             _mm_maskmoveu_si128(mVal, mask, (char *)&dst0[col]);
 
             //Second
-            if (bsymSecond) { 
+            if (bsymSecond) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -920,12 +920,12 @@ void intpl_luma_ver_x3_sse128(pel_t *const dst[3], int i_dst, pel_t *src, int i_
             _mm_maskmoveu_si128(mVal, mask, (char *)&dst1[col]);
 
             //Third
-            if (bsymThird) { 
+            if (bsymThird) {
                 tempT00 = _mm_unpacklo_epi8(T00, T70);
                 tempT10 = _mm_unpacklo_epi8(T10, T60);
                 tempT20 = _mm_unpacklo_epi8(T20, T50);
                 tempT30 = _mm_unpacklo_epi8(T30, T40);
-            } else { 
+            } else {
                 tempT00 = _mm_unpacklo_epi8(T00, T10);
                 tempT10 = _mm_unpacklo_epi8(T20, T30);
                 tempT20 = _mm_unpacklo_epi8(T40, T50);
@@ -1218,7 +1218,7 @@ void intpl_luma_ext_x3_sse128(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_
     pel_t *dst1 = dst[1];
     pel_t *dst2 = dst[2];
 
-    if(bsymyFirst) { 
+    if(bsymyFirst) {
         mCoefy1First = _mm_set1_epi16(coeff[0][0]);
         mCoefy2First = _mm_set1_epi16(coeff[0][1]);
         mCoefy3First = _mm_set1_epi16(coeff[0][2]);
@@ -1234,7 +1234,7 @@ void intpl_luma_ext_x3_sse128(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_
         mCoefy4First = _mm_cvtepi8_epi16(mCoefy4First);
     }
 
-    if(bsymySecond) { 
+    if(bsymySecond) {
         mCoefy1Second = _mm_set1_epi16(coeff[1][0]);
         mCoefy2Second = _mm_set1_epi16(coeff[1][1]);
         mCoefy3Second = _mm_set1_epi16(coeff[1][2]);
@@ -1250,7 +1250,7 @@ void intpl_luma_ext_x3_sse128(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_
         mCoefy4Second = _mm_cvtepi8_epi16(mCoefy4Second);
     }
 
-    if(bsymyThird) { 
+    if(bsymyThird) {
         mCoefy1Third = _mm_set1_epi16(coeff[2][0]);
         mCoefy2Third = _mm_set1_epi16(coeff[2][1]);
         mCoefy3Third = _mm_set1_epi16(coeff[2][2]);
@@ -1270,9 +1270,9 @@ void intpl_luma_ext_x3_sse128(pel_t *const dst[3], int i_dst, mct_t *tmp, int i_
     __m128i T0, T1, T2, T3, T4, T5, T6, T7;
     __m128i mVal1, mVal2, mVal;
     //
-    for (row = 0; row < height; row++) { 
+    for (row = 0; row < height; row++) {
         p = tmp;
-        for (col = 0; col < width - 7; col += 8) { 
+        for (col = 0; col < width - 7; col += 8) {
             T00 = _mm_loadu_si128((__m128i*)(p));
             T10 = _mm_loadu_si128((__m128i*)(p + i_tmp));
             T20 = _mm_loadu_si128((__m128i*)(p + 2 * i_tmp));
@@ -1919,7 +1919,7 @@ void intpl_chroma_block_ext_sse128(pel_t *dst, int i_dst, pel_t *src, int i_src,
                 __m128i M13 = _mm_unpackhi_epi16(T2, T3);
 
                 mV01 = _mm_add_epi32(_mm_madd_epi16(M00, mCoefy1), _mm_madd_epi16(M01, mCoefy2));
-                mV02 = _mm_add_epi32(_mm_madd_epi16(M02, mCoefy1), _mm_madd_epi16(M03, mCoefy2));                
+                mV02 = _mm_add_epi32(_mm_madd_epi16(M02, mCoefy1), _mm_madd_epi16(M03, mCoefy2));
                 mV11 = _mm_add_epi32(_mm_madd_epi16(M10, mCoefy1), _mm_madd_epi16(M11, mCoefy2));
                 mV12 = _mm_add_epi32(_mm_madd_epi16(M12, mCoefy1), _mm_madd_epi16(M13, mCoefy2));
 
@@ -2041,7 +2041,7 @@ void intpl_chroma_block_ext_sse128(pel_t *dst, int i_dst, pel_t *src, int i_src,
                 __m128i M01 = _mm_unpacklo_epi16(T2, T3);
                 __m128i M02 = _mm_unpackhi_epi16(T0, T1);
                 __m128i M03 = _mm_unpackhi_epi16(T2, T3);
-                
+
                 __m128i M10 = _mm_unpacklo_epi16(T1, T2);
                 __m128i M11 = _mm_unpacklo_epi16(T3, T4);
                 __m128i M12 = _mm_unpackhi_epi16(T1, T2);

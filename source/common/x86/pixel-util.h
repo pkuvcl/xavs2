@@ -89,13 +89,13 @@ void xavs2_weight_sp_sse4(const int16_t *src, pel_t *dst, intptr_t srcStride, in
 
 #define xavs2_pixel_ssim_4x4x2_core_mmx2 FPFX(pixel_ssim_4x4x2_core_mmx2)
 void xavs2_pixel_ssim_4x4x2_core_mmx2(const pel_t *pix1, intptr_t stride1,
-                                     const pel_t *pix2, intptr_t stride2, int sums[2][4]);
+                                      const pel_t *pix2, intptr_t stride2, int sums[2][4]);
 #define xavs2_pixel_ssim_4x4x2_core_sse2 FPFX(pixel_ssim_4x4x2_core_sse2)
 void xavs2_pixel_ssim_4x4x2_core_sse2(const pel_t *pix1, intptr_t stride1,
-                                     const pel_t *pix2, intptr_t stride2, int sums[2][4]);
+                                      const pel_t *pix2, intptr_t stride2, int sums[2][4]);
 #define xavs2_pixel_ssim_4x4x2_core_avx FPFX(pixel_ssim_4x4x2_core_avx)
 void xavs2_pixel_ssim_4x4x2_core_avx(const pel_t *pix1, intptr_t stride1,
-                                    const pel_t *pix2, intptr_t stride2, int sums[2][4]);
+                                     const pel_t *pix2, intptr_t stride2, int sums[2][4]);
 #define xavs2_pixel_ssim_end4_sse2 FPFX(pixel_ssim_end4_sse2)
 float xavs2_pixel_ssim_end4_sse2(int sum0[5][4], int sum1[5][4], int width);
 #define xavs2_pixel_ssim_end4_avx FPFX(pixel_ssim_end4_avx)

@@ -66,7 +66,7 @@ void fill_edge_samples_0_sse128(const pel_t *pTL, int i_TL, const pel_t *pLcuEP,
     }
     memset(&EP[-(bsy << 1)] + j, g_dc_value, k - j + 1);
     EP[2 * bsx] = (pel_t)g_dc_value;
-    
+
     /* get prediction pixels ---------------------------------------
      * extra pixels          | left-down pixels   | left pixels   | top-left | top pixels  | top-right pixels  | extra pixels
      * -2*bsy-4 ... -2*bsy-1 | -bsy-bsy ... -bsy-1| -bsy -3 -2 -1 |     0    | 1 2 ... bsx | bsx+1 ... bsx+bsx | 2*bsx+1 ... 2*bsx+4
@@ -181,7 +181,7 @@ void fill_edge_samples_x_sse128(const pel_t *pTL, int i_TL, const pel_t *pLcuEP,
     }
     memset(&EP[-(bsy << 1)] + j, g_dc_value, k - j + 1);
     EP[2 * bsx] = (pel_t)g_dc_value;
-    
+
     /* get prediction pixels ---------------------------------------
      * extra pixels          | left-down pixels   | left pixels   | top-left | top pixels  | top-right pixels  | extra pixels
      * -2*bsy-4 ... -2*bsy-1 | -bsy-bsy ... -bsy-1| -bsy -3 -2 -1 |     0    | 1 2 ... bsx | bsx+1 ... bsx+bsx | 2*bsx+1 ... 2*bsx+4
@@ -307,7 +307,7 @@ void fill_edge_samples_y_sse128(const pel_t *pTL, int i_TL, const pel_t *pLcuEP,
     }
     memset(&EP[-(bsy << 1)] + j, g_dc_value, k - j + 1);
     EP[2 * bsx] = (pel_t)g_dc_value;
-    
+
     /* get prediction pixels ---------------------------------------
      * extra pixels          | left-down pixels   | left pixels   | top-left | top pixels  | top-right pixels  | extra pixels
      * -2*bsy-4 ... -2*bsy-1 | -bsy-bsy ... -bsy-1| -bsy -3 -2 -1 |     0    | 1 2 ... bsx | bsx+1 ... bsx+bsx | 2*bsx+1 ... 2*bsx+4
@@ -424,7 +424,7 @@ void fill_edge_samples_xy_sse128(const pel_t *pTL, int i_TL, const pel_t *pLcuEP
     }
     memset(&EP[-(bsy << 1)] + j, g_dc_value, k - j + 1);
     EP[2 * bsx] = (pel_t)g_dc_value;
-    
+
     /* get prediction pixels ---------------------------------------
      * extra pixels          | left-down pixels   | left pixels   | top-left | top pixels  | top-right pixels  | extra pixels
      * -2*bsy-4 ... -2*bsy-1 | -bsy-bsy ... -bsy-1| -bsy -3 -2 -1 |     0    | 1 2 ... bsx | bsx+1 ... bsx+bsx | 2*bsx+1 ... 2*bsx+4
