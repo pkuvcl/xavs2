@@ -68,15 +68,15 @@ enum transform_scan_direction_e {
 /* ---------------------------------------------------------------------------
  * luma intra prediction modes
  */
-enum intra_pred_mode_e{
+enum intra_pred_mode_e {
     /* non-angular mode */
     DC_PRED         = 0 ,                /* prediction mode: DC */
     PLANE_PRED      = 1 ,                /* prediction mode: PLANE */
     BI_PRED         = 2 ,                /* prediction mode: BI */
 
     /* vertical angular mode */
-    INTRA_ANG_X_3   =  3, INTRA_ANG_X_4   =  4, INTRA_ANG_X_5   =  5, 
-    INTRA_ANG_X_6   =  6, INTRA_ANG_X_7   =  7, INTRA_ANG_X_8   =  8, 
+    INTRA_ANG_X_3   =  3, INTRA_ANG_X_4   =  4, INTRA_ANG_X_5   =  5,
+    INTRA_ANG_X_6   =  6, INTRA_ANG_X_7   =  7, INTRA_ANG_X_8   =  8,
     INTRA_ANG_X_9   =  9, INTRA_ANG_X_10  = 10, INTRA_ANG_X_11  = 11,
     INTRA_ANG_X_12  = 12,
     VERT_PRED       = INTRA_ANG_X_12,    /* prediction mode: VERT */
@@ -88,8 +88,8 @@ enum intra_pred_mode_e{
     INTRA_ANG_XY_22 = 22, INTRA_ANG_XY_23 = 23,
 
     /* horizontal angular mode */
-    INTRA_ANG_Y_24  = 24, INTRA_ANG_Y_25  = 25, INTRA_ANG_Y_26 = 26, 
-    INTRA_ANG_Y_27  = 27, INTRA_ANG_Y_28  = 28, INTRA_ANG_Y_29 = 29, 
+    INTRA_ANG_Y_24  = 24, INTRA_ANG_Y_25  = 25, INTRA_ANG_Y_26 = 26,
+    INTRA_ANG_Y_27  = 27, INTRA_ANG_Y_28  = 28, INTRA_ANG_Y_29 = 29,
     INTRA_ANG_Y_30  = 30, INTRA_ANG_Y_31  = 31, INTRA_ANG_Y_32 = 32,
     HOR_PRED        = INTRA_ANG_Y_24,    /* prediction mode: HOR */
     NUM_INTRA_MODE  = 33,                /* number of luma intra prediction modes */
@@ -181,7 +181,7 @@ enum neighbor_block_pos_e {
 enum rdo_level_e {
     RDO_OFF       = 0,          /* disable RDO */
     RDO_CU_LEVEL1 = 1,          /* conduct RDO only for best 1 partition mode of CU */
-    RDO_CU_LEVEL2 = 2,          /* conduct RDO only for best 2 partition mode of CU, 
+    RDO_CU_LEVEL2 = 2,          /* conduct RDO only for best 2 partition mode of CU,
                                  * including 1 skip/direct mode and 1 normal partition mode */
     RDO_ALL       = 3           /* conduct for all partition modes */
 };
@@ -264,7 +264,7 @@ enum sao_class_e {
 #define XAVS2_SWAP(x, y)      {(y) = (y) ^ (x); (x) = (y) ^ (x); (y) = (x) ^ (y);}
 #ifdef __cplusplus
 template <class T>
-static void XAVS2_SWAP_PTR(T *&x, T *&y) 
+static void XAVS2_SWAP_PTR(T *&x, T *&y)
 {
     T *t = x;
     x = y;

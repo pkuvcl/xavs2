@@ -2,7 +2,7 @@
  * avs2tab.h
  *
  * Description of this file:
- *    AVS2 tables definition of the xavs2 library (this file is ONLY included by block_info.c) 
+ *    AVS2 tables definition of the xavs2 library (this file is ONLY included by block_info.c)
  *
  * --------------------------------------------------------------------------
  *
