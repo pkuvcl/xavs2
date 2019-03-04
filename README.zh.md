@@ -8,6 +8,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/issues)
 [![GitHub forks](https://img.shields.io/github/forks/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/network)
 [![GitHub stars](https://img.shields.io/github/stars/pkuvcl/xavs2.svg)](https://github.com/pkuvcl/xavs2/stargazers)
+[![Build Status](https://travis-ci.org/pkuvcl/xavs2.svg?branch=master)](https://travis-ci.org/pkuvcl/xavs2)
 
 ## 编译方法
 ### Windows
