@@ -130,8 +130,8 @@ typedef struct node_list_t {
  * AC ENGINE PARAMETERS
  */
 static const int16_t tab_LPSbits[256] = {
-   2184,2184,1928,1779,1673,1591,1525,1468,1419,1376,1338,1303,1272,1243,1216,1191,
-   1167,1145,1125,1105,1087,1069,1053,1037,1022,1007, 993, 980, 967, 954, 942, 930,
+    2184,2184,1928,1779,1673,1591,1525,1468,1419,1376,1338,1303,1272,1243,1216,1191,
+    1167,1145,1125,1105,1087,1069,1053,1037,1022,1007, 993, 980, 967, 954, 942, 930,
     919, 908, 898, 888, 878, 868, 859, 850, 841, 832, 824, 816, 808, 800, 792, 785,
     777, 770, 763, 756, 750, 743, 737, 730, 724, 718, 712, 707, 701, 695, 690, 684,
     679, 674, 669, 663, 658, 654, 649, 644, 639, 635, 630, 626, 621, 617, 613, 608,
@@ -582,9 +582,9 @@ rdoq_get_last_cg_pos(coeff_t *ncur_blk, int num_coeff, const int thres_lower_int
 /* ---------------------------------------------------------------------------
  * rdoq中预先计算一个系数量化后可能取的值（加权量化）
  */
-static int rdoq_est_coeff_level_wq(xavs2_t *h, level_info_t *p_level_info, 
-    wq_data_t *wq, int wqm_size_id, int wqm_size, int xx, int yy,
-    coeff_t coeff, int qp, int shift_bit)
+static int rdoq_est_coeff_level_wq(xavs2_t *h, level_info_t *p_level_info,
+                                   wq_data_t *wq, int wqm_size_id, int wqm_size, int xx, int yy,
+                                   coeff_t coeff, int qp, int shift_bit)
 {
     const double f_err_level_mult = 256.0 / (1 << (shift_bit * 2));
     const int thres_lower_int = (int)((16384 << shift_bit) / (double)(tab_Q_TAB[qp]));
@@ -723,7 +723,7 @@ rdoq_get_sum_abs_coeff(level_info_t *p_level_info, const coeff_t *p_ncoeff, int 
  * 迭代一个CG内的系数的各个level，求当前CG的最优
  */
 static int rdoq_est_cg(xavs2_t *h, rdoq_t *p_rdoq, level_info_t *p_level_info, cost_state_t *p_cost_stat, node_t *node,
-    coeff_t *ncur_blk, int8_t *p_sig_cg_flag, int iCG, int rank_pre)
+                       coeff_t *ncur_blk, int8_t *p_sig_cg_flag, int iCG, int rank_pre)
 {
     static const int T_Chr[5] = {0, 1, 2, 4, INT_MAX};
     pair_cost_t *p_pair_cost = &p_cost_stat->pairCost[0];
@@ -752,8 +752,8 @@ static int rdoq_est_cg(xavs2_t *h, rdoq_t *p_rdoq, level_info_t *p_level_info, c
         if (node->attrib == LAST_RUN) { // this is not the last CG
             if (node->run != 16) {
                 int scan_pos = tab_1d_scan_4x4[15 - node->run];
-                p_cost_stat->lastRunCost = lambda_rdoq * 
-                    est_rate_last_coeff_pos(p_rdoq, scan_pos & 3, (scan_pos >> 2), 0, CGx, CGy);
+                p_cost_stat->lastRunCost = lambda_rdoq *
+                                           est_rate_last_coeff_pos(p_rdoq, scan_pos & 3, (scan_pos >> 2), 0, CGx, CGy);
             } else {
                 p_cost_stat->lastRunCost = 0;
             }
@@ -837,7 +837,7 @@ static int rdoq_est_cg(xavs2_t *h, rdoq_t *p_rdoq, level_info_t *p_level_info, c
                     p_ctx         = p_ctx_primary[XAVS2_MIN((absSum5 >> 1), 2)];
                     rateRunMerged = est_rate_run(p_rdoq, p_ctx, node->prev->run + 1 + node->run, 15 - pos_start, iCG, pos_start);
                     lagrDelta0    = p_cost_stat->pairCost[pairsInCG - 1].runCost;
-                } else /*if (node->next != NULL)*/ {    // LAST_RUN
+                } else { /*if (node->next != NULL)*/     // LAST_RUN
                     // only try 0 when there's more than 1 pair in the CG
                     lagrDelta0    = p_cost_stat->lastRunCost;
                     if (node->prev->run != 16) {
@@ -979,15 +979,15 @@ int rdoq_cg(xavs2_t *h, rdoq_t *p_rdoq, cu_t *p_cu, coeff_t *ncur_blk, const int
 #if ENABLE_WQUANT
             if (h->WeightQuantEnable) {
                 ncur_blk[idx_coeff] = (coeff_t)rdoq_est_coeff_level_wq(h, p_level_info,
-                    wq, wqm_size_id, wqm_size, xx, yy, ncur_blk[idx_coeff],
-                    qp, shift_bit);
+                                      wq, wqm_size_id, wqm_size, xx, yy, ncur_blk[idx_coeff],
+                                      qp, shift_bit);
             } else {
                 ncur_blk[idx_coeff] = (coeff_t)rdoq_est_coeff_level(p_level_info, ncur_blk[idx_coeff],
-                    qp, shift_bit, f_err_level_mult, thres_lower_int);
+                                      qp, shift_bit, f_err_level_mult, thres_lower_int);
             }
 #else
             ncur_blk[idx_coeff] = (coeff_t)rdoq_est_coeff_level(p_level_info, ncur_blk[idx_coeff],
-                qp, shift_bit, f_err_level_mult, thres_lower_int);
+                                  qp, shift_bit, f_err_level_mult, thres_lower_int);
 #endif
 
             p_level_info->pos_xy   = xx_yy;
@@ -1072,7 +1072,7 @@ int rdoq_cg(xavs2_t *h, rdoq_t *p_rdoq, cu_t *p_cu, coeff_t *ncur_blk, const int
                 cost_best += p_cost_stat->lastRunCost;
                 if (i_cg > 0) {
                     cost_best += p_cost_stat->sigCGFlagCost;
-               }
+                }
             }
             cost_curr += cost_curr_last_cg - cost_prev_last_cg;
 
@@ -1083,8 +1083,8 @@ int rdoq_cg(xavs2_t *h, rdoq_t *p_rdoq, cu_t *p_cu, coeff_t *ncur_blk, const int
 
                 cost_curr_last_pos = lambda_rdoq * est_rate_last_coeff_pos(p_rdoq, xx, yy, 1, CGx, CGy);
                 cost_curr += cost_curr_last_pos - cost_prev_last_pos + cost_prev_uncoded
-                          +  p_pair_cost->levelCost - cost_prev_level
-                          +  p_pair_cost->runCost   - cost_prev_run;
+                             +  p_pair_cost->levelCost - cost_prev_level
+                             +  p_pair_cost->runCost   - cost_prev_run;
 
                 cost_best += p_pair_cost->levelCost + p_pair_cost->runCost;
 
@@ -1142,8 +1142,8 @@ int rdoq_cg(xavs2_t *h, rdoq_t *p_rdoq, cu_t *p_cu, coeff_t *ncur_blk, const int
 
                 cost_curr_last_pos = lambda_rdoq * est_rate_last_coeff_pos(p_rdoq, xx, yy, 0, CGx, CGy);
                 cost_curr += cost_curr_last_pos - cost_prev_last_pos + cost_prev_uncoded
-                          + p_pair_cost->levelCost - cost_prev_level 
-                          + p_pair_cost->runCost   - cost_prev_run;
+                             + p_pair_cost->levelCost - cost_prev_level
+                             + p_pair_cost->runCost   - cost_prev_run;
 
                 if (pairNo == p_cost_stat->pairNum - 1) {
                     cost_curr += p_cost_stat->sigCGFlagCost0 - p_cost_stat->sigCGFlagCost;
@@ -1239,7 +1239,7 @@ int rdoq_block(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *cur_blk, int bsx, 
     int num_non_zero = 0;
     int i;
     const int16_t *p_tab_coeff_scan_1d;
-    
+
     rdoq_init(p_rdoq, p_aec, p_cu, bsx, bsy, i_tu_level, b_luma, intra_mode);
 
     g_funcs.dctf.abs_coeff(p_coeff, cur_blk, coeff_num);

@@ -590,7 +590,7 @@ void xavs2_slice_write_start(xavs2_t *h)
     /* init slice buffers */
     slice_init_bufer(h, slice);
 
-    /* prediction mode is set to -1 outside the frame, 
+    /* prediction mode is set to -1 outside the frame,
      * indicating that no prediction can be made from this part */
     {
         int ip_stride = h->i_width_in_minpu + 16;

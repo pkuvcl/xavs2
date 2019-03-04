@@ -141,8 +141,7 @@ static const int8_t Spiral2[9][2] = {
 
 /* ---------------------------------------------------------------------------
  * offsets for Two Point Search (TZ) */
-static const int offsets[16][2] =
-{
+static const int offsets[16][2] = {
     { -1,  0 }, {  0, -1 },
     { -1, -1 }, {  1, -1 },
     { -1,  0 }, {  1,  0 },
@@ -411,7 +410,7 @@ static const int i_org = FENC_STRIDE;
  * 否则，返回0值表示新的MV应该继续被搜索
  */
 static int pmvr_adapt_mv(int *mx, int *my, int ctr_x, int ctr_y,
-    int mv_x, int mv_y, int step_x, int step_y)
+                         int mv_x, int mv_y, int step_x, int step_y)
 {
     if (XAVS2_ABS(mv_x - ctr_x) > TH_PMVR || XAVS2_ABS(mv_y - ctr_y) > TH_PMVR) {
         *mx = mv_x + step_x * 2;
@@ -924,8 +923,7 @@ dist_t xavs2_me_search(xavs2_t *h, xavs2_me_t *p_me, int16_t(*mvc)[2], int i_mvc
     /* -------------------------------------------------------------
      * search using different method */
     switch (h->param->me_method) {
-    case XAVS2_ME_TZ:         /* TZ */
-    {
+    case XAVS2_ME_TZ: {       /* TZ */
         const int RasterDistance = 16;
         const int MaxIters = 32;
         const int EarlyExitIters = 3;

@@ -79,7 +79,7 @@ uint32_t get_intra_neighbors(xavs2_t *h, int x_4x4, int y_4x4, int bsx, int bsy,
     b_TOP_RIGHT = b_TOP_RIGHT && topright;
 
     return (b_LEFT << MD_I_LEFT) | (b_TOP << MD_I_TOP) | (b_TOP_LEFT << MD_I_TOP_LEFT) |
-        (b_TOP_RIGHT << MD_I_TOP_RIGHT) | (b_LEFT_DOWN << MD_I_LEFT_DOWN);
+           (b_TOP_RIGHT << MD_I_TOP_RIGHT) | (b_LEFT_DOWN << MD_I_LEFT_DOWN);
 }
 
 /* ---------------------------------------------------------------------------
@@ -134,9 +134,9 @@ uint32_t get_intra_pu_avail(cu_t *p_cu, int block_x, int block_y, int bsx, int b
  * fill reference samples for luma component
  */
 static INLINE
-void fill_ref_samples_luma(xavs2_t *h, cu_t *p_cu, pel_t *EP, 
-                           int img_x, int img_y, 
-                           int block_x, int block_y, 
+void fill_ref_samples_luma(xavs2_t *h, cu_t *p_cu, pel_t *EP,
+                           int img_x, int img_y,
+                           int block_x, int block_y,
                            int bsx, int bsy)
 {
     int pos_x = (img_x - h->lcu.i_pix_x - 1);
@@ -397,7 +397,7 @@ int rdo_get_pred_intra_luma_rmd(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_can
  * return the best intra prediction mode from the 1st run
  */
 int rdo_get_pred_intra_luma_2nd_pass(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
-                                     pel_t *p_fenc, int mpm[], int blockidx, 
+                                     pel_t *p_fenc, int mpm[], int blockidx,
                                      int block_x, int block_y, int block_w, int block_h)
 {
     cu_parallel_t *p_enc = cu_get_enc_context(h, p_cu->cu_info.i_level);

@@ -267,7 +267,7 @@ uint64_t get_fast_algorithms(xavs2_t *h, int i_preset_level)
         SWITCH_ON(OPT_BYPASS_INTRA_RDOQ);
         SWITCH_ON(OPT_RDOQ_AZPC);
         SWITCH_ON(OPT_PU_RMS);
-    case 4:     // fast 
+    case 4:     // fast
         SWITCH_ON(OPT_CU_DEPTH_CTRL);
         SWITCH_ON(OPT_SUBCU_SPLIT);
         SWITCH_ON(OPT_FAST_PU_SEL);

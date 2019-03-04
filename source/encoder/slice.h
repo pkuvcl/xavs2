@@ -56,7 +56,7 @@ extern slice_row_index_t g_slice_lcu_row_order[1024];
  */
 static ALWAYS_INLINE
 void slice_init_bufer(xavs2_t *h, slice_t *slice)
-{ 
+{
     /* init slice buffers */
     h->ipredmode         = slice->slice_ipredmode;
     h->intra_border[0]   = slice->slice_intra_border[0];

@@ -278,7 +278,7 @@ static double rc_calculate_gop_delta_qp(ratectrl_t *rc, int frm_type, int gop_le
     } else {
         if (rc->i_intra_period == 1) {
             tmp_bpp = rc->f_intra_bpp;
-        } else /*if (rc->i_intra_period == 0)*/ {
+        } else { /*if (rc->i_intra_period == 0)*/
             tmp_bpp = rc->f_inter_bpp;
         }
     }

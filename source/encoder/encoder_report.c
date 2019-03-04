@@ -101,7 +101,7 @@ void encoder_cal_psnr(xavs2_t *h, double *psnr_y, double *psnr_u, double *psnr_v
 }
 
 /* ---------------------------------------------------------------------------
- * calculate SSIM 
+ * calculate SSIM
  */
 double ssim_calculate_plane(xavs2_t *h, int comp_id)
 {
@@ -127,19 +127,19 @@ double ssim_calculate_plane(xavs2_t *h, int comp_id)
     double dLocSSIM, dLocMeanRef, dLocMeanRec, dLocVarRef, dLocVarRec, dLocCovar, Num1, Num2, Den1, Den2, dMSSIM = 0;
     uint32_t i, j, x, y;
     // xavs2_log(h, XAVS2_LOG_INFO, "uiHeight: %d uiWinHeight: %d uiWidth: %d uiWinWidth:%d\n",uiHeight,uiWinHeight,uiWidth,uiWinWidth);
-    
+
     uint32_t uiNumWin = (uiHeight - uiWinHeight + 1)*(uiWidth - uiWinWidth + 1);
     uint32_t iWinPixel = uiWinWidth * uiWinHeight;
     uint32_t uiMaxval = 255 * (1 << (g_uiBitDepth + g_uiBitIncrement - 8));
     // xavs2_log(h, XAVS2_LOG_INFO, "uiNumWin : %d uiMaxval : %d\n",uiNumWin,uiMaxval);
-    
+
     double C1 = k_ssim_1 * k_ssim_1 * uiMaxval * uiMaxval;
     double C2 = k_ssim_2 * k_ssim_2 * uiMaxval * uiMaxval;
-    
+
     pel_t*  pOrg = h->fenc->planes[comp_id];
     pel_t*  pRec = h->fdec->planes[comp_id];
     // xavs2_log(h, XAVS2_LOG_INFO, "pOrg : %p pRec : %p\n",pOrg,pRec);
-    
+
     pel_t*  pOrgPel = pOrg;
     pel_t*  pRecPel = pRec;
 
@@ -152,13 +152,13 @@ double ssim_calculate_plane(xavs2_t *h, int comp_id)
             dLocCovar = 0;
             pOrgPel = pOrg + i + iStride1*j;
             pRecPel = pRec + i + iStride2*j;
-           // xavs2_log(h, XAVS2_LOG_INFO, "pOrgPel[0] : %d pRecPel[0] : %d\n",pOrgPel[0],pRecPel[0]);
-           // xavs2_log(h, XAVS2_LOG_INFO, "uiWinWidth : %d uiWinHeight : %d\n",uiWinWidth,uiWinHeight);
-           
+            // xavs2_log(h, XAVS2_LOG_INFO, "pOrgPel[0] : %d pRecPel[0] : %d\n",pOrgPel[0],pRecPel[0]);
+            // xavs2_log(h, XAVS2_LOG_INFO, "uiWinWidth : %d uiWinHeight : %d\n",uiWinWidth,uiWinHeight);
+
             for (y = 0; y < uiWinHeight; y++) {
                 for (x = 0; x < uiWinWidth; x++) {
                     // xavs2_log(h, XAVS2_LOG_INFO, "pOrgPel[%d] : %d pRecPel[%d] : %d\n",x,pOrgPel[x],x,pRecPel[x]);
-           
+
                     dLocMeanRef += pOrgPel[x];
                     dLocMeanRec += pRecPel[x];
                     dLocVarRef += pOrgPel[x] * pOrgPel[x];
@@ -173,7 +173,7 @@ double ssim_calculate_plane(xavs2_t *h, int comp_id)
             dLocMeanRef /= iWinPixel;
             dLocMeanRec /= iWinPixel;
             // xavs2_log(h, XAVS2_LOG_INFO, "dLocMeanRef : %7.4f dLocMeanRec : %7.4f \n",dLocMeanRef,dLocMeanRec);
-           
+
             dLocVarRef = (dLocVarRef - dLocMeanRef * dLocMeanRef * iWinPixel) / iWinPixel;
             dLocVarRec = (dLocVarRec - dLocMeanRec * dLocMeanRec * iWinPixel) / iWinPixel;
             dLocCovar = (dLocCovar - dLocMeanRef * dLocMeanRec * iWinPixel) / iWinPixel;
@@ -239,7 +239,7 @@ void encoder_report_stat_info(xavs2_t *h)
         xavs2_log(h, XAVS2_LOG_INFO, "AVERAGE SEQ SSIM:      %7.5f %7.5f %7.5f\n",
                   ssim_y / num_total_frames, ssim_u / num_total_frames, ssim_v / num_total_frames);
     }
-    
+
     // BITRATE
     f_bitrate = (i_total_bits * (8.0f / 1000.0f) * h->framerate) / ((float)num_total_frames);
     xavs2_log(h, XAVS2_LOG_INFO, "         BITRATE: %6.2f kb/s @ %4.1f Hz, %d frames, xavs2 p%d \n",
@@ -415,10 +415,10 @@ void encoder_show_head_info(xavs2_param_t *param)
     xavs2_log(NULL, XAVS2_LOG_INFO, " CPU Capabilities : %s\n", buf_cpu);
 
     xavs2_log(NULL, XAVS2_LOG_INFO, " Preset Level     : %d,  %s \n", param->preset_level, xavs2_preset_names[param->preset_level]);
-    xavs2_log(NULL, XAVS2_LOG_INFO, " Ref Structure    : BFrames: %d; %s GOP; IntraPeriod: %d~%d\n", 
-        param->num_bframes, s_gop_param, param->intra_period_min, param->intra_period_max);
+    xavs2_log(NULL, XAVS2_LOG_INFO, " Ref Structure    : BFrames: %d; %s GOP; IntraPeriod: %d~%d\n",
+              param->num_bframes, s_gop_param, param->intra_period_min, param->intra_period_max);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Rate Control     : %d; QP: %d, [%2d, %2d]; %.3f Mbps\n",
-        param->i_rc_method, param->i_initial_qp, param->i_min_qp, param->i_max_qp, 0.000001f * param->i_target_bitrate);
+              param->i_rc_method, param->i_initial_qp, param->i_min_qp, param->i_max_qp, 0.000001f * param->i_target_bitrate);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Threads (Row/Frm): %s / %s, cpu cores %d \n", s_threads_row, s_threads_frame, xavs2_cpu_num_processors());
 }
 
@@ -434,20 +434,20 @@ void encoder_show_frame_info_tab(xavs2_t *h, xavs2_handler_t *mgr)
               mgr->i_row_threads, mgr->i_frm_threads, mgr->num_pool_threads, mgr->num_row_contexts);
     xavs2_log(NULL, XAVS2_LOG_INFO, " Memory  (Alloc)  : %d MB \n", (int)(space_alloc));
     xavs2_log(NULL, XAVS2_LOG_INFO, " Enabled Tools    : LCU %d, 2NxN/Nx2N:%d, AMP:%d, IntraInInter:%d, SDIP:%d,\n"\
-                                        "                    FFrame %d, DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
-                                        "                    NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\
-                                        "                    ME:%d, SearchRange:%d,\n"\
-                                        "                    RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
-                                        "                    RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
-        1 << param->lcu_bit_level, param->inter_2pu, param->enable_amp, param->enable_intra, param->enable_sdip, 
-        param->enable_f_frame, param->enable_dhp, param->enable_dmh, param->enable_mhp_skip, param->enable_wsm,
-        param->enable_nsqt, param->b_fast_2lelvel_tu, param->enable_secT,
-        param->me_method, param->search_range,
-        param->enable_refine_qp, param->enable_tdrdo, h->i_fast_algs,
-        param->i_rd_level, param->i_rdoq_level, param->enable_sao, param->enable_alf);
+              "                    FFrame %d, DHP:%d, DMH:%d, MHP:%d, WSM:%d,\n"\
+              "                    NSQT:%d, Fast2LevelTu:%d, 2ndTrans:%d,\n"\
+              "                    ME:%d, SearchRange:%d,\n"\
+              "                    RefinedQP:%d, TDRDO:%d, Algorithm: %8llx\n"\
+              "                    RdLevel:%d, RdoqLevel:%d, SAO:%d, ALF:%d.\n",
+              1 << param->lcu_bit_level, param->inter_2pu, param->enable_amp, param->enable_intra, param->enable_sdip,
+              param->enable_f_frame, param->enable_dhp, param->enable_dmh, param->enable_mhp_skip, param->enable_wsm,
+              param->enable_nsqt, param->b_fast_2lelvel_tu, param->enable_secT,
+              param->me_method, param->search_range,
+              param->enable_refine_qp, param->enable_tdrdo, h->i_fast_algs,
+              param->i_rd_level, param->i_rdoq_level, param->enable_sao, param->enable_alf);
     /* table header */
     xavs2_log(NULL, XAVS2_LOG_INFO, "--------------------------------------------------------------------------------\n");
-    if (param->enable_psnr && param->enable_ssim){
+    if (param->enable_psnr && param->enable_ssim) {
         xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   SsimY   SsimU   SsimV   Time  [ RefList ]\n");
     } else if (param->enable_psnr) {
         xavs2_log(NULL, XAVS2_LOG_DEBUG, "POC Type QP +   Bits    PsnrY   PsnrU   PsnrV   Time  [ RefList ]\n");

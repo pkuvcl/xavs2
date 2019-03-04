@@ -271,7 +271,7 @@ void lookahead_append_subgop_frames(xavs2_handler_t *h_mgr, xlist_t *list_out,
 
 /**
  * ---------------------------------------------------------------------------
- * Function   : complexity analysis and slice type decision of one frame, 
+ * Function   : complexity analysis and slice type decision of one frame,
  *              then send the frame into encoding queue
  * Parameters :
  *      [in ] : h_mgr - pointer to xavs2_handler_t

@@ -356,7 +356,7 @@ static void CaculateKappaTableLDP(xavs2_t *h, DL *omcplist, DL *realDlist, int f
 
     memset(td_rdo->KappaTable, 0, TotalBlocksInAframe * sizeof(double));
     if (framenum <= 0) {
-      return;
+        return;
     }
 
     D             = td_rdo->D;
@@ -581,7 +581,7 @@ int tdrdo_init(td_rdo_t *td_rdo, xavs2_param_t *param)
     for (i = 0; i < param->i_gop_size; i++) {
         td_rdo->QpOffset[i] = param->cfg_ref_all[i].qp_offset;
     }
-    
+
     td_rdo->D  = (double *)mem_ptr;
     mem_ptr   += num_blocks * sizeof(double);
     td_rdo->DMCP = (double *)mem_ptr;

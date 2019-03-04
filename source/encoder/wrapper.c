@@ -42,7 +42,7 @@
 
 /* ---------------------------------------------------------------------------
  */
-void frame_buffer_init(xavs2_handler_t *h_mgr, uint8_t **mem_base, xavs2_frame_buffer_t *frm_buf, 
+void frame_buffer_init(xavs2_handler_t *h_mgr, uint8_t **mem_base, xavs2_frame_buffer_t *frm_buf,
                        int num_frm, int frm_type)
 {
     int i;

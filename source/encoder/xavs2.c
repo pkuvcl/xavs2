@@ -88,8 +88,8 @@ xavs2_param_t *xavs2_encoder_opt_alloc(void)
     xavs2_param_t *param = (xavs2_param_t *)xavs2_malloc(sizeof(xavs2_param_t));
 
     if (param == NULL) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "Failed to malloc space for xavs2_param_t with %d bytes\n", 
-            sizeof(xavs2_param_t));
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "Failed to malloc space for xavs2_param_t with %d bytes\n",
+                  sizeof(xavs2_param_t));
         return NULL;
     }
 
@@ -288,10 +288,10 @@ void *xavs2_encoder_create(xavs2_param_t *param)
 
     /* compute the memory size */
     mem_size = sizeof(xavs2_handler_t)                           +   /* M0, size of the encoder wrapper */
-    xavs2_frame_buffer_size(param, FT_ENC) * XAVS2_INPUT_NUM     +   /* M4, size of buffered input frames */
-    size_ratecontrol                                             +   /* M5, rate control information */
-    size_tdrdo                                                   +   /* M6, TDRDO */
-    CACHE_LINE_SIZE * (XAVS2_INPUT_NUM + 4);
+               xavs2_frame_buffer_size(param, FT_ENC) * XAVS2_INPUT_NUM     +   /* M4, size of buffered input frames */
+               size_ratecontrol                                             +   /* M5, rate control information */
+               size_tdrdo                                                   +   /* M6, TDRDO */
+               CACHE_LINE_SIZE * (XAVS2_INPUT_NUM + 4);
 
     /* alloc memory for the encoder wrapper */
     CHECKED_MALLOC(mem_ptr, uint8_t *, mem_size);
@@ -310,7 +310,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     h_mgr->num_input  = 0;
     h_mgr->num_encode = 0;
     h_mgr->num_output = 0;
-    
+
     /* counters for encoding */
     h_mgr->i_exit_flag = 0;
     h_mgr->i_input     = 0;
@@ -376,7 +376,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
         xl_init(&h_mgr->list_frames_ready) != 0) {
         goto fail;
     }
-    
+
     /* init rate-control buffer */
     ALIGN_POINTER(mem_ptr);
     h_mgr->rate_control = (ratectrl_t *)mem_ptr;
@@ -427,7 +427,7 @@ void *xavs2_encoder_create(xavs2_param_t *param)
     }
 
     /* allocate DPB */
-    frame_buffer_init(h_mgr, NULL, &h_mgr->dpb, 
+    frame_buffer_init(h_mgr, NULL, &h_mgr->dpb,
                       XAVS2_MIN(FREF_BUF_SIZE, MAX_REFS + h_mgr->i_frm_threads * 4), FT_DEC);
 
     /* memory check */

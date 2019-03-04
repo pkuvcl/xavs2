@@ -49,7 +49,7 @@
 static const double tab_umh_alpha_2nd[MAX_INTER_MODES] = {
     0.0f, 0.01f, 0.01f, 0.01f, 0.02f, 0.03f, 0.03f, 0.04f
 };
-static const double tab_umh_alpha_3rd[MAX_INTER_MODES] = { 
+static const double tab_umh_alpha_3rd[MAX_INTER_MODES] = {
     0.0f, 0.06f, 0.07f, 0.07f, 0.08f, 0.12f, 0.11f, 0.15f
 };
 
@@ -211,7 +211,7 @@ static void get_pskip_mv_spatial(cu_mode_t *p_cumode, const neighbor_inter_t *p_
     int bid_flag = 0, fwd_flag = 0, bid2 = 0, fwd2 = 0;
     int j;
 
-    g_funcs.fast_memset(p_cumode->skip_mv_1st, 0, sizeof(p_cumode->skip_mv_1st) 
+    g_funcs.fast_memset(p_cumode->skip_mv_1st, 0, sizeof(p_cumode->skip_mv_1st)
                         + sizeof(p_cumode->skip_mv_2nd)
                         + sizeof(p_cumode->skip_ref_1st)
                         + sizeof(p_cumode->skip_ref_2nd));
@@ -554,7 +554,7 @@ void get_mvp_default_sad(xavs2_t *h, const neighbor_inter_t *p_neighbors, cu_t *
     SAD[3] = is_available_UL ? h->all_mincost[(pic_block_y - 1) * width_in_4x4 + pic_block_x - 1][mode][ref_idx] : 0;
 
     mvp_type = get_mvp_type_default(ref_idx, rFrameL, rFrameU, rFrameUR, p_cb);
-    
+
     if (h->i_type == SLICE_TYPE_B) {
         int mult_distance  = h->fdec->ref_dpoc      [bwd_2nd ? B_BWD : B_FWD];
         int dist_src_scale = h->fdec->ref_dpoc_multi[bwd_2nd ? B_BWD : B_FWD];
@@ -597,7 +597,7 @@ void get_mvp_default_sad(xavs2_t *h, const neighbor_inter_t *p_neighbors, cu_t *
 
 /* ---------------------------------------------------------------------------
 */
-static void 
+static void
 fast_me_prepare_info_remove_mvp(xavs2_t *h, xavs2_me_t *p_me, int mode, int ref_idx,
                                 dist_t mincosts[MAX_INTER_MODES][MAX_REFS])
 {
@@ -638,7 +638,7 @@ fast_me_prepare_info_remove_mvp(xavs2_t *h, xavs2_me_t *p_me, int mode, int ref_
 
 /* ---------------------------------------------------------------------------
  */
-static void 
+static void
 fast_me_prepare_info(xavs2_t *h, xavs2_me_t *p_me, int mode, int ref_idx,int pu_idx,
                      dist_t mincosts[MAX_INTER_MODES][MAX_REFS])
 {
@@ -814,7 +814,7 @@ int get_mv_predictors_pskip(xavs2_t *h, cu_t *p_cu)
             int *delta_P = h->fdec->ref_dpoc;
 
             for (k = 0; k < 4; k++) {
-                mv_t mv_1st = p_cu_mode->tskip_mv[k][0]; 
+                mv_t mv_1st = p_cu_mode->tskip_mv[k][0];
                 for (i = 1; i < h->i_ref; i++) {
                     mv_t mv_2nd;
                     mv_2nd.x = scale_mv_skip  (   mv_1st.x, delta_P[i], delta_P[0]);
@@ -1100,7 +1100,7 @@ void pred_inter_search_bi(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, 
     m = XAVS2_MAX((bsx >> (MIN_PU_SIZE_IN_BIT + pu_size_shift)), 1);
     n = XAVS2_MAX((bsy >> (MIN_PU_SIZE_IN_BIT + pu_size_shift)), 1);
     for (j = 0; j < n; j++) {
-       for (i = 0; i < m; i++) {
+        for (i = 0; i < m; i++) {
             k = ((pu_idx_y + j) << 1) + (pu_idx_x + i);
             p_mode_mv[k].all_sym_mv     [0] = mv;
             p_mode_mv[k].all_dual_mv_1st[0] = fwd_mv;
@@ -1112,12 +1112,12 @@ void pred_inter_search_bi(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, 
           check_mvd(h, (fwd_mv.x - p_me->mvp1.x), (fwd_mv.y - p_me->mvp1.y)))) {
         cost_bid = MAX_DISTORTION;
     }
-    
+
     if (!(check_mv_range(h, &bwd_mv, B_BWD, pix_x, pix_y, bsx, bsy) &&
           check_mvd(h, (bwd_mv.x - p_me->mvp2.x), (bwd_mv.y - p_me->mvp2.y)))) {
         cost_bid = MAX_DISTORTION;
     }
-    
+
     if (!(check_mv_range_sym(h, &mv, pix_x, pix_y, bsx, bsy, distance_fwd, distance_bwd) &&
           check_mvd(h, (mv.x - mvp.x), (mv.y - mvp.y)))) {
         cost = MAX_DISTORTION;
@@ -1132,7 +1132,7 @@ void pred_inter_search_bi(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, 
 /* ---------------------------------------------------------------------------
  * get cost for dual hypothesis prediction
  */
-void pred_inter_search_dual(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me, 
+void pred_inter_search_dual(xavs2_t *h, cu_t *p_cu, cb_t *p_cb, xavs2_me_t *p_me,
                             dist_t *dual_mcost, int *dual_best_fst_ref, int *dual_best_snd_ref)
 {
     int mode = p_cu->cu_info.i_mode;

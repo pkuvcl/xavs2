@@ -39,7 +39,7 @@
 #include "wrapper.h"
 #include "ratecontrol.h"
 #include "rps.h"
- 
+
 /**
  * ===========================================================================
  * local definitions
@@ -50,7 +50,7 @@
  */
 static void ALWAYS_INLINE
 set_ref_man(xavs2_rps_t *p_refman, int idx, int poc, int qp_offset, int refered_by_others,
-    int num_of_ref, int ref_pic[4], int num_to_rm, int rm_pic[4], int temporal_id)
+            int num_of_ref, int ref_pic[4], int num_to_rm, int rm_pic[4], int temporal_id)
 {
     p_refman->idx_in_gop       = idx;
     p_refman->poc              = poc;
@@ -321,7 +321,7 @@ int rps_init_reference_list(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
 
                 /* check whether the frame could be referenced by current frame */
                 b_could_be_referenced = frame->i_frame >= frm_buf->POC_IDR ||
-                    (frame->i_frame < frm_buf->POC_IDR && cur_frm->i_frm_type == XAVS2_TYPE_B && h->param->b_open_gop);
+                                        (frame->i_frame < frm_buf->POC_IDR && cur_frm->i_frm_type == XAVS2_TYPE_B && h->param->b_open_gop);
 
                 if (k == num_ref &&
                     frame->i_frm_coi == coi &&
@@ -555,7 +555,7 @@ int frame_is_free(const xavs2_handler_t *h_mgr, int cur_poc, xavs2_frame_t *fram
  */
 static INLINE
 xavs2_frame_t *frame_buffer_find_free_frame_dpb(xavs2_handler_t *h_mgr, xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
-                                                xavs2_frame_t *cur_frm, xavs2_rps_t *p_rps)
+        xavs2_frame_t *cur_frm, xavs2_rps_t *p_rps)
 {
     xavs2_frame_t **DPB = frm_buf->frames;
     xavs2_frame_t *fdec_frm = NULL;
@@ -776,7 +776,7 @@ int rps_build(const xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
  * initializes the parameters for a new frame
  */
 xavs2_frame_t *find_fdec_and_build_rps(xavs2_t *h, xavs2_frame_buffer_t *frm_buf,
-                                       xavs2_frame_t *cur_frm, 
+                                       xavs2_frame_t *cur_frm,
                                        xavs2_frame_t *frefs[XAVS2_MAX_REFS])
 {
     xavs2_handler_t *h_mgr = h->h_top;

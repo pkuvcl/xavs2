@@ -65,7 +65,7 @@ static ALWAYS_INLINE void sao_init_stat_data(SAOStatData *p_stats)
 /* ---------------------------------------------------------------------------
  */
 static
-void sao_get_stat_block_EO_0(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org, 
+void sao_get_stat_block_EO_0(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
                              SAOStatData *p_stats, sao_region_t *p_region, int compIdx)
 {
     int start_x, end_x, start_y, end_y;
@@ -85,7 +85,7 @@ void sao_get_stat_block_EO_0(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
     const pel_t *p_org = frm_org->planes[compIdx] + pix_y * i_org + pix_x;
     const pel_t *p_org_iter;
     const pel_t *p_rec_iter;
-    sao_init_stat_data(p_stats);        
+    sao_init_stat_data(p_stats);
     p_org_iter = p_org;
     p_rec_iter = p_rec;
     start_y = 0;
@@ -105,13 +105,13 @@ void sao_get_stat_block_EO_0(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
         }
         p_rec_iter += i_rec;
         p_org_iter += i_org;
-    }            
+    }
 }
 
 /* ---------------------------------------------------------------------------
 */
 static
-void sao_get_stat_block_EO_90(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org, 
+void sao_get_stat_block_EO_90(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
                               SAOStatData *p_stats, sao_region_t *p_region, int compIdx)
 {
     int start_x, end_x, start_y, end_y;
@@ -133,7 +133,7 @@ void sao_get_stat_block_EO_90(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
     const pel_t *p_rec_iter;
 
     sao_init_stat_data(p_stats);
-               
+
     p_org_iter = p_org;
     p_rec_iter = p_rec;
     start_x = 0;
@@ -149,7 +149,7 @@ void sao_get_stat_block_EO_90(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
             p_stats->diff[edgetype + 2] += (p_org_iter[y * i_org + x] - p_rec_iter[y * i_rec + x]);
             p_stats->count[edgetype + 2]++;
         }
-    }           
+    }
 }
 
 /* ---------------------------------------------------------------------------
@@ -179,7 +179,7 @@ void sao_get_stat_block_EO_135(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
     const pel_t *p_rec_iter;
 
     sao_init_stat_data(p_stats);
-              
+
     p_org_iter = p_org;
     p_rec_iter = p_rec;
     start_x_r0 = p_region->b_top_left ? 0 : 1;
@@ -231,7 +231,7 @@ void sao_get_stat_block_EO_135(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
         edgetype = downsign + signupline[x];
         p_stats->diff[edgetype + 2] += (p_org_iter[x] - p_rec_iter[x]);
         p_stats->count[edgetype + 2]++;
-    }           
+    }
 }
 
 /* ---------------------------------------------------------------------------
@@ -261,7 +261,7 @@ void sao_get_stat_block_EO_45(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
     const pel_t *p_rec_iter;
 
     sao_init_stat_data(p_stats);
-                 
+
     p_org_iter = p_org;
     p_rec_iter = p_rec;
     start_x_r0 = p_region->b_top ? (p_region->b_left ? 0 : 1) : (width - 1);
@@ -312,13 +312,13 @@ void sao_get_stat_block_EO_45(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
         edgetype = downsign + signupline1[x];
         p_stats->diff[edgetype + 2] += (p_org_iter[x] - p_rec_iter[x]);
         p_stats->count[edgetype + 2]++;
-    }           
+    }
 }
 
 /* ---------------------------------------------------------------------------
 */
 static
-void sao_get_stat_block_BO(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org, 
+void sao_get_stat_block_BO(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
                            SAOStatData *p_stats, sao_region_t *p_region, int compIdx)
 {
     int start_x, end_x, start_y, end_y;
@@ -337,10 +337,10 @@ void sao_get_stat_block_BO(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
     const pel_t *p_rec = frm_rec->planes[compIdx] + pix_y * i_rec + pix_x;
     const pel_t *p_org = frm_org->planes[compIdx] + pix_y * i_org + pix_x;
     const pel_t *p_org_iter;
-    const pel_t *p_rec_iter;   
+    const pel_t *p_rec_iter;
 
     sao_init_stat_data(p_stats);
-             
+
     p_org_iter = p_org;
     p_rec_iter = p_rec;
     band_shift = (g_bit_depth - NUM_SAO_BO_CLASSES_IN_BIT);
@@ -356,16 +356,15 @@ void sao_get_stat_block_BO(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
         }
         p_rec_iter += i_rec;
         p_org_iter += i_org;
-    }          
+    }
 }
 
 /* ---------------------------------------------------------------------------
 */
-typedef void(*sao_pf)(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org, 
+typedef void(*sao_pf)(xavs2_frame_t *frm_rec, xavs2_frame_t *frm_org,
                       SAOStatData *stat_datas, sao_region_t *p_region, int compIdx);
 
-sao_pf gf_sao_stat[5] =
-{
+sao_pf gf_sao_stat[5] = {
     sao_get_stat_block_EO_0,
     sao_get_stat_block_EO_90,
     sao_get_stat_block_EO_135,
@@ -489,7 +488,7 @@ static void find_offset(int typeIdc, SAOStatData *p_stat, SAOBlkParam *p_param, 
         int best_start_band2 = 0;
         for (class_i = 0; class_i < num_class; class_i++) {
             p_param->offset[class_i] = (int8_t)offset_estimation(typeIdc, class_i, lambda, p_param->offset[class_i], p_stat[typeIdc].count[class_i],
-                p_stat[typeIdc].diff[class_i], &(classcost[class_i]));
+                                       p_stat[typeIdc].diff[class_i], &(classcost[class_i]));
         }
         mincost_bandsum = MAX_DOUBLE;
         for (start_band1 = 0; start_band1 < (NUM_SAO_BO_CLASSES - 1); start_band1++) {
@@ -508,7 +507,7 @@ static void find_offset(int typeIdc, SAOStatData *p_stat, SAOBlkParam *p_param, 
 
         for (class_i = 0; class_i < num_class; class_i++) {
             if ((class_i >= best_start_band1 && class_i <= best_start_band1 + 1) || (class_i >= best_start_band2 &&
-                class_i <= best_start_band2 + 1)) {
+                    class_i <= best_start_band2 + 1)) {
                 continue;
             }
             p_param->offset[class_i] = 0;
@@ -531,9 +530,9 @@ static void find_offset(int typeIdc, SAOStatData *p_stat, SAOBlkParam *p_param, 
                 p_param->offset[class_i] = 0;
                 classcost[class_i] = 0;
             } else {
-                p_param->offset[class_i] = (int8_t)offset_estimation(typeIdc, class_i, lambda, 
-                                                                         p_param->offset[class_i], p_stat[typeIdc].count[class_i],
-                                                                         p_stat[typeIdc].diff[class_i], &(classcost[class_i]));
+                p_param->offset[class_i] = (int8_t)offset_estimation(typeIdc, class_i, lambda,
+                                           p_param->offset[class_i], p_stat[typeIdc].count[class_i],
+                                           p_stat[typeIdc].diff[class_i], &(classcost[class_i]));
             }
         }
         p_param->startBand = 0;
@@ -586,7 +585,7 @@ static ALWAYS_INLINE void copy_sao_param_one_comp(SAOBlkParam *saopara_dst, SAOB
 
 /* ---------------------------------------------------------------------------
  */
-static 
+static
 rdcost_t sao_rdo_new_params(xavs2_t *h, aec_t *p_aec, int avail_left, int avail_up, bool_t *slice_sao_on, rdcost_t sao_lambda,
                             SAOStatData stat_data[NUM_SAO_COMPONENTS][NUM_SAO_NEW_TYPES], SAOBlkParam *sao_cur_param)
 {
@@ -600,7 +599,7 @@ rdcost_t sao_rdo_new_params(xavs2_t *h, aec_t *p_aec, int avail_left, int avail_
         bits = p_aec->binary.write_sao_mergeflag(p_aec, avail_left, avail_up, &(sao_cur_param[SAO_Y]));
         total_rdcost += bits * sao_lambda;
     }
-    for (compIdx = 0; compIdx < 3; compIdx++){
+    for (compIdx = 0; compIdx < 3; compIdx++) {
         if (slice_sao_on[compIdx]) {
             rdcost_t mincost;
             rdcost_t curcost;
@@ -756,8 +755,7 @@ static void sao_filter_region(xavs2_t *h, SAOBlkParam *blk_param, int compIdx, s
             dst += i_dst;
         }
         break;
-    case SAO_TYPE_EO_90:
-    {
+    case SAO_TYPE_EO_90: {
         pel_t *src_base = src;
         pel_t *dst_base = dst;
         start_x = 0;
@@ -784,8 +782,7 @@ static void sao_filter_region(xavs2_t *h, SAOBlkParam *blk_param, int compIdx, s
         }
         break;
     }
-    case SAO_TYPE_EO_135:
-    {
+    case SAO_TYPE_EO_135: {
         start_x_r0 = p_region->b_top_left ? 0 : 1;
         end_x_r0 = p_region->b_top ? (p_region->b_right ? width : (width - 1)) : 1;
         start_x_r = p_region->b_left ? 0 : 1;
@@ -828,9 +825,8 @@ static void sao_filter_region(xavs2_t *h, SAOBlkParam *blk_param, int compIdx, s
             dst[x] = (pel_t)XAVS2_CLIP3(0, max_val, src[x] + blk_param->offset[edgetype + 2]);
         }
     }
-        break;
-    case SAO_TYPE_EO_45:
-    {
+    break;
+    case SAO_TYPE_EO_45: {
         start_x_r0 = p_region->b_top ? (p_region->b_left ? 0 : 1) : (width - 1);
         end_x_r0 = p_region->b_top_right ? width : (width - 1);
         start_x_r = p_region->b_left ? 0 : 1;
@@ -910,7 +906,7 @@ static void sao_get_neighbor_avail(xavs2_t *h, sao_region_t *p_avail, int i_lcu_
     int pix_y_c = pix_y >> CHROMA_V_SHIFT;
     int width_c = width >> 1;
     int height_c = height >> 1;
-    
+
     /* 可用性获取 */
     p_avail->b_left = i_lcu_x != 0;
     p_avail->b_top  = i_lcu_y != 0;
@@ -931,7 +927,7 @@ static void sao_get_neighbor_avail(xavs2_t *h, sao_region_t *p_avail, int i_lcu_
     p_avail->b_top_right = p_avail->b_top && p_avail->b_right;
     p_avail->b_down_left = p_avail->b_down && p_avail->b_left;
     p_avail->b_right_down = p_avail->b_down && p_avail->b_right;
-    
+
     /* 滤波区域的调整 */
     if (!p_avail->b_right) {
         width += SAO_SHIFT_PIX_NUM;
@@ -1163,7 +1159,7 @@ void sao_get_lcu_param_after_deblock(xavs2_t *h, aec_t *p_aec, int i_lcu_x, int 
         }
     }
 
-    sao_get_param_lcu(h, p_aec, i_lcu_x, i_lcu_y, h->slice_sao_on, 
+    sao_get_param_lcu(h, p_aec, i_lcu_x, i_lcu_y, h->slice_sao_on,
                       h->sao_stat_datas[i_lcu_xy],
                       &h->sao_blk_params[i_lcu_xy], h->f_lambda_mode);
 }
@@ -1175,7 +1171,7 @@ void sao_filter_lcu(xavs2_t *h, SAOBlkParam blk_param[NUM_SAO_COMPONENTS], int l
     sao_region_t region;
     SAOBlkParam *p_param = blk_param;
     int compIdx;
-        
+
     sao_get_neighbor_avail(h, &region, lcu_x, lcu_y);
 
     for (compIdx = 0; compIdx < NUM_SAO_COMPONENTS; compIdx++) {
@@ -1198,8 +1194,8 @@ void sao_filter_lcu(xavs2_t *h, SAOBlkParam blk_param[NUM_SAO_COMPONENTS], int l
         avail[6] = region.b_down_left;
         avail[7] = region.b_right_down;
         g_funcs.sao_block(dst, i_dst, src, i_src,
-            region.width[compIdx], region.height[compIdx],
-            avail, &p_param[compIdx]);
+                          region.width[compIdx], region.height[compIdx],
+                          avail, &p_param[compIdx]);
 
     }
 }

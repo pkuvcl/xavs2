@@ -139,7 +139,7 @@ void cu_init_pu_inter(xavs2_t *h, cu_info_t *p_cu_info, int i_level, int i_mode)
     if (i_mode == PRED_SKIP) {
         ///! 一些特殊的Skip/Direct模式下如果CU超过8x8，则PU划分成4个
         if (i_level > 3 && (h->i_type == SLICE_TYPE_P || (h->i_type == SLICE_TYPE_F && ds_mode == DS_NONE)
-            || (h->i_type == SLICE_TYPE_B && ds_mode == DS_NONE))) {
+                            || (h->i_type == SLICE_TYPE_B && ds_mode == DS_NONE))) {
             p_cu_info->num_pu = 4;
             for (i = 0; i < 4; i++) {
                 p_cb[i].v = CODING_BLOCK_INFO[PRED_I_nx2N + 1][i].v << shift_bits;
@@ -180,7 +180,7 @@ void cu_init_pu_intra(xavs2_t *h, cu_info_t *p_cu_info, int i_level, int i_mode)
  * TU split type when TU split is enabled for current CU
  */
 static ALWAYS_INLINE
-void cu_set_tu_split_type(xavs2_t *h, cu_info_t *p_cu_info, int transform_split_flag) 
+void cu_set_tu_split_type(xavs2_t *h, cu_info_t *p_cu_info, int transform_split_flag)
 {
     int mode = p_cu_info->i_mode;
     int level = p_cu_info->i_level;
@@ -392,15 +392,15 @@ void cu_copy_stored_parameters(xavs2_t *h, cu_t *p_cu, cu_info_t *best)
 
     //===== reconstruction values =====
     g_funcs.pixf.copy_pp[PART_INDEX(blocksize, blocksize)](h->lcu.p_fdec[0] + pix_y * FDEC_STRIDE + pix_x, FDEC_STRIDE,
-                                                           best->p_rec[0], FREC_STRIDE);
+            best->p_rec[0], FREC_STRIDE);
     g_funcs.pixf.copy_ss[PART_INDEX(blocksize, blocksize)](h->lcu.lcu_coeff[0] + (p_cu->idx_zorder << 6), blocksize,
-                                                           best->p_coeff[0], blocksize);
+            best->p_coeff[0], blocksize);
 
-    g_funcs.pixf.copy_pp[part_idx_c](h->lcu.p_fdec[1] + pix_cy * FDEC_STRIDE + pix_cx, FDEC_STRIDE, 
+    g_funcs.pixf.copy_pp[part_idx_c](h->lcu.p_fdec[1] + pix_cy * FDEC_STRIDE + pix_cx, FDEC_STRIDE,
                                      best->p_rec[1], FREC_CSTRIDE / 2);
-    g_funcs.pixf.copy_pp[part_idx_c](h->lcu.p_fdec[2] + pix_cy * FDEC_STRIDE + pix_cx, FDEC_STRIDE, 
+    g_funcs.pixf.copy_pp[part_idx_c](h->lcu.p_fdec[2] + pix_cy * FDEC_STRIDE + pix_cx, FDEC_STRIDE,
                                      best->p_rec[2], FREC_CSTRIDE / 2);
-    g_funcs.pixf.copy_ss[part_idx_c](h->lcu.lcu_coeff[1] + (p_cu->idx_zorder << 4), blocksize >> 1, 
+    g_funcs.pixf.copy_ss[part_idx_c](h->lcu.lcu_coeff[1] + (p_cu->idx_zorder << 4), blocksize >> 1,
                                      best->p_coeff[1], blocksize >> 1);
     g_funcs.pixf.copy_ss[part_idx_c](h->lcu.lcu_coeff[2] + (p_cu->idx_zorder << 4), blocksize >> 1,
                                      best->p_coeff[2], blocksize >> 1);
@@ -607,7 +607,7 @@ void cu_get_neighbors(xavs2_t *h, cu_t *p_cu, cb_t *p_cb)
  */
 static ALWAYS_INLINE
 int cu_get_mvs_for_mc(xavs2_t *h, cu_t *p_cu, int pu_idx,
-                      mv_t *p_mv_1st, mv_t *p_mv_2nd, 
+                      mv_t *p_mv_1st, mv_t *p_mv_2nd,
                       int *p_ref_idx1, int *p_ref_idx2)
 {
     int num_ref;            // number of reference frames
@@ -660,9 +660,9 @@ int tu_quant_forward(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *p_coeff, int
 {
     /* ((1 << x) * 5) / 31 */
     static const int tab_quant_fwd_add[] = {
-         0,      0,      0,      1,      2,      5,     10,     20,
+        0,      0,      0,      1,      2,      5,     10,     20,
         41,     82,    165,    330,    660,   1321,   2642,   5285,
-     10570,  21140,  42281,  84562, 169125, 338250, 676500, 1353001,
+        10570,  21140,  42281,  84562, 169125, 338250, 676500, 1353001,
     };
     const int shift = 15 + LIMIT_BIT - (h->param->sample_bit_depth + 1) - i_level;
     const int add = tab_quant_fwd_add[shift + b_intra];
@@ -779,7 +779,7 @@ void tu_get_dct_coeff(xavs2_t *h, coeff_t *cur_blk, int pu_size_idx, int bsx, in
  */
 
 /* ---------------------------------------------------------------------------
- * finish transform, quantization, inverse-transform, inverse-quantization 
+ * finish transform, quantization, inverse-transform, inverse-quantization
  * and reconstruction pixel generation of chroma block
  */
 static int cu_recon_chroma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, dist_t *distortion)
@@ -805,7 +805,7 @@ static int cu_recon_chroma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, dist_t *distort
         p_pred = p_enc->buf_pred_inter_c;
     }
 
-     for (uv = 0; uv < 2; uv++) {
+    for (uv = 0; uv < 2; uv++) {
         pel_t *p_fdec = p_cu->cu_info.p_rec[uv + 1];
         pel_t *p_fenc = h->lcu.p_fenc[uv + 1] + pix_y_c * FENC_STRIDE + pix_x_c;
 
@@ -869,11 +869,11 @@ int rdo_get_left_bits(xavs2_t *h, rdcost_t min_rdcost, dist_t distortion)
  */
 
 /* ---------------------------------------------------------------------------
- * finish transform, quantization, inverse-transform, inverse-quantization 
+ * finish transform, quantization, inverse-transform, inverse-quantization
  * and reconstruction pixel generation of a intra luma block
  */
 static INLINE
-int cu_recon_intra_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, pel_t *p_pred, int bsx, int bsy, 
+int cu_recon_intra_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, pel_t *p_pred, int bsx, int bsy,
                         int block_x, int block_y, int idx_tu, int intra_pred_mode, dist_t *distortion)
 {
     int used_wavelet = (p_cu->cu_info.i_level == B64X64_IN_BIT && p_cu->cu_info.i_tu_split != TU_SPLIT_CROSS);
@@ -1052,8 +1052,8 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         }
 
         /* conduct prediction and get intra prediction direction candidates for RDO */
-        num_for_rdo = h->lcu.get_intra_dir_for_rdo_luma(h, p_cu, p_candidates, p_fenc, mpm, blockidx, 
-                                                        block_x, block_y, block_w, block_h);
+        num_for_rdo = h->lcu.get_intra_dir_for_rdo_luma(h, p_cu, p_candidates, p_fenc, mpm, blockidx,
+                      block_x, block_y, block_w, block_h);
 
         // store the coding state
         h->copy_aec_state_rdo(&p_enc->cs_pu_init, p_aec);
@@ -1078,7 +1078,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 int used_wavelet = (p_cu->cu_info.i_level == B64X64_IN_BIT && p_cu->cu_info.i_tu_split != TU_SPLIT_CROSS);
                 int w_tr = block_w >> used_wavelet;
                 int i_tu_level = p_cu->cu_info.i_level - (p_cu->cu_info.i_tu_split != TU_SPLIT_NON) - used_wavelet;
-                int rate_luma_mode; 
+                int rate_luma_mode;
                 coeff_t *p_coeff_y = p_cu->cu_info.p_coeff[0] + (blockidx << ((p_cu->cu_info.i_level - 1) << 1));
 
                 // get rate for intra prediction mode
@@ -1088,7 +1088,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 if (num_nonzero) {
                     int bits_left = rdo_get_left_bits(h, best_rdcost, dist_curr) - rate_luma_mode;
                     rate_curr = p_aec->binary.est_luma_block_coeff(h, p_aec, p_cu, p_coeff_y, &p_enc->runlevel, i_tu_level, xavs2_log2u(w_tr),
-                                                                   1, Mode, bits_left);
+                                1, Mode, bits_left);
                     rate_luma_mode += rate_curr;
                 }
 
@@ -1124,7 +1124,7 @@ static void cu_check_intra(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         if (best_rate < INT_MAX) {
             if (p_cu->cu_info.i_mode != PRED_I_2Nx2N) {
                 g_funcs.pixf.copy_pp[PART_INDEX(block_w, block_h)](h->lcu.p_fdec[0] + pos_y * FDEC_STRIDE + pos_x, FDEC_STRIDE,
-                                                                   p_layer->p_rec_tmp[0] + block_y * FREC_STRIDE + block_x, FREC_STRIDE);
+                        p_layer->p_rec_tmp[0] + block_y * FREC_STRIDE + block_x, FREC_STRIDE);
             }
 
             /* copy coefficients and reconstructed data for best mode */
@@ -1329,9 +1329,9 @@ bool_t isZeroCuFast(xavs2_t *h, cu_t *p_cu)
 /* ---------------------------------------------------------------------------
  * int scrFlag = 0;             // 0=noSCR, 1=strongSCR, 2=jmSCR
  */
-static INLINE int 
+static INLINE int
 tu_recon_inter_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
-                    int i_level, int8_t *cbp, int blockidx, coeff_t *cur_blk, 
+                    int i_level, int8_t *cbp, int blockidx, coeff_t *cur_blk,
                     int x_pu, int y_pu, int w_pu, int h_pu)
 {
     cu_layer_t *p_layer = cu_get_layer(h, p_cu->cu_info.i_level);
@@ -1376,7 +1376,7 @@ tu_recon_inter_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
  */
 static
 dist_t cu_recon_inter_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
-                           int is_non_residual, int b_tu_split, 
+                           int is_non_residual, int b_tu_split,
                            int cbp_c, dist_t dist_chroma)
 {
     cu_layer_t *p_layer = cu_get_layer(h, p_cu->cu_info.i_level);
@@ -1486,7 +1486,7 @@ dist_t cu_recon_inter_luma(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
         h->lcu.bypass_all_dmh |= (h->i_type == SLICE_TYPE_F && p_cu->cu_info.dmh_mode == 0);
         p_cu->cu_info.i_cbp = 0;
         g_funcs.pixf.copy_pp[PART_INDEX(cu_size, cu_size)](p_cu->cu_info.p_rec[0], FREC_STRIDE,
-                                                           p_layer->buf_pred_inter, FREC_STRIDE);
+                p_layer->buf_pred_inter, FREC_STRIDE);
     }
 
     /* set CBP */
@@ -1544,9 +1544,9 @@ static int tu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
 
                     cu_init_transform_block(p_cu->cu_info.i_level, p_cu->cu_info.i_tu_split, block_idx, &tb);
 
-                    rate += p_aec->binary.est_luma_block_coeff(h, p_aec, p_cu, 
-                                                               p_cu->cu_info.p_coeff[0] + (block_idx << ((p_cu->cu_info.i_level - 1) << 1)),
-                                                               &p_enc->runlevel, i_tu_level, xavs2_log2u(tb.w) - use_wavelet, 0, 0, cur_bits_left);
+                    rate += p_aec->binary.est_luma_block_coeff(h, p_aec, p_cu,
+                            p_cu->cu_info.p_coeff[0] + (block_idx << ((p_cu->cu_info.i_level - 1) << 1)),
+                            &p_enc->runlevel, i_tu_level, xavs2_log2u(tb.w) - use_wavelet, 0, 0, cur_bits_left);
                 }
             }
         } else {
@@ -1554,7 +1554,7 @@ static int tu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu,
                 int i_tu_level = level - (level == B64X64_IN_BIT);
                 cur_bits_left = bits_left - rate;
                 rate += p_aec->binary.est_luma_block_coeff(h, p_aec, p_cu, p_cu->cu_info.p_coeff[0],
-                                                           &p_enc->runlevel, i_tu_level, i_tu_level, 0, 0, cur_bits_left);
+                        &p_enc->runlevel, i_tu_level, i_tu_level, 0, 0, cur_bits_left);
             }
         }
 
@@ -1651,7 +1651,7 @@ int rdo_get_pred_inter(xavs2_t *h, cu_t *p_cu, int cal_luma_chroma)
             p_pred = p_enc->buf_pred_inter_c + start_y * FREC_CSTRIDE + start_x;
 
             /* u component */
-            mc_chroma(p_pred, p_pred + uvoffset, FREC_CSTRIDE, 
+            mc_chroma(p_pred, p_pred + uvoffset, FREC_CSTRIDE,
                       mv_1st.x, mv_1st.y, width, height, p_ref1);
 
             if (num_mvs > 1) {
@@ -1728,7 +1728,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
      * 3, tu decision
      */
     /* 3.1, check chroma residual coding */
-    if (h->param->chroma_format == CHROMA_420){
+    if (h->param->chroma_format == CHROMA_420) {
         cbp_c = cu_recon_chroma(h, p_aec, p_cu, &dist_chroma);
 
         if (IS_ALG_ENABLE(OPT_ADVANCE_CHROMA_AEC)) {
@@ -1748,9 +1748,9 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
 
     /* 3.2, check luma CU tu-split type and CBP */
     /* 3.2.1, get luma residual */
-    g_funcs.pixf.sub_ps[PART_INDEX(cu_size, cu_size)](p_enc->coeff_bak, cu_size, 
-                                                      p_fenc, p_layer->buf_pred_inter, 
-                                                      FENC_STRIDE, FREC_STRIDE);
+    g_funcs.pixf.sub_ps[PART_INDEX(cu_size, cu_size)](p_enc->coeff_bak, cu_size,
+            p_fenc, p_layer->buf_pred_inter,
+            FENC_STRIDE, FREC_STRIDE);
 
     /* 3.2.2, Fast algorithm, check whether TU split is essential */
     if (IS_ALG_ENABLE(OPT_FAST_ZBLOCK) || IS_ALG_ENABLE(OPT_ECU)) {
@@ -1777,7 +1777,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
             rdcost_split = MAX_COST;
             tmp_cbp = 0;
         }
-        if (rdcost_split >= *min_rdcost) {           
+        if (rdcost_split >= *min_rdcost) {
             h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);
             return 0;  /* return code = 0, means it is not the best mode */
         } else {
@@ -1852,13 +1852,13 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
         rdcost_t rdcost_skip = MAX_COST;
         dist_t dist_total_skip;
         int best_tu_split_type = p_cu->cu_info.i_tu_split;
-    
+
         if (best_tu_split_type == TU_SPLIT_NON) {
             h->copy_aec_state_rdo(&p_enc->cs_tu, p_aec); /* store coding state for best Direct mode */
         }
-    
+
         h->copy_aec_state_rdo(p_aec, &p_layer->cs_rdo);/* restore coding state */
-    
+
         tmp_cbp = p_cu->cu_info.i_cbp;
         /* backup reconstruction buffers, prepare for SKIP mode */
         XAVS2_SWAP_PTR(p_cu->cu_info.p_rec[0], p_layer->p_rec_tmp[0]);
@@ -1866,11 +1866,11 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
             XAVS2_SWAP_PTR(p_cu->cu_info.p_rec[1], p_layer->p_rec_tmp[1]);
             XAVS2_SWAP_PTR(p_cu->cu_info.p_rec[2], p_layer->p_rec_tmp[2]);
         }
-    
+
         /* check SKIP Mode */
         dist_total_skip = cu_recon_inter_luma(h, p_aec, p_cu, 1, 0, cbp_c, dist_chroma);
         tu_rdcost_inter(h, p_aec, p_cu, dist_total_skip, rate_chroma, &rdcost_skip);
-    
+
         if (rdcost_skip <= rdcost) {
             rdcost = rdcost_skip;    /* skip mode is the best */
             best_dist_cur = dist_total_skip;
@@ -1883,7 +1883,7 @@ int cu_rdcost_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, rdcost_t *min_rdcost, 
                 XAVS2_SWAP_PTR(p_cu->cu_info.p_rec[1], p_layer->p_rec_tmp[1]);
                 XAVS2_SWAP_PTR(p_cu->cu_info.p_rec[2], p_layer->p_rec_tmp[2]);
             }
-    
+
             p_cu->cu_info.i_cbp = (int8_t)(tmp_cbp);
             p_cu->cu_info.i_tu_split = (int8_t)(best_tu_split_type);
         }
@@ -1933,7 +1933,7 @@ static ALWAYS_INLINE void cu_set_mvs_noskip(cu_t *p_cu, int blockidx, int ref1, 
     } else {
         p_cu->mc.mv              [blockidx][0].v = pmv1->v;
         p_cu->cu_info.ref_idx_1st[blockidx] = (int8_t)ref1;
-        
+
         p_cu->mc.mv              [blockidx][1].v = pmv2->v;
         p_cu->cu_info.ref_idx_2nd[blockidx] = (int8_t)ref2;
     }
@@ -2174,7 +2174,7 @@ static int cu_select_inter_partition(xavs2_t *h, cu_t *p_cu, int i_level, uint32
         p_fenc[0] = h->lcu.p_fenc[0] + pix_y   * FENC_STRIDE + pix_x;
         p_fenc[1] = h->lcu.p_fenc[1] + pix_y_c * FENC_STRIDE + pix_x_c;
         p_fenc[2] = h->lcu.p_fenc[2] + pix_y_c * FENC_STRIDE + pix_x_c;
-        
+
         mecost  = g_funcs.pixf.sa8d[PART_INDEX(cu_size, cu_size)](p_layer->buf_pred_inter, FREC_STRIDE, p_fenc[0], FENC_STRIDE);
         mecost += g_funcs.pixf.sa8d[PART_INDEX(cu_size_c, cu_size_c)](p_enc->buf_pred_inter_c, FREC_CSTRIDE, p_fenc[1], FENC_STRIDE);
         mecost += g_funcs.pixf.sa8d[PART_INDEX(cu_size_c, cu_size_c)](p_enc->buf_pred_inter_c + (FREC_CSTRIDE >> 1), FREC_CSTRIDE, p_fenc[2], FENC_STRIDE);
@@ -2204,7 +2204,7 @@ static int cu_select_inter_partition(xavs2_t *h, cu_t *p_cu, int i_level, uint32
  * 尝试普通帧间预测块划分方式，并计算相应的Cost
  */
 static
-void cu_check_inter_partition(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int mode, int i_level, 
+void cu_check_inter_partition(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int mode, int i_level,
                               cu_info_t *best, rdcost_t *p_min_rdcost,
                               int b_dhp_enabled, int b_check_dmh)
 {
@@ -3093,7 +3093,7 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         if (!(avail_modes & (1 << mode))) {
             continue;           // 直接跳过不可用模式的决策
         }
-        
+
         /* -------------------------------------------------------------
          * 3.1 与Skip/Direct模式相关的快速模式决策算法放在此处
          */
@@ -3104,7 +3104,7 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
                 b_bypass_intra = 1;
                 break;              // bypass all rest inter & intra modes
             }
-    }
+        }
 #endif
 
         /* 快速PU划分模式决策：
@@ -3234,13 +3234,13 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
             // cal rd-cost
             cu_check_intra(h, p_aec, p_cu, best, mode, &min_rdcost);
 
-            if (IS_ALG_ENABLE(OPT_CMS_ETMD)){
+            if (IS_ALG_ENABLE(OPT_CMS_ETMD)) {
                 if (best->i_mode != PRED_I_2Nx2N && mode == PRED_I_2Nx2N) {
                     break;
                 }
             }
         }
-    }   
+    }
 
     /* 检查最优模式,包括TU划分还是不划分的确定，带RDOQ */
     if (h->param->i_rdoq_level == RDOQ_CU_LEVEL&& best->i_cbp > 0) {
@@ -3255,14 +3255,14 @@ rdcost_t compress_cu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, cu_info_t *best
         mode = best->i_mode;
         cu_copy_info(&p_cu->cu_info, best);
         if (IS_INTRA_MODE(mode)) {
-            if((!IS_ALG_ENABLE(OPT_BYPASS_INTRA_RDOQ)) || h->i_type == SLICE_TYPE_F){
+            if((!IS_ALG_ENABLE(OPT_BYPASS_INTRA_RDOQ)) || h->i_type == SLICE_TYPE_F) {
                 cu_check_intra(h, p_aec, p_cu, best, mode, &min_rdcost);
             }
         } else {
             memcpy(&p_cu->mc, &p_layer->cu_mode.best_mc, sizeof(p_cu->mc));  /* 拷贝MV信息用于补偿 */
             cu_rdcost_inter(h, p_aec, p_cu, &min_rdcost, best);
         }
-    } else if (IS_ALG_ENABLE(OPT_BIT_EST_PSZT) && i_level >= 5 && (best->i_mode != PRED_SKIP || best->i_cbp != 0)) {       
+    } else if (IS_ALG_ENABLE(OPT_BIT_EST_PSZT) && i_level >= 5 && (best->i_mode != PRED_SKIP || best->i_cbp != 0)) {
         h->enable_tu_2level = 2;
         h->lcu.get_intra_dir_for_rdo_luma = rdo_get_pred_intra_luma_2nd_pass;
         h->lcu.b_2nd_rdcost_pass = 1;
@@ -3467,7 +3467,7 @@ rdcost_t compress_ctu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, i
         }
 
         /* 当前CU和上一层CU的最优模式均为SKIP模式，则跳过下层CU的划分 @张玉槐 */
-        if (IS_ALG_ENABLE(OPT_CU_CSET) && 
+        if (IS_ALG_ENABLE(OPT_CU_CSET) &&
             ((p_cu->i_size <= 16 && h->i_type == SLICE_TYPE_B) || (p_cu->i_size <= 32 && h->fdec->rps.referd_by_others == 0))) {
             cu_layer_t *p_ulayer = cu_get_layer(h, i_level + 1);
             cu_info_t *curr_ubest = &p_ulayer->cu_best;
@@ -3506,7 +3506,7 @@ rdcost_t compress_ctu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, i
 
         for (i = 0; i < 4; i++) {
             cu_t *p_sub_cu = p_cu->sub_cu[i];
-            
+
 
             if (p_sub_cu->i_pix_x >= h->i_width || p_sub_cu->i_pix_y >= h->i_height) {
                 continue;       // current sub CU is outside the frame
@@ -3523,7 +3523,7 @@ rdcost_t compress_ctu_inter(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, int i_level, i
     }
     if (IS_ALG_ENABLE(OPT_SUBCU_SPLIT)) {
         if ((p_cu->sub_cu[0] != NULL) && (p_cu->sub_cu[1] != NULL) && (p_cu->sub_cu[2] != NULL) && (p_cu->sub_cu[3] != NULL)) {
-            if (((p_cu->sub_cu[0]->is_ctu_split + p_cu->sub_cu[1]->is_ctu_split + p_cu->sub_cu[2]->is_ctu_split + p_cu->sub_cu[3]->is_ctu_split) >= 3)){
+            if (((p_cu->sub_cu[0]->is_ctu_split + p_cu->sub_cu[1]->is_ctu_split + p_cu->sub_cu[2]->is_ctu_split + p_cu->sub_cu[3]->is_ctu_split) >= 3)) {
                 b_check_large_cu = FALSE;   // 1080p 20% 节省，约1.7%损失，preset 6，1080p
             }
             /* else if (((!p_cu->sub_cu[0]->is_ctu_split) && ((p_cu->sub_cu[0]->cu_info.i_mode == PRED_SKIP || p_cu->sub_cu[0]->cu_info.i_mode == PRED_2Nx2N) && (p_cu->sub_cu[0]->cu_info.i_cbp == 0)))

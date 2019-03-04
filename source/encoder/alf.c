@@ -93,8 +93,7 @@ static const int uvlc_bitrate_estimate[128] = {
     15
 };
 
-typedef struct dh_nc
-{
+typedef struct dh_nc {
     double dh;
     int nc;
 } DhNc;
@@ -231,12 +230,12 @@ void copyALFparam(ALFParam *dst, ALFParam *src, int componentID)
 /* ---------------------------------------------------------------------------
  * calculate the correlation matrix for Luma
  */
-static 
+static
 void calcCorrOneCompRegionLuma(xavs2_t *h, alf_ctx_t *Enc_ALF, pel_t *org, int i_org, pel_t *rec, int i_rec,
-                               int yPos, int xPos, int height, int width, 
+                               int yPos, int xPos, int height, int width,
                                int64_t m_autoCorr[][ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
-                               double m_crossCorr[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], 
-                               double *pixAcc, 
+                               double m_crossCorr[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
+                               double *pixAcc,
                                int isLeftAvail, int isRightAvail, int isAboveAvail, int isBelowAvail)
 {
     int xPosEnd = xPos + width;
@@ -650,9 +649,9 @@ static uint32_t estimateALFBitrateInPicHeader(ALFParam *alfPicParam)
 
 /* ---------------------------------------------------------------------------
  */
-static 
-long xFastFiltDistEstimation(alf_ctx_t *Enc_ALF, 
-                             int64_t ppdE[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], 
+static
+long xFastFiltDistEstimation(alf_ctx_t *Enc_ALF,
+                             int64_t ppdE[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
                              double *pdy, int *piCoeff, int iFiltLength)
 {
     //static memory
@@ -689,8 +688,8 @@ long xFastFiltDistEstimation(alf_ctx_t *Enc_ALF,
 /* ---------------------------------------------------------------------------
  */
 static
-long estimateFilterDistortion(alf_ctx_t *Enc_ALF, int compIdx, AlfCorrData *alfCorr, 
-                              int coeffSet[][ALF_MAX_NUM_COEF], int filterSetSize, 
+long estimateFilterDistortion(alf_ctx_t *Enc_ALF, int compIdx, AlfCorrData *alfCorr,
+                              int coeffSet[][ALF_MAX_NUM_COEF], int filterSetSize,
                               int *mergeTable, int doPixAccMerge)
 {
     AlfCorrData *alfMerged = &Enc_ALF->m_alfCorrMerged[compIdx];
@@ -748,7 +747,7 @@ dist_t calcAlfLCUDist(xavs2_t *h, alf_ctx_t *Enc_ALF, int compIdx,
         }
         break;
     default:
-    // case IMG_Y:
+        // case IMG_Y:
         if (!notSkipLinesBelowVB) {
             height = height - (int)(DF_CHANGED_SIZE)-(int)(ALF_FOOTPRINT_SIZE >> 1);
         }
@@ -775,7 +774,7 @@ dist_t calcAlfLCUDist(xavs2_t *h, alf_ctx_t *Enc_ALF, int compIdx,
  * ALF filter on CTB
  */
 static
-void filterOneCTB(xavs2_t *h, alf_ctx_t *Enc_ALF, pel_t *p_dst, int i_dst, pel_t *p_src, int i_src, 
+void filterOneCTB(xavs2_t *h, alf_ctx_t *Enc_ALF, pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
                   int compIdx, ALFParam *alfParam, int ypos, int height, int xpos, int width,
                   int isAboveAvail, int isBelowAvail)
 {
@@ -795,17 +794,17 @@ void filterOneCTB(xavs2_t *h, alf_ctx_t *Enc_ALF, pel_t *p_dst, int i_dst, pel_t
 
 
     g_funcs.alf_flt[0](p_dst, i_dst, p_src, i_src,
-        xpos, ypos, width, height, coef,
-        isAboveAvail, isBelowAvail);
+                       xpos, ypos, width, height, coef,
+                       isAboveAvail, isBelowAvail);
     g_funcs.alf_flt[1](p_dst, i_dst, p_src, i_src,
-        xpos, ypos, width, height, coef,
-        isAboveAvail, isBelowAvail);
+                       xpos, ypos, width, height, coef,
+                       isAboveAvail, isBelowAvail);
 }
 
 /* ---------------------------------------------------------------------------
  */
 static ALWAYS_INLINE
-void copyOneAlfBlk(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src, int ypos, int xpos, 
+void copyOneAlfBlk(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src, int ypos, int xpos,
                    int height, int width, int isAboveAvail, int isBelowAvail)
 {
     int startPos  = isAboveAvail ? (ypos          - 4) : ypos;
@@ -821,7 +820,7 @@ void copyOneAlfBlk(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src, int ypos, i
  */
 static
 double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, ALFParam *alfPictureParam,
-                               double lambda, AlfCorrData * alfCorr)
+        double lambda, AlfCorrData * alfCorr)
 {
     dist_t distEnc, distOff;
     double rateEnc, rateOff, costEnc, costOff, costAlfOn, costAlfOff;
@@ -856,12 +855,12 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
                 continue;
             }
 
-            // ALF on            
+            // ALF on
             reconstructCoefInfo(compIdx, &alfPictureParam[compIdx], Enc_ALF->m_filterCoeffSym, Enc_ALF->m_varIndTab);
             //distEnc is the estimated distortion reduction compared with filter-off case
             distEnc = estimateFilterDistortion(Enc_ALF, compIdx, alfCorr + (compIdx * NumCUsInFrame) + ctu, Enc_ALF->m_filterCoeffSym,
-                alfPictureParam[compIdx].filters_per_group, Enc_ALF->m_varIndTab, FALSE)
-                - estimateFilterDistortion(Enc_ALF, compIdx, alfCorr + (compIdx * NumCUsInFrame) + ctu, NULL, 1, NULL, FALSE);
+                                               alfPictureParam[compIdx].filters_per_group, Enc_ALF->m_varIndTab, FALSE)
+                      - estimateFilterDistortion(Enc_ALF, compIdx, alfCorr + (compIdx * NumCUsInFrame) + ctu, NULL, 1, NULL, FALSE);
 
             h->copy_aec_state_rdo(p_aec, &h->cs_data.cs_alf_cu_ctr);
 
@@ -901,7 +900,7 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
             costAlfOn = (double)distBestPic[compIdx] + lambda_ *
-                (rateBestPic[compIdx] + (double)(rate));
+                        (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;
 
@@ -930,7 +929,7 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
 */
 static
 void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, ALFParam *alfPictureParam,
-                              double lambda, xavs2_frame_t *p_org, xavs2_frame_t *p_rec, xavs2_frame_t *p_dst)
+                                double lambda, xavs2_frame_t *p_org, xavs2_frame_t *p_rec, xavs2_frame_t *p_dst)
 {
     dist_t distEnc, distOff;
     double rateEnc, rateOff, costEnc, costOff, costAlfOn, costAlfOff;
@@ -972,15 +971,14 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
         //derive CTU height
         ctuYPos = ctuy * size_lcu;
         ctuHeight = XAVS2_MIN(img_height - ctuYPos, size_lcu);
-        for (ctux = 0; ctux < numLCUInPicWidth; ctux++, ctu++)
-        {
+        for (ctux = 0; ctux < numLCUInPicWidth; ctux++, ctu++) {
             //derive CTU width
             ctuXPos = ctux * size_lcu;
             ctuWidth = XAVS2_MIN(img_width - ctuXPos, size_lcu);
 
             //derive CTU boundary availabilities
             deriveBoundaryAvail(h, ctuXPos, ctuYPos,
-                &isLeftAvail, &isRightAvail, &isAboveAvail, &isBelowAvail);
+                                &isLeftAvail, &isRightAvail, &isAboveAvail, &isBelowAvail);
 
             for (compIdx = 0; compIdx < IMG_CMPNTS; compIdx++) {
                 //if slice-level enabled flag is 0, set CTB-level enabled flag 0
@@ -999,12 +997,12 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
 
                 // ALF on
                 filterOneCTB(h, Enc_ALF, p_rec_after, i_rec_after, p_rec_before, i_rec_before, compIdx,
-                    &alfPictureParam[compIdx], ctuYPos >> formatShift, ctuHeight >> formatShift,
-                    ctuXPos >> formatShift, ctuWidth >> formatShift, isAboveAvail, isBelowAvail);
+                             &alfPictureParam[compIdx], ctuYPos >> formatShift, ctuHeight >> formatShift,
+                             ctuXPos >> formatShift, ctuWidth >> formatShift, isAboveAvail, isBelowAvail);
                 distEnc = calcAlfLCUDist(h, Enc_ALF, compIdx, ctuYPos >> formatShift, ctuXPos >> formatShift,
-                    ctuHeight >> formatShift, ctuWidth >> formatShift, isAboveAvail, p_org_pixel, i_org, p_rec_after, i_rec_after);
+                                         ctuHeight >> formatShift, ctuWidth >> formatShift, isAboveAvail, p_org_pixel, i_org, p_rec_after, i_rec_after);
                 distEnc -= calcAlfLCUDist(h, Enc_ALF, compIdx, ctuYPos >> formatShift, ctuXPos >> formatShift,
-                    ctuHeight >> formatShift, ctuWidth >> formatShift, isAboveAvail, p_org_pixel, i_org, p_rec_before, i_rec_before);
+                                          ctuHeight >> formatShift, ctuWidth >> formatShift, isAboveAvail, p_org_pixel, i_org, p_rec_before, i_rec_before);
 
                 h->copy_aec_state_rdo(p_aec, &h->cs_data.cs_alf_cu_ctr);
 
@@ -1025,8 +1023,8 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
 
                 if (!h->is_alf_lcu_on[ctu][compIdx]) {
                     copyOneAlfBlk(p_rec_after, i_rec_after, p_rec_before, i_rec_before,
-                        ctuYPos >> formatShift, ctuXPos >> formatShift, ctuHeight >> formatShift, ctuWidth >> formatShift,
-                        isAboveAvail, isBelowAvail);
+                                  ctuYPos >> formatShift, ctuXPos >> formatShift, ctuHeight >> formatShift, ctuWidth >> formatShift,
+                                  isAboveAvail, isBelowAvail);
                 }
 
                 //update CABAC status
@@ -1052,7 +1050,7 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
             costAlfOn = (double)distBestPic[compIdx] + lambda_ *
-                (rateBestPic[compIdx] + (double)(rate));
+                        (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;
 
@@ -1063,8 +1061,8 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
                 }
 
                 g_funcs.plane_copy(p_dst->planes[compIdx], p_dst->i_stride[compIdx],
-                    p_rec->planes[compIdx], p_rec->i_stride[compIdx],
-                    p_rec->i_width[compIdx], p_rec->i_lines[compIdx]);
+                                   p_rec->planes[compIdx], p_rec->i_stride[compIdx],
+                                   p_rec->i_width[compIdx], p_rec->i_lines[compIdx]);
             }
         }
     }
@@ -1269,7 +1267,7 @@ static int gnsSolveByChol(int64_t LHS[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], doubl
     } else { /* LHS was singular */
         singular = 0;
 
-        /* Regularize LHS 
+        /* Regularize LHS
         for (i = 0; i < noEq; i++) {
             LHS[i][i] += REG;
         }*/
@@ -1314,7 +1312,7 @@ static double calculateErrorAbs(int64_t A[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], d
  */
 static
 double mergeFiltersGreedy(alf_ctx_t *Enc_ALF, double yGlobalSeq[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], int64_t EGlobalSeq[][ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
-    double *pixAccGlobalSeq, int intervalBest[NO_VAR_BINS][2], int sqrFiltLength, int noIntervals)
+                          double *pixAccGlobalSeq, int intervalBest[NO_VAR_BINS][2], int sqrFiltLength, int noIntervals)
 {
     int first, ind, ind1, ind2, i, j, bestToMerge;
     double error, error1, error2, errorMin;
@@ -1601,8 +1599,8 @@ static double QuantizeIntegerFilterPP(double *filterCoeff, int *filterCoeffQuant
 /* ---------------------------------------------------------------------------
  */
 static double findFilterCoeff(alf_ctx_t *Enc_ALF, int64_t EGlobalSeq[][ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], double yGlobalSeq[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
-    double *pixAccGlobalSeq, int filterCoeffSeq[][ALF_MAX_NUM_COEF], int filterCoeffQuantSeq[][ALF_MAX_NUM_COEF], int intervalBest[NO_VAR_BINS][2],
-    int varIndTab[NO_VAR_BINS], int sqrFiltLength, int filters_per_fr, double errorTabForce0Coeff[NO_VAR_BINS][2])
+                              double *pixAccGlobalSeq, int filterCoeffSeq[][ALF_MAX_NUM_COEF], int filterCoeffQuantSeq[][ALF_MAX_NUM_COEF], int intervalBest[NO_VAR_BINS][2],
+                              int varIndTab[NO_VAR_BINS], int sqrFiltLength, int filters_per_fr, double errorTabForce0Coeff[NO_VAR_BINS][2])
 {
     double pixAcc_temp;
     int filterCoeffQuant[ALF_MAX_NUM_COEF];
@@ -1638,7 +1636,7 @@ static double findFilterCoeff(alf_ctx_t *Enc_ALF, int64_t EGlobalSeq[][ALF_MAX_N
  */
 static
 void xfindBestFilterVarPred(alf_ctx_t *Enc_ALF, double ySym[ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF], int64_t ESym[][ALF_MAX_NUM_COEF][ALF_MAX_NUM_COEF],
-    double *pixAcc, int filterCoeffSym[][ALF_MAX_NUM_COEF], int *filters_per_fr_best, int varIndTab[], double lambda_val, int numMaxFilters)
+                            double *pixAcc, int filterCoeffSym[][ALF_MAX_NUM_COEF], int *filters_per_fr_best, int varIndTab[], double lambda_val, int numMaxFilters)
 {
     int filterCoeffSymQuant[NO_VAR_BINS][ALF_MAX_NUM_COEF];
     int filters_per_fr, firstFilt, interval[NO_VAR_BINS][2], intervalBest[NO_VAR_BINS][2];
@@ -1660,7 +1658,7 @@ void xfindBestFilterVarPred(alf_ctx_t *Enc_ALF, double ySym[ALF_MAX_NUM_COEF][AL
     while (filters_per_fr >= 1) {
         mergeFiltersGreedy(Enc_ALF, ySym, ESym, pixAcc, interval, sqrFiltLength, filters_per_fr);
         findFilterCoeff(Enc_ALF, ESym, ySym, pixAcc, filterCoeffSym, filterCoeffSymQuant, interval,
-            varIndTab, sqrFiltLength, filters_per_fr, errorForce0CoeffTab);
+                        varIndTab, sqrFiltLength, filters_per_fr, errorForce0CoeffTab);
 
         lagrangian = xfindBestCoeffCodMethod(filterCoeffSymQuant, sqrFiltLength, filters_per_fr, errorForce0CoeffTab, lambda_val);
         if (lagrangian < lagrangianMin || firstFilt == 1 || filters_per_fr == numMaxFilters) {
@@ -1674,7 +1672,7 @@ void xfindBestFilterVarPred(alf_ctx_t *Enc_ALF, double ySym[ALF_MAX_NUM_COEF][AL
     }
 
     findFilterCoeff(Enc_ALF, ESym, ySym, pixAcc, filterCoeffSym, filterCoeffSymQuant, intervalBest,
-        varIndTab, sqrFiltLength, (*filters_per_fr_best), errorForce0CoeffTab);
+                    varIndTab, sqrFiltLength, (*filters_per_fr_best), errorForce0CoeffTab);
 
     if (*filters_per_fr_best == 1) {
         memset(varIndTab, 0, sizeof(int)*NO_VAR_BINS);
@@ -1875,13 +1873,13 @@ int alf_get_buffer_size(const xavs2_param_t *param)
     int maxNumTemporalLayer = (int)(log10((float)(param->i_gop_size)) / log10(2.0) + 1);
 
     int mem_size = sizeof(alf_ctx_t)
-        + 2 * IMG_CMPNTS * num_lcu * sizeof(AlfCorrData)
-        + maxNumTemporalLayer * IMG_CMPNTS * num_lcu * sizeof(AlfCorrData)
-        + num_lcu * sizeof(int)      // m_numSlicesDataInOneLCU
-        + num_lcu * sizeof(int8_t)   // tab_lcu_region
-        + num_lcu * IMG_CMPNTS * sizeof(bool_t)  // is_alf_lcu_on[3]
-        + num_lcu * sizeof(AlfCorrData)  //for other function temp variable alfPicCorr
-        + CACHE_LINE_SIZE * 50;
+                   + 2 * IMG_CMPNTS * num_lcu * sizeof(AlfCorrData)
+                   + maxNumTemporalLayer * IMG_CMPNTS * num_lcu * sizeof(AlfCorrData)
+                   + num_lcu * sizeof(int)      // m_numSlicesDataInOneLCU
+                   + num_lcu * sizeof(int8_t)   // tab_lcu_region
+                   + num_lcu * IMG_CMPNTS * sizeof(bool_t)  // is_alf_lcu_on[3]
+                   + num_lcu * sizeof(AlfCorrData)  //for other function temp variable alfPicCorr
+                   + CACHE_LINE_SIZE * 50;
 
     return mem_size;
 }
@@ -1893,7 +1891,8 @@ void alf_init_buffer(xavs2_t *h, uint8_t *mem_base)
 {
     // Ï£¶û²®ÌØÉ¨ÃèË³Ðò
     static const uint8_t regionTable[NO_VAR_BINS] = {
-        0, 1, 4, 5, 15, 2, 3, 6, 14, 11, 10, 7, 13, 12, 9, 8}
+        0, 1, 4, 5, 15, 2, 3, 6, 14, 11, 10, 7, 13, 12, 9, 8
+    }
     ;
     int width_in_lcu  = h->i_width_in_lcu;
     int height_in_lcu = h->i_height_in_lcu;
@@ -1909,7 +1908,7 @@ void alf_init_buffer(xavs2_t *h, uint8_t *mem_base)
     int mem_size;
     uint8_t *mem_ptr = mem_base;
     alf_ctx_t *Enc_ALF;
-    
+
     mem_size = alf_get_buffer_size(h->param);
     memset(mem_ptr, 0, mem_size);
 
@@ -1982,7 +1981,7 @@ void alf_filter_one_frame(xavs2_t *h)
     }
 
     setCurAlfParam(h, Enc_ALF, p_aec, alfPictureParam, lambda_mode);
-    executePicLCUOnOffDecision(h, Enc_ALF, p_aec, alfPictureParam, lambda_mode, 
+    executePicLCUOnOffDecision(h, Enc_ALF, p_aec, alfPictureParam, lambda_mode,
                                p_org, p_rec, h->fdec);
 
     // set ALF frame parameters

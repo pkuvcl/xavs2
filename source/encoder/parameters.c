@@ -149,7 +149,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     RESTORE_WARNING
 
     int item_idx = 0;
-    
+
     /* input */
     MAP("Width",                        &p->org_width,                  MAP_NUM, "Image width  in pixels");
     MAP("SourceWidth",                  &p->org_width,                  MAP_NUM, "  - Same as `Width`");
@@ -368,26 +368,36 @@ static intptr_t ParseRefContent(xavs2_param_t *param, char **buf)
     while (0 == strcmp(header, *p++)) {
         i_gop_size++;
         tmp   = param->cfg_ref_all + i - 1;
-        token = *p++;       tmp->poc              = atoi(token);
-        token = *p++;       tmp->qp_offset        = atoi(token);
-        token = *p++;       tmp->num_of_ref       = atoi(token);
-        token = *p++;       tmp->referd_by_others = atoi(token);
+        token = *p++;
+        tmp->poc              = atoi(token);
+        token = *p++;
+        tmp->qp_offset        = atoi(token);
+        token = *p++;
+        tmp->num_of_ref       = atoi(token);
+        token = *p++;
+        tmp->referd_by_others = atoi(token);
         for (j = 0; j < tmp->num_of_ref; j++) {
-            token = *p++;   tmp->ref_pic[j]       = atoi(token);
+            token = *p++;
+            tmp->ref_pic[j]       = atoi(token);
         }
 
-        token = *p++;       predict               = atoi(token);
+        token = *p++;
+        predict               = atoi(token);
         if (predict != 0) {
-            token = *p++;   j /* delta_rps */     = atoi(token);    /* delta_rps, not used */
+            token = *p++;
+            j /* delta_rps */     = atoi(token);    /* delta_rps, not used */
         }
 
-        token = *p++;       tmp->num_to_rm        = atoi(token);
+        token = *p++;
+        tmp->num_to_rm        = atoi(token);
         for (j = 0; j < tmp->num_to_rm; j++) {
-            token = *p++;   tmp->rm_pic[j]        = atoi(token);
+            token = *p++;
+            tmp->rm_pic[j]        = atoi(token);
         }
 
         if (param->temporal_id_exist_flag == 1) {
-            token = *p++;   tmp->temporal_id      = atoi(token);
+            token = *p++;
+            tmp->temporal_id      = atoi(token);
         }
 
         header[5] = header[6] = header[7] = header[8] = header[9] = '\0';
@@ -731,7 +741,7 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             item_value = xavs2e_atoi(value_string, &b_error);
             if (b_error) {
                 xavs2_log(NULL, XAVS2_LOG_ERROR, " Parsing error: Expected numerical value for Parameter of %s, found '%s'.\n",
-                    name, value_string);
+                          name, value_string);
                 return -1;
             }
             *(int *)(g_param_map.map_tab[map_index].addr) = item_value;
@@ -762,7 +772,7 @@ xavs2_encoder_opt_set2(xavs2_param_t *param, const char *name, const char *value
             item_value = xavs2e_atoi(value_string, &b_error);
             if (b_error) {
                 xavs2_log(NULL, XAVS2_LOG_ERROR, " Parsing error: Expected numerical value for Parameter of %s, found '%s'.\n",
-                    name, value_string);
+                          name, value_string);
                 return -1;
             }
             *(bool_t *)(g_param_map.map_tab[map_index].addr) = (bool_t)(!!item_value);

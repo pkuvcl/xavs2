@@ -71,7 +71,7 @@ typedef struct frm_lowres_t {
 } frm_lowres_t;
 
 /* ---------------------------------------------------------------------------
- * video pre-processing motion estimation 
+ * video pre-processing motion estimation
  */
 typedef struct vpp_me_t {
     int             mv_min[2];        /* full pel MV range for motion search (min) */
@@ -359,7 +359,7 @@ int xavs2_encoder_packet_unref(void *coder, xavs2_outpacket_t *packet);
  *      [in ] : coder - pointer to wrapper of the xavs2 encoder
  *      [out] : none
  * Return     : none
- * Note       : this API is *NOT* thread-safe, 
+ * Note       : this API is *NOT* thread-safe,
  *              and can not be called simultaneously with other APIs.
  * ---------------------------------------------------------------------------
  */

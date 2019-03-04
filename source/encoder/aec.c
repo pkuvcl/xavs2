@@ -681,7 +681,7 @@ int aec_write_pdir(aec_t *p_aec, int i_cu_type, int i_cu_level, int pdir0, int p
             act_ctx++;
         }
         if (pdir0 != 3) {
-             biari_encode_symbol_aec(p_aec, 1, p_ctx + act_ctx);
+            biari_encode_symbol_aec(p_aec, 1, p_ctx + act_ctx);
         }
 
         symbol = (pdir0 == pdir1);
@@ -1036,9 +1036,9 @@ int aec_write_dqp(aec_t *p_aec, int delta_qp, int last_dqp)
 
 /* ---------------------------------------------------------------------------
  */
-static ALWAYS_INLINE 
-void aec_write_last_cg_pos(aec_t *p_aec, int b_luma, int b_dc_diag, 
-                           int i_cg, int cg_last_x, int cg_last_y, 
+static ALWAYS_INLINE
+void aec_write_last_cg_pos(aec_t *p_aec, int b_luma, int b_dc_diag,
+                           int i_cg, int cg_last_x, int cg_last_y,
                            int num_cg, int num_cg_x_minus1, int num_cg_y_minus1)
 {
     context_t *p_ctx = p_aec->p_ctx_set->last_cg_contexts + (b_luma ? 0 : NUM_LAST_CG_CTX_LUMA);
@@ -1086,10 +1086,10 @@ void aec_write_last_cg_pos(aec_t *p_aec, int b_luma, int b_dc_diag,
 
 /* ---------------------------------------------------------------------------
  */
-static ALWAYS_INLINE 
+static ALWAYS_INLINE
 void aec_write_last_coeff_pos(aec_t *p_aec, context_t *p_ctx, int isLastCG,
                               int b_one_cg, int cg_x, int cg_y,
-                              int last_coeff_pos_x, int last_coeff_pos_y, 
+                              int last_coeff_pos_x, int last_coeff_pos_y,
                               int b_luma, int b_dc_diag)
 {
     int offset;
@@ -1231,8 +1231,8 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
             int scan_pos = tab_1d_scan_4x4[15 - pos];
             int x_in_cg = scan_pos & 3;
             int y_in_cg = scan_pos >> 2;
-            aec_write_last_coeff_pos(p_aec, p_ctx_last_coeff_pos, rank == 0, num_cg == 1, 
-                CGx, CGy, x_in_cg, y_in_cg, 1, b_dc_diag);
+            aec_write_last_coeff_pos(p_aec, p_ctx_last_coeff_pos, rank == 0, num_cg == 1,
+                                     CGx, CGy, x_in_cg, y_in_cg, 1, b_dc_diag);
         }
 
         for (pairsInCG = 0; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--, pairsInCG++) {
@@ -1316,7 +1316,7 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_aec(p_aec, Level_sign >> 1, num_pairs);
-    }   // for (; i_cg >= 0; i_cg--) 
+    }   // for (; i_cg >= 0; i_cg--)
 
     /* get the number of written bits */
     org_bits = aec_get_written_bits(p_aec) - org_bits;
@@ -1324,8 +1324,8 @@ int aec_write_run_level_luma(aec_t *p_aec, int b_dc_diag,
 #ifdef DEBUG
     if (rank == 0) {
         xavs2_log(h, XAVS2_LOG_ERROR, "no non-zero run-level luma, POC[%d]: p_cu: (%d, %d), level %d, cu_type %d\n",
-            h->fdec->i_poc, runlevel->p_cu_info->i_scu_x, runlevel->p_cu_info->i_scu_y, runlevel->p_cu_info->i_level, 
-            runlevel->p_cu_info->i_mode);
+                  h->fdec->i_poc, runlevel->p_cu_info->i_scu_x, runlevel->p_cu_info->i_scu_y, runlevel->p_cu_info->i_level,
+                  runlevel->p_cu_info->i_mode);
     }
 #endif
     assert(rank > 0);  // 当有非零系数时，rank的值应大于零
@@ -1405,7 +1405,7 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h)
             int x_in_cg = scan_pos & 3;
             int y_in_cg = scan_pos >> 2;
             aec_write_last_coeff_pos(p_aec, p_ctx_last_coeff_pos, rank == 0, num_cg == 1, CGx, CGy, x_in_cg, y_in_cg,
-                0, 1);
+                                     0, 1);
         }
 
         for (pairsInCG = 0; i > 0 && pos < NUM_OF_COEFFS_IN_CG; i--, pairs--, pairsInCG++) {
@@ -1488,7 +1488,7 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h)
 
         /* 4, sign of coefficient */
         biari_encode_symbols_eq_prob_aec(p_aec, Level_sign >> 1, num_pairs);
-    }   // for (; i_cg >= 0; i_cg--) 
+    }   // for (; i_cg >= 0; i_cg--)
 
     /* get the number of written bits */
     org_bits = aec_get_written_bits(p_aec) - org_bits;
@@ -1496,8 +1496,8 @@ int aec_write_run_level_chroma(aec_t *p_aec, runlevel_t *runlevel, xavs2_t *h)
 #ifdef DEBUG
     if (rank == 0) {
         xavs2_log(h, XAVS2_LOG_ERROR, "no non-zero run-level chroma, p_cu: (%d, %d), level %d, cu_type %d\n",
-            runlevel->p_cu_info->i_scu_x, runlevel->p_cu_info->i_scu_y, runlevel->p_cu_info->i_level, 
-            runlevel->p_cu_info->i_mode);
+                  runlevel->p_cu_info->i_scu_x, runlevel->p_cu_info->i_scu_y, runlevel->p_cu_info->i_level,
+                  runlevel->p_cu_info->i_mode);
     }
 #endif
     assert(rank > 0);  // 当有非零系数时，rank的值应大于零
@@ -1709,8 +1709,8 @@ int write_sao_type(aec_t *p_aec, SAOBlkParam *saoBlkParam)
 
 #if XAVS2_TRACE
         if (p_aec->b_writting) {
-            xavs2_trace("coded band = %d, second band = %d, delta band = %d\n", 
-                saoBlkParam->startBand, (saoBlkParam->startBand + saoBlkParam->deltaBand) & 31, saoBlkParam->deltaBand);
+            xavs2_trace("coded band = %d, second band = %d, delta band = %d\n",
+                        saoBlkParam->startBand, (saoBlkParam->startBand + saoBlkParam->deltaBand) & 31, saoBlkParam->deltaBand);
         }
 #endif
     } else {
@@ -1773,8 +1773,8 @@ int write_cu_header(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int scu_xy)
             }
 #endif
         } else if (h->i_type == SLICE_TYPE_F && h->param->enable_dhp && (h->i_ref > 1) &&
-                 ((mode >= PRED_2Nx2N && mode <= PRED_nRx2N && level >  B8X8_IN_BIT) ||
-                  (mode == PRED_2Nx2N                       && level == B8X8_IN_BIT))) {
+                   ((mode >= PRED_2Nx2N && mode <= PRED_nRx2N && level >  B8X8_IN_BIT) ||
+                    (mode == PRED_2Nx2N                       && level == B8X8_IN_BIT))) {
             rate += aec_write_pdir_dhp(p_aec, mode, p_cu_info->b8pdir[0], p_cu_info->b8pdir[1]);
 #if XAVS2_TRACE
             if (p_aec->b_writting) {
@@ -1927,8 +1927,8 @@ int write_cu_refs_mvds(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info)
 
 
     /* write DMH mode, "dir_multi_hypothesis_mode" */
-    if (h->i_type == SLICE_TYPE_F /*&& h->param->enable_dmh*/ 
-        && p_cu_info->b8pdir[0] == PDIR_FWD && p_cu_info->b8pdir[1] == PDIR_FWD 
+    if (h->i_type == SLICE_TYPE_F /*&& h->param->enable_dmh*/
+        && p_cu_info->b8pdir[0] == PDIR_FWD && p_cu_info->b8pdir[1] == PDIR_FWD
         && p_cu_info->b8pdir[2] == PDIR_FWD && p_cu_info->b8pdir[3] == PDIR_FWD) {
         if (!(p_cu_info->i_level == B8X8_IN_BIT && p_cu_info->i_mode >= PRED_2NxN && p_cu_info->i_mode <= PRED_nRx2N)) {
             dmh_mode = p_cu_info->dmh_mode;
@@ -2000,7 +2000,7 @@ int write_cu_cbp_dqp(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, int slice_i
 /* ---------------------------------------------------------------------------
  */
 static INLINE
-int write_luma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff_t *quant_coeff, runlevel_t *runlevel, 
+int write_luma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff_t *quant_coeff, runlevel_t *runlevel,
                            int i_level, int i_stride_shift, int is_intra, int intra_mode)
 {
     const int16_t(*cg_scan)[2] = NULL;
@@ -2043,7 +2043,7 @@ int write_luma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff
 /* ---------------------------------------------------------------------------
  */
 static INLINE
-int write_chroma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff_t *quant_coeff, runlevel_t *runlevel, 
+int write_chroma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coeff_t *quant_coeff, runlevel_t *runlevel,
                              int i_level)
 {
     const int num_cg = 1 << (i_level + i_level - 4);
@@ -2065,7 +2065,7 @@ int write_chroma_block_coeff(xavs2_t *h, aec_t *p_aec, cu_info_t *p_cu_info, coe
  * write CBP, DQUANT, and Luma Coefficients of an cu
  */
 static
-void xavs2_cu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, cu_info_t *p_cu_info, 
+void xavs2_cu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, cu_info_t *p_cu_info,
                     int i_level, int img_x, int img_y)
 {
     int scu_x = (img_x >> MIN_CU_SIZE_IN_BIT);
@@ -2103,7 +2103,7 @@ void xavs2_cu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, cu_info_t *p
 
                 cu_init_transform_block(i_level, p_cu_info->i_tu_split, block_idx, &tb);
 
-                write_luma_block_coeff(h, p_aec, p_cu_info, 
+                write_luma_block_coeff(h, p_aec, p_cu_info,
                                        lcu_info->coeffs_y + (idx_zorder << 6) + (block_idx << ((i_level - 1) << 1)),
                                        &h->lcu.run_level_write, i_tu_level, xavs2_log2u(tb.w) - use_wavelet,
                                        IS_INTRA_MODE(mode), p_cu_info->real_intra_modes[block_idx]);
@@ -2118,7 +2118,7 @@ void xavs2_cu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, cu_info_t *p
         if (h->param->chroma_format != CHROMA_400) {
             for (block_idx = 4; block_idx < 6; block_idx++) {
                 if (p_cu_info->i_cbp & (1 << block_idx)) {
-                    write_chroma_block_coeff(h, p_aec, p_cu_info, 
+                    write_chroma_block_coeff(h, p_aec, p_cu_info,
                                              lcu_info->coeffs_uv[block_idx - 4] + (idx_zorder << 4),
                                              &h->lcu.run_level_write, i_level - 1);
                 }
@@ -2134,8 +2134,8 @@ void xavs2_lcu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, int i_level
     int cu_ex  = img_x + (1 << i_level);    /* down-right point position x */
     int cu_ey  = img_y + (1 << i_level);    /* down-right point position y */
     int inside = cu_ex <= h->i_width && cu_ey <= h->i_height;   /* down-right point is inside of the frame */
-    int i_cu_pos = (img_y >> MIN_CU_SIZE_IN_BIT) * h->i_width_in_mincu 
-                 + (img_x >> MIN_CU_SIZE_IN_BIT);
+    int i_cu_pos = (img_y >> MIN_CU_SIZE_IN_BIT) * h->i_width_in_mincu
+                   + (img_x >> MIN_CU_SIZE_IN_BIT);
     cu_info_t *p_cu_info;
 
     assert(img_x < h->i_width && img_y < h->i_height);
@@ -2172,7 +2172,7 @@ void xavs2_lcu_write(xavs2_t *h, aec_t *p_aec, lcu_info_t *lcu_info, int i_level
             }
 
             xavs2_lcu_write(h, p_aec, lcu_info, i_level_next,
-                              sub_pix_x, sub_pix_y);
+                            sub_pix_x, sub_pix_y);
         }
     } else {
         assert(inside);

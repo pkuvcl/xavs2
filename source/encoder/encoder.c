@@ -161,7 +161,7 @@ void encoder_fill_packet_data(xavs2_handler_t *h_mgr, xavs2_outpacket_t *packet,
 
 /**
  * ---------------------------------------------------------------------------
- * Function   : output encoded data from the encoder 
+ * Function   : output encoded data from the encoder
  * Parameters :
  *      [in]  : opaque - user data
  *      [in]  : frame - pointer to the frame
@@ -589,7 +589,7 @@ void encoder_encode_frame_header(xavs2_t *h)
 {
     bs_t   *p_bs = &h->header_bs;
     int overhead = 30;  /* number of overhead bytes (include I/P/B picture header) */
-    
+
     /* init bitstream context */
     xavs2_bs_init(p_bs, h->p_bs_buf_header, h->i_bs_buf_header);
 
@@ -989,15 +989,15 @@ int encoder_check_parameters(xavs2_param_t *param)
 
     /* check number of threaded frames */
     if (param->i_frame_threads > MAX_PARALLEL_FRAMES) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "too many threaded frames : %d. increase MAX_PARALLEL_FRAMES (%d) and recompile.\n", 
-                    param->i_frame_threads, MAX_PARALLEL_FRAMES);
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "too many threaded frames : %d. increase MAX_PARALLEL_FRAMES (%d) and recompile.\n",
+                  param->i_frame_threads, MAX_PARALLEL_FRAMES);
         return -1;
     }
 
     /* check slice number */
     if (param->slice_num > MAX_SLICES || param->slice_num > num_max_slice) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "too many slices : %d. exceeds MAX_SLICES (%d) or LcuRows/2 (%d).\n", 
-            param->slice_num, MAX_SLICES, num_max_slice);
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "too many slices : %d. exceeds MAX_SLICES (%d) or LcuRows/2 (%d).\n",
+                  param->slice_num, MAX_SLICES, num_max_slice);
         return -1;
     }
 
@@ -1012,7 +1012,7 @@ int encoder_check_parameters(xavs2_param_t *param)
     encoder_check_fps_param(param);
 
     /* check LCU size */
-    if (param->lcu_bit_level < B16X16_IN_BIT || param->lcu_bit_level > B64X64_IN_BIT){
+    if (param->lcu_bit_level < B16X16_IN_BIT || param->lcu_bit_level > B64X64_IN_BIT) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "MaxSizeInBit must be in 4..6 (LCU size: 16x16, 32x32, 64x64)\n");
         return -1;
     }
@@ -1060,8 +1060,8 @@ int encoder_check_parameters(xavs2_param_t *param)
 
     /* check bit depth */
     if (param->profile_id != MAIN_PROFILE) {
-        xavs2_log(NULL, XAVS2_LOG_ERROR, "Not Supported profile \"%d\", HIGH_BIT_DEPTH macro haven`t turn on!\n", 
-            param->profile_id);
+        xavs2_log(NULL, XAVS2_LOG_ERROR, "Not Supported profile \"%d\", HIGH_BIT_DEPTH macro haven`t turn on!\n",
+                  param->profile_id);
         return -1;
     }
     /* check LevelID */
@@ -1117,8 +1117,8 @@ int encoder_check_parameters(xavs2_param_t *param)
         return -1;
     }
     if (param->i_initial_qp < 25 + 8 * (param->sample_bit_depth - 8)) {
-        xavs2_log(NULL, XAVS2_LOG_WARNING, "A small QP is configured: QP: %d, EncodingBitDepth: %d, Suggested QP: >=%d\n", 
-            param->i_initial_qp, param->sample_bit_depth, 25 + 8 * (param->sample_bit_depth - 8));
+        xavs2_log(NULL, XAVS2_LOG_WARNING, "A small QP is configured: QP: %d, EncodingBitDepth: %d, Suggested QP: >=%d\n",
+                  param->i_initial_qp, param->sample_bit_depth, 25 + 8 * (param->sample_bit_depth - 8));
     }
     if (param->i_max_qp > 63 + (param->sample_bit_depth - 8) * 8) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "A too large max QP is configured: QP: %d, EncodingBitDepth: %d, Available QP: <=%d\n",
@@ -1297,21 +1297,21 @@ xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_en
                sizeof(int8_t)  * size_4x4 * 2        +  /* reference frames */
                sizeof(mv_t)    * size_4x4 * 2        +  /* reference motion vectors */
                CACHE_LINE_SIZE * (MAX_SLICES + 32);
-    mem_size += 
-               qpel_frame_size * 3 * sizeof(mct_t)   +  /* temporary buffer for 1/4 interpolation: a,1,b */
-               xavs2_me_get_buf_size(param)          +  /* buffers in me module */
-               info_size                             +  /* the frame info structure */
-               frame_size_in_scu * sizeof(cu_info_t) +  /* CU data */
-               num_me_bytes                          +  /* Motion Estimation */
-               w_in_lcu * h_in_lcu * sizeof(int8_t)  +  /* CTU slice index */
-               size_extra_frame_buffer               +  /* extra frame buffer: TDRDO, SAO, ALF */
+    mem_size +=
+        qpel_frame_size * 3 * sizeof(mct_t)   +  /* temporary buffer for 1/4 interpolation: a,1,b */
+        xavs2_me_get_buf_size(param)          +  /* buffers in me module */
+        info_size                             +  /* the frame info structure */
+        frame_size_in_scu * sizeof(cu_info_t) +  /* CU data */
+        num_me_bytes                          +  /* Motion Estimation */
+        w_in_lcu * h_in_lcu * sizeof(int8_t)  +  /* CTU slice index */
+        size_extra_frame_buffer               +  /* extra frame buffer: TDRDO, SAO, ALF */
 
-               size_sao_stats + CACHE_LINE_SIZE      +  /* SAO stat data */
-               size_sao_param + CACHE_LINE_SIZE      +  /* SAO parameters */
-               size_sao_onoff + CACHE_LINE_SIZE      +  /* SAO on/off number of LCU row */
+        size_sao_stats + CACHE_LINE_SIZE      +  /* SAO stat data */
+        size_sao_param + CACHE_LINE_SIZE      +  /* SAO parameters */
+        size_sao_onoff + CACHE_LINE_SIZE      +  /* SAO on/off number of LCU row */
 
-               size_alf + CACHE_LINE_SIZE            +  /* ALF encoder contexts */
-               CACHE_LINE_SIZE * 30;                    /* used for align buffer */
+        size_alf + CACHE_LINE_SIZE            +  /* ALF encoder contexts */
+        CACHE_LINE_SIZE * 30;                    /* used for align buffer */
 
     /* alloc memory space */
     mem_size = ((mem_size + CACHE_LINE_SIZE - 1) / CACHE_LINE_SIZE) * CACHE_LINE_SIZE;
@@ -1545,7 +1545,7 @@ xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_en
     h->all_mincost = (dist_t(*)[MAX_INTER_MODES][MAX_REFS])mem_base;
     mem_base += num_me_bytes;
     ALIGN_POINTER(mem_base);
-    
+
     // allocate memory for current frame
     if (h->param->enable_tdrdo) {
         h->img_luma_pre = xavs2_frame_new(h, &mem_base, FT_TEMP);
@@ -1570,7 +1570,7 @@ xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_en
     } else {
         h->img_alf = NULL;
     }
-    
+
     if ((uintptr_t)(h) + mem_size < (uintptr_t)(mem_base)) {
         /* malloc size allocation error: no enough memory */
         goto fail;
@@ -1640,7 +1640,7 @@ int encoder_contexts_init(xavs2_t *h, xavs2_handler_t *h_mgr)
 
             memcpy(&h_row_coder->communal_vars_1, &h->communal_vars_1,
                    (uint8_t *)&h->communal_vars_2 - (uint8_t *)&h->communal_vars_1);
-            
+
             /* identify ourself */
             h_row_coder->task_type = XAVS2_TASK_ROW;
 
@@ -1730,7 +1730,7 @@ void encoder_task_manager_free(xavs2_handler_t *h_mgr)
     xavs2_thread_cond_signal(&h_mgr->cond[SIG_FRM_AEC_COMPLETED]);
 
     xavs2_thread_mutex_destroy(&h_mgr->mutex);
-        
+
     for (i = 0; i < SIG_COUNT; i++) {
         xavs2_thread_cond_destroy(&h_mgr->cond[i]);
     }
@@ -1872,7 +1872,7 @@ xavs2_t *encoder_open(xavs2_param_t *param, xavs2_handler_t *h_mgr)
 #endif
     /* decide ultimaete coding parameters by preset level */
     decide_ultimate_paramters(param);
-    
+
     /* init frame context */
     if ((h = encoder_create_frame_context(param, 0)) == NULL) {
         xavs2_log(NULL, XAVS2_LOG_ERROR, "create frame context fail\n");
@@ -2116,7 +2116,7 @@ void *xavs2e_encode_one_frame(void *arg)
             sao_off_num_y += h->num_sao_lcu_off[i][0];
             sao_off_num_u += h->num_sao_lcu_off[i][1];
             sao_off_num_v += h->num_sao_lcu_off[i][2];
-            }
+        }
         h->fdec->num_lcu_sao_off[0] = sao_off_num_y;
         h->fdec->num_lcu_sao_off[1] = sao_off_num_u;
         h->fdec->num_lcu_sao_off[2] = sao_off_num_v;
@@ -2163,7 +2163,7 @@ void *xavs2e_encode_one_frame(void *arg)
 
     /* update encoding information */
     xavs2_reconfigure_encoder(h);
-    
+
     /* release all reference frames */
     for (i = 0; i < h->i_ref; i++) {
         release_one_frame(h, h->fref[i]);

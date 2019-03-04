@@ -86,7 +86,7 @@ int xavs2_sequence_write(xavs2_t *h, bs_t *p_bs)
     bits += u_v(p_bs, 14, h->param->org_width,                       "horizontal_size");
     bits += u_v(p_bs, 14, h->param->org_height,                      "vertical_size");
     bits += u_v(p_bs,  2, h->param->chroma_format,                   "chroma_format");
-    
+
     bits += u_v(p_bs,  3, h->param->sample_precision,                "sample_precision");
     if (h->param->profile_id == MAIN10_PROFILE) { // MAIN10 profile
         bits += u_v(p_bs, 3, ((h->param->sample_bit_depth - 6) / 2), "encoding_precision");
@@ -570,7 +570,7 @@ int xavs2_slice_header_write(xavs2_t *h, slice_t *p_slice)
         len += u_v(p_bs, 1, h->slice_sao_on[2],                     "sao_slice_flag_Cr");
     }
 
-    if (!is_valid_qp(h, h->i_qp)){
+    if (!is_valid_qp(h, h->i_qp)) {
         xavs2_log(h, XAVS2_LOG_ERROR, "Invalid Slice QP: %d\n", h->i_qp);
     }
 
