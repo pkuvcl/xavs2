@@ -59,7 +59,7 @@ void xavs2_frame_copy_planes(xavs2_t *h, xavs2_frame_t *dst, xavs2_frame_t *src)
 
 #define xavs2_frame_expand_border_frame FPFX(frame_expand_border_frame)
 void plane_expand_border(pel_t *p_pix, int i_stride, int i_width, int i_height,
-                         int i_padh, int i_padv, int b_pad_top, int b_pad_bottom); 
+                         int i_padh, int i_padv, int b_pad_top, int b_pad_bottom);
 void xavs2_frame_expand_border_frame(xavs2_t *h, xavs2_frame_t *frame);
 #define xavs2_frame_expand_border_lcurow FPFX(frame_expand_border_lcurow)
 void xavs2_frame_expand_border_lcurow(xavs2_t *h, xavs2_frame_t *frame, int i_lcu_y);

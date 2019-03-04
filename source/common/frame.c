@@ -148,17 +148,17 @@ size_t xavs2_frame_buffer_size(const xavs2_param_t *param, int alloc_type)
 
     /* compute space size and alloc memory */
     mem_size = sizeof(xavs2_frame_t)                + /* M0, size of frame handle */
-        i_nal_info_size                             + /* M1, size of nal_info buffer */
-        cmp_size + cmp_buf_size                     + /* M2, size of frame complexity buffer */
-        bs_size                                     + /* M3, size of bitstream buffer */
-        planes_size * sizeof(pel_t)                 + /* M4, size of planes buffer: Y+U+V */
-        frame_size_in_mvstore * sizeof(int8_t)      + /* M5, size of pu reference index buffer */
-        frame_size_in_mvstore * sizeof(mv_t)        + /* M6, size of pu motion vector buffer */
+               i_nal_info_size                             + /* M1, size of nal_info buffer */
+               cmp_size + cmp_buf_size                     + /* M2, size of frame complexity buffer */
+               bs_size                                     + /* M3, size of bitstream buffer */
+               planes_size * sizeof(pel_t)                 + /* M4, size of planes buffer: Y+U+V */
+               frame_size_in_mvstore * sizeof(int8_t)      + /* M5, size of pu reference index buffer */
+               frame_size_in_mvstore * sizeof(mv_t)        + /* M6, size of pu motion vector buffer */
 #if SAVE_CU_INFO
-        frame_size_in_mincu * sizeof(int8_t) * 3    + /* M7, size of cu mode/cbp/level buffers */
+               frame_size_in_mincu * sizeof(int8_t) * 3    + /* M7, size of cu mode/cbp/level buffers */
 #endif
-        (img_h_l >> MIN_CU_SIZE_IN_BIT) * sizeof(int)+ /* M8, line status array */
-        CACHE_LINE_SIZE * 10;
+               (img_h_l >> MIN_CU_SIZE_IN_BIT) * sizeof(int)+ /* M8, line status array */
+               CACHE_LINE_SIZE * 10;
 
     /* align to CACHE_LINE_SIZE */
     mem_size = (mem_size + CACHE_LINE_SIZE - 1) & (~(uint32_t)(CACHE_LINE_SIZE - 1));
@@ -237,17 +237,17 @@ xavs2_frame_t *xavs2_frame_new(xavs2_t *h, uint8_t **mem_base, int alloc_type)
 
     /* compute space size and alloc memory */
     mem_size = sizeof(xavs2_frame_t)                + /* M0, size of frame handle */
-        i_nal_info_size                             + /* M1, size of nal_info buffer */
-        cmp_size + cmp_buf_size                     + /* M2, size of frame complexity buffer */
-        bs_size                                     + /* M3, size of bitstream buffer */
-        planes_size * sizeof(pel_t)                 + /* M4, size of planes buffer: Y+U+V */
-        frame_size_in_mvstore * sizeof(int8_t)      + /* M5, size of pu reference index buffer */
-        frame_size_in_mvstore * sizeof(mv_t)        + /* M6, size of pu motion vector buffer */
+               i_nal_info_size                             + /* M1, size of nal_info buffer */
+               cmp_size + cmp_buf_size                     + /* M2, size of frame complexity buffer */
+               bs_size                                     + /* M3, size of bitstream buffer */
+               planes_size * sizeof(pel_t)                 + /* M4, size of planes buffer: Y+U+V */
+               frame_size_in_mvstore * sizeof(int8_t)      + /* M5, size of pu reference index buffer */
+               frame_size_in_mvstore * sizeof(mv_t)        + /* M6, size of pu motion vector buffer */
 #if SAVE_CU_INFO
-        frame_size_in_mincu * sizeof(int8_t) * 3    + /* M7, size of cu mode/cbp/level buffers */
+               frame_size_in_mincu * sizeof(int8_t) * 3    + /* M7, size of cu mode/cbp/level buffers */
 #endif
-        h->i_height_in_lcu * sizeof(int)            + /* M8, line status array */
-        CACHE_LINE_SIZE * 10;
+               h->i_height_in_lcu * sizeof(int)            + /* M8, line status array */
+               CACHE_LINE_SIZE * 10;
 
     /* align to CACHE_LINE_SIZE */
     mem_size = (mem_size + CACHE_LINE_SIZE - 1) & (~(uint32_t)(CACHE_LINE_SIZE - 1));
@@ -623,8 +623,8 @@ void xavs2_frame_copy_planes(xavs2_t *h, xavs2_frame_t *dst, xavs2_frame_t *src)
     } else {
         for (k = 0; k < dst->i_plane; k++) {
             g_funcs.plane_copy(dst->planes[k], dst->i_stride[k],
-                src->planes[k], src->i_stride[k],
-                src->i_width[k], src->i_lines[k]);
+                               src->planes[k], src->i_stride[k],
+                               src->i_width[k], src->i_lines[k]);
         }
     }
 }

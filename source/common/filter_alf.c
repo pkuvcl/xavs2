@@ -228,7 +228,7 @@ void alf_filter_block2(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
         p_dst[0] = (pel_t)XAVS2_CLIP1(pixelInt);
     }
 }
- 
+
 /* ---------------------------------------------------------------------------
  */
 void xavs2_alf_init(uint32_t cpuid, intrinsic_func_t *pf)

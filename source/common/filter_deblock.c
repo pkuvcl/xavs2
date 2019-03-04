@@ -182,57 +182,57 @@ void lf_lcu_set_edge_filter(xavs2_t *h, int i_level, int scu_x, int scu_y, int s
             /* set prediction boundary */
             i = i_level - MIN_CU_SIZE_IN_BIT - 1;
             switch (p_cu_info->i_mode) {
-                case PRED_2NxN:
-                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << i), EDGE_HOR, EDGE_TYPE_BOTH);
-                    break;
-                case PRED_Nx2N:
-                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << i), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
-                    break;
-                case PRED_I_NxN:
-                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << i), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
-                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << i), EDGE_HOR, EDGE_TYPE_BOTH);
-                    break;
-                case PRED_I_2Nxn:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)),     EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 2, EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 3, EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
-                    } else {
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i    )),     EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
-                    }
-                    break;
-                case PRED_I_nx2N:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)),     scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 2, scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 3, scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
-                    } else {
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i    )),     scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
-                    }
-                    break;
-                case PRED_2NxnU:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)), EDGE_HOR, EDGE_TYPE_BOTH);
-                    }
-                    break;
-                case PRED_2NxnD:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 3, EDGE_HOR, EDGE_TYPE_BOTH);
-                    }
-                    break;
-                case PRED_nLx2N:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
-                    }
-                    break;
-                case PRED_nRx2N:
-                    if (i > 0) {
-                        lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 3, scu_y, EDGE_VER, EDGE_TYPE_BOTH);
-                    }
-                    break;
-                default:
-                    // for other modes: direct/skip, 2Nx2N inter, 2Nx2N intra, no need to set
-                    break;
+            case PRED_2NxN:
+                lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << i), EDGE_HOR, EDGE_TYPE_BOTH);
+                break;
+            case PRED_Nx2N:
+                lf_set_edge_filter_param(h, i_level, scu_x + (1 << i), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
+                break;
+            case PRED_I_NxN:
+                lf_set_edge_filter_param(h, i_level, scu_x + (1 << i), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
+                lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << i), EDGE_HOR, EDGE_TYPE_BOTH);
+                break;
+            case PRED_I_2Nxn:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)),     EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 2, EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 3, EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
+                } else {
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i    )),     EDGE_HOR, EDGE_TYPE_ONLY_LUMA);
+                }
+                break;
+            case PRED_I_nx2N:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)),     scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 2, scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 3, scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
+                } else {
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i    )),     scu_y, EDGE_VER, EDGE_TYPE_ONLY_LUMA);
+                }
+                break;
+            case PRED_2NxnU:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)), EDGE_HOR, EDGE_TYPE_BOTH);
+                }
+                break;
+            case PRED_2NxnD:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x, scu_y + (1 << (i - 1)) * 3, EDGE_HOR, EDGE_TYPE_BOTH);
+                }
+                break;
+            case PRED_nLx2N:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)), scu_y, EDGE_VER, EDGE_TYPE_BOTH);
+                }
+                break;
+            case PRED_nRx2N:
+                if (i > 0) {
+                    lf_set_edge_filter_param(h, i_level, scu_x + (1 << (i - 1)) * 3, scu_y, EDGE_VER, EDGE_TYPE_BOTH);
+                }
+                break;
+            default:
+                // for other modes: direct/skip, 2Nx2N inter, 2Nx2N intra, no need to set
+                break;
             }
 
             /* set transform block boundary */
@@ -442,16 +442,16 @@ void lf_scu_deblock(xavs2_t *h, pel_t *p_rec[3], int i_stride, int i_stride_c, i
         assert(h->param->chroma_format == CHROMA_420 || h->param->chroma_format == CHROMA_400);   /* only support I420/I400 now */
         /* deblock chroma edge */
         if (edge_type == EDGE_TYPE_BOTH && h->param->chroma_format == CHROMA_420)
-        if ((((scu_y & 1) == 0) && dir) || (((scu_x & 1) == 0) && (!dir))) {
-            pel_t *src_u = p_rec[1] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
-            pel_t *src_v = p_rec[2] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
+            if ((((scu_y & 1) == 0) && dir) || (((scu_x & 1) == 0) && (!dir))) {
+                pel_t *src_u = p_rec[1] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
+                pel_t *src_v = p_rec[2] + (scu_y << (MIN_CU_SIZE_IN_BIT - 1)) * i_stride_c + (scu_x << (MIN_CU_SIZE_IN_BIT - 1));
 
-            int alpha_c, beta_c;
-            QP = cu_get_chroma_qp(h, QP, 0) - offset;
-            alpha_c = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->alpha_c_offset)] << shift;
-            beta_c  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->beta_offset)] << shift;
-            g_funcs.deblock_chroma[dir](src_u, src_v, i_stride_c, alpha_c, beta_c, b_filter_edge);
-        }
+                int alpha_c, beta_c;
+                QP = cu_get_chroma_qp(h, QP, 0) - offset;
+                alpha_c = tab_deblock_alpha[XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->alpha_c_offset)] << shift;
+                beta_c  = tab_deblock_beta [XAVS2_CLIP3(0, max_qp_deblock, QP + h->param->beta_offset)] << shift;
+                g_funcs.deblock_chroma[dir](src_u, src_v, i_stride_c, alpha_c, beta_c, b_filter_edge);
+            }
     }
 }
 

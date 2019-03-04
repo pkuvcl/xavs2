@@ -49,8 +49,8 @@
 /* ---------------------------------------------------------------------------
 */
 static void sao_block_c(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
-    int i_block_w, int i_block_h,
-    int *lcu_avail, SAOBlkParam *sao_param)
+                        int i_block_w, int i_block_h,
+                        int *lcu_avail, SAOBlkParam *sao_param)
 {
     int8_t SIGN_BUF[MAX_CU_SIZE + 32];  // sign of top line
     int8_t *UPROW_S = SIGN_BUF + 16;
@@ -63,7 +63,7 @@ static void sao_block_c(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
     int edge_type;
     int pel_diff;
     int x, y;
-    
+
     assert(sao_param->typeIdc != SAO_TYPE_OFF);
     switch (sao_param->typeIdc) {
     case SAO_TYPE_EO_0:
@@ -81,8 +81,7 @@ static void sao_block_c(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
             p_dst += i_dst;
         }
         break;
-    case SAO_TYPE_EO_90:
-    {
+    case SAO_TYPE_EO_90: {
         sy = lcu_avail[SAO_T] ? 0 : 1;
         ey = lcu_avail[SAO_D] ? i_block_h : (i_block_h - 1);
         for (x = 0; x < i_block_w; x++) {
@@ -154,7 +153,7 @@ static void sao_block_c(pel_t *p_dst, int i_dst, pel_t *p_src, int i_src,
             edge_type = down_sign + UPROW_S[x] + 2;
             p_dst[x] = (pel_t)XAVS2_CLIP3(0, max_pel_val, p_src[x] + sao_offset[edge_type]);
         }
-    break;
+        break;
     case SAO_TYPE_EO_45:
         sx = lcu_avail[SAO_L] ? 0 : 1;
         ex = lcu_avail[SAO_R] ? i_block_w : (i_block_w - 1);

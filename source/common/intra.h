@@ -43,7 +43,7 @@ typedef struct intra_candidate_t intra_candidate_t;
 uint32_t xavs2_intra_get_cu_neighbors(xavs2_t *h, cu_t *p_cu, int img_x, int img_y, int cu_size);
 
 #define xavs2_intra_fill_ref_samples_luma FPFX(intra_fill_ref_samples_luma)
-void xavs2_intra_fill_ref_samples_luma(xavs2_t *h, cu_t *p_cu, int img_x, int img_y, 
+void xavs2_intra_fill_ref_samples_luma(xavs2_t *h, cu_t *p_cu, int img_x, int img_y,
                                        int block_x, int block_y, int bsx, int bsy);
 
 #define rdo_get_pred_intra_luma FPFX(rdo_get_pred_intra_luma)
