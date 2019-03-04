@@ -175,7 +175,7 @@ xavs2_log_default(int i_log_level, const char *psz_fmt)
 #if !defined(_MSC_VER)
     static const char str_color_clear[] = "\033[0m";  // "\033[0m"
     static const char str_color[][16] = {
-    /*        red        yellow        green          cyan        (default)  */
+        /*  red        yellow        green          cyan        (default)  */
         "\033[1;31m", "\033[1;33m", "\033[1;32m", "\033[1;36m", "\033[0m"
     };
     const char *cur_color = str_color[i_log_level];

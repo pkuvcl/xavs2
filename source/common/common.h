@@ -419,7 +419,7 @@ typedef struct binary_t {
 
     int (*est_luma_block_coeff)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *quant_coeff, runlevel_t *runlevel,
                                 int i_level, int i_stride_shift, int is_intra, int intra_mode, int max_bits);
-    int (*est_chroma_block_coeff)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *quant_coeff, runlevel_t *runlevel, 
+    int (*est_chroma_block_coeff)(xavs2_t *h, aec_t *p_aec, cu_t *p_cu, coeff_t *quant_coeff, runlevel_t *runlevel,
                                   int i_level, int max_bits);
 
 #if ENABLE_RATE_CONTROL_CU
@@ -567,7 +567,7 @@ typedef struct xavs2_param_t {
     int     inter_2pu;                /* enable inter 2NxN or Nx2N or AMP mode */
     int     enable_amp;               /* enable Asymmetric Motion Partitions */
     int     enable_intra;             /* enable intra mode for inter frame */
-    int     rdo_bit_est_method;       /* RDO bit estimation method: 
+    int     rdo_bit_est_method;       /* RDO bit estimation method:
                                        * 0: AEC with context updating; 1: AEC without context update
                                        * 2: VLC */
     int     preset_level;             /* preset level */
@@ -597,9 +597,9 @@ typedef struct xavs2_param_t {
     float   factor_zero_block;        /* threadhold factor for zero block detection */
 
     /* RDOQ */
-    int     i_rdoq_level;             /* RDOQ level, 
-                                       * 0: off, 
-                                       * 1: only for best partition mode of one CU, 
+    int     i_rdoq_level;             /* RDOQ level,
+                                       * 0: off,
+                                       * 1: only for best partition mode of one CU,
                                        * 2: for all modes */
     int     lambda_factor_rdoq;       /* */
     int     lambda_factor_rdoq_p;     /* */
@@ -831,7 +831,7 @@ struct cu_info_t {
     int8_t      i_tu_split;           /* transform unit split flag, tu_split_type_e */
 
     /* cbp */
-    int8_t      i_cbp;                /* Coding Block Pattern (CBP) or Coding Transform Pattern (CTP): 
+    int8_t      i_cbp;                /* Coding Block Pattern (CBP) or Coding Transform Pattern (CTP):
                                        *   Indicating whether transform block (TB) has nonzero coefficients
                                        *   When it is zero, it means all 6 TBs are zero block */
 
@@ -920,7 +920,7 @@ typedef struct cu_feature_t {
     rdcost_t   rdcost_luma;
     /* 0: try both (not determined);
      * 1: only try split;
-     * 2: only try current depth 
+     * 2: only try current depth
      * --------------------------- */
     int        pred_split_type;         /* prediction of cu split type: 0: un-determined; 1: split; 2: not-split */
     rdcost_t   pred_costs[MAX_PRED_MODES];  /* 每种PU划分模式的 cost （基于预分析等获取） */
@@ -1140,7 +1140,7 @@ typedef struct xavs2_me_t {
     mv_t        bmv2;                 /* best motion vector (fullpel) */
     dist_t      bcost;                /* best cost of subpel  motion search, satd + lambda * nbits */
     dist_t      bcost2;               /* best cost of fullpel motion search, sad  + lambda * nbits */
-    
+
     dist_t      mvcost[5];            /* mv cost for every direction*/
     dist_t      bmvcost[5];           /* cost of best mv of all ref for every direction */
 
@@ -1153,7 +1153,7 @@ typedef struct xavs2_me_t {
 /* ---------------------------------------------------------------------------
  * SAOStatData
  */
-typedef struct SAOStatData{
+typedef struct SAOStatData {
     long        diff[MAX_NUM_SAO_CLASSES];
     long        count[MAX_NUM_SAO_CLASSES];
 } SAOStatData;
@@ -1468,7 +1468,7 @@ struct xavs2_t {
     int         max_mv_range[2];      /* mv range (max) decided by the level id */
     /* function pointers */
     int       (*get_intra_candidates_luma)(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
-                                           pel_t *p_fenc, int mpm[], int blockidx, 
+                                           pel_t *p_fenc, int mpm[], int blockidx,
                                            int block_x, int block_y, int block_w, int block_h);
     int       (*get_intra_candidates_chroma)(xavs2_t *h, cu_t *p_cu, int i_level, int pix_y_c, int pix_x_c,
                                              intra_candidate_t *p_candidate_list);
@@ -1595,7 +1595,7 @@ struct xavs2_t {
 
         /* function pointers for RDO */
         int   (*get_intra_dir_for_rdo_luma)(xavs2_t *h, cu_t *p_cu, intra_candidate_t *p_candidates,
-                                            pel_t *p_fenc, int mpm[], int blockidx, 
+                                            pel_t *p_fenc, int mpm[], int blockidx,
                                             int block_x, int block_y, int block_w, int block_h);
         int   (*get_skip_mvs)(xavs2_t *h, cu_t *p_cu);  /* get MVs for skip/direct mode */
 

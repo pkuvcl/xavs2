@@ -441,7 +441,7 @@ const int16_t(*tab_coef_scan_list_ver[3])[2] = {
 
 /* ---------------------------------------------------------------------------
  */
-const int16_t(*tab_cg_scan_list_nxn[])[2] = { 
+const int16_t(*tab_cg_scan_list_nxn[])[2] = {
     tab_scan_2x2, // 4x4
     tab_scan_2x2, // 8x8
     tab_scan_4x4, // 16x16
@@ -741,7 +741,7 @@ void coeff_scan_4x4_xy_c(coeff_t *dst, const coeff_t *src, int i_src_shift)
     for (i = 0; i < 16; i++) {
         int xx = tab_scan_4x4[i][0];
         int yy = tab_scan_4x4[i][1];
-        coeff_t level = src[(yy << i_src_shift) + xx]; 
+        coeff_t level = src[(yy << i_src_shift) + xx];
 
         dst[j] = level;
         j++;
@@ -968,7 +968,7 @@ void xavs2_cg_scan_init(uint32_t cpuid, intrinsic_func_t *pf)
     pf->transpose_coeff_scan[LUMA_16x16][1] = coeff_scan_16x16_yx_c;
     pf->transpose_coeff_scan[LUMA_32x32][0] = coeff_scan_32x32_xy_c;
     pf->transpose_coeff_scan[LUMA_32x32][1] = coeff_scan_32x32_yx_c;
-    
+
     pf->transpose_coeff_scan[LUMA_4x16 ][0] = coeff_scan_4x16_xy_c;
     pf->transpose_coeff_scan[LUMA_16x4 ][0] = coeff_scan_16x4_xy_c;
     pf->transpose_coeff_scan[LUMA_8x32 ][0] = coeff_scan_8x32_xy_c;
