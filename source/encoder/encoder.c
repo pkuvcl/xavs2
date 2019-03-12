@@ -1325,7 +1325,7 @@ xavs2_t *encoder_create_frame_context(const xavs2_param_t *param, int idx_frm_en
 
     /* init log module */
     h->module_log.i_log_level = param->i_log_level;
-    sprintf(h->module_log.module_name, "Enc[%2d] %06llx", idx_frm_encoder, (long long unsigned int)(h));
+    sprintf(h->module_log.module_name, "Enc[%2d] %06llx", idx_frm_encoder, (uintptr_t)(h));
 
     /* copy the input parameters */
     h->param = param;
