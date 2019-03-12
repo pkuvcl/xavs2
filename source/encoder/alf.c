@@ -449,25 +449,25 @@ void deriveBoundaryAvail(xavs2_t *h, int pic_x, int pic_y,
                          int *isLeftAvail, int *isRightAvail, int *isAboveAvail, int *isBelowAvail)
 {
     int size_lcu = 1 << h->i_lcu_level;
-    int mb_x, mb_y, mb_nr;
-    int pic_mb_width = h->i_width_in_mincu;
-    cu_info_t *cuCurr, *cuLeft, *cuRight, *cuAbove, *cuBelow;
+    int mb_x, mb_y;
+    //int pic_mb_width = h->i_width_in_mincu;
+    //cu_info_t *cuCurr, *cuLeft, *cuRight, *cuAbove, *cuBelow; 
 
     mb_x      = pic_x >> MIN_CU_SIZE_IN_BIT;
     mb_y      = pic_y >> MIN_CU_SIZE_IN_BIT;
-    mb_nr     = mb_y * pic_mb_width + mb_x;
+    //mb_nr     = mb_y * pic_mb_width + mb_x;
 
     *isLeftAvail  = pic_x > 0;
     *isRightAvail = pic_x + size_lcu < h->i_width;
     *isAboveAvail = pic_y > 0;
     *isBelowAvail = pic_y + size_lcu < h->i_height;
-
+    /*
     cuCurr  = &(h->cu_info[mb_nr]);
     cuLeft  = *isLeftAvail  ? &(h->cu_info[mb_nr - 1]) : NULL;
     cuRight = *isRightAvail ? &(h->cu_info[mb_nr + 1]) : NULL;
     cuAbove = *isAboveAvail ? &(h->cu_info[mb_nr - pic_mb_width]) : NULL;
     cuBelow = *isBelowAvail ? &(h->cu_info[mb_nr + pic_mb_width]) : NULL;
-
+    */
     if (!h->param->b_cross_slice_loop_filter) {
         int curSliceNr = cu_get_slice_index(h, mb_x, mb_y);
         if (*isLeftAvail) {
@@ -721,11 +721,11 @@ dist_t calcAlfLCUDist(xavs2_t *h, alf_ctx_t *Enc_ALF, int compIdx,
 
     int notSkipLinesRightVB = TRUE;
     int notSkipLinesBelowVB = TRUE;
-    int NumCUsInFrame, numLCUInPicWidth, numLCUInPicHeight;
+    //int NumCUsInFrame, numLCUInPicWidth, numLCUInPicHeight;
 
-    numLCUInPicHeight  = h->i_height_in_lcu;
-    numLCUInPicWidth   = h->i_width_in_lcu;
-    NumCUsInFrame      = numLCUInPicHeight * numLCUInPicWidth;
+    //numLCUInPicHeight  = h->i_height_in_lcu;
+    //numLCUInPicWidth   = h->i_width_in_lcu;
+    //NumCUsInFrame      = numLCUInPicHeight * numLCUInPicWidth;
 
     switch (compIdx) {
     case IMG_U:
@@ -828,7 +828,7 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
     double rateBestPic[IMG_CMPNTS];
     int compIdx, ctu;
     double lambda_luma, lambda_chroma;
-    int img_height, img_width;
+    //int img_height, img_width;
     int NumCUsInFrame;
     double bestCost = 0;
     int rate, noFilters;
@@ -836,8 +836,8 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
     h->copy_aec_state_rdo(p_aec, &h->cs_data.cs_alf_initial);
     h->copy_aec_state_rdo(&h->cs_data.cs_alf_cu_ctr, p_aec);
 
-    img_height = h->i_height;
-    img_width = h->i_width;
+    //img_height = h->i_height;
+    //img_width = h->i_width;
     NumCUsInFrame = h->i_height_in_lcu * h->i_width_in_lcu;
 
     lambda_luma = lambda; //VKTBD lambda is not correct
@@ -893,13 +893,13 @@ double executePicLCUOnOffDecisionRDOEstimate(xavs2_t *h, alf_ctx_t *Enc_ALF, aec
 
     for (compIdx = 0; compIdx < IMG_CMPNTS; compIdx++) {
         if (alfPictureParam[compIdx].alf_flag == 1) {
-            double lambda_ = (compIdx == 0 ? lambda_luma : lambda_chroma);
+            double Lambda = (compIdx == 0 ? lambda_luma : lambda_chroma);
             rate = ALFParamBitrateEstimate(&alfPictureParam[compIdx]);
             if (compIdx == IMG_Y) {
                 noFilters = alfPictureParam[0].filters_per_group - 1;
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
-            costAlfOn = (double)distBestPic[compIdx] + lambda_ *
+            costAlfOn = (double)distBestPic[compIdx] + Lambda *
                         (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;
@@ -1043,13 +1043,13 @@ void executePicLCUOnOffDecision(xavs2_t *h, alf_ctx_t *Enc_ALF, aec_t *p_aec, AL
 
     for (compIdx = 0; compIdx < IMG_CMPNTS; compIdx++) {
         if (alfPictureParam[compIdx].alf_flag == 1) {
-            double lambda_ = (compIdx == 0 ? lambda_luma : lambda_chroma);
+            double Lambda = (compIdx == 0 ? lambda_luma : lambda_chroma);
             rate = ALFParamBitrateEstimate(&alfPictureParam[compIdx]);
             if (compIdx == IMG_Y) {
                 noFilters = alfPictureParam[0].filters_per_group - 1;
                 rate += uvlc_bitrate_estimate[noFilters] + (4 * noFilters);
             }
-            costAlfOn = (double)distBestPic[compIdx] + lambda_ *
+            costAlfOn = (double)distBestPic[compIdx] + Lambda *
                         (rateBestPic[compIdx] + (double)(rate));
 
             costAlfOff = 0;
@@ -1144,7 +1144,7 @@ static void predictALFCoeff(int coeff[][ALF_MAX_NUM_COEF], int numCoef, int numF
  */
 static void xcodeFiltCoeff(int filterCoeff[][ALF_MAX_NUM_COEF], int *varIndTab, int numFilters, ALFParam *alfParam)
 {
-    int filterPattern[NO_VAR_BINS], startSecondFilter = 0, i, g;
+    int filterPattern[NO_VAR_BINS], i, g;
     memset(filterPattern, 0, NO_VAR_BINS * sizeof(int));
 
     alfParam->num_coeff = (int)ALF_MAX_NUM_COEF;
@@ -1155,7 +1155,7 @@ static void xcodeFiltCoeff(int filterCoeff[][ALF_MAX_NUM_COEF], int *varIndTab, 
         for (i = 1; i < NO_VAR_BINS; ++i) {
             if (varIndTab[i] != varIndTab[i - 1]) {
                 filterPattern[i] = 1;
-                startSecondFilter = i;
+                //startSecondFilter = i;
             }
         }
     }

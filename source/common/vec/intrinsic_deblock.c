@@ -49,8 +49,8 @@ void deblock_edge_ver_sse128(pel_t *SrcPtr, int stride, int Alpha, int Beta, uin
     int flag1 = flt_flag[1] ? -1 : 0;
     __m128i TL0, TL1, TL2, TL3;
     __m128i TR0, TR1, TR2, TR3;
-    __m128i TL0l, TL1l, TL2l;
-    __m128i TR0l, TR1l, TR2l;
+    __m128i TL0l, TL1l;
+    __m128i TR0l, TR1l;
     __m128i V0, V1, V2, V3, V4, V5;
     __m128i T0, T1, T2, T3, T4, T5, T6, T7;
     __m128i M0, M1, M2;
@@ -209,8 +209,6 @@ void deblock_edge_ver_sse128(pel_t *SrcPtr, int stride, int Alpha, int Beta, uin
     FS = _mm_cmpeq_epi16(FS, c_4);
 
     if (!_mm_testz_si128(FS, _mm_set1_epi16(-1))) { /* fs == 4 */
-        TL2l = TL2;
-        TR2l = TR2;
         /* cal L0/R0 */
         T0 = _mm_slli_epi16(_mm_add_epi16(_mm_add_epi16(TL0l, TL2), TR0l), 3);
         T0 = _mm_add_epi16(_mm_add_epi16(T0, c_16), _mm_add_epi16(TL0l, TL2));
