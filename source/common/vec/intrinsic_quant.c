@@ -108,7 +108,7 @@ int quant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int s
     mCount = _mm_packus_epi16(mCount, mCount);
     mCount = _mm_sad_epu8(mCount, mZero); // get the total number of 0
 
-    return i_coef - *(int16_t *)&mCount;
+    return i_coef - _mm_extract_epi16(mCount, 0);
 }
 
 void dequant_c_sse128(coeff_t *coef, const int i_coef, const int scale, const int shift, const int add)
@@ -186,5 +186,5 @@ int add_sign_sse128(coeff_t *dst, const coeff_t *abs_val, const int i_coef)
     mCount = _mm_packus_epi16(mCount, mCount);
     mCount = _mm_sad_epu8(mCount, mZero);
 
-    return i_coef - *(int16_t *) &mCount;
+    return i_coef - _mm_extract_epi16(mCount, 0);
 }

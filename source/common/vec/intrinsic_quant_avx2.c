@@ -184,7 +184,7 @@ int quant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shi
     mCount = _mm256_permute4x64_epi64(mCount, 0xD8);
     mCount = _mm256_sad_epu8(mCount, mZero); // get the total number of 0
 
-    return i_coef - *(int16_t *) &mCount - *(((int16_t *) &mCount) + 4);
+    return i_coef - _mm256_extract_epi16(mCount, 0) - _mm256_extract_epi16(mCount, 4);
 }
 
 void dequant_c_avx2(coeff_t *coef, const int i_coef, const int scale, const int shift)
@@ -352,5 +352,5 @@ int add_sign_avx2(coeff_t *dst, const coeff_t *abs_val, const int i_coef)
     mCount = _mm256_permute4x64_epi64(_mm256_packus_epi16(mCount, mCount), 0xD8);
     mCount = _mm256_sad_epu8(mCount, mZero);
 
-    return i_coef - *(int16_t *) &mCount - *(((int16_t *) &mCount) + 4);
+    return i_coef - _mm256_extract_epi16(mCount, 0) - _mm256_extract_epi16(mCount, 4);
 }

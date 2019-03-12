@@ -40,11 +40,11 @@
 /* ---------------------------------------------------------------------------
  * macros used for quick access of __m128i
  */
-#define M128_U64(mx, idx)  *(((uint64_t *)&mx) + idx)
-#define M128_U32(mx, idx)  *(((uint32_t *)&mx) + idx)
-#define M128_I32(mx, idx)  *((( int32_t *)&mx) + idx)
-#define M128_U16(mx, idx)  *(((uint16_t *)&mx) + idx)
-#define M128_I16(mx, idx)  *((( int16_t *)&mx) + idx)
+#define M128_U64(mx, idx)  _mm_extract_epi64(mx, idx)
+#define M128_U32(mx, idx)  _mm_extract_epi32(mx, idx)
+#define M128_I32(mx, idx)  _mm_extract_epi32(mx, idx)
+#define M128_U16(mx, idx)  _mm_extract_epi16(mx, idx)
+#define M128_I16(mx, idx)  _mm_extract_epi16(mx, idx)
 
 
 #if _MSC_VER // 解决vs下immintrin.h中没有定义这些函数的问题
