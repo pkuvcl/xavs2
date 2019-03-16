@@ -3,6 +3,7 @@ Release/
 x64_Debug/
 x64_Release/
 test/
+build/linux/xavs2*
 My*/
 *.user
 *.suo
