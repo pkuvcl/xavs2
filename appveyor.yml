@@ -1,0 +1,17 @@
+image: Visual Studio 2015
+configuration: Release
+
+platform:
+  - x64
+
+install:
+    - appveyor DownloadFile https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip -FileName nasm.zip
+    - ps: Expand-Archive -Path nasm.zip -DestinationPath build/vs2013 -Force:$true
+    - ps: Move-Item build/vs2013/nasm-2.14.02/nasm.exe build/vs2013
+
+build:
+  project: build\vs2013\xavs2.sln
+
+artifacts:
+    - path: build\bin\x64_Release\*.* 
+      name: $(APPVEYOR_PROJECT_NAME)
