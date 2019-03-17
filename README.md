@@ -18,9 +18,9 @@ then set the `xavs2` as the start project and build it.
 #### Notes
 1. A `shell executor`, i.e. the bash in git for windows, is needed and should be found in `PATH` variable.
  For example, the path `C:\Program Files\Git\bin` can be added if git-for-windows is installed.
-2. `nasm` is needed and `2.13.03` is suggested.
- For windows platform, it can be installed using the script:
-https://github.com/ShiftMediaProject/VSNASM.git
+2. `nasm.exe` with version `2.13` (or later version) is needed and should be put into the `build/vs2013` directory.
+ For windows platform, you can downloaded the packege and unpack the zip file to get `nasm.exe`:
+https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip
 
 
 ### Linux
