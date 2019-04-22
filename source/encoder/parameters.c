@@ -680,11 +680,6 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
             get_param_name(name, items[i]);
         }
 
-        if ((map_index = ParameterNameToMapIndex(&g_param_map, name)) < 0) {
-            xavs2_log(NULL, XAVS2_LOG_WARNING, "Parameter Name not recognized: '%s'.\n", items[i]);
-            continue;   // do not exit, continue to parse
-        }
-
         if (i + 2 >= item) {
             xavs2_log(NULL, XAVS2_LOG_ERROR, "Parsing error in the last parameter: %s.\n", items[i]);
             break;
@@ -696,7 +691,8 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
         }
 
         if (xavs2_encoder_opt_set2(param, name, items[i + 2]) < 0) {
-            return -1;
+            xavs2_log(NULL, XAVS2_LOG_WARNING, "Parameter Name not recognized: '%s'.\n", items[i]);
+            continue;   // do not exit, continue to parse
         }
     }
 
