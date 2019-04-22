@@ -460,9 +460,25 @@ int xavs2e_atoi(const char *str, int *b_error)
     char *end;
     int v = strtol(str, &end, 0);
 
-    if (end == str || *end != '\0') {
+    if (end == str || end == NULL) {
         *b_error = 1;
+        return v;
     }
+
+    switch (*end) {
+    case 'k':
+        v *= 1000;
+        break;
+    case 'm':
+        v *= 1000000;
+        break;
+    case '\0':
+        break;
+    default:
+        *b_error = 1;  // un-known charaters
+        break;
+    }
+
     return v;
 }
 
