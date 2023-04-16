@@ -187,8 +187,8 @@ void encoder_output_frame_bitstream(xavs2_handler_t *h_mgr, xavs2_frame_t *frame
  */
 void encoder_fetch_one_encoded_frame(xavs2_handler_t *h_mgr, xavs2_outpacket_t *packet, int is_flush)
 {
-    int num_encoding_frames = h_mgr->num_encode - h_mgr->num_output;  // ÕýÔÚ±àÂëÖ¡Êý
-    int num_frames_threads  = h_mgr->i_frm_threads;      // ²¢ÐÐÖ¡Êý
+    int num_encoding_frames = h_mgr->num_encode - h_mgr->num_output;  // æ­£åœ¨ç¼–ç å¸§æ•°
+    int num_frames_threads  = h_mgr->i_frm_threads;      // å¹¶è¡Œå¸§æ•°
 
     /* clear packet data */
     packet->len          = 0;
@@ -695,7 +695,7 @@ static void *encoder_aec_encode_one_frame(xavs2_t *h)
             xavs2_lcu_terminat_bit_write(p_aec, lcu_xy == slice->i_last_lcu_xy);
         }
 
-        /* ½ö¿¼ÂÇLCUÐÐ¼¶µÄSlice»®·Ö·½Ê½ */
+        /* ä»…è€ƒè™‘LCUè¡Œçº§çš„Sliceåˆ’åˆ†æ–¹å¼ */
         if (lcu_xy >= slice->i_last_lcu_xy) {
             int bs_len;
             /* slice done */
@@ -895,7 +895,7 @@ static void encoder_decide_level_id(xavs2_param_t *param)
 {
     const int tab_level_restriction[][5] = {
         /* LevelID, MaxWidth, MaxHeight, MaxFps, MaxKBps */
-        { 0x00, 8192, 8192,   0,      0 },  // ½ûÖ¹
+        { 0x00, 8192, 8192,   0,      0 },  // ç¦æ­¢
         { 0x10,  352,  288,  15,   1500 },  // 2.0.15
         { 0x12,  352,  288,  30,   2000 },  // 2.0.30
         { 0x14,  352,  288,  60,   2500 },  // 2.0.60
@@ -919,14 +919,14 @@ static void encoder_decide_level_id(xavs2_param_t *param)
         { 0x66, 8192, 4608,  60, 480000 },  // 10.2.60
         { 0x68, 8192, 4608, 120, 240000 },  // 10.0.120
         { 0x6A, 8192, 4608, 120, 800000 },  // 10.2.120
-        { 0x00, 16384, 8192, 120, 8000000 },  // ½ûÖ¹
+        { 0x00, 16384, 8192, 120, 8000000 },  // ç¦æ­¢
     };
 
     int i = 1;
     int i_last_level = 0;
 
     for (; tab_level_restriction[i][4] != 0;) {
-        /* Î´¿ªÆôÂë¿ØÊ±£¬ÉèÖÃÎª×î´ó */
+        /* æœªå¼€å¯ç æŽ§æ—¶ï¼Œè®¾ç½®ä¸ºæœ€å¤§ */
         if (param->i_rc_method == 0 &&
             param->org_width <= tab_level_restriction[i_last_level][1] &&
             param->org_height <= tab_level_restriction[i_last_level][2] &&
@@ -934,16 +934,16 @@ static void encoder_decide_level_id(xavs2_param_t *param)
             param->org_height <= tab_level_restriction[i][2] &&
             tab_level_restriction[i_last_level][1] < tab_level_restriction[i][1] &&
             tab_level_restriction[i_last_level][2] < tab_level_restriction[i][2]) {
-            /* ÂëÂÊ¿ØÖÆÎ´¿ªÆôÊ±£¬Ñ¡ÔñÂú×ãÌõ¼þµÄ·Ö±æÂÊÏÂµÄ×î¸ßµµ */
+            /* ç çŽ‡æŽ§åˆ¶æœªå¼€å¯æ—¶ï¼Œé€‰æ‹©æ»¡è¶³æ¡ä»¶çš„åˆ†è¾¨çŽ‡ä¸‹çš„æœ€é«˜æ¡£ */
             i = i_last_level;
             break;
         }
-        /* ·Ö±æÂÊ¡¢Ö¡ÂÊ·ûºÏÒªÇó */
+        /* åˆ†è¾¨çŽ‡ã€å¸§çŽ‡ç¬¦åˆè¦æ±‚ */
         if (param->org_width <= tab_level_restriction[i][1] &&
             param->org_height <= tab_level_restriction[i][2] &&
             param->frame_rate <= tab_level_restriction[i][3]) {
             i_last_level = i;
-            /* ±ÈÌØÂÊÒÑÉè¶¨£¬¿É¸ù¾Ý×î´óÂëÂÊÉèÖÃLevelID */
+            /* æ¯”ç‰¹çŽ‡å·²è®¾å®šï¼Œå¯æ ¹æ®æœ€å¤§ç çŽ‡è®¾ç½®LevelID */
             if (param->i_rc_method != 0 &&
                 param->i_target_bitrate * 1.5 <= tab_level_restriction[i][4] * 1000 &&
                 param->bitrate_upper <= tab_level_restriction[i][4] * 1000) {
@@ -1001,8 +1001,8 @@ int encoder_check_parameters(xavs2_param_t *param)
         return -1;
     }
 
-    /* ¶àSliceÏÂ²»ÄÜ¿ªÆô cross slice loop filter£¬»áÓ°Ïì²¢ÐÐÐ§ÂÊ
-     * TODO: ºóÐø¿ÉÖ§³Ö */
+    /* å¤šSliceä¸‹ä¸èƒ½å¼€å¯ cross slice loop filterï¼Œä¼šå½±å“å¹¶è¡Œæ•ˆçŽ‡
+     * TODO: åŽç»­å¯æ”¯æŒ */
     if (param->slice_num > 1 && param->b_cross_slice_loop_filter != FALSE) {
         xavs2_log(NULL, XAVS2_LOG_WARNING, "Un-supported cross slice loop filter, forcing not filtering\n");
         param->b_cross_slice_loop_filter = FALSE;
@@ -1992,7 +1992,7 @@ void xavs2e_frame_coding_init(xavs2_t *h)
     /* encoding begin ----------------------------------------------
      */
 
-    /* Ö¡¼¶ÆäËû²ÎÊý³õÊ¼»¯ */
+    /* å¸§çº§å…¶ä»–å‚æ•°åˆå§‹åŒ– */
     if (IS_ALG_ENABLE(OPT_CU_QSFD)) {
         qsfd_calculate_threshold_of_a_frame(h);
     }
@@ -2038,7 +2038,7 @@ void *xavs2e_encode_one_frame(void *arg)
 
     /* start AEC frame coding */
     if (h->h_top->threadpool_aec != NULL && !h->param->enable_alf) {
-        xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
+        xavs2_threadpool_run(h->h_top->threadpool_aec, (void * (*)(void *)) encoder_aec_encode_one_frame, h, 0);
     }
 
     /* (3) encode all LCU rows in current frame ---------------------------
@@ -2051,44 +2051,44 @@ void *xavs2e_encode_one_frame(void *arg)
 
         h->i_slice_index = g_slice_lcu_row_order[i].slice_idx;
 
-        /* ÊÇ·ñÐèÒª¶îÍâ´¦ÀíSlice±ß½ç */
+        /* æ˜¯å¦éœ€è¦é¢å¤–å¤„ç†Sliceè¾¹ç•Œ */
         row->b_top_slice_border  = 0;
         row->b_down_slice_border = 0;
 
-        /* µ±Ç°Ö¡ÄÚµÄÒÀÀµÐÐ */
+        /* å½“å‰å¸§å†…çš„ä¾èµ–è¡Œ */
         if (row_type) {
             last_row = &rows[lcu_y - 1];
             row->b_down_slice_border = (row_type == 2 && lcu_y != h->i_height_in_lcu - 1);
         } else {
-            xavs2_slice_write_start(h);  /* SliceµÄµÚÒ»ÐÐ£¬³õÊ¼»¯ */
+            xavs2_slice_write_start(h);  /* Sliceçš„ç¬¬ä¸€è¡Œï¼Œåˆå§‹åŒ– */
             last_row = NULL;
             row->b_top_slice_border = (lcu_y > 0);
         }
 
-        /* µÈ´ý²Î¿¼Ö¡ÖÐÒÀÀµµÄÐÐ±àÂëÍê±Ï */
+        /* ç­‰å¾…å‚è€ƒå¸§ä¸­ä¾èµ–çš„è¡Œç¼–ç å®Œæ¯• */
         xavs2e_inter_sync(h, lcu_y, 0);
 
         /* encode one lcu row */
         if (enable_wpp && i != h->i_height_in_lcu - 1) {
-            /* 1, ·ÖÅäÒ»¸öÐÐ¼¶µÄÏß³Ì½øÐÐ±àÂë */
+            /* 1, åˆ†é…ä¸€ä¸ªè¡Œçº§çš„çº¿ç¨‹è¿›è¡Œç¼–ç  */
             if ((row->h = xavs2e_alloc_row_task(h)) == NULL) {
                 return NULL;
             }
 
-            /* 2, ¼ì²éµ±Ç°ÐÐÊÇ·ñÓ¦Á¢¿ÌÆô¶¯£»
-             *    ¹æÔòÎªµÈ´ýÉÏÒ»ÐÐÖÁÉÙÍê³ÉÁ½¸öLCU²ÅÆô¶¯Ïß³Ì£¬ÕâÀïÖÁÉÙµÈ´ý1¸ö
+            /* 2, æ£€æŸ¥å½“å‰è¡Œæ˜¯å¦åº”ç«‹åˆ»å¯åŠ¨ï¼›
+             *    è§„åˆ™ä¸ºç­‰å¾…ä¸Šä¸€è¡Œè‡³å°‘å®Œæˆä¸¤ä¸ªLCUæ‰å¯åŠ¨çº¿ç¨‹ï¼Œè¿™é‡Œè‡³å°‘ç­‰å¾…1ä¸ª
              */
             wait_lcu_row_coded(last_row, 0);
 
-            /* 3, Ê¹ÓÃ¸ÃÐÐ¼¶Ïß³Ì½øÐÐ±àÂë */
+            /* 3, ä½¿ç”¨è¯¥è¡Œçº§çº¿ç¨‹è¿›è¡Œç¼–ç  */
             xavs2_threadpool_run(h->h_top->threadpool_rdo, xavs2_lcu_row_write, row, 0);
         } else {
             row->h = h;
             xavs2_lcu_row_write(row);
         }
 
-        /* ¶ÔSliceµÄ×îºóÒ»ÐÐLCUÀ´Ëµ£¬ÐèÒªºÏ²¢¶à¸öSliceµÄÂëÁ÷
-         * µ«ÔÚRDO½×¶Î£¬²¢²»ÐèÒª */
+        /* å¯¹Sliceçš„æœ€åŽä¸€è¡ŒLCUæ¥è¯´ï¼Œéœ€è¦åˆå¹¶å¤šä¸ªSliceçš„ç æµ
+         * ä½†åœ¨RDOé˜¶æ®µï¼Œå¹¶ä¸éœ€è¦ */
         // if (h->param->slice_num > 1 && row_type == 2) {
         //     nal_merge_slice(h, h->slices[h->i_slice_index]->p_bs_buf, h->i_nal_type, h->i_nal_ref_idc);
         // }
@@ -2107,7 +2107,7 @@ void *xavs2e_encode_one_frame(void *arg)
         }
     }
 
-    /* (5) Í³¼ÆSAOµÄ¿ªÆôºÍ¿ª¹Ø±ÈÂÊ */
+    /* (5) ç»Ÿè®¡SAOçš„å¼€å¯å’Œå¼€å…³æ¯”çŽ‡ */
     if (h->param->enable_sao && (h->slice_sao_on[0] || h->slice_sao_on[1] || h->slice_sao_on[2])) {
         int sao_off_num_y = 0;
         int sao_off_num_u = 0;
@@ -2132,7 +2132,7 @@ void *xavs2e_encode_one_frame(void *arg)
         xavs2_frame_copy_planes(h, h->img_alf, h->fdec);
         xavs2_frame_expand_border_frame(h, h->img_alf);
         alf_filter_one_frame(h);
-        /* ÖØÐÂ¶ÔÖØ¹¹Í¼Ïñ±ß½ç½øÐÐÀ©Õ¹ */
+        /* é‡æ–°å¯¹é‡æž„å›¾åƒè¾¹ç•Œè¿›è¡Œæ‰©å±• */
         if (h->pic_alf_on[0] || h->pic_alf_on[1] || h->pic_alf_on[2]) {
             xavs2_frame_expand_border_frame(h, h->fdec);
         }
@@ -2147,7 +2147,7 @@ void *xavs2e_encode_one_frame(void *arg)
 #endif
 
         if (h->h_top->threadpool_aec != NULL) {
-            xavs2_threadpool_run(h->h_top->threadpool_aec, encoder_aec_encode_one_frame, h, 0);
+            xavs2_threadpool_run(h->h_top->threadpool_aec, (void * (*)(void *)) encoder_aec_encode_one_frame, h, 0);
         }
     }
 
