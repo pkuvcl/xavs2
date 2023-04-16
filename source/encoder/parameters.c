@@ -207,7 +207,7 @@ mapping_default(xavs2_param_map_t *p_map_tab, xavs2_param_t *p)
     MAP("ALFLowLatencyEncodingEnable",  &p->alf_LowLatencyEncoding,     MAP_NUM, "Enable Low Latency ALF (1=Low Latency mode, 0=High Efficiency mode)");
     MAP("CrossSliceLoopFilter",         &p->b_cross_slice_loop_filter,  MAP_NUM, "Enable Cross Slice Boundary Filter (0=Disable, 1=Enable)");
 
-    /* ³¡±àÂë²ÎÊı */
+    /* åœºç¼–ç å‚æ•° */
     // MAP("InterlaceCodingOption",        &p->InterlaceCodingOption,      MAP_NUM);
     // MAP("RepeatFirstField",             &p->repeat_first_field,         MAP_NUM);
     // MAP("TopFieldFirst",                &p->top_field_first,            MAP_NUM);
@@ -425,7 +425,7 @@ int ParameterNameToMapIndex(xavs2_param_map_t *p_map_tab, const char *param_name
     mapping_t *map_tab = p_map_tab->map_tab;
     int i = 0;
 
-    while (map_tab[i].name[0] != '\0') {  // ÖÕÖ¹Î»ÖÃÊÇ¿Õ×Ö·û´®
+    while (map_tab[i].name[0] != '\0') {  // ç»ˆæ­¢ä½ç½®æ˜¯ç©ºå­—ç¬¦ä¸²
         if (xavs2_param_match(map_tab[i].name, param_name)) {
             return i;
         } else {
@@ -629,7 +629,7 @@ xavs2_encoder_opt_set(xavs2_param_t *param, int argc, char *argv[])
     int   in_item = 0;
     int   i;
 
-    if ((contents = xavs2_get_configs(argc, argv)) == NULL) {
+    if ((contents = xavs2_get_configs(argc, (const char * const *)argv)) == NULL) {
         fprintf(stderr, "get contents from configure file error.");
         return -1;
     }
